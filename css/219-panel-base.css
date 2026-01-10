@@ -77,6 +77,16 @@
     height: var(--frame-bottom-height);
 }
 
+/* Hide decorative hooks/frames when using external themes */
+body.external-theme .panel-base::before,
+body.external-theme .panel-base::after,
+body.external-theme header::before,
+body.external-theme header::after,
+body.external-theme .editor-panel::before,
+body.external-theme .editor-panel::after {
+    display: none !important;
+}
+
 /* Typography and content styles */
 .panel-base h3,
 .panel-base p {
@@ -114,10 +124,19 @@
 
 /* Universal panel content container - applies to ALL panels */
 .panel-content {
-    max-height: calc(80vh - 200px); /* Limit to prevent overflow, accounting for hooks/frames */
-    overflow-y: auto; /* Enable vertical scrolling when content overflows */
+    /* Use fixed height instead of max-height to force overflow containment */
+    height: auto;
+    max-height: 400px; /* Fixed pixel height that will trigger scrolling */
+    overflow-y: auto !important; /* Enable vertical scrolling when content overflows */
     overflow-x: hidden; /* Prevent horizontal scroll */
-    min-height: min-content; /* Ensure content is always visible */
+    padding-bottom: 20px; /* Add space at bottom for better scrolling */
+}
+
+/* When panel is open, enforce height constraint to ensure scrolling activates */
+.panel-open .panel-content,
+.editor-panel:hover .panel-content {
+    height: 400px; /* Fixed height forces content into scrollable container */
+    max-height: 400px;
 }
 
 /* Custom scrollbar styling for all panel content */

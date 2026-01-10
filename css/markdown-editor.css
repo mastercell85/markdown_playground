@@ -337,37 +337,43 @@ header {
 .document-tabs-container {
     display: flex;
     position: fixed;
-    top: 70px; /* Position below panel tabs with more clearance */
+    top: 70px; /* Position below panel tabs */
     left: 0;
     right: 0;
-    height: 35px; /* Compact height */
+    height: 47px; /* 45px content + 2px border */
     z-index: 4;
     align-items: center;
-    padding: 0 15px;
-    background: rgba(0, 0, 0, 0.5);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-bottom: 2px solid rgba(255, 165, 0, 0.3);
+    box-sizing: border-box;
     overflow-x: auto;
     overflow-y: hidden;
 }
 
 .document-tabs {
     display: flex;
-    gap: 5px;
+    gap: 8px;
     height: 100%;
     align-items: center;
 }
 
+/* Default theme: subtle document tabs */
 .document-tab {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 6px 12px;
+    gap: 10px;
+    padding: 8px 20px;
     background: rgba(255, 255, 255, 0.05);
-    color: #999;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
+    color: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-left: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
     cursor: pointer;
-    font-size: 11px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
     white-space: nowrap;
     transition: all 0.3s ease;
 }
@@ -375,59 +381,103 @@ header {
 .document-tab:hover {
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
+    border-left-color: rgba(255, 255, 255, 0.3);
 }
 
 .document-tab.active {
-    background: rgba(255, 255, 255, 0.15);
+    background: linear-gradient(90deg, rgba(66, 153, 225, 0.25), rgba(66, 153, 225, 0.1));
     color: #fff;
-    border-color: rgba(255, 255, 255, 0.3);
+    border-left: 4px solid rgb(66, 153, 225);
+    box-shadow: 0 0 15px rgba(66, 153, 225, 0.3);
+}
+
+/* LCARS-style document tabs - only in Typora mode */
+body.typora-mode .document-tab {
+    background: linear-gradient(90deg, rgba(255, 165, 0, 0.15), rgba(255, 165, 0, 0.05));
+    border-left: 3px solid rgba(255, 165, 0, 0.5);
+}
+
+body.typora-mode .document-tab:hover {
+    background: linear-gradient(90deg, rgba(255, 165, 0, 0.25), rgba(255, 165, 0, 0.1));
+    border-left-color: rgba(255, 165, 0, 0.8);
+}
+
+body.typora-mode .document-tab.active {
+    background: linear-gradient(90deg, rgba(255, 165, 0, 0.35), rgba(255, 165, 0, 0.15));
+    border-left: 4px solid rgb(255, 165, 0);
+    box-shadow: 0 0 10px rgba(255, 165, 0, 0.3);
 }
 
 .document-tab-close {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     border-radius: 2px;
-    font-size: 14px;
+    font-size: 16px;
+    font-weight: bold;
     line-height: 1;
-    transition: background 0.2s ease;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.2s ease;
 }
 
 .document-tab-close:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 100, 100, 0.3);
+    color: #fff;
 }
 
+/* Default theme: subtle new tab button */
 .document-tab-new {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 26px;
-    height: 26px;
+    width: 36px;
+    height: 36px;
     background: rgba(255, 255, 255, 0.05);
-    color: #999;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
+    color: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-left: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 20px;
+    font-weight: bold;
     transition: all 0.3s ease;
 }
 
 .document-tab-new:hover {
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
+    border-left-color: rgba(255, 255, 255, 0.3);
+}
+
+/* LCARS-style new tab button - only in Typora mode */
+body.typora-mode .document-tab-new {
+    background: linear-gradient(90deg, rgba(100, 200, 255, 0.15), rgba(100, 200, 255, 0.05));
+    border-left: 3px solid rgba(100, 200, 255, 0.5);
+}
+
+body.typora-mode .document-tab-new:hover {
+    background: linear-gradient(90deg, rgba(100, 200, 255, 0.25), rgba(100, 200, 255, 0.1));
+    border-left-color: rgba(100, 200, 255, 0.8);
 }
 
 /* Editor Container - Split-screen layout */
 .editor-container {
     display: flex;
     flex-direction: row;
-    margin-top: 105px; /* Panel tabs (70px) + Document tabs (35px) = 105px */
-    gap: 0;
+    position: fixed;
+    top: 117px; /* Panel tabs (70px) + Document tabs (47px with border) = 117px */
+    left: 0;
+    right: 0;
+    bottom: 0; /* Extend to bottom of viewport */
     width: 100%;
-    height: calc(100vh - 125px); /* Full viewport minus top offset and extra padding for scrollbars */
+    gap: 0;
+    margin: 0;
+    padding: 0;
     background: rgba(0, 0, 0, 0.6);
+    box-sizing: border-box;
+    z-index: 2;
 }
 
 .editor-container[data-layout="split"] {
@@ -445,19 +495,43 @@ header {
     min-width: 0;
     background: rgba(50, 50, 50, 0.8);
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: none;
 }
 
 .editor-section-content {
     flex: 1;
-    padding: 20px;
+    padding: 0 20px 0 20px;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 /* Input Area */
 .editor-input {
     flex: 1;
     min-width: 200px;
+}
+
+.editor-input .editor-section-content {
+    padding: 0;
+}
+
+.editor-section-content .typora-write {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin: 0;
+    padding: 0;
+}
+
+.editor-section-content .typora-write .markdown-textarea,
+.editor-section-content .typora-write .markdown-output {
+    flex: 1;
+    margin: 0;
+    min-height: 0;
 }
 
 /* Resizable Divider */
@@ -493,7 +567,8 @@ header {
 .markdown-textarea {
     width: 100%;
     height: 100%;
-    padding: 15px;
+    margin: 0;
+    padding: 0;
     background: rgba(0, 0, 0, 0.5);
     color: #fff;
     border: none;
@@ -502,6 +577,8 @@ header {
     line-height: 1.6;
     resize: none;
     outline: none;
+    box-sizing: border-box;
+    overflow: auto;
 }
 
 .markdown-textarea::placeholder {
@@ -510,11 +587,15 @@ header {
 
 .markdown-output {
     width: 100%;
-    min-height: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
     color: #fff;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 1.6;
+    overflow: auto;
+    box-sizing: border-box;
 }
 
 /* Markdown rendered styles */
@@ -805,4 +886,105 @@ header {
     .editor-panel:hover {
         max-height: calc(80vh * 0.55);
     }
+}
+
+/* ============================================
+   VIEW MENU FEATURES - Phase 1
+   ============================================ */
+
+/* Panel section titles */
+.panel-section-title {
+    font-size: 11px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 15px 40px 5px 40px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.panel-section-title:first-of-type {
+    border-top: none;
+    margin-top: 10px;
+    padding-top: 0;
+}
+
+/* Theme Support - Removed old CSS variable-based theme system */
+/* Universal theme system now uses dynamically loaded CSS files */
+/* Default theme uses the base dark styles defined earlier in this file */
+
+/* Layout Modes */
+.editor-container[data-layout="split"] .editor-input,
+.editor-container[data-layout="split"] .editor-preview,
+.editor-container[data-layout="split"] .editor-divider {
+    display: flex;
+}
+
+.editor-container[data-layout="editor"] .editor-input {
+    display: flex;
+    flex: 1;
+}
+
+.editor-container[data-layout="editor"] .editor-preview,
+.editor-container[data-layout="editor"] .editor-divider {
+    display: none;
+}
+
+.editor-container[data-layout="preview"] .editor-preview {
+    display: flex;
+    flex: 1;
+}
+
+.editor-container[data-layout="preview"] .editor-input,
+.editor-container[data-layout="preview"] .editor-divider {
+    display: none;
+}
+
+/* Line Numbers (simulated with background gradient) */
+.markdown-textarea.show-line-numbers {
+    padding-left: 50px;
+    background-image: linear-gradient(
+        to right,
+        rgba(128, 128, 128, 0.1) 0,
+        rgba(128, 128, 128, 0.1) 45px,
+        transparent 45px,
+        transparent 100%
+    );
+    background-attachment: local;
+}
+
+/* Word Wrap is handled via inline styles in JavaScript */
+/* Default is pre-wrap, toggling sets it to pre */
+
+/* ============================================
+   TYPORA MODE STYLING
+   ============================================ */
+
+/* Typora themes target #write and #write-input containers */
+/* Ensure both areas have proper dimensions */
+#write,
+#write-input,
+.typora-write {
+    width: 100%;
+    height: 100%;
+}
+
+/* Make textarea inherit Typora theme styling */
+body.typora-mode #write-input {
+    background: inherit;
+}
+
+body.typora-mode #write-input textarea {
+    background: transparent !important;
+    color: inherit;
+    border: none;
+    outline: none;
+}
+
+/* Remove default editor styling when Typora theme is active */
+body.typora-mode .editor-input {
+    background: transparent;
+}
+
+body.typora-mode .editor-section-content {
+    background: transparent;
 }

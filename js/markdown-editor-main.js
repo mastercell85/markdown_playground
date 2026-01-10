@@ -6,9 +6,20 @@
 (function() {
     'use strict';
 
+    // Module-level variables
+    let themeLoader = null;
+
     // Initialize when DOM is ready
     function init() {
         console.log('Markdown Editor initialized');
+
+        // Initialize theme loader
+        themeLoader = new ThemeLoader({
+            onThemeChange: (theme) => {
+                updateThemeDisplay(theme);
+            }
+        });
+        themeLoader.init();
 
         // Initialize panel management
         initializePanelManagement();
@@ -51,6 +62,12 @@
 
         // Setup Edit menu buttons
         setupEditMenuButtons();
+
+        // Setup View menu buttons
+        setupViewMenuButtons();
+
+        // Restore user preferences
+        restoreViewPreferences();
     }
 
     /**
@@ -471,6 +488,421 @@
 
         // Start the interactive replacement
         replaceNext();
+    }
+
+    /**
+     * Setup View menu button handlers
+     */
+    function setupViewMenuButtons() {
+        // Theme selector button
+        const themeSelectorBtn = document.getElementById('theme-selector-btn');
+        const themeLoadCustomBtn = document.getElementById('theme-load-custom-btn');
+        const customThemeInput = document.getElementById('custom-theme-input');
+
+        if (themeSelectorBtn) {
+            themeSelectorBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                showThemeSelector();
+            });
+        }
+
+        if (themeLoadCustomBtn) {
+            themeLoadCustomBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                customThemeInput.click();
+            });
+        }
+
+        if (customThemeInput) {
+            customThemeInput.addEventListener('change', async function(event) {
+                const file = event.target.files[0];
+                if (file && themeLoader) {
+                    await themeLoader.loadCustomCSSFile(file);
+                }
+                // Reset input so same file can be loaded again
+                event.target.value = '';
+            });
+        }
+
+        // Layout buttons
+        const layoutSplitBtn = document.getElementById('layout-split-btn');
+        const layoutEditorBtn = document.getElementById('layout-editor-btn');
+        const layoutPreviewBtn = document.getElementById('layout-preview-btn');
+
+        if (layoutSplitBtn) {
+            layoutSplitBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleLayoutChange('split');
+            });
+        }
+
+        if (layoutEditorBtn) {
+            layoutEditorBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleLayoutChange('editor');
+            });
+        }
+
+        if (layoutPreviewBtn) {
+            layoutPreviewBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleLayoutChange('preview');
+            });
+        }
+
+        // Editor options
+        const toggleLineNumbersBtn = document.getElementById('toggle-line-numbers-btn');
+        const toggleWordWrapBtn = document.getElementById('toggle-word-wrap-btn');
+
+        if (toggleLineNumbersBtn) {
+            toggleLineNumbersBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleToggleLineNumbers();
+            });
+        }
+
+        if (toggleWordWrapBtn) {
+            toggleWordWrapBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleToggleWordWrap();
+            });
+        }
+
+        // Zoom buttons
+        const zoom90Btn = document.getElementById('zoom-90-btn');
+        const zoom100Btn = document.getElementById('zoom-100-btn');
+        const zoom110Btn = document.getElementById('zoom-110-btn');
+        const zoom125Btn = document.getElementById('zoom-125-btn');
+        const zoom150Btn = document.getElementById('zoom-150-btn');
+
+        if (zoom90Btn) {
+            zoom90Btn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleZoomChange(90);
+            });
+        }
+
+        if (zoom100Btn) {
+            zoom100Btn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleZoomChange(100);
+            });
+        }
+
+        if (zoom110Btn) {
+            zoom110Btn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleZoomChange(110);
+            });
+        }
+
+        if (zoom125Btn) {
+            zoom125Btn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleZoomChange(125);
+            });
+        }
+
+        if (zoom150Btn) {
+            zoom150Btn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleZoomChange(150);
+            });
+        }
+    }
+
+    /**
+     * Show theme selector modal
+     */
+    function showThemeSelector() {
+        if (!themeLoader) return;
+
+        // Remove any existing theme selector
+        const existingModal = document.getElementById('theme-selector-modal');
+        if (existingModal) existingModal.remove();
+
+        // Create modal overlay
+        const modal = document.createElement('div');
+        modal.id = 'theme-selector-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        `;
+
+        // Create modal content
+        const modalContent = document.createElement('div');
+        modalContent.style.cssText = `
+            background: rgba(40, 40, 40, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 70vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        `;
+
+        // Create title
+        const title = document.createElement('h2');
+        title.textContent = 'Select Theme';
+        title.style.cssText = `
+            margin: 0 0 20px 0;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 18px;
+        `;
+
+        // Create theme list
+        const themeList = document.createElement('div');
+        const allThemes = themeLoader.getAllThemes();
+        const currentTheme = themeLoader.getCurrentTheme();
+
+        Object.keys(allThemes).forEach(themeId => {
+            const theme = allThemes[themeId];
+            const themeItem = document.createElement('div');
+            const isActive = currentTheme && currentTheme.name === theme.name;
+
+            themeItem.style.cssText = `
+                padding: 12px;
+                margin: 8px 0;
+                background: ${isActive ? 'rgba(100, 100, 255, 0.2)' : 'rgba(60, 60, 60, 0.5)'};
+                border: 1px solid ${isActive ? 'rgba(100, 100, 255, 0.5)' : 'rgba(255, 255, 255, 0.2)'};
+                border-radius: 4px;
+                cursor: pointer;
+                transition: all 0.2s;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            `;
+
+            const themeInfo = document.createElement('div');
+            themeInfo.innerHTML = `
+                <div style="color: rgba(255, 255, 255, 0.9); font-weight: bold; margin-bottom: 4px;">
+                    ${theme.name}
+                </div>
+                <div style="color: rgba(255, 255, 255, 0.5); font-size: 11px;">
+                    ${theme.type.toUpperCase()}${isActive ? ' • ACTIVE' : ''}
+                </div>
+            `;
+
+            themeItem.appendChild(themeInfo);
+
+            // Add delete button for custom themes
+            if (themeId.startsWith('custom-')) {
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = '×';
+                deleteBtn.style.cssText = `
+                    background: rgba(255, 60, 60, 0.3);
+                    border: 1px solid rgba(255, 60, 60, 0.5);
+                    color: white;
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 18px;
+                    line-height: 1;
+                `;
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (confirm(`Delete custom theme "${theme.name}"?`)) {
+                        themeLoader.deleteCustomTheme(themeId);
+                        modal.remove();
+                        showThemeSelector();
+                    }
+                });
+                themeItem.appendChild(deleteBtn);
+            }
+
+            // Hover effect
+            themeItem.addEventListener('mouseenter', () => {
+                if (!isActive) {
+                    themeItem.style.background = 'rgba(80, 80, 80, 0.5)';
+                }
+            });
+            themeItem.addEventListener('mouseleave', () => {
+                if (!isActive) {
+                    themeItem.style.background = 'rgba(60, 60, 60, 0.5)';
+                }
+            });
+
+            // Click to select theme
+            themeItem.addEventListener('click', () => {
+                themeLoader.loadThemeById(themeId);
+                modal.remove();
+            });
+
+            themeList.appendChild(themeItem);
+        });
+
+        // Create close button
+        const closeButton = document.createElement('button');
+        closeButton.textContent = 'Close';
+        closeButton.style.cssText = `
+            margin-top: 20px;
+            padding: 8px 16px;
+            background: rgba(80, 80, 80, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            color: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            width: 100%;
+        `;
+
+        closeButton.addEventListener('click', () => {
+            modal.remove();
+        });
+
+        // Assemble modal
+        modalContent.appendChild(title);
+        modalContent.appendChild(themeList);
+        modalContent.appendChild(closeButton);
+        modal.appendChild(modalContent);
+
+        // Close on background click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+
+        // Close on Escape key
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                modal.remove();
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+
+        // Add to document
+        document.body.appendChild(modal);
+    }
+
+    /**
+     * Update theme display label
+     * @param {Object} theme - Theme object
+     */
+    function updateThemeDisplay(theme) {
+        const display = document.getElementById('current-theme-display');
+        if (display && theme) {
+            display.textContent = `Current: ${theme.name}`;
+        }
+
+        // Add/remove external-theme class to hide default decorative elements
+        if (theme && (theme.type === 'zen-garden' || theme.type === 'custom')) {
+            document.body.classList.add('external-theme');
+        } else {
+            document.body.classList.remove('external-theme');
+        }
+    }
+
+    /**
+     * Handle layout change
+     * @param {string} layout - 'split', 'editor', or 'preview'
+     */
+    function handleLayoutChange(layout) {
+        const editorContainer = document.querySelector('.editor-container');
+        if (!editorContainer) return;
+
+        // Update data-layout attribute
+        editorContainer.setAttribute('data-layout', layout);
+
+        // Save preference to localStorage
+        localStorage.setItem('editor-layout', layout);
+
+        console.log(`Layout changed to: ${layout}`);
+    }
+
+    /**
+     * Handle toggle line numbers
+     */
+    function handleToggleLineNumbers() {
+        const inputElement = document.getElementById('markdown-input');
+        if (!inputElement) return;
+
+        // Toggle line numbers class on input element
+        const hasLineNumbers = inputElement.classList.toggle('show-line-numbers');
+
+        // Save preference to localStorage
+        localStorage.setItem('editor-line-numbers', hasLineNumbers ? 'true' : 'false');
+
+        console.log(`Line numbers: ${hasLineNumbers ? 'enabled' : 'disabled'}`);
+    }
+
+    /**
+     * Handle toggle word wrap
+     */
+    function handleToggleWordWrap() {
+        const inputElement = document.getElementById('markdown-input');
+        if (!inputElement) return;
+
+        // Toggle word wrap by changing CSS white-space property
+        const currentWrap = inputElement.style.whiteSpace === 'pre-wrap';
+
+        inputElement.style.whiteSpace = currentWrap ? 'pre' : 'pre-wrap';
+
+        // Save preference to localStorage
+        localStorage.setItem('editor-word-wrap', currentWrap ? 'false' : 'true');
+
+        console.log(`Word wrap: ${currentWrap ? 'disabled' : 'enabled'}`);
+    }
+
+    /**
+     * Handle zoom change
+     * @param {number} percent - Zoom percentage (90, 100, 110, 125, 150)
+     */
+    function handleZoomChange(percent) {
+        const editorContainer = document.querySelector('.editor-container');
+        if (!editorContainer) return;
+
+        // Set font size based on zoom percentage
+        const baseFontSize = 16; // Base font size in pixels
+        const newFontSize = (baseFontSize * percent) / 100;
+
+        editorContainer.style.fontSize = `${newFontSize}px`;
+
+        // Save preference to localStorage
+        localStorage.setItem('editor-zoom', percent.toString());
+
+        console.log(`Zoom changed to: ${percent}%`);
+    }
+
+    /**
+     * Restore view preferences from localStorage
+     */
+    function restoreViewPreferences() {
+        // Theme is restored by ThemeLoader.init()
+
+        // Restore layout
+        const savedLayout = localStorage.getItem('editor-layout') || 'split';
+        handleLayoutChange(savedLayout);
+
+        // Restore line numbers
+        const savedLineNumbers = localStorage.getItem('editor-line-numbers') === 'true';
+        const inputElement = document.getElementById('markdown-input');
+        if (inputElement && savedLineNumbers) {
+            inputElement.classList.add('show-line-numbers');
+        }
+
+        // Restore word wrap
+        const savedWordWrap = localStorage.getItem('editor-word-wrap') !== 'false'; // Default true
+        if (inputElement) {
+            inputElement.style.whiteSpace = savedWordWrap ? 'pre-wrap' : 'pre';
+        }
+
+        // Restore zoom
+        const savedZoom = parseInt(localStorage.getItem('editor-zoom') || '100', 10);
+        handleZoomChange(savedZoom);
+
+        console.log('View preferences restored');
     }
 
     /**

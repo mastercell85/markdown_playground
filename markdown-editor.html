@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+lsDOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -62,6 +62,37 @@
 			<div class="panel-tab-label">View</div>
 			<div class="panel-content">
 				<h3>View Options</h3>
+
+				<!-- Theme -->
+				<h4 class="panel-section-title">Theme</h4>
+				<button id="theme-selector-btn" class="panel-button">Select Theme...</button>
+				<button id="theme-load-custom-btn" class="panel-button">Load Custom CSS</button>
+				<div id="current-theme-display" style="padding: 8px 40px; font-size: 11px; color: rgba(255, 255, 255, 0.6);">
+					Current: Default
+				</div>
+				<input type="file" id="custom-theme-input" accept=".css" style="display: none;">
+
+				<!-- Layout -->
+				<h4 class="panel-section-title">Layout</h4>
+				<button id="layout-split-btn" class="panel-button">Split View</button>
+				<button id="layout-editor-btn" class="panel-button">Editor Only</button>
+				<button id="layout-preview-btn" class="panel-button">Preview Only</button>
+
+				<!-- Editor Options -->
+				<h4 class="panel-section-title">Editor</h4>
+				<button id="toggle-line-numbers-btn" class="panel-button">Toggle Line Numbers</button>
+				<button id="toggle-word-wrap-btn" class="panel-button">Toggle Word Wrap</button>
+
+				<!-- Zoom -->
+				<h4 class="panel-section-title">Zoom</h4>
+				<button id="zoom-90-btn" class="panel-button">90%</button>
+				<button id="zoom-100-btn" class="panel-button">100%</button>
+				<button id="zoom-110-btn" class="panel-button">110%</button>
+				<button id="zoom-125-btn" class="panel-button">125%</button>
+				<button id="zoom-150-btn" class="panel-button">150%</button>
+
+				<!-- External Preview -->
+				<h4 class="panel-section-title">External Window</h4>
 				<button id="open-external-preview" class="panel-button">
 					Open Preview in New Window
 				</button>
@@ -106,12 +137,15 @@
 			<!-- Input section -->
 			<section class="editor-section editor-input">
 				<div class="editor-section-content">
-					<textarea
-						id="markdown-input"
-						class="markdown-textarea"
-						placeholder="Start typing your markdown here..."
-						aria-label="Markdown input"
-					></textarea>
+					<!-- Typora wrapper for input -->
+					<div id="write-input" class="typora-write">
+						<textarea
+							id="markdown-input"
+							class="markdown-textarea"
+							placeholder="Start typing your markdown here..."
+							aria-label="Markdown input"
+						></textarea>
+					</div>
 				</div>
 			</section>
 
@@ -121,12 +155,15 @@
 			<!-- Preview section -->
 			<section class="editor-section editor-preview">
 				<div class="editor-section-content">
-					<div
-						id="markdown-preview"
-						class="markdown-output"
-						aria-label="Rendered markdown preview"
-						aria-live="polite"
-					></div>
+					<!-- Typora wrapper for preview -->
+					<div id="write" class="typora-write">
+						<div
+							id="markdown-preview"
+							class="markdown-output"
+							aria-label="Rendered markdown preview"
+							aria-live="polite"
+						></div>
+					</div>
 				</div>
 			</section>
 		</div>
@@ -150,6 +187,8 @@
 <script src="js/markdown/document.js"></script>
 <script src="js/markdown/document-manager.js"></script>
 <script src="js/markdown/tab-controller.js"></script>
+<script src="js/markdown/typora-adapter.js"></script>
+<script src="js/markdown/theme-loader.js"></script>
 
 <!-- Main application script -->
 <script src="js/markdown-editor-main.js"></script>

@@ -11,6 +11,7 @@
 @import url("219-panel-header.css");
 @import url("219-panel-preamble.css");
 @import url("219-panel-summary.css");
+@import url("219-panel-tabs.css");
 
 /* Hide specific content panels */
 .explanation,

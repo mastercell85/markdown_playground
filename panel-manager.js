@@ -33,6 +33,15 @@
                 panel.element.addEventListener('mouseenter', function() {
                     openPanel(panel);
                 });
+
+                // Add click listener to tab label
+                const tabLabel = panel.element.querySelector('.panel-tab-label');
+                if (tabLabel) {
+                    tabLabel.addEventListener('click', function(event) {
+                        event.stopPropagation(); // Prevent click-outside from closing immediately
+                        openPanel(panel);
+                    });
+                }
             }
         });
 

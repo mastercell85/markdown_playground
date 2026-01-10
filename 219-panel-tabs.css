@@ -48,12 +48,14 @@
 
 /* Also show content on hover (CSS fallback) */
 .preamble:hover .panel-tab-label,
-.summary:hover .panel-tab-label {
+.summary:hover .panel-tab-label,
+.editor-panel:hover .panel-tab-label {
     display: none;
 }
 
 .preamble:hover .panel-content,
-.summary:hover .panel-content {
+.summary:hover .panel-content,
+.editor-panel:hover .panel-content {
     display: block;
     opacity: 1;
 }

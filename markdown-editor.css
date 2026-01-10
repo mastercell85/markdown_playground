@@ -35,6 +35,12 @@ footer,
     z-index: 3;
 }
 
+/* Hide header completely on markdown editor page */
+header {
+    display: none !important;
+    visibility: hidden !important;
+}
+
 /* Main content area styling */
 .main.supporting {
     position: relative;
@@ -105,7 +111,6 @@ footer,
 
 .files-panel.panel-open,
 .files-panel:hover {
-    bottom: 10%;
     margin-left: -595px;
 }
 
@@ -144,7 +149,6 @@ footer,
 
 .edit-panel.panel-open,
 .edit-panel:hover {
-    bottom: 10%;
     margin-left: -405px;
 }
 
@@ -183,7 +187,6 @@ footer,
 
 .view-panel.panel-open,
 .view-panel:hover {
-    bottom: 10%;
     margin-left: -215px;
 }
 
@@ -222,7 +225,6 @@ footer,
 
 .settings-panel.panel-open,
 .settings-panel:hover {
-    bottom: 10%;
     margin-left: -25px;
 }
 
@@ -261,7 +263,6 @@ footer,
 
 .back-panel.panel-open,
 .back-panel:hover {
-    bottom: 10%;
     margin-left: 165px;
 }
 
@@ -269,6 +270,7 @@ footer,
 .editor-panel.panel-open,
 .editor-panel:hover {
     height: auto;
+    max-height: 80vh; /* Limit panel height to 80% of viewport */
     color: #fff;
     transform: rotateY(0) scale(1);
 }
@@ -278,6 +280,33 @@ footer,
 .editor-panel p {
     padding: 8px 40px 0 40px;
     transition: background-color 1s ease-out;
+}
+
+/* Panel buttons */
+.panel-button {
+    display: block;
+    width: calc(100% - 80px);
+    margin: 10px 40px;
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.panel-button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.panel-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
 .editor-panel h3 {
@@ -300,51 +329,361 @@ footer,
     padding-bottom: 10px;
 }
 
+/* Editor Container - Split-screen layout */
+.editor-container {
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 100px);
+    gap: 0;
+    margin-top: 20px;
+}
+
+.editor-container[data-layout="split"] {
+    flex-direction: row;
+}
+
+.editor-container[data-layout="full"] .editor-preview {
+    display: none;
+}
+
+/* Editor Sections */
+.editor-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.editor-section-content {
+    flex: 1;
+    padding: 20px;
+    overflow: auto;
+}
+
+/* Input Area */
+.editor-input {
+    border-right: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.markdown-textarea {
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: none;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+    outline: none;
+}
+
+.markdown-textarea::placeholder {
+    color: #666;
+}
+
+/* Preview Area */
+.editor-preview {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.markdown-output {
+    width: 100%;
+    min-height: 100%;
+    color: #fff;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Markdown rendered styles */
+.markdown-output h1 {
+    font-size: 32px;
+    margin: 20px 0 10px 0;
+    color: #fff;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
+}
+
+.markdown-output h2 {
+    font-size: 24px;
+    margin: 18px 0 8px 0;
+    color: #fff;
+}
+
+.markdown-output h3 {
+    font-size: 20px;
+    margin: 16px 0 6px 0;
+    color: #fff;
+}
+
+.markdown-output p {
+    margin: 10px 0;
+}
+
+.markdown-output strong {
+    font-weight: bold;
+    color: #fff;
+}
+
+.markdown-output em {
+    font-style: italic;
+}
+
+.markdown-output code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 13px;
+}
+
+.markdown-output pre {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+.markdown-output pre code {
+    background: none;
+    padding: 0;
+}
+
+.markdown-output ul, .markdown-output ol {
+    margin: 10px 0;
+    padding-left: 30px;
+}
+
+.markdown-output li {
+    margin: 5px 0;
+}
+
+.markdown-output a {
+    color: #66b3ff;
+    text-decoration: none;
+}
+
+.markdown-output a:hover {
+    text-decoration: underline;
+}
+
+.markdown-output blockquote {
+    border-left: 4px solid rgba(255, 255, 255, 0.3);
+    padding-left: 15px;
+    margin: 10px 0;
+    color: #ccc;
+    font-style: italic;
+}
+
 /* Responsive scaling for viewports smaller than the design target */
 @media (max-width: 1366px) and (min-width: 1024px) {
-    /* Scale to 75% for medium screens */
+    /* Scale to 75% for medium laptop screens */
 
-    header {
-        width: calc(450px * 0.75);
-        margin-left: calc(-190px * 0.75);
+    .editor-panel {
+        width: calc(225px * 0.75);
+        height: calc(35px * 0.75);
     }
 
-    header::before,
-    header::after {
-        width: calc(450px * 0.75);
+    .editor-panel .panel-tab-label {
+        height: calc(35px * 0.75);
+        font-size: calc(12px * 0.75);
+        padding: 0 calc(20px * 0.75);
+        line-height: calc(35px * 0.75);
     }
 
-    h1 {
-        font-size: calc(60px * 0.75);
-        padding: calc(40px * 0.75) calc(70px * 0.75) calc(10px * 0.75) calc(70px * 0.75);
+    .editor-panel::before,
+    .editor-panel::after {
+        width: calc(225px * 0.75);
     }
 
-    h2 {
-        font-size: calc(16px * 0.75);
-        padding: calc(10px * 0.75) calc(70px * 0.75) calc(40px * 0.75) calc(70px * 0.75);
+    .editor-panel::before {
+        top: calc(-350px * 0.75);
+        height: calc(350px * 0.75);
+        background-size: auto auto, calc(225px * 0.75) auto;
+    }
+
+    /* Files Panel */
+    .files-panel {
+        margin-left: calc(-640px * 0.75);
+    }
+
+    .files-panel.panel-open,
+    .files-panel:hover {
+        margin-left: calc(-595px * 0.75);
+    }
+
+    /* Edit Panel */
+    .edit-panel {
+        margin-left: calc(-450px * 0.75);
+    }
+
+    .edit-panel.panel-open,
+    .edit-panel:hover {
+        margin-left: calc(-405px * 0.75);
+    }
+
+    /* View Panel */
+    .view-panel {
+        margin-left: calc(-260px * 0.75);
+    }
+
+    .view-panel.panel-open,
+    .view-panel:hover {
+        margin-left: calc(-215px * 0.75);
+    }
+
+    /* Settings Panel */
+    .settings-panel {
+        margin-left: calc(-70px * 0.75);
+    }
+
+    .settings-panel.panel-open,
+    .settings-panel:hover {
+        margin-left: calc(-25px * 0.75);
+    }
+
+    /* Back Panel */
+    .back-panel {
+        margin-left: calc(120px * 0.75);
+    }
+
+    .back-panel.panel-open,
+    .back-panel:hover {
+        margin-left: calc(165px * 0.75);
+    }
+
+    .editor-panel h3 {
+        font-size: calc(15px * 0.75);
+        padding-top: calc(10px * 0.75);
+    }
+
+    .editor-panel p {
+        font-size: calc(10px * 0.75);
+        padding: calc(8px * 0.75) calc(40px * 0.75) 0 calc(40px * 0.75);
+    }
+
+    .panel-button {
+        width: calc(100% - calc(80px * 0.75));
+        margin: calc(10px * 0.75) calc(40px * 0.75);
+        padding: calc(10px * 0.75) calc(15px * 0.75);
+        font-size: calc(12px * 0.75);
+    }
+
+    /* Scale panel content container and max heights */
+    .panel-content {
+        max-height: calc((80vh - 100px) * 0.75);
+    }
+
+    .editor-panel.panel-open,
+    .editor-panel:hover {
+        max-height: calc(80vh * 0.75);
     }
 }
 
 @media (max-width: 1023px) and (min-width: 800px) {
-    /* Scale to 55% for smaller screens */
+    /* Scale to 55% for smaller laptop screens */
 
-    header {
-        width: calc(450px * 0.55);
-        margin-left: calc(-190px * 0.55);
+    .editor-panel {
+        width: calc(225px * 0.55);
+        height: calc(35px * 0.55);
     }
 
-    header::before,
-    header::after {
-        width: calc(450px * 0.55);
+    .editor-panel .panel-tab-label {
+        height: calc(35px * 0.55);
+        font-size: calc(12px * 0.55);
+        padding: 0 calc(20px * 0.55);
+        line-height: calc(35px * 0.55);
     }
 
-    h1 {
-        font-size: calc(60px * 0.55);
-        padding: calc(40px * 0.55) calc(70px * 0.55) calc(10px * 0.55) calc(70px * 0.55);
+    .editor-panel::before,
+    .editor-panel::after {
+        width: calc(225px * 0.55);
     }
 
-    h2 {
-        font-size: calc(16px * 0.55);
-        padding: calc(10px * 0.55) calc(70px * 0.55) calc(40px * 0.55) calc(70px * 0.55);
+    .editor-panel::before {
+        top: calc(-350px * 0.55);
+        height: calc(350px * 0.55);
+        background-size: auto auto, calc(225px * 0.55) auto;
+    }
+
+    /* Files Panel */
+    .files-panel {
+        margin-left: calc(-640px * 0.55);
+    }
+
+    .files-panel.panel-open,
+    .files-panel:hover {
+        margin-left: calc(-595px * 0.55);
+    }
+
+    /* Edit Panel */
+    .edit-panel {
+        margin-left: calc(-450px * 0.55);
+    }
+
+    .edit-panel.panel-open,
+    .edit-panel:hover {
+        margin-left: calc(-405px * 0.55);
+    }
+
+    /* View Panel */
+    .view-panel {
+        margin-left: calc(-260px * 0.55);
+    }
+
+    .view-panel.panel-open,
+    .view-panel:hover {
+        margin-left: calc(-215px * 0.55);
+    }
+
+    /* Settings Panel */
+    .settings-panel {
+        margin-left: calc(-70px * 0.55);
+    }
+
+    .settings-panel.panel-open,
+    .settings-panel:hover {
+        margin-left: calc(-25px * 0.55);
+    }
+
+    /* Back Panel */
+    .back-panel {
+        margin-left: calc(120px * 0.55);
+    }
+
+    .back-panel.panel-open,
+    .back-panel:hover {
+        margin-left: calc(165px * 0.55);
+    }
+
+    .editor-panel h3 {
+        font-size: calc(15px * 0.55);
+        padding-top: calc(10px * 0.55);
+    }
+
+    .editor-panel p {
+        font-size: calc(10px * 0.55);
+        padding: calc(8px * 0.55) calc(40px * 0.55) 0 calc(40px * 0.55);
+    }
+
+    .panel-button {
+        width: calc(100% - calc(80px * 0.55));
+        margin: calc(10px * 0.55) calc(40px * 0.55);
+        padding: calc(10px * 0.55) calc(15px * 0.55);
+        font-size: calc(12px * 0.55);
+    }
+
+    /* Scale panel content container and max heights */
+    .panel-content {
+        max-height: calc((80vh - 100px) * 0.55);
+    }
+
+    .editor-panel.panel-open,
+    .editor-panel:hover {
+        max-height: calc(80vh * 0.55);
     }
 }

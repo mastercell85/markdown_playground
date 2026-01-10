@@ -112,6 +112,8 @@
     bottom: var(--summary-bottom-hover);
     margin: 0 var(--summary-margin-right-hover) 0 0;
     height: auto;
+    max-height: 80vh; /* Limit panel height to 80% of viewport */
+    overflow: visible; /* Allow panel to show its content */
     color: #fff;
     -moz-transform: rotateY(0) scale(1);
     -ms-transform: scale(1);

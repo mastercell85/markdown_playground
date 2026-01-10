@@ -46,8 +46,13 @@
 		<div class="editor-panel view-panel" id="view-panel" role="article">
 			<div class="panel-tab-label">View</div>
 			<div class="panel-content">
-				<h3>View</h3>
-				<p>View options coming soon...</p>
+				<h3>View Options</h3>
+				<button id="open-external-preview" class="panel-button">
+					Open Preview in New Window
+				</button>
+				<button id="close-external-preview" class="panel-button" disabled>
+					Close External Window
+				</button>
 			</div>
 		</div>
 
@@ -65,13 +70,40 @@
 			<div class="panel-tab-label">Back</div>
 			<div class="panel-content">
 				<h3>Go Back</h3>
-				<p>Return to the main page</p>
+				<button id="back-to-home" class="panel-button">
+					Return to Main Page
+				</button>
 			</div>
 		</div>
 	</section>
 
 	<div class="main supporting" id="zen-supporting" role="main">
-		<!-- Content will be added dynamically as tabs are created -->
+		<!-- Split-screen markdown editor -->
+		<div class="editor-container" data-layout="split">
+			<!-- Input section -->
+			<section class="editor-section editor-input">
+				<div class="editor-section-content">
+					<textarea
+						id="markdown-input"
+						class="markdown-textarea"
+						placeholder="Start typing your markdown here..."
+						aria-label="Markdown input"
+					></textarea>
+				</div>
+			</section>
+
+			<!-- Preview section -->
+			<section class="editor-section editor-preview">
+				<div class="editor-section-content">
+					<div
+						id="markdown-preview"
+						class="markdown-output"
+						aria-label="Rendered markdown preview"
+						aria-live="polite"
+					></div>
+				</div>
+			</section>
+		</div>
 	</div>
 
 </div>

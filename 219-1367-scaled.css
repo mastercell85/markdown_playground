@@ -1,0 +1,181 @@
+/**
+* Scaled version of 219-1367.css
+* Uses CSS transform scale to make the design responsive
+*/
+
+/* Import the original unchanged */
+@import url("219-1367.css");
+
+/* Add responsive scaling for viewports smaller than the design target */
+@media (max-width: 1366px) and (min-width: 1024px) {
+    /* Scale to 75% for medium screens */
+    header {
+        width: calc(450px * 0.75);
+        margin-left: calc(-190px * 0.75);
+    }
+
+    header::before,
+    header::after {
+        width: calc(450px * 0.75);
+    }
+
+    .preamble {
+        width: calc(495px * 0.75);
+        margin-left: calc(-580px * 0.75);
+    }
+
+    .preamble::before,
+    .preamble::after {
+        width: calc(495px * 0.75);
+    }
+
+    .preamble:hover {
+        margin-left: calc(-490px * 0.75);
+    }
+
+    .summary {
+        width: calc(450px * 0.75);
+        margin-right: calc(-500px * 0.75);
+    }
+
+    .summary::before,
+    .summary::after {
+        width: calc(450px * 0.75);
+    }
+
+    .summary:hover {
+        margin-right: calc(-460px * 0.75);
+    }
+
+    .main div[role="article"] {
+        width: calc(460px * 0.75);
+        padding: calc(55px * 0.75) calc(70px * 0.75) calc(50px * 0.75) calc(70px * 0.75);
+    }
+
+    .design-selection {
+        width: calc(615px * 0.75);
+        padding: calc(55px * 0.75) calc(52px * 0.75) calc(45px * 0.75) calc(52px * 0.75);
+    }
+
+    .design-selection li {
+        width: calc(380px * 0.75);
+    }
+
+    .design-selection li a.designer-name {
+        width: calc(378px * 0.75);
+        font-size: calc(25px * 0.75);
+    }
+
+    .design-archives,
+    .zen-resources {
+        left: calc(458px * 0.75);
+        width: calc(204px * 0.75);
+    }
+
+    footer {
+        width: calc(75px * 0.75);
+        height: calc(450px * 0.75);
+        margin-top: calc(-225px * 0.75);
+    }
+
+    h1 {
+        font-size: calc(60px * 0.75);
+        padding: calc(40px * 0.75) calc(70px * 0.75) calc(10px * 0.75) calc(70px * 0.75);
+    }
+
+    h2 {
+        font-size: calc(16px * 0.75);
+        padding: calc(10px * 0.75) calc(70px * 0.75) calc(40px * 0.75) calc(70px * 0.75);
+    }
+}
+
+@media (max-width: 1023px) and (min-width: 800px) {
+    /* Scale to 55% for smaller screens */
+    header {
+        width: calc(450px * 0.55);
+        margin-left: calc(-190px * 0.55);
+    }
+
+    header::before,
+    header::after {
+        width: calc(450px * 0.55);
+    }
+
+    .preamble {
+        width: calc(495px * 0.55);
+        margin-left: calc(-580px * 0.55);
+    }
+
+    .preamble::before,
+    .preamble::after {
+        width: calc(495px * 0.55);
+    }
+
+    .preamble:hover {
+        margin-left: calc(-490px * 0.55);
+    }
+
+    .summary {
+        width: calc(450px * 0.55);
+        margin-right: calc(-500px * 0.55);
+    }
+
+    .summary::before,
+    .summary::after {
+        width: calc(450px * 0.55);
+    }
+
+    .summary:hover {
+        margin-right: calc(-460px * 0.55);
+    }
+
+    .main div[role="article"] {
+        width: calc(460px * 0.55);
+        padding: calc(55px * 0.55) calc(70px * 0.55) calc(50px * 0.55) calc(70px * 0.55);
+    }
+
+    .design-selection {
+        width: calc(615px * 0.55);
+        padding: calc(55px * 0.55) calc(52px * 0.55) calc(45px * 0.55) calc(52px * 0.55);
+    }
+
+    .design-selection li {
+        width: calc(380px * 0.55);
+    }
+
+    .design-selection li a.designer-name {
+        width: calc(378px * 0.55);
+        font-size: calc(25px * 0.55);
+    }
+
+    .design-archives,
+    .zen-resources {
+        left: calc(458px * 0.55);
+        width: calc(204px * 0.55);
+    }
+
+    footer {
+        width: calc(75px * 0.55);
+        height: calc(450px * 0.55);
+        margin-top: calc(-225px * 0.55);
+    }
+
+    h1 {
+        font-size: calc(60px * 0.55);
+        padding: calc(40px * 0.55) calc(70px * 0.55) calc(10px * 0.55) calc(70px * 0.55);
+    }
+
+    h2 {
+        font-size: calc(16px * 0.55);
+        padding: calc(10px * 0.55) calc(70px * 0.55) calc(40px * 0.55) calc(70px * 0.55);
+    }
+
+    .main div[role="article"] p {
+        width: calc(460px * 0.55);
+        font-size: calc(20px * 0.55);
+    }
+
+    .main div[role="article"] h3 {
+        font-size: calc(36px * 0.55);
+    }
+}

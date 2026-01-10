@@ -51,6 +51,7 @@
 @import url("219-base.css");
 @import url("219-400.css") all and (min-width: 400px) and (max-width: 799px);
 @import url("219-800-compat.css") all and (min-width: 800px);
-@import url("219-1367.css") all and (min-width: 800px);
+/* Original animation with responsive scaling */
+@import url("219-1367-scaled.css") all and (min-width: 800px);
 @import url("219-1600.css") all and (min-width: 1600px);
 @import url("219-bg.css") all and (min-width: 400px);

@@ -1,0 +1,350 @@
+/**
+* Markdown Editor CSS
+* Uses the same background and base styles as the main Zen Garden page
+*/
+
+/* Import the original 1367 CSS for base styles and animations */
+@import url("219-1367.css");
+
+/* Import panel base for consistent styling */
+@import url("219-panel-base.css");
+@import url("219-panel-header.css");
+@import url("219-panel-tabs.css");
+
+/* Hide all unnecessary content panels from the original design */
+.explanation,
+.participation,
+.requirements,
+.benefits,
+.sidebar,
+aside.sidebar,
+.sidebar .wrapper,
+.design-selection,
+.design-archives,
+.zen-resources,
+footer,
+.preamble,
+.summary {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Intro section needs to be positioned for absolute children */
+.intro {
+    position: relative;
+    z-index: 3;
+}
+
+/* Main content area styling */
+.main.supporting {
+    position: relative;
+    z-index: 1;
+}
+
+/* Editor panel base styling */
+.editor-panel {
+    position: fixed;
+    z-index: 5;
+    padding: 0;
+    width: 225px;
+    height: 35px;
+    overflow: visible;
+    background: url(layer-middle.svg) repeat-y center top;
+    background-size: 225px auto;
+    color: #999;
+    transition: transform 1s ease-out,
+                bottom 1s ease-out,
+                top 1s ease-out,
+                left 1s ease-out,
+                right 1s ease-out,
+                margin 1s 1s ease-out,
+                height 1s ease-out;
+}
+
+/* Tab label sizing for editor panels - scaled to half */
+.editor-panel .panel-tab-label {
+    height: 35px;
+    font-size: 12px;
+    padding: 0 20px;
+    line-height: 35px;
+    letter-spacing: 1px;
+}
+
+/* Files Panel - First from left */
+.files-panel {
+    top: 10px;
+    left: 50%;
+    margin-left: -640px;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.files-panel::before,
+.files-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    display: block;
+    width: 225px;
+    content: '';
+}
+
+.files-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(hook1.svg) no-repeat center -20px,
+                url(layer-frame.svg) no-repeat center 328px;
+    background-size: auto auto, 225px auto;
+}
+
+.files-panel::after {
+    bottom: -23px;
+    height: 23px;
+    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.files-panel.panel-open,
+.files-panel:hover {
+    bottom: 10%;
+    margin-left: -595px;
+}
+
+/* Edit Panel - Second from left */
+.edit-panel {
+    top: 10px;
+    left: 50%;
+    margin-left: -450px;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.edit-panel::before,
+.edit-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    display: block;
+    width: 225px;
+    content: '';
+}
+
+.edit-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(hook2.svg) no-repeat center -17px,
+                url(layer-frame.svg) no-repeat center 330px;
+    background-size: auto auto, 225px auto;
+}
+
+.edit-panel::after {
+    bottom: -21px;
+    height: 21px;
+    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.edit-panel.panel-open,
+.edit-panel:hover {
+    bottom: 10%;
+    margin-left: -405px;
+}
+
+/* View Panel - Third from left */
+.view-panel {
+    top: 10px;
+    left: 50%;
+    margin-left: -260px;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.view-panel::before,
+.view-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    display: block;
+    width: 225px;
+    content: '';
+}
+
+.view-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(hook1.svg) no-repeat center -20px,
+                url(layer-frame.svg) no-repeat center 328px;
+    background-size: auto auto, 225px auto;
+}
+
+.view-panel::after {
+    bottom: -23px;
+    height: 23px;
+    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.view-panel.panel-open,
+.view-panel:hover {
+    bottom: 10%;
+    margin-left: -215px;
+}
+
+/* Settings Panel - Fourth from left */
+.settings-panel {
+    top: 10px;
+    left: 50%;
+    margin-left: -70px;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.settings-panel::before,
+.settings-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    display: block;
+    width: 225px;
+    content: '';
+}
+
+.settings-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(hook2.svg) no-repeat center -17px,
+                url(layer-frame.svg) no-repeat center 330px;
+    background-size: auto auto, 225px auto;
+}
+
+.settings-panel::after {
+    bottom: -21px;
+    height: 21px;
+    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.settings-panel.panel-open,
+.settings-panel:hover {
+    bottom: 10%;
+    margin-left: -25px;
+}
+
+/* Back Panel - Fifth from left */
+.back-panel {
+    top: 10px;
+    left: 50%;
+    margin-left: 120px;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.back-panel::before,
+.back-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    display: block;
+    width: 225px;
+    content: '';
+}
+
+.back-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(hook1.svg) no-repeat center -20px,
+                url(layer-frame.svg) no-repeat center 328px;
+    background-size: auto auto, 225px auto;
+}
+
+.back-panel::after {
+    bottom: -23px;
+    height: 23px;
+    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.back-panel.panel-open,
+.back-panel:hover {
+    bottom: 10%;
+    margin-left: 165px;
+}
+
+/* Open state for editor panels */
+.editor-panel.panel-open,
+.editor-panel:hover {
+    height: auto;
+    color: #fff;
+    transform: rotateY(0) scale(1);
+}
+
+/* Content styling */
+.editor-panel h3,
+.editor-panel p {
+    padding: 8px 40px 0 40px;
+    transition: background-color 1s ease-out;
+}
+
+.editor-panel h3 {
+    color: #999;
+    font-size: 15px;
+    line-height: 15px;
+    padding-top: 10px;
+}
+
+.editor-panel:hover h3,
+.editor-panel.panel-open h3 {
+    color: #fff;
+}
+
+.editor-panel p {
+    font-size: 10px;
+}
+
+.editor-panel p:last-child {
+    padding-bottom: 10px;
+}
+
+/* Responsive scaling for viewports smaller than the design target */
+@media (max-width: 1366px) and (min-width: 1024px) {
+    /* Scale to 75% for medium screens */
+
+    header {
+        width: calc(450px * 0.75);
+        margin-left: calc(-190px * 0.75);
+    }
+
+    header::before,
+    header::after {
+        width: calc(450px * 0.75);
+    }
+
+    h1 {
+        font-size: calc(60px * 0.75);
+        padding: calc(40px * 0.75) calc(70px * 0.75) calc(10px * 0.75) calc(70px * 0.75);
+    }
+
+    h2 {
+        font-size: calc(16px * 0.75);
+        padding: calc(10px * 0.75) calc(70px * 0.75) calc(40px * 0.75) calc(70px * 0.75);
+    }
+}
+
+@media (max-width: 1023px) and (min-width: 800px) {
+    /* Scale to 55% for smaller screens */
+
+    header {
+        width: calc(450px * 0.55);
+        margin-left: calc(-190px * 0.55);
+    }
+
+    header::before,
+    header::after {
+        width: calc(450px * 0.55);
+    }
+
+    h1 {
+        font-size: calc(60px * 0.55);
+        padding: calc(40px * 0.55) calc(70px * 0.55) calc(10px * 0.55) calc(70px * 0.55);
+    }
+
+    h2 {
+        font-size: calc(16px * 0.55);
+        padding: calc(10px * 0.55) calc(70px * 0.55) calc(40px * 0.55) calc(70px * 0.55);
+    }
+}

@@ -1,11 +1,10 @@
 /**
- * Panel Manager - Handles tab hover and click-outside behavior
+ * Markdown Editor - Manages dynamic tab creation and content
  *
  * Behavior:
- * - Mouse over tab: Panel begins to lower
- * - Panel lowers completely and stays open
- * - Only one panel can be open at a time - opening a new panel closes the previous one
- * - Click outside panel: Panel closes and retracts to tab
+ * - Starts with a clean slate (no tabs)
+ * - Tabs will be created dynamically as needed
+ * - Same panel management system as main page
  */
 
 (function() {
@@ -14,14 +13,19 @@
     // Track which panel is currently open (only one at a time)
     let currentlyOpenPanel = null;
 
-    // Panel selectors
+    // Panel selectors for the five editor panels
     const panels = [
-        { element: null, selector: '.preamble', class: 'panel-open' },
-        { element: null, selector: '.summary', class: 'panel-open' }
+        { element: null, selector: '.files-panel', class: 'panel-open' },
+        { element: null, selector: '.edit-panel', class: 'panel-open' },
+        { element: null, selector: '.view-panel', class: 'panel-open' },
+        { element: null, selector: '.settings-panel', class: 'panel-open' },
+        { element: null, selector: '.back-panel', class: 'panel-open' }
     ];
 
     // Initialize when DOM is ready
     function init() {
+        console.log('Markdown Editor initialized');
+
         // Get panel elements
         panels.forEach(panel => {
             panel.element = document.querySelector(panel.selector);
@@ -48,45 +52,26 @@
         // Add click listener to document for click-outside detection
         document.addEventListener('click', handleClickOutside);
 
-        // Add click listeners to menu items
-        initMenuItems();
-    }
-
-    /**
-     * Initialize menu item click handlers
-     */
-    function initMenuItems() {
-        const menuItems = document.querySelectorAll('.menu-item');
-        menuItems.forEach(item => {
-            item.addEventListener('click', function(event) {
-                event.preventDefault();
+        // Add special handler for Back button
+        const backPanel = document.querySelector('.back-panel');
+        if (backPanel) {
+            backPanel.addEventListener('click', function(event) {
                 event.stopPropagation();
-
-                const action = this.getAttribute('data-action');
-                handleMenuAction(action);
+                window.location.href = 'index.html';
             });
-        });
-    }
-
-    /**
-     * Handle menu item actions
-     */
-    function handleMenuAction(action) {
-        switch(action) {
-            case 'create-markdown':
-                console.log('Create Markdown Document clicked');
-                openMarkdownEditor();
-                break;
-            default:
-                console.log('Unknown action:', action);
         }
     }
 
     /**
-     * Open the markdown editor in the same window
+     * Create a new panel/tab dynamically
+     * @param {Object} config - Configuration for the new panel
+     * @param {string} config.name - Display name for the tab
+     * @param {string} config.selector - CSS selector class
+     * @param {string} config.content - HTML content for the panel
      */
-    function openMarkdownEditor() {
-        window.location.href = 'markdown-editor.html';
+    function createPanel(config) {
+        // TODO: Implement dynamic panel creation
+        console.log('Creating panel:', config);
     }
 
     /**
@@ -137,4 +122,9 @@
     } else {
         init();
     }
+
+    // Expose createPanel for external use if needed
+    window.MarkdownEditor = {
+        createPanel: createPanel
+    };
 })();

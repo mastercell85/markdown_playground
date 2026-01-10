@@ -48,6 +48,9 @@
 
         // Setup File menu buttons
         setupFileMenuButtons();
+
+        // Setup Edit menu buttons
+        setupEditMenuButtons();
     }
 
     /**
@@ -154,6 +157,320 @@
                 reader.readAsText(file);
             });
         }
+    }
+
+    /**
+     * Setup Edit menu button handlers
+     */
+    function setupEditMenuButtons() {
+        // Undo button
+        const undoBtn = document.getElementById('undo-btn');
+        if (undoBtn) {
+            undoBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleUndo();
+            });
+        }
+
+        // Redo button
+        const redoBtn = document.getElementById('redo-btn');
+        if (redoBtn) {
+            redoBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleRedo();
+            });
+        }
+
+        // Cut button
+        const cutBtn = document.getElementById('cut-btn');
+        if (cutBtn) {
+            cutBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleCut();
+            });
+        }
+
+        // Copy button
+        const copyBtn = document.getElementById('copy-btn');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleCopy();
+            });
+        }
+
+        // Paste button
+        const pasteBtn = document.getElementById('paste-btn');
+        if (pasteBtn) {
+            pasteBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handlePaste();
+            });
+        }
+
+        // Select All button
+        const selectAllBtn = document.getElementById('select-all-btn');
+        if (selectAllBtn) {
+            selectAllBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleSelectAll();
+            });
+        }
+
+        // Find button
+        const findBtn = document.getElementById('find-btn');
+        if (findBtn) {
+            findBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleFind();
+            });
+        }
+
+        // Replace button
+        const replaceBtn = document.getElementById('replace-btn');
+        if (replaceBtn) {
+            replaceBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleReplace();
+            });
+        }
+    }
+
+    /**
+     * Handle Undo action
+     */
+    function handleUndo() {
+        const inputElement = document.getElementById('markdown-input');
+        if (!inputElement) return;
+
+        // Focus the textarea first to ensure the undo command works
+        inputElement.focus();
+
+        // Try the modern approach first
+        if (document.execCommand) {
+            document.execCommand('undo');
+        }
+    }
+
+    /**
+     * Handle Redo action
+     */
+    function handleRedo() {
+        const inputElement = document.getElementById('markdown-input');
+        if (!inputElement) return;
+
+        // Focus the textarea first to ensure the redo command works
+        inputElement.focus();
+
+        // Execute redo command
+        if (document.execCommand) {
+            document.execCommand('redo');
+        }
+    }
+
+    /**
+     * Handle Cut action
+     */
+    function handleCut() {
+        const inputElement = document.getElementById('markdown-input');
+        if (!inputElement) return;
+
+        // Focus the textarea first
+        inputElement.focus();
+
+        // Execute cut command
+        if (document.execCommand) {
+            document.execCommand('cut');
+        }
+    }
+
+    /**
+     * Handle Copy action
+     */
+    function handleCopy() {
+        const inputElement = document.getElementById('markdown-input');
+        if (!inputElement) return;
+
+        // Focus the textarea first
+        inputElement.focus();
+
+        // Execute copy command
+        if (document.execCommand) {
+            document.execCommand('copy');
+        }
+    }
+
+    /**
+     * Handle Paste action
+     */
+    async function handlePaste() {
+        const inputElement = document.getElementById('markdown-input');
+        if (!inputElement) return;
+
+        // Focus the textarea first
+        inputElement.focus();
+
+        // Try modern Clipboard API first
+        if (navigator.clipboard && navigator.clipboard.readText) {
+            try {
+                const text = await navigator.clipboard.readText();
+                const start = inputElement.selectionStart;
+                const end = inputElement.selectionEnd;
+                const currentValue = inputElement.value;
+
+                // Insert text at cursor position
+                inputElement.value = currentValue.substring(0, start) + text + currentValue.substring(end);
+
+                // Move cursor to end of pasted text
+                const newPosition = start + text.length;
+                inputElement.setSelectionRange(newPosition, newPosition);
+
+                // Trigger input event to update the preview
+                inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+            } catch (err) {
+                // If Clipboard API fails, try execCommand as fallback
+                console.warn('Clipboard API failed, trying execCommand:', err);
+                if (document.execCommand) {
+                    document.execCommand('paste');
+                }
+            }
+        } else {
+            // Fallback to execCommand for older browsers
+            if (document.execCommand) {
+                document.execCommand('paste');
+            }
+        }
+    }
+
+    /**
+     * Handle Select All action
+     */
+    function handleSelectAll() {
+        const inputElement = document.getElementById('markdown-input');
+        if (!inputElement) return;
+
+        // Focus the textarea first
+        inputElement.focus();
+
+        // Select all text
+        inputElement.select();
+    }
+
+    /**
+     * Handle Find action
+     */
+    function handleFind() {
+        const inputElement = document.getElementById('markdown-input');
+        if (!inputElement) return;
+
+        // Focus the textarea
+        inputElement.focus();
+
+        // Prompt user for search text
+        const searchText = prompt('Find:');
+        if (!searchText) return;
+
+        const content = inputElement.value;
+        const index = content.indexOf(searchText);
+
+        if (index !== -1) {
+            // Select the found text
+            inputElement.setSelectionRange(index, index + searchText.length);
+            inputElement.focus();
+        } else {
+            alert(`"${searchText}" not found.`);
+        }
+    }
+
+    /**
+     * Handle Replace action
+     */
+    function handleReplace() {
+        const inputElement = document.getElementById('markdown-input');
+        if (!inputElement) return;
+
+        // Focus the textarea
+        inputElement.focus();
+
+        // Prompt user for find and replace text
+        const findText = prompt('Find:');
+        if (!findText) return;
+
+        const replaceText = prompt('Replace with:');
+        if (replaceText === null) return; // User cancelled
+
+        let content = inputElement.value;
+        let currentIndex = 0;
+        let replacedCount = 0;
+
+        // Find all occurrences
+        const occurrences = [];
+        let index = content.indexOf(findText);
+        while (index !== -1) {
+            occurrences.push(index);
+            index = content.indexOf(findText, index + 1);
+        }
+
+        if (occurrences.length === 0) {
+            alert(`"${findText}" not found.`);
+            return;
+        }
+
+        // Ask user how they want to proceed
+        const choice = confirm(`Found ${occurrences.length} occurrence(s).\n\nClick OK to replace one by one, or Cancel to replace all at once.`);
+
+        if (!choice) {
+            // Replace all occurrences
+            const newContent = content.split(findText).join(replaceText);
+            inputElement.value = newContent;
+
+            // Trigger input event to update the preview
+            inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+
+            alert(`Replaced ${occurrences.length} occurrence(s).`);
+            return;
+        }
+
+        // Interactive replace - go through each occurrence
+        function replaceNext() {
+            if (currentIndex >= occurrences.length) {
+                alert(`Finished! Replaced ${replacedCount} of ${occurrences.length} occurrence(s).`);
+                return;
+            }
+
+            // Recalculate position based on previous replacements
+            const offset = replacedCount * (replaceText.length - findText.length);
+            const position = occurrences[currentIndex] + offset;
+
+            // Select the current occurrence
+            inputElement.setSelectionRange(position, position + findText.length);
+            inputElement.focus();
+
+            // Ask user if they want to replace this occurrence
+            const shouldReplace = confirm(`Replace this occurrence?\n\nOccurrence ${currentIndex + 1} of ${occurrences.length}\n\nClick OK to replace, Cancel to skip.`);
+
+            if (shouldReplace) {
+                // Replace this occurrence
+                content = inputElement.value;
+                inputElement.value = content.substring(0, position) + replaceText + content.substring(position + findText.length);
+
+                // Trigger input event to update the preview
+                inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+
+                replacedCount++;
+
+                // Select the replaced text
+                inputElement.setSelectionRange(position, position + replaceText.length);
+            }
+
+            currentIndex++;
+
+            // Continue to next occurrence
+            setTimeout(replaceNext, 10);
+        }
+
+        // Start the interactive replacement
+        replaceNext();
     }
 
     /**

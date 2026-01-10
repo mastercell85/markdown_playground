@@ -31,22 +31,30 @@
                      bottom var(--panel-transition-position),
                      margin var(--panel-transition-position) var(--panel-hover-delay),
                      left var(--panel-transition-position) var(--panel-hover-delay),
-                     right var(--panel-transition-position) var(--panel-hover-delay);
+                     right var(--panel-transition-position) var(--panel-hover-delay),
+                     height var(--panel-transition-position),
+                     clip-path var(--panel-transition-position);
     -o-transition: -o-transform var(--panel-transition-transform),
                    bottom var(--panel-transition-position),
                    margin var(--panel-transition-position) var(--panel-hover-delay),
                    left var(--panel-transition-position) var(--panel-hover-delay),
-                   right var(--panel-transition-position) var(--panel-hover-delay);
+                   right var(--panel-transition-position) var(--panel-hover-delay),
+                   height var(--panel-transition-position),
+                   clip-path var(--panel-transition-position);
     -webkit-transition: -webkit-transform var(--panel-transition-transform),
                         bottom var(--panel-transition-position),
                         margin var(--panel-transition-position) var(--panel-hover-delay),
                         left var(--panel-transition-position) var(--panel-hover-delay),
-                        right var(--panel-transition-position) var(--panel-hover-delay);
+                        right var(--panel-transition-position) var(--panel-hover-delay),
+                        height var(--panel-transition-position),
+                        clip-path var(--panel-transition-position);
     transition: transform var(--panel-transition-transform),
                 bottom var(--panel-transition-position),
                 margin var(--panel-transition-position) var(--panel-hover-delay),
                 left var(--panel-transition-position) var(--panel-hover-delay),
-                right var(--panel-transition-position) var(--panel-hover-delay);
+                right var(--panel-transition-position) var(--panel-hover-delay),
+                height var(--panel-transition-position),
+                clip-path var(--panel-transition-position);
 }
 
 /* Shared hook and frame styles */

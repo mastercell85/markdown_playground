@@ -41,6 +41,7 @@
     --article-right-position: 40px;
     --article-top-initial: -50%;
     --article-top-hover: 8vh;
+    --article-tab-height: 120px;
 
     /* Positioning */
     position: absolute;
@@ -53,7 +54,10 @@
              var(--article-padding-bottom)
              var(--article-padding-left);
     width: var(--article-width);
-    height: var(--article-height);
+
+    /* Tab mode - show only top portion when retracted */
+    height: var(--article-tab-height);
+    overflow: hidden;
 
     /* Visual */
     background: url(layer.svg) no-repeat left center;
@@ -74,27 +78,32 @@
                      left 1s ease-out,
                      right 1s ease-out,
                      top 1s 1s ease-out,
-                     margin-top 1s 1s ease-out;
+                     margin-top 1s 1s ease-out,
+                     height 1s ease-out;
     -o-transition: -o-transform 1s ease-out,
                    left 1s ease-out,
                    right 1s ease-out,
                    top 1s 1s ease-out,
-                   margin-top 1s 1s ease-out;
+                   margin-top 1s 1s ease-out,
+                   height 1s ease-out;
     -webkit-transition: -webkit-transform 1s ease-out,
                         left 1s ease-out,
                         right 1s ease-out,
                         top 1s 1s ease-out,
-                        margin-top 1s 1s ease-out;
+                        margin-top 1s 1s ease-out,
+                        height 1s ease-out;
     transition: transform 1s ease-out,
                 left 1s ease-out,
                 right 1s ease-out,
                 top 1s 1s ease-out,
-                margin-top 1s 1s ease-out;
+                margin-top 1s 1s ease-out,
+                height 1s ease-out;
 }
 
-/* Show panel on main hover */
+/* Show panel on main hover - expand from tab to full panel */
 .main:hover div[role="article"] {
     top: var(--article-top-hover);
+    height: var(--article-height);
 }
 
 /* Hook element for articles */

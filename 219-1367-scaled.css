@@ -11,7 +11,6 @@
 @import url("219-panel-header.css");
 @import url("219-panel-preamble.css");
 @import url("219-panel-summary.css");
-@import url("219-panel-benefits.css");
 
 /* Hide specific content panels */
 .explanation,
@@ -26,11 +25,6 @@ aside.sidebar,
 footer {
     display: none !important;
     visibility: hidden !important;
-}
-
-/* Override .main positioning from original to allow retract behavior */
-.main:hover div[role="article"] {
-    top: 8vh;
 }
 
 /* Add responsive scaling for viewports smaller than the design target */
@@ -50,6 +44,7 @@ footer {
     .preamble {
         width: calc(495px * 0.75);
         margin-left: calc(-580px * 0.75);
+        height: calc(70px * 0.75);
     }
 
     .preamble::before,
@@ -64,6 +59,7 @@ footer {
     .summary {
         width: calc(450px * 0.75);
         margin-right: calc(-500px * 0.75);
+        height: calc(70px * 0.75);
     }
 
     .summary::before,
@@ -73,15 +69,6 @@ footer {
 
     .summary:hover {
         margin-right: calc(-460px * 0.75);
-    }
-
-    .main div[role="article"] {
-        width: calc(460px * 0.75);
-        padding: calc(55px * 0.75) calc(70px * 0.75) calc(50px * 0.75) calc(70px * 0.75);
-    }
-
-    .main:hover div[role="article"] {
-        top: 10vh;
     }
 
     h1 {
@@ -111,6 +98,7 @@ footer {
     .preamble {
         width: calc(495px * 0.55);
         margin-left: calc(-580px * 0.55);
+        height: calc(70px * 0.55);
     }
 
     .preamble::before,
@@ -125,6 +113,7 @@ footer {
     .summary {
         width: calc(450px * 0.55);
         margin-right: calc(-500px * 0.55);
+        height: calc(70px * 0.55);
     }
 
     .summary::before,
@@ -134,15 +123,6 @@ footer {
 
     .summary:hover {
         margin-right: calc(-460px * 0.55);
-    }
-
-    .main div[role="article"] {
-        width: calc(460px * 0.55);
-        padding: calc(55px * 0.55) calc(70px * 0.55) calc(50px * 0.55) calc(70px * 0.55);
-    }
-
-    .main:hover div[role="article"] {
-        top: 8vh;
     }
 
     h1 {

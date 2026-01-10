@@ -19,6 +19,7 @@
     --preamble-hook: url(hook1.svg);
     --preamble-hook-offset: -40px;
     --preamble-frame-top-offset: 655px;
+    --preamble-tab-height: 70px;
 
     /* Positioning */
     position: absolute;
@@ -28,6 +29,10 @@
     margin: 0 0 0 var(--preamble-margin-left-initial);
     padding: 0;
     width: var(--preamble-width);
+
+    /* Tab mode - show only top portion when retracted */
+    height: var(--preamble-tab-height);
+    overflow: hidden;
 
     /* Visual */
     background: url(layer-middle.svg) repeat-y center top;
@@ -99,11 +104,13 @@
     background-size: var(--preamble-width) auto;
 }
 
-/* Hover state */
+/* Open state - expand from tab to full panel */
+.preamble.panel-open,
 .preamble:hover {
     bottom: var(--preamble-bottom-hover);
     left: 50%;
     margin: 0 0 0 var(--preamble-margin-left-hover);
+    height: auto;
     color: #fff;
     -moz-transform: rotateY(0) scale(1);
     -ms-transform: scale(1);

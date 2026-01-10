@@ -14,7 +14,8 @@ aside.sidebar,
 footer,
 .explanation,
 .participation,
-.requirements {
+.requirements,
+.benefits {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;

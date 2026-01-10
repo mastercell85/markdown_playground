@@ -19,6 +19,7 @@
     --summary-hook: url(hook2.svg);
     --summary-hook-offset: -34px;
     --summary-frame-top-offset: 659px;
+    --summary-tab-height: 70px;
 
     /* Positioning */
     position: absolute;
@@ -28,6 +29,10 @@
     margin: 0 var(--summary-margin-right-initial) 0 0;
     padding: 0;
     width: var(--summary-width);
+
+    /* Tab mode - show only top portion when retracted */
+    height: var(--summary-tab-height);
+    overflow: hidden;
 
     /* Visual */
     background: url(layer-middle.svg) repeat-y center top;
@@ -100,11 +105,13 @@
     background-size: var(--summary-width) auto;
 }
 
-/* Hover state */
+/* Open state - expand from tab to full panel */
+.summary.panel-open,
 .summary:hover {
     right: 50%;
     bottom: var(--summary-bottom-hover);
     margin: 0 var(--summary-margin-right-hover) 0 0;
+    height: auto;
     color: #fff;
     -moz-transform: rotateY(0) scale(1);
     -ms-transform: scale(1);

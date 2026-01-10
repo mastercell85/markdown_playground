@@ -75,12 +75,18 @@
         switch(action) {
             case 'create-markdown':
                 console.log('Create Markdown Document clicked');
-                // TODO: Implement markdown document creation
-                alert('Create Markdown Document feature - Coming soon!');
+                openMarkdownEditor();
                 break;
             default:
                 console.log('Unknown action:', action);
         }
+    }
+
+    /**
+     * Open the markdown editor in the same window
+     */
+    function openMarkdownEditor() {
+        window.location.href = 'markdown-editor.html';
     }
 
     /**

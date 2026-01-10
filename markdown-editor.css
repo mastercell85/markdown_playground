@@ -1,0 +1,808 @@
+/**
+* Markdown Editor CSS
+* Uses the same background and base styles as the main Zen Garden page
+*/
+
+/* Import the original 1367 CSS for base styles and animations */
+@import url("219-1367.css");
+
+/* Import panel base for consistent styling */
+@import url("219-panel-base.css");
+@import url("219-panel-header.css");
+@import url("219-panel-tabs.css");
+
+/* Hide all unnecessary content panels from the original design */
+.explanation,
+.participation,
+.requirements,
+.benefits,
+.sidebar,
+aside.sidebar,
+.sidebar .wrapper,
+.design-selection,
+.design-archives,
+.zen-resources,
+footer,
+.preamble,
+.summary {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Intro section needs to be positioned for absolute children */
+.intro {
+    position: relative;
+    z-index: 15; /* Higher than document tabs to allow editor panels to appear above */
+}
+
+/* Hide header completely on markdown editor page */
+header {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Main content area styling */
+.main.supporting {
+    position: relative;
+    z-index: 1;
+    width: 100% !important; /* Override base CSS width constraint */
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Editor panel base styling */
+.editor-panel {
+    position: fixed;
+    z-index: 5;
+    padding: 0;
+    width: 225px;
+    height: 35px;
+    overflow: visible;
+    background: url(layer-middle.svg) repeat-y center top;
+    background-size: 225px auto;
+    color: #999;
+    transition: transform 1s ease-out,
+                bottom 1s ease-out,
+                top 1s ease-out,
+                left 1s ease-out,
+                right 1s ease-out,
+                margin 1s 1s ease-out,
+                height 1s ease-out;
+}
+
+/* Tab label sizing for editor panels - scaled to half */
+.editor-panel .panel-tab-label {
+    height: 35px;
+    font-size: 12px;
+    padding: 0 20px;
+    line-height: 35px;
+    letter-spacing: 1px;
+}
+
+/* Files Panel - First from left */
+.files-panel {
+    top: 10px;
+    left: 50%;
+    margin-left: -640px;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.files-panel::before,
+.files-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    display: block;
+    width: 225px;
+    content: '';
+}
+
+.files-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(hook1.svg) no-repeat center -20px,
+                url(layer-frame.svg) no-repeat center 328px;
+    background-size: auto auto, 225px auto;
+}
+
+.files-panel::after {
+    bottom: -23px;
+    height: 23px;
+    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.files-panel.panel-open,
+.files-panel:hover {
+    margin-left: -595px;
+}
+
+/* Edit Panel - Second from left */
+.edit-panel {
+    top: 10px;
+    left: 50%;
+    margin-left: -450px;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.edit-panel::before,
+.edit-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    display: block;
+    width: 225px;
+    content: '';
+}
+
+.edit-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(hook2.svg) no-repeat center -17px,
+                url(layer-frame.svg) no-repeat center 330px;
+    background-size: auto auto, 225px auto;
+}
+
+.edit-panel::after {
+    bottom: -21px;
+    height: 21px;
+    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.edit-panel.panel-open,
+.edit-panel:hover {
+    margin-left: -405px;
+}
+
+/* View Panel - Third from left */
+.view-panel {
+    top: 10px;
+    left: 50%;
+    margin-left: -260px;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.view-panel::before,
+.view-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    display: block;
+    width: 225px;
+    content: '';
+}
+
+.view-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(hook1.svg) no-repeat center -20px,
+                url(layer-frame.svg) no-repeat center 328px;
+    background-size: auto auto, 225px auto;
+}
+
+.view-panel::after {
+    bottom: -23px;
+    height: 23px;
+    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.view-panel.panel-open,
+.view-panel:hover {
+    margin-left: -215px;
+}
+
+/* Settings Panel - Fourth from left */
+.settings-panel {
+    top: 10px;
+    left: 50%;
+    margin-left: -70px;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.settings-panel::before,
+.settings-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    display: block;
+    width: 225px;
+    content: '';
+}
+
+.settings-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(hook2.svg) no-repeat center -17px,
+                url(layer-frame.svg) no-repeat center 330px;
+    background-size: auto auto, 225px auto;
+}
+
+.settings-panel::after {
+    bottom: -21px;
+    height: 21px;
+    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.settings-panel.panel-open,
+.settings-panel:hover {
+    margin-left: -25px;
+}
+
+/* Back Panel - Fifth from left */
+.back-panel {
+    top: 10px;
+    left: 50%;
+    margin-left: 120px;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.back-panel::before,
+.back-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    display: block;
+    width: 225px;
+    content: '';
+}
+
+.back-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(hook1.svg) no-repeat center -20px,
+                url(layer-frame.svg) no-repeat center 328px;
+    background-size: auto auto, 225px auto;
+}
+
+.back-panel::after {
+    bottom: -23px;
+    height: 23px;
+    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.back-panel.panel-open,
+.back-panel:hover {
+    margin-left: 165px;
+}
+
+/* Open state for editor panels */
+.editor-panel.panel-open,
+.editor-panel:hover {
+    height: auto;
+    max-height: 80vh; /* Limit panel height to 80% of viewport */
+    color: #fff;
+    transform: rotateY(0) scale(1);
+}
+
+/* Content styling */
+.editor-panel h3,
+.editor-panel p {
+    padding: 8px 40px 0 40px;
+    transition: background-color 1s ease-out;
+}
+
+/* Panel buttons */
+.panel-button {
+    display: block;
+    width: calc(100% - 80px);
+    margin: 10px 40px;
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.panel-button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.panel-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.editor-panel h3 {
+    color: #999;
+    font-size: 15px;
+    line-height: 15px;
+    padding-top: 10px;
+}
+
+.editor-panel:hover h3,
+.editor-panel.panel-open h3 {
+    color: #fff;
+}
+
+.editor-panel p {
+    font-size: 10px;
+}
+
+.editor-panel p:last-child {
+    padding-bottom: 10px;
+}
+
+/* Document Tabs Bar */
+.document-tabs-container {
+    display: flex;
+    position: fixed;
+    top: 70px; /* Position below panel tabs with more clearance */
+    left: 0;
+    right: 0;
+    height: 35px; /* Compact height */
+    z-index: 4;
+    align-items: center;
+    padding: 0 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.document-tabs {
+    display: flex;
+    gap: 5px;
+    height: 100%;
+    align-items: center;
+}
+
+.document-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #999;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 11px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.document-tab:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.document-tab.active {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.document-tab-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
+    font-size: 14px;
+    line-height: 1;
+    transition: background 0.2s ease;
+}
+
+.document-tab-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.document-tab-new {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #999;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.document-tab-new:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* Editor Container - Split-screen layout */
+.editor-container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 105px; /* Panel tabs (70px) + Document tabs (35px) = 105px */
+    gap: 0;
+    width: 100%;
+    height: calc(100vh - 125px); /* Full viewport minus top offset and extra padding for scrollbars */
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.editor-container[data-layout="split"] {
+    flex-direction: row;
+}
+
+.editor-container[data-layout="full"] .editor-preview {
+    display: none;
+}
+
+/* Editor Sections */
+.editor-section {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: rgba(50, 50, 50, 0.8);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.editor-section-content {
+    flex: 1;
+    padding: 20px;
+    overflow: auto;
+}
+
+/* Input Area */
+.editor-input {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Resizable Divider */
+.editor-divider {
+    width: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: col-resize;
+    position: relative;
+    transition: background 0.2s ease;
+}
+
+.editor-divider:hover,
+.editor-divider.dragging {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.editor-divider::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -2px;
+    right: -2px;
+}
+
+/* Preview Area */
+.editor-preview {
+    flex: 1;
+    min-width: 200px;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.markdown-textarea {
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: none;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+    outline: none;
+}
+
+.markdown-textarea::placeholder {
+    color: #666;
+}
+
+.markdown-output {
+    width: 100%;
+    min-height: 100%;
+    color: #fff;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Markdown rendered styles */
+.markdown-output h1 {
+    font-size: 32px;
+    margin: 20px 0 10px 0;
+    color: #fff;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
+}
+
+.markdown-output h2 {
+    font-size: 24px;
+    margin: 18px 0 8px 0;
+    color: #fff;
+}
+
+.markdown-output h3 {
+    font-size: 20px;
+    margin: 16px 0 6px 0;
+    color: #fff;
+}
+
+.markdown-output p {
+    margin: 10px 0;
+}
+
+.markdown-output strong {
+    font-weight: bold;
+    color: #fff;
+}
+
+.markdown-output em {
+    font-style: italic;
+}
+
+.markdown-output code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 13px;
+}
+
+.markdown-output pre {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+.markdown-output pre code {
+    background: none;
+    padding: 0;
+}
+
+.markdown-output ul, .markdown-output ol {
+    margin: 10px 0;
+    padding-left: 30px;
+}
+
+.markdown-output li {
+    margin: 5px 0;
+}
+
+.markdown-output a {
+    color: #66b3ff;
+    text-decoration: none;
+}
+
+.markdown-output a:hover {
+    text-decoration: underline;
+}
+
+.markdown-output blockquote {
+    border-left: 4px solid rgba(255, 255, 255, 0.3);
+    padding-left: 15px;
+    margin: 10px 0;
+    color: #ccc;
+    font-style: italic;
+}
+
+/* Responsive scaling for viewports smaller than the design target */
+@media (max-width: 1366px) and (min-width: 1024px) {
+    /* Scale to 75% for medium laptop screens */
+
+    .editor-panel {
+        width: calc(225px * 0.75);
+        height: calc(35px * 0.75);
+    }
+
+    .editor-panel .panel-tab-label {
+        height: calc(35px * 0.75);
+        font-size: calc(12px * 0.75);
+        padding: 0 calc(20px * 0.75);
+        line-height: calc(35px * 0.75);
+    }
+
+    .editor-panel::before,
+    .editor-panel::after {
+        width: calc(225px * 0.75);
+    }
+
+    .editor-panel::before {
+        top: calc(-350px * 0.75);
+        height: calc(350px * 0.75);
+        background-size: auto auto, calc(225px * 0.75) auto;
+    }
+
+    /* Files Panel */
+    .files-panel {
+        margin-left: calc(-640px * 0.75);
+    }
+
+    .files-panel.panel-open,
+    .files-panel:hover {
+        margin-left: calc(-595px * 0.75);
+    }
+
+    /* Edit Panel */
+    .edit-panel {
+        margin-left: calc(-450px * 0.75);
+    }
+
+    .edit-panel.panel-open,
+    .edit-panel:hover {
+        margin-left: calc(-405px * 0.75);
+    }
+
+    /* View Panel */
+    .view-panel {
+        margin-left: calc(-260px * 0.75);
+    }
+
+    .view-panel.panel-open,
+    .view-panel:hover {
+        margin-left: calc(-215px * 0.75);
+    }
+
+    /* Settings Panel */
+    .settings-panel {
+        margin-left: calc(-70px * 0.75);
+    }
+
+    .settings-panel.panel-open,
+    .settings-panel:hover {
+        margin-left: calc(-25px * 0.75);
+    }
+
+    /* Back Panel */
+    .back-panel {
+        margin-left: calc(120px * 0.75);
+    }
+
+    .back-panel.panel-open,
+    .back-panel:hover {
+        margin-left: calc(165px * 0.75);
+    }
+
+    .editor-panel h3 {
+        font-size: calc(15px * 0.75);
+        padding-top: calc(10px * 0.75);
+    }
+
+    .editor-panel p {
+        font-size: calc(10px * 0.75);
+        padding: calc(8px * 0.75) calc(40px * 0.75) 0 calc(40px * 0.75);
+    }
+
+    .panel-button {
+        width: calc(100% - calc(80px * 0.75));
+        margin: calc(10px * 0.75) calc(40px * 0.75);
+        padding: calc(10px * 0.75) calc(15px * 0.75);
+        font-size: calc(12px * 0.75);
+    }
+
+    /* Scale panel content container and max heights */
+    .panel-content {
+        max-height: calc((80vh - 100px) * 0.75);
+    }
+
+    .editor-panel.panel-open,
+    .editor-panel:hover {
+        max-height: calc(80vh * 0.75);
+    }
+}
+
+@media (max-width: 1023px) and (min-width: 800px) {
+    /* Scale to 55% for smaller laptop screens */
+
+    .editor-panel {
+        width: calc(225px * 0.55);
+        height: calc(35px * 0.55);
+    }
+
+    .editor-panel .panel-tab-label {
+        height: calc(35px * 0.55);
+        font-size: calc(12px * 0.55);
+        padding: 0 calc(20px * 0.55);
+        line-height: calc(35px * 0.55);
+    }
+
+    .editor-panel::before,
+    .editor-panel::after {
+        width: calc(225px * 0.55);
+    }
+
+    .editor-panel::before {
+        top: calc(-350px * 0.55);
+        height: calc(350px * 0.55);
+        background-size: auto auto, calc(225px * 0.55) auto;
+    }
+
+    /* Files Panel */
+    .files-panel {
+        margin-left: calc(-640px * 0.55);
+    }
+
+    .files-panel.panel-open,
+    .files-panel:hover {
+        margin-left: calc(-595px * 0.55);
+    }
+
+    /* Edit Panel */
+    .edit-panel {
+        margin-left: calc(-450px * 0.55);
+    }
+
+    .edit-panel.panel-open,
+    .edit-panel:hover {
+        margin-left: calc(-405px * 0.55);
+    }
+
+    /* View Panel */
+    .view-panel {
+        margin-left: calc(-260px * 0.55);
+    }
+
+    .view-panel.panel-open,
+    .view-panel:hover {
+        margin-left: calc(-215px * 0.55);
+    }
+
+    /* Settings Panel */
+    .settings-panel {
+        margin-left: calc(-70px * 0.55);
+    }
+
+    .settings-panel.panel-open,
+    .settings-panel:hover {
+        margin-left: calc(-25px * 0.55);
+    }
+
+    /* Back Panel */
+    .back-panel {
+        margin-left: calc(120px * 0.55);
+    }
+
+    .back-panel.panel-open,
+    .back-panel:hover {
+        margin-left: calc(165px * 0.55);
+    }
+
+    .editor-panel h3 {
+        font-size: calc(15px * 0.55);
+        padding-top: calc(10px * 0.55);
+    }
+
+    .editor-panel p {
+        font-size: calc(10px * 0.55);
+        padding: calc(8px * 0.55) calc(40px * 0.55) 0 calc(40px * 0.55);
+    }
+
+    .panel-button {
+        width: calc(100% - calc(80px * 0.55));
+        margin: calc(10px * 0.55) calc(40px * 0.55);
+        padding: calc(10px * 0.55) calc(15px * 0.55);
+        font-size: calc(12px * 0.55);
+    }
+
+    /* Scale panel content container and max heights */
+    .panel-content {
+        max-height: calc((80vh - 100px) * 0.55);
+    }
+
+    .editor-panel.panel-open,
+    .editor-panel:hover {
+        max-height: calc(80vh * 0.55);
+    }
+}

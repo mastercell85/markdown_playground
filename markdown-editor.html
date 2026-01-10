@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Markdown Editor - CSS Zen Garden</title>
+
+	<link rel="stylesheet" media="screen" href="markdown-editor.css">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="Dave Shea">
+	<meta name="description" content="Markdown document editor with CSS Zen Garden styling.">
+	<meta name="robots" content="all">
+
+	<script src="https://use.typekit.net/fzq7emy.js"></script>
+	<script>try{Typekit.load();}catch(e){}</script>
+</head>
+
+<body id="css-zen-garden">
+<div class="page-wrapper">
+
+	<section class="intro" id="zen-intro">
+		<header role="banner">
+			<h1>Markdown Editor</h1>
+			<h2>Create Your Document</h2>
+		</header>
+
+		<!-- Files Tab -->
+		<div class="editor-panel files-panel" id="files-panel" role="article">
+			<div class="panel-tab-label">Files</div>
+			<div class="panel-content">
+				<h3>Files</h3>
+				<p>File management coming soon...</p>
+			</div>
+		</div>
+
+		<!-- Edit Tab -->
+		<div class="editor-panel edit-panel" id="edit-panel" role="article">
+			<div class="panel-tab-label">Edit</div>
+			<div class="panel-content">
+				<h3>Edit</h3>
+				<p>Edit options coming soon...</p>
+			</div>
+		</div>
+
+		<!-- View Tab -->
+		<div class="editor-panel view-panel" id="view-panel" role="article">
+			<div class="panel-tab-label">View</div>
+			<div class="panel-content">
+				<h3>View Options</h3>
+				<button id="open-external-preview" class="panel-button">
+					Open Preview in New Window
+				</button>
+				<button id="close-external-preview" class="panel-button" disabled>
+					Close External Window
+				</button>
+			</div>
+		</div>
+
+		<!-- Settings Tab -->
+		<div class="editor-panel settings-panel" id="settings-panel" role="article">
+			<div class="panel-tab-label">Settings</div>
+			<div class="panel-content">
+				<h3>Settings</h3>
+				<p>Settings coming soon...</p>
+			</div>
+		</div>
+
+		<!-- Back Button -->
+		<div class="editor-panel back-panel" id="back-panel" role="article">
+			<div class="panel-tab-label">Back</div>
+			<div class="panel-content">
+				<h3>Go Back</h3>
+				<button id="back-to-home" class="panel-button">
+					Return to Main Page
+				</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- Document Tabs Bar -->
+	<div class="document-tabs-container">
+		<div class="document-tabs" id="document-tabs">
+			<!-- Tabs will be added dynamically -->
+			<div class="document-tab active" data-doc-id="untitled-1">
+				<span class="document-tab-name">Untitled-1</span>
+				<span class="document-tab-close">×</span>
+			</div>
+		</div>
+		<button class="document-tab-new" id="new-document-btn" title="New Document">+</button>
+	</div>
+
+	<div class="main supporting" id="zen-supporting" role="main">
+		<!-- Split-screen markdown editor -->
+		<div class="editor-container" data-layout="split">
+			<!-- Input section -->
+			<section class="editor-section editor-input">
+				<div class="editor-section-content">
+					<textarea
+						id="markdown-input"
+						class="markdown-textarea"
+						placeholder="Start typing your markdown here..."
+						aria-label="Markdown input"
+					></textarea>
+				</div>
+			</section>
+
+			<!-- Resizable divider -->
+			<div class="editor-divider" id="editor-divider"></div>
+
+			<!-- Preview section -->
+			<section class="editor-section editor-preview">
+				<div class="editor-section-content">
+					<div
+						id="markdown-preview"
+						class="markdown-output"
+						aria-label="Rendered markdown preview"
+						aria-live="polite"
+					></div>
+				</div>
+			</section>
+		</div>
+	</div>
+
+</div>
+
+<div class="extra1" role="presentation"></div><div class="extra2" role="presentation"></div><div class="extra3" role="presentation"></div>
+<div class="extra4" role="presentation"></div><div class="extra5" role="presentation"></div><div class="extra6" role="presentation"></div>
+
+<script src="markdown-editor.js"></script>
+</body>
+</html>

@@ -32,117 +32,219 @@ footer {
 /* Add responsive scaling for viewports smaller than the design target */
 @media (max-width: 1366px) and (min-width: 1024px) {
     /* Scale to 75% for medium screens */
+    :root {
+        --responsive-scale: 0.75;
+    }
 
     header {
-        width: calc(450px * 0.75);
-        margin-left: calc(-190px * 0.75);
+        width: calc(450px * var(--responsive-scale));
+        margin-left: calc(-190px * var(--responsive-scale));
     }
 
     header::before,
     header::after {
-        width: calc(450px * 0.75);
+        width: calc(450px * var(--responsive-scale));
     }
 
     .preamble {
-        width: calc(495px * 0.75);
-        margin-left: calc(-580px * 0.75);
-        height: calc(70px * 0.75);
+        width: calc(495px * var(--responsive-scale));
+        margin-left: calc(-580px * var(--responsive-scale));
+        height: calc(70px * var(--responsive-scale));
     }
 
     .preamble::before,
     .preamble::after {
-        width: calc(495px * 0.75);
+        width: calc(495px * var(--responsive-scale));
     }
 
     .preamble:hover {
-        margin-left: calc(-490px * 0.75);
+        margin-left: calc(-490px * var(--responsive-scale));
     }
 
     .summary {
-        width: calc(450px * 0.75);
-        margin-right: calc(-500px * 0.75);
-        height: calc(70px * 0.75);
+        width: calc(450px * var(--responsive-scale));
+        margin-right: calc(-500px * var(--responsive-scale));
+        height: calc(70px * var(--responsive-scale));
     }
 
     .summary::before,
     .summary::after {
-        width: calc(450px * 0.75);
+        width: calc(450px * var(--responsive-scale));
     }
 
     .summary:hover {
-        margin-right: calc(-460px * 0.75);
+        margin-right: calc(-460px * var(--responsive-scale));
     }
 
     h1 {
-        font-size: calc(60px * 0.75);
-        padding: calc(40px * 0.75) calc(70px * 0.75) calc(10px * 0.75) calc(70px * 0.75);
+        font-size: calc(60px * var(--responsive-scale));
+        padding: calc(40px * var(--responsive-scale)) calc(70px * var(--responsive-scale)) calc(10px * var(--responsive-scale)) calc(70px * var(--responsive-scale));
     }
 
     h2 {
-        font-size: calc(16px * 0.75);
-        padding: calc(10px * 0.75) calc(70px * 0.75) calc(40px * 0.75) calc(70px * 0.75);
+        font-size: calc(16px * var(--responsive-scale));
+        padding: calc(10px * var(--responsive-scale)) calc(70px * var(--responsive-scale)) calc(40px * var(--responsive-scale)) calc(70px * var(--responsive-scale));
+    }
+
+    /* Panel content text scaling */
+    .intro h3 {
+        font-size: calc(30px * var(--responsive-scale));
+        padding: calc(15px * var(--responsive-scale)) calc(80px * var(--responsive-scale)) 0 calc(80px * var(--responsive-scale));
+    }
+
+    .intro p {
+        font-size: calc(20px * var(--responsive-scale));
+        padding: calc(15px * var(--responsive-scale)) calc(80px * var(--responsive-scale)) 0 calc(80px * var(--responsive-scale));
+    }
+
+    .intro .preamble h3 {
+        padding-top: calc(20px * var(--responsive-scale));
+    }
+
+    .intro .preamble p:last-child {
+        padding-bottom: calc(20px * var(--responsive-scale));
+    }
+
+    .intro .summary p:first-child {
+        padding-top: calc(35px * var(--responsive-scale));
+    }
+
+    .intro .summary p:last-child {
+        padding: calc(10px * var(--responsive-scale)) calc(80px * var(--responsive-scale)) calc(35px * var(--responsive-scale)) calc(80px * var(--responsive-scale));
+    }
+
+    /* Panel tab label text scaling */
+    .panel-tab-label {
+        height: calc(70px * var(--responsive-scale));
+        font-size: calc(24px * var(--responsive-scale));
+        padding: 0 calc(40px * var(--responsive-scale));
+        letter-spacing: calc(2px * var(--responsive-scale));
+    }
+
+    /* Scale panel content container */
+    .panel-content {
+        max-height: calc((80vh - 100px) * var(--responsive-scale));
+    }
+
+    /* Scale panel max heights */
+    .preamble.panel-open,
+    .preamble:hover,
+    .summary.panel-open,
+    .summary:hover {
+        max-height: calc(80vh * var(--responsive-scale));
     }
 }
 
 @media (max-width: 1023px) and (min-width: 800px) {
     /* Scale to 55% for smaller screens */
+    :root {
+        --responsive-scale: 0.55;
+    }
 
     header {
-        width: calc(450px * 0.55);
-        margin-left: calc(-190px * 0.55);
+        width: calc(450px * var(--responsive-scale));
+        margin-left: calc(-190px * var(--responsive-scale));
     }
 
     header::before,
     header::after {
-        width: calc(450px * 0.55);
+        width: calc(450px * var(--responsive-scale));
     }
 
     .preamble {
-        width: calc(495px * 0.55);
-        margin-left: calc(-580px * 0.55);
-        height: calc(70px * 0.55);
+        width: calc(495px * var(--responsive-scale));
+        margin-left: calc(-580px * var(--responsive-scale));
+        height: calc(70px * var(--responsive-scale));
     }
 
     .preamble::before,
     .preamble::after {
-        width: calc(495px * 0.55);
+        width: calc(495px * var(--responsive-scale));
     }
 
     .preamble:hover {
-        margin-left: calc(-490px * 0.55);
+        margin-left: calc(-490px * var(--responsive-scale));
     }
 
     .summary {
-        width: calc(450px * 0.55);
-        margin-right: calc(-500px * 0.55);
-        height: calc(70px * 0.55);
+        width: calc(450px * var(--responsive-scale));
+        margin-right: calc(-500px * var(--responsive-scale));
+        height: calc(70px * var(--responsive-scale));
     }
 
     .summary::before,
     .summary::after {
-        width: calc(450px * 0.55);
+        width: calc(450px * var(--responsive-scale));
     }
 
     .summary:hover {
-        margin-right: calc(-460px * 0.55);
+        margin-right: calc(-460px * var(--responsive-scale));
     }
 
     h1 {
-        font-size: calc(60px * 0.55);
-        padding: calc(40px * 0.55) calc(70px * 0.55) calc(10px * 0.55) calc(70px * 0.55);
+        font-size: calc(60px * var(--responsive-scale));
+        padding: calc(40px * var(--responsive-scale)) calc(70px * var(--responsive-scale)) calc(10px * var(--responsive-scale)) calc(70px * var(--responsive-scale));
     }
 
     h2 {
-        font-size: calc(16px * 0.55);
-        padding: calc(10px * 0.55) calc(70px * 0.55) calc(40px * 0.55) calc(70px * 0.55);
+        font-size: calc(16px * var(--responsive-scale));
+        padding: calc(10px * var(--responsive-scale)) calc(70px * var(--responsive-scale)) calc(40px * var(--responsive-scale)) calc(70px * var(--responsive-scale));
     }
 
+    /* Panel content text scaling */
+    .intro h3 {
+        font-size: calc(30px * var(--responsive-scale));
+        padding: calc(15px * var(--responsive-scale)) calc(80px * var(--responsive-scale)) 0 calc(80px * var(--responsive-scale));
+    }
+
+    .intro p {
+        font-size: calc(20px * var(--responsive-scale));
+        padding: calc(15px * var(--responsive-scale)) calc(80px * var(--responsive-scale)) 0 calc(80px * var(--responsive-scale));
+    }
+
+    .intro .preamble h3 {
+        padding-top: calc(20px * var(--responsive-scale));
+    }
+
+    .intro .preamble p:last-child {
+        padding-bottom: calc(20px * var(--responsive-scale));
+    }
+
+    .intro .summary p:first-child {
+        padding-top: calc(35px * var(--responsive-scale));
+    }
+
+    .intro .summary p:last-child {
+        padding: calc(10px * var(--responsive-scale)) calc(80px * var(--responsive-scale)) calc(35px * var(--responsive-scale)) calc(80px * var(--responsive-scale));
+    }
+
+    /* Panel tab label text scaling */
+    .panel-tab-label {
+        height: calc(70px * var(--responsive-scale));
+        font-size: calc(24px * var(--responsive-scale));
+        padding: 0 calc(40px * var(--responsive-scale));
+        letter-spacing: calc(2px * var(--responsive-scale));
+    }
+
+    /* Scale panel content container */
+    .panel-content {
+        max-height: calc((80vh - 100px) * var(--responsive-scale));
+    }
+
+    /* Scale panel max heights */
+    .preamble.panel-open,
+    .preamble:hover,
+    .summary.panel-open,
+    .summary:hover {
+        max-height: calc(80vh * var(--responsive-scale));
+    }
+
+    /* Legacy rules for backward compatibility */
     .main div[role="article"] p {
-        width: calc(460px * 0.55);
-        font-size: calc(20px * 0.55);
+        width: calc(460px * var(--responsive-scale));
     }
 
     .main div[role="article"] h3 {
-        font-size: calc(36px * 0.55);
+        font-size: calc(36px * var(--responsive-scale));
     }
 }

@@ -111,3 +111,35 @@
     -webkit-transform: rotateY(0) scale(1);
     transform: rotateY(0) scale(1);
 }
+
+/* Universal panel content container - applies to ALL panels */
+.panel-content {
+    max-height: calc(80vh - 200px); /* Limit to prevent overflow, accounting for hooks/frames */
+    overflow-y: auto; /* Enable vertical scrolling when content overflows */
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    min-height: min-content; /* Ensure content is always visible */
+}
+
+/* Custom scrollbar styling for all panel content */
+.panel-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.panel-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.panel-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.panel-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Firefox scrollbar styling */
+.panel-content {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.2);
+}

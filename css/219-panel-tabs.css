@@ -59,23 +59,23 @@ body.typora-mode .panel-tab-label::after {
 
 /* Different colors for each panel - Typora mode only */
 body.typora-mode .files-panel .panel-tab-label::before {
-    background: rgb(255, 165, 0); /* Orange */
+    background: rgb(255, 165, 0);
 }
 
 body.typora-mode .edit-panel .panel-tab-label::before {
-    background: rgb(255, 165, 0); /* Orange */
+    background: rgb(255, 165, 0);
 }
 
 body.typora-mode .view-panel .panel-tab-label::before {
-    background: rgb(255, 165, 0); /* Orange */
+    background: rgb(255, 165, 0);
 }
 
 body.typora-mode .settings-panel .panel-tab-label::before {
-    background: rgb(255, 165, 0); /* Orange */
+    background: rgb(255, 165, 0);
 }
 
 body.typora-mode .back-panel .panel-tab-label::before {
-    background: rgb(255, 165, 0); /* Orange */
+    background: rgb(255, 165, 0);
 }
 
 body.typora-mode .panel-tab-label:hover {

@@ -226,6 +226,9 @@ await themeLoader.loadCustomCSSFile(file);
 // Load custom CSS file as protected (won't be saved to localStorage)
 await themeLoader.loadCustomCSSFile(file, { isProtected: true });
 
+// Load custom CSS file with wire decorations disabled
+await themeLoader.loadCustomCSSFile(file, { disableWireDecorations: true });
+
 // Get current theme
 const current = themeLoader.getCurrentTheme();
 
@@ -245,6 +248,7 @@ themeLoader.deleteCustomTheme('custom-123456');
     url: 'path/to/theme.css' | null,
     content: 'css content...' // Only for custom themes
     isProtected: true | false // Optional, prevents deletion and localStorage saving
+    disableWireDecorations: true | false // Optional, disables LCARS-style wire decorations for typora themes
 }
 ```
 
@@ -292,6 +296,26 @@ To use Typora themes:
 3. The system auto-detects it as type `typora`
 
 **Note**: Typora themes may need adaptation since they target different HTML structure. You may need to modify the CSS to work with this editor.
+
+### Wire Decorations for Typora Themes
+
+Typora themes can optionally use LCARS-style wire decorations on panel tabs (FILE, EDIT, VIEW, etc.). These are decorative rectangles that appear before and after the tab text.
+
+**Auto-Detection**:
+- Themes with "cyberpunk", "modern", or "minimal" in the filename automatically disable wire decorations
+- LCARS theme keeps wire decorations enabled (they match the LCARS aesthetic)
+- Other Typora themes use wire decorations by default
+
+**Manual Control**:
+```javascript
+// Explicitly disable wire decorations
+await themeLoader.loadCustomCSSFile(file, { disableWireDecorations: true });
+
+// Explicitly enable wire decorations
+await themeLoader.loadCustomCSSFile(file, { disableWireDecorations: false });
+```
+
+When wire decorations are disabled, the `typora-mode` class is removed from `<body>`, which prevents the CSS rules in `css/219-panel-tabs.css` from applying.
 
 ## CSS Zen Garden Theme Support
 

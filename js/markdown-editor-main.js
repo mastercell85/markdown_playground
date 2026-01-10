@@ -735,16 +735,20 @@
 
             // Click to select theme
             themeItem.addEventListener('click', async () => {
-                // Special handling for LCARS theme - load it like a custom CSS file
-                if (themeId === 'lcars') {
+                // Special handling for protected Typora themes - load them like custom CSS files
+                if (theme.isProtected && theme.type === 'typora') {
                     try {
-                        const response = await fetch('themes/lcars-theme.css');
+                        const response = await fetch(theme.url);
                         const cssText = await response.text();
                         const blob = new Blob([cssText], { type: 'text/css' });
-                        const file = new File([blob], 'lcars-theme.css', { type: 'text/css' });
-                        await themeLoader.loadCustomCSSFile(file, { isProtected: true });
+                        const filename = theme.url.split('/').pop();
+                        const file = new File([blob], filename, { type: 'text/css' });
+                        await themeLoader.loadCustomCSSFile(file, {
+                            isProtected: true,
+                            disableWireDecorations: theme.disableWireDecorations
+                        });
                     } catch (error) {
-                        console.error('Failed to load LCARS theme:', error);
+                        console.error(`Failed to load ${theme.name} theme:`, error);
                     }
                 } else {
                     themeLoader.loadThemeById(themeId);

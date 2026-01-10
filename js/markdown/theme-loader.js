@@ -30,6 +30,13 @@ class ThemeLoader {
                 type: 'builtin',
                 url: null // No external CSS, uses base styles
             },
+            'cyberpunk': {
+                name: 'Cyberpunk',
+                type: 'typora',
+                url: 'themes/cyberpunk.css',
+                isProtected: true,
+                disableWireDecorations: true
+            },
             'lcars': {
                 name: 'LCARS',
                 type: 'typora',
@@ -114,7 +121,9 @@ class ThemeLoader {
             if (theme.url) {
                 this.themeLink = document.createElement('link');
                 this.themeLink.rel = 'stylesheet';
-                this.themeLink.href = theme.url;
+                // Add cache-busting parameter for blob URLs to force reload
+                const cacheBuster = theme.url.includes('blob:') ? '' : `?v=${Date.now()}`;
+                this.themeLink.href = theme.url + cacheBuster;
                 this.themeLink.id = 'dynamic-theme';
                 document.head.appendChild(this.themeLink);
 
@@ -125,8 +134,14 @@ class ThemeLoader {
             }
 
             // Add typora-mode class to body for special styling
-            document.body.classList.add('typora-mode');
-            console.log('Added typora-mode class to body. Body classes:', document.body.className);
+            // But check if theme explicitly disables wire decorations
+            if (theme.disableWireDecorations) {
+                document.body.classList.remove('typora-mode');
+                console.log('Wire decorations disabled for this theme');
+            } else {
+                document.body.classList.add('typora-mode');
+                console.log('Added typora-mode class to body. Body classes:', document.body.className);
+            }
 
         } else {
             console.log('Non-Typora theme, loading normally (type: ' + theme.type + ')');
@@ -181,6 +196,7 @@ class ThemeLoader {
      * @param {File} file - CSS file from file input
      * @param {Object} options - Optional configuration
      * @param {boolean} options.isProtected - If true, theme won't be saved to custom themes
+     * @param {boolean} options.disableWireDecorations - If true, removes typora-mode class to hide wire decorations
      */
     async loadCustomCSSFile(file, options = {}) {
         if (!file || !file.name.endsWith('.css')) {
@@ -195,6 +211,14 @@ class ThemeLoader {
             // Detect theme type (typora or custom)
             const detectedType = this.detectThemeType(file.name, content);
 
+            // Auto-detect if wire decorations should be disabled
+            // Cyberpunk and similar modern themes don't need LCARS-style wire decorations
+            const shouldDisableWires = options.disableWireDecorations !== undefined
+                ? options.disableWireDecorations
+                : (file.name.toLowerCase().includes('cyberpunk') ||
+                   file.name.toLowerCase().includes('modern') ||
+                   file.name.toLowerCase().includes('minimal'));
+
             // Create data URL
             const blob = new Blob([content], { type: 'text/css' });
             const url = URL.createObjectURL(blob);
@@ -206,13 +230,34 @@ class ThemeLoader {
                 url: url,
                 content: content,
                 timestamp: Date.now(),
-                isProtected: options.isProtected || false
+                isProtected: options.isProtected || false,
+                disableWireDecorations: shouldDisableWires
             };
 
             // Add to custom themes ONLY if not protected
             let themeId;
             if (!options.isProtected) {
-                themeId = `custom-${Date.now()}`;
+                // Check if a theme with this name already exists
+                const existingThemeId = Object.keys(this.customThemes).find(
+                    id => this.customThemes[id].name === customTheme.name
+                );
+
+                if (existingThemeId) {
+                    // Update existing theme instead of creating duplicate
+                    themeId = existingThemeId;
+                    console.log(`Updating existing theme: ${customTheme.name}`);
+
+                    // Revoke old blob URL
+                    if (this.customThemes[themeId].url &&
+                        this.customThemes[themeId].url.startsWith('blob:')) {
+                        URL.revokeObjectURL(this.customThemes[themeId].url);
+                    }
+                } else {
+                    // Create new theme
+                    themeId = `custom-${Date.now()}`;
+                    console.log(`Creating new custom theme: ${customTheme.name}`);
+                }
+
                 this.customThemes[themeId] = customTheme;
 
                 // Save custom themes

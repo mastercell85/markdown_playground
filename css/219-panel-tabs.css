@@ -35,25 +35,25 @@ body.typora-mode .panel-tab-label {
 }
 
 body.typora-mode .panel-tab-label::before {
-    content: '';
-    display: block;
-    width: 30px;
-    height: 25px;
-    background: rgba(128, 128, 128, 0.4);
-    margin-right: 8px;
-    flex-shrink: 0;
+    content: '' !important;
+    display: block !important;
+    width: 30px !important;
+    height: 25px !important;
+    background: rgba(128, 128, 128, 0.4) !important;
+    margin-right: 8px !important;
+    flex-shrink: 0 !important;
     transition: all 0.3s ease;
 }
 
 body.typora-mode .panel-tab-label::after {
-    content: '';
-    display: block;
-    width: 15px;
-    height: 25px;
-    background: rgba(128, 128, 128, 0.3);
-    margin-left: 5px;
-    margin-right: 15px;
-    flex-shrink: 0;
+    content: '' !important;
+    display: block !important;
+    width: 15px !important;
+    height: 25px !important;
+    background: rgba(128, 128, 128, 0.3) !important;
+    margin-left: 5px !important;
+    margin-right: 15px !important;
+    flex-shrink: 0 !important;
     transition: all 0.3s ease;
 }
 

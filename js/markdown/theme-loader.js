@@ -29,6 +29,12 @@ class ThemeLoader {
                 name: 'Default',
                 type: 'builtin',
                 url: null // No external CSS, uses base styles
+            },
+            'lcars': {
+                name: 'LCARS',
+                type: 'typora',
+                url: 'themes/lcars-theme.css',
+                isProtected: true
             }
         };
 
@@ -45,7 +51,19 @@ class ThemeLoader {
         if (savedTheme) {
             try {
                 const themeData = JSON.parse(savedTheme);
-                this.loadTheme(themeData);
+                console.log('Loading saved theme from localStorage:', themeData);
+
+                // Try to find the theme by name in built-in or custom themes first
+                const allThemes = this.getAllThemes();
+                const matchingTheme = Object.values(allThemes).find(t => t.name === themeData.name);
+
+                if (matchingTheme) {
+                    console.log('Found matching theme in registry:', matchingTheme);
+                    this.loadTheme(matchingTheme);
+                } else {
+                    console.log('Theme not in registry, loading from saved data');
+                    this.loadTheme(themeData);
+                }
             } catch (error) {
                 console.error('Failed to load saved theme:', error);
             }
@@ -108,6 +126,7 @@ class ThemeLoader {
 
             // Add typora-mode class to body for special styling
             document.body.classList.add('typora-mode');
+            console.log('Added typora-mode class to body. Body classes:', document.body.className);
 
         } else {
             console.log('Non-Typora theme, loading normally (type: ' + theme.type + ')');
@@ -160,8 +179,10 @@ class ThemeLoader {
     /**
      * Load custom CSS file
      * @param {File} file - CSS file from file input
+     * @param {Object} options - Optional configuration
+     * @param {boolean} options.isProtected - If true, theme won't be saved to custom themes
      */
-    async loadCustomCSSFile(file) {
+    async loadCustomCSSFile(file, options = {}) {
         if (!file || !file.name.endsWith('.css')) {
             console.error('Invalid CSS file');
             return;
@@ -184,15 +205,22 @@ class ThemeLoader {
                 type: detectedType,
                 url: url,
                 content: content,
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                isProtected: options.isProtected || false
             };
 
-            // Add to custom themes
-            const themeId = `custom-${Date.now()}`;
-            this.customThemes[themeId] = customTheme;
+            // Add to custom themes ONLY if not protected
+            let themeId;
+            if (!options.isProtected) {
+                themeId = `custom-${Date.now()}`;
+                this.customThemes[themeId] = customTheme;
 
-            // Save custom themes
-            this.saveCustomThemes();
+                // Save custom themes
+                this.saveCustomThemes();
+            } else {
+                // For protected themes, use the original built-in ID
+                themeId = 'lcars';
+            }
 
             // Load the theme
             this.loadTheme(customTheme);

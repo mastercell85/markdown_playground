@@ -42,12 +42,20 @@ The markdown editor now supports **universal CSS theme loading**, allowing you t
 3. Click the **×** button next to the theme name
 4. Confirm deletion
 
+**Note**: Built-in and protected themes cannot be deleted. Only custom user-uploaded themes show the delete button.
+
 ## Built-in Themes
 
 ### Default
 - Type: `builtin`
 - Uses the base CSS Zen Garden styling
 - No external CSS loaded
+
+### LCARS
+- Type: `typora` (protected)
+- Star Trek LCARS interface theme
+- Located at `themes/lcars-theme.css`
+- **Protected**: Cannot be deleted from theme selector
 
 ### Sample Dark
 - Type: `local`
@@ -180,6 +188,17 @@ The system automatically detects theme types:
 - Stored in localStorage
 - Can be deleted by user
 
+## Protected Themes
+
+Some built-in themes are marked as **protected** to prevent accidental deletion:
+
+- Protected themes are part of the project's theme collection
+- They appear in the theme selector but without a delete button (×)
+- Loading a protected theme uses the same mechanism as custom CSS for compatibility
+- Protected themes are NOT saved to localStorage as custom themes
+
+Example: The LCARS theme is protected because it ships with the project.
+
 ## Technical Details
 
 ### ThemeLoader API
@@ -204,6 +223,9 @@ themeLoader.loadThemeById('sample-dark');
 // Load custom CSS file
 await themeLoader.loadCustomCSSFile(file);
 
+// Load custom CSS file as protected (won't be saved to localStorage)
+await themeLoader.loadCustomCSSFile(file, { isProtected: true });
+
 // Get current theme
 const current = themeLoader.getCurrentTheme();
 
@@ -222,6 +244,7 @@ themeLoader.deleteCustomTheme('custom-123456');
     type: 'local' | 'zen-garden' | 'typora' | 'generic' | 'builtin' | 'custom',
     url: 'path/to/theme.css' | null,
     content: 'css content...' // Only for custom themes
+    isProtected: true | false // Optional, prevents deletion and localStorage saving
 }
 ```
 
@@ -247,12 +270,18 @@ this.builtInThemes = {
     'my-new-theme': {
         name: 'My New Theme',
         type: 'local',
-        url: 'themes/my-new-theme.css'
+        url: 'themes/my-new-theme.css',
+        isProtected: true // Optional: prevent deletion
     }
 };
 ```
 
 Then create the CSS file at `themes/my-new-theme.css`.
+
+### Protected vs Regular Built-in Themes
+
+- **Regular built-in**: Can be accessed normally, deletable if user uploads duplicate
+- **Protected built-in**: Cannot be deleted, uses custom CSS loading mechanism for compatibility
 
 ## Typora Theme Support
 

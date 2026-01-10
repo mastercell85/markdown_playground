@@ -29,10 +29,23 @@ footer,
     visibility: hidden !important;
 }
 
+/* Use CSS Grid for clean layout: panel tabs, document tabs, editor */
+body {
+    display: grid;
+    grid-template-rows: 70px 47px 1fr;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.page-wrapper {
+    display: contents; /* Makes children participate in body's grid */
+}
+
 /* Intro section needs to be positioned for absolute children */
 .intro {
     position: relative;
     z-index: 15; /* Higher than document tabs to allow editor panels to appear above */
+    grid-row: 1; /* First row - panel tabs */
 }
 
 /* Hide header completely on markdown editor page */
@@ -41,14 +54,21 @@ header {
     visibility: hidden !important;
 }
 
-/* Main content area styling */
+/* Document tabs in second row */
+.document-tabs-container {
+    grid-row: 2;
+}
+
+/* Main content area in third row */
 .main.supporting {
+    grid-row: 3;
     position: relative;
     z-index: 1;
-    width: 100% !important; /* Override base CSS width constraint */
+    width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
+    overflow: hidden;
 }
 
 /* Editor panel base styling */
@@ -336,11 +356,6 @@ header {
 /* Document Tabs Bar */
 .document-tabs-container {
     display: flex;
-    position: fixed;
-    top: 70px; /* Position below panel tabs */
-    left: 0;
-    right: 0;
-    height: 47px; /* 45px content + 2px border */
     z-index: 4;
     align-items: center;
     padding: 0 20px;
@@ -466,12 +481,8 @@ body.typora-mode .document-tab-new:hover {
 .editor-container {
     display: flex;
     flex-direction: row;
-    position: fixed;
-    top: 117px; /* Panel tabs (70px) + Document tabs (47px with border) = 117px */
-    left: 0;
-    right: 0;
-    bottom: 0; /* Extend to bottom of viewport */
     width: 100%;
+    height: 100%;
     gap: 0;
     margin: 0;
     padding: 0;

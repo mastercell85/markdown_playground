@@ -47,6 +47,40 @@
 
         // Add click listener to document for click-outside detection
         document.addEventListener('click', handleClickOutside);
+
+        // Add click listeners to menu items
+        initMenuItems();
+    }
+
+    /**
+     * Initialize menu item click handlers
+     */
+    function initMenuItems() {
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                const action = this.getAttribute('data-action');
+                handleMenuAction(action);
+            });
+        });
+    }
+
+    /**
+     * Handle menu item actions
+     */
+    function handleMenuAction(action) {
+        switch(action) {
+            case 'create-markdown':
+                console.log('Create Markdown Document clicked');
+                // TODO: Implement markdown document creation
+                alert('Create Markdown Document feature - Coming soon!');
+                break;
+            default:
+                console.log('Unknown action:', action);
+        }
     }
 
     /**

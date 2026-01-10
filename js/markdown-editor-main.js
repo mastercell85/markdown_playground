@@ -72,7 +72,7 @@
             previewElementId: 'markdown-preview'
         });
 
-        // Create renderer
+        // Create renderer first
         const renderer = new MarkdownRenderer({
             parser: parser,
             inputElement: inputElement,
@@ -80,7 +80,47 @@
             windowManager: windowManager
         });
 
+        // Create document manager with renderer callbacks
+        const documentManager = new DocumentManager({
+            autoSave: true,
+            autoSaveDelay: 1000,
+            onDocumentSwitch: (doc) => {
+                // Load document content into editor
+                renderer.setMarkdown(doc.content);
+                console.log('Switched to document:', doc.name);
+            },
+            onDocumentUpdate: (doc) => {
+                console.log('Document updated:', doc.name);
+            }
+        });
+
+        // Update renderer callback to sync with document manager
+        renderer.onRender = ({ markdown }) => {
+            documentManager.updateActiveContent(markdown);
+        };
+
+        // Try to load documents from storage, or create initial document
+        if (!documentManager.loadFromStorage()) {
+            const initialDoc = documentManager.createDocument();
+            documentManager.switchDocument(initialDoc.id);
+        } else {
+            // Restore active document
+            const activeDoc = documentManager.getActiveDocument();
+            if (activeDoc) {
+                renderer.setMarkdown(activeDoc.content);
+            }
+        }
+
         renderer.init();
+
+        // Initialize tab controller
+        const tabController = new TabController({
+            documentManager: documentManager,
+            tabsContainer: document.getElementById('document-tabs'),
+            newTabButton: document.getElementById('new-document-btn')
+        });
+
+        tabController.init();
 
         // Setup View panel controls
         setupViewControls(windowManager, renderer);
@@ -91,10 +131,12 @@
             renderer: renderer,
             windowManager: windowManager,
             ruleEngine: ruleEngine,
-            blockProcessor: blockProcessor
+            blockProcessor: blockProcessor,
+            documentManager: documentManager,
+            tabController: tabController
         };
 
-        console.log('Markdown editor initialized with live preview');
+        console.log('Markdown editor initialized with live preview and document management');
     }
 
     /**

@@ -77,6 +77,18 @@
 		</div>
 	</section>
 
+	<!-- Document Tabs Bar -->
+	<div class="document-tabs-container">
+		<div class="document-tabs" id="document-tabs">
+			<!-- Tabs will be added dynamically -->
+			<div class="document-tab active" data-doc-id="untitled-1">
+				<span class="document-tab-name">Untitled-1</span>
+				<span class="document-tab-close">×</span>
+			</div>
+		</div>
+		<button class="document-tab-new" id="new-document-btn" title="New Document">+</button>
+	</div>
+
 	<div class="main supporting" id="zen-supporting" role="main">
 		<!-- Split-screen markdown editor -->
 		<div class="editor-container" data-layout="split">
@@ -91,6 +103,9 @@
 					></textarea>
 				</div>
 			</section>
+
+			<!-- Resizable divider -->
+			<div class="editor-divider" id="editor-divider"></div>
 
 			<!-- Preview section -->
 			<section class="editor-section editor-preview">

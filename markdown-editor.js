@@ -488,3 +488,87 @@
         initializeMarkdownEditor();
     }
 })();
+
+/**
+ * Resizable Split View Module
+ * Handles dragging the divider to resize editor panels
+ */
+(function() {
+    'use strict';
+
+    function initializeResizableDivider() {
+        const divider = document.getElementById('editor-divider');
+        const inputSection = document.querySelector('.editor-input');
+        const previewSection = document.querySelector('.editor-preview');
+        const container = document.querySelector('.editor-container');
+
+        if (!divider || !inputSection || !previewSection || !container) {
+            return;
+        }
+
+        let isDragging = false;
+        let startX = 0;
+        let startInputWidth = 0;
+        let startPreviewWidth = 0;
+
+        divider.addEventListener('mousedown', function(e) {
+            isDragging = true;
+            startX = e.clientX;
+
+            // Get current widths
+            startInputWidth = inputSection.offsetWidth;
+            startPreviewWidth = previewSection.offsetWidth;
+
+            // Add dragging class for visual feedback
+            divider.classList.add('dragging');
+
+            // Prevent text selection during drag
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (!isDragging) return;
+
+            const deltaX = e.clientX - startX;
+            const containerWidth = container.offsetWidth;
+
+            // Calculate new widths
+            const newInputWidth = startInputWidth + deltaX;
+            const newPreviewWidth = startPreviewWidth - deltaX;
+
+            // Enforce minimum widths (200px each)
+            if (newInputWidth >= 200 && newPreviewWidth >= 200) {
+                const inputFlex = newInputWidth / containerWidth;
+                const previewFlex = newPreviewWidth / containerWidth;
+
+                inputSection.style.flex = `${inputFlex} 0 0px`;
+                previewSection.style.flex = `${previewFlex} 0 0px`;
+            }
+        });
+
+        document.addEventListener('mouseup', function() {
+            if (isDragging) {
+                isDragging = false;
+                divider.classList.remove('dragging');
+            }
+        });
+
+        // Handle cursor during drag
+        document.addEventListener('mousemove', function(e) {
+            if (isDragging) {
+                document.body.style.cursor = 'col-resize';
+            }
+        });
+
+        document.addEventListener('mouseup', function() {
+            document.body.style.cursor = '';
+        });
+    }
+
+    // Initialize
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeResizableDivider);
+    } else {
+        initializeResizableDivider();
+    }
+})();

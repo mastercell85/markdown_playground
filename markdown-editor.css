@@ -329,13 +329,101 @@ header {
     padding-bottom: 10px;
 }
 
+/* Document Tabs Bar */
+.document-tabs-container {
+    display: flex;
+    position: fixed;
+    top: 70px; /* Position below panel tabs with more clearance */
+    left: 0;
+    right: 0;
+    height: 35px; /* Compact height */
+    z-index: 4;
+    align-items: center;
+    padding: 0 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.document-tabs {
+    display: flex;
+    gap: 5px;
+    height: 100%;
+    align-items: center;
+}
+
+.document-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #999;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 11px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.document-tab:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.document-tab.active {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.document-tab-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
+    font-size: 14px;
+    line-height: 1;
+    transition: background 0.2s ease;
+}
+
+.document-tab-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.document-tab-new {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #999;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.document-tab-new:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
 /* Editor Container - Split-screen layout */
 .editor-container {
     display: flex;
-    width: 100%;
-    height: calc(100vh - 100px);
+    flex-direction: row;
+    margin-top: 105px; /* Panel tabs (70px) + Document tabs (35px) = 105px */
     gap: 0;
-    margin-top: 20px;
+    width: 100%;
+    height: calc(100vh - 105px); /* Full viewport minus top offset */
+    background: rgba(0, 0, 0, 0.6);
 }
 
 .editor-container[data-layout="split"] {
@@ -348,11 +436,12 @@ header {
 
 /* Editor Sections */
 .editor-section {
-    flex: 1;
     display: flex;
     flex-direction: column;
     min-width: 0;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(50, 50, 50, 0.8);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .editor-section-content {
@@ -363,7 +452,38 @@ header {
 
 /* Input Area */
 .editor-input {
-    border-right: 2px solid rgba(255, 255, 255, 0.1);
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Resizable Divider */
+.editor-divider {
+    width: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: col-resize;
+    position: relative;
+    transition: background 0.2s ease;
+}
+
+.editor-divider:hover,
+.editor-divider.dragging {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.editor-divider::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -2px;
+    right: -2px;
+}
+
+/* Preview Area */
+.editor-preview {
+    flex: 1;
+    min-width: 200px;
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .markdown-textarea {
@@ -382,11 +502,6 @@ header {
 
 .markdown-textarea::placeholder {
     color: #666;
-}
-
-/* Preview Area */
-.editor-preview {
-    background: rgba(0, 0, 0, 0.2);
 }
 
 .markdown-output {

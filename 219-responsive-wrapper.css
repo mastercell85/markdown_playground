@@ -1,0 +1,128 @@
+/**
+* Responsive Wrapper for Steel Animation
+*
+* This approach uses the original 219-1367.css styles unchanged,
+* but wraps the entire design in a responsive container that scales.
+* This preserves all animations and positioning while making it responsive.
+*/
+
+/* Import the original animation styles */
+@import url("219-1367.css");
+
+/* Responsive scaling wrapper */
+@media (max-width: 1366px) and (min-width: 800px) {
+    /* Calculate scale factor based on viewport */
+    /* At 800px, scale to ~58.5% (800/1367) */
+    /* At 1366px, scale to 100% */
+
+    html {
+        font-size: calc(14px + (20 - 14) * ((100vw - 800px) / (1367 - 800)));
+    }
+
+    /* Scale the entire layout proportionally */
+    .page-wrapper,
+    header,
+    .summary,
+    .preamble,
+    .main,
+    .sidebar,
+    footer {
+        transform-origin: center center;
+    }
+
+    /* Adjust positioning for smaller screens */
+    header {
+        width: min(450px, 33vw);
+        margin-left: min(-190px, -16.5vw);
+    }
+
+    .preamble {
+        width: min(495px, 36vw);
+        margin-left: min(-580px, -42vw);
+    }
+
+    .preamble:hover {
+        margin-left: min(-490px, -36vw);
+    }
+
+    .summary {
+        width: min(450px, 33vw);
+        margin-right: min(-500px, -36.5vw);
+    }
+
+    .summary:hover {
+        margin-right: min(-460px, -33.5vw);
+    }
+
+    .main div[role="article"] {
+        width: min(460px, 34vw);
+        right: min(40px, 3vw);
+    }
+
+    .design-selection {
+        width: min(615px, 45vw);
+    }
+
+    .design-selection li {
+        width: min(380px, 28vw);
+    }
+
+    .design-selection li a.designer-name {
+        width: min(378px, 27.5vw);
+    }
+}
+
+@media (max-width: 1023px) and (min-width: 800px) {
+    /* Further adjustments for tablets */
+    header {
+        width: min(450px, 38vw);
+        margin-left: min(-190px, -19vw);
+    }
+
+    .preamble {
+        width: min(495px, 42vw);
+        margin-left: min(-580px, -48vw);
+    }
+
+    .summary {
+        width: min(450px, 38vw);
+        margin-right: min(-500px, -42vw);
+    }
+
+    .design-selection {
+        width: min(615px, 52vw);
+    }
+
+    .main div[role="article"] {
+        width: min(460px, 40vw);
+    }
+}
+
+@media (max-width: 899px) and (min-width: 800px) {
+    /* Smallest responsive size */
+    header {
+        width: min(450px, 45vw);
+        margin-left: min(-190px, -22.5vw);
+        transform: scale(0.7);
+    }
+
+    .preamble {
+        width: min(495px, 50vw);
+        margin-left: min(-580px, -56vw);
+        transform: rotate(-5deg) skew(-5deg) scale(0.7);
+    }
+
+    .summary {
+        width: min(450px, 45vw);
+        margin-right: min(-500px, -50vw);
+        transform: rotate(5deg) skew(5deg) scale(0.7);
+    }
+
+    .wrapper {
+        transform: rotateY(35deg);
+    }
+
+    .main div[role="article"] {
+        transform: rotateY(-25deg);
+    }
+}

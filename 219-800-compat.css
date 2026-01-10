@@ -1,0 +1,18 @@
+/**
+* Compatibility layer for running 219-1367.css at 800px+
+* This provides the necessary base styles from 219-400.css
+*/
+
+html,
+body {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+html {
+    overflow: hidden;
+}

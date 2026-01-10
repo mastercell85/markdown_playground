@@ -1,0 +1,128 @@
+/**
+* Header Panel - CSS ZEN GARDEN title
+*
+* Configuration:
+* - Position: Center top, centered horizontally
+* - Width: 450px
+* - Hook: hook3.svg
+* - Initial state: Scaled down (0.8) at top
+* - Hover state: Drops to center, full scale
+*/
+
+header {
+    /* Panel configuration */
+    --header-width: 450px;
+    --header-margin-left: -190px;
+    --header-top-initial: 50px;
+    --header-top-hover: 260px;
+    --header-hook: url(hook3.svg);
+    --header-hook-offset: bottom;
+    --header-hook-size: 360px auto;
+    --header-frame-top-offset: 559px;
+
+    /* Positioning */
+    position: absolute;
+    top: var(--header-top-initial);
+    left: 50%;
+    z-index: 4;
+    display: block;
+    margin: 0 0 0 var(--header-margin-left);
+    padding: 0;
+    width: var(--header-width);
+
+    /* Visual */
+    background: url(layer-middle.svg) repeat-y center top;
+    background-color: transparent;
+    -moz-background-size: var(--header-width) auto;
+    -o-background-size: var(--header-width) auto;
+    -webkit-background-size: var(--header-width) auto;
+    background-size: var(--header-width) auto;
+
+    /* Initial transform */
+    -moz-transform: scale(0.8);
+    -ms-transform: scale(0.8);
+    -o-transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+    transform: scale(0.8);
+
+    /* Transitions */
+    -moz-transition: -moz-transform 1s 1s ease-out,
+                     top 1s ease-out,
+                     margin 1s 1s ease-out,
+                     left 1s 1s ease-out;
+    -o-transition: -o-transform 1s 1s ease-out,
+                   top 1s ease-out,
+                   margin 1s 1s ease-out,
+                   left 1s 1s ease-out;
+    -webkit-transition: -webkit-transform 1s 1s ease-out,
+                        top 1s ease-out,
+                        margin 1s 1s ease-out,
+                        left 1s 1s ease-out;
+    transition: transform 1s 1s ease-out,
+                top 1s ease-out,
+                margin 1s 1s ease-out,
+                left 1s 1s ease-out;
+}
+
+/* Hook and frame elements */
+header::before,
+header::after {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    display: block;
+    width: var(--header-width);
+    content: '';
+}
+
+header::before {
+    top: -600px;
+    height: 600px;
+    background: var(--header-hook) no-repeat center var(--header-hook-offset),
+                url(layer-frame.svg) no-repeat center var(--header-frame-top-offset);
+    -moz-background-size: var(--header-hook-size), var(--header-width) auto;
+    -o-background-size: var(--header-hook-size), var(--header-width) auto;
+    -webkit-background-size: var(--header-hook-size), var(--header-width) auto;
+    background-size: var(--header-hook-size), var(--header-width) auto;
+}
+
+header::after {
+    bottom: -41px;
+    height: 41px;
+    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    -moz-background-size: var(--header-width) auto;
+    -o-background-size: var(--header-width) auto;
+    -webkit-background-size: var(--header-width) auto;
+    background-size: var(--header-width) auto;
+}
+
+/* Hover state */
+header:hover {
+    top: var(--header-top-hover);
+    margin: 0 0 0 var(--header-margin-left);
+    -moz-transform: rotateY(0) scale(1);
+    -ms-transform: scale(1);
+    -o-transform: rotateY(0) scale(1);
+    -webkit-transform: rotateY(0) scale(1);
+    transform: rotateY(0) scale(1);
+}
+
+/* Typography */
+h1,
+h2 {
+    position: static;
+    display: block;
+}
+
+h1 {
+    margin: 0;
+    padding: 40px 70px 10px 70px;
+    font-size: 60px;
+    line-height: 60px;
+}
+
+h2 {
+    padding: 10px 70px 40px 70px;
+    font-size: 16px;
+    line-height: 16px;
+}

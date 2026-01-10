@@ -1,10 +1,17 @@
 /**
 * Scaled version of 219-1367.css
-* Uses CSS transform scale to make the design responsive
+* Uses modular panel system for easy customization and duplication
 */
 
-/* Import the original unchanged */
+/* Import the original 1367 CSS for base styles and animations */
 @import url("219-1367.css");
+
+/* Import modular panel system */
+@import url("219-panel-base.css");
+@import url("219-panel-header.css");
+@import url("219-panel-preamble.css");
+@import url("219-panel-summary.css");
+@import url("219-panel-benefits.css");
 
 /* Hide specific content panels */
 .explanation,
@@ -21,30 +28,14 @@ footer {
     visibility: hidden !important;
 }
 
+/* Override .main positioning from original to allow retract behavior */
+.main:hover div[role="article"] {
+    top: 8vh;
+}
+
 /* Add responsive scaling for viewports smaller than the design target */
 @media (max-width: 1366px) and (min-width: 1024px) {
     /* Scale to 75% for medium screens */
-
-    /* Retract wrapper (sidebar) to top, show on hover */
-    .wrapper {
-        top: -50%;
-        margin-top: 0;
-    }
-
-    .wrapper:hover {
-        top: 10vh;
-        margin-top: 0;
-    }
-
-    /* Retract main content articles to top, show on hover */
-    .main div[role="article"] {
-        top: -50%;
-        margin-top: 0;
-    }
-
-    .main:hover div[role="article"] {
-        top: 10vh;
-    }
 
     header {
         width: calc(450px * 0.75);
@@ -89,30 +80,8 @@ footer {
         padding: calc(55px * 0.75) calc(70px * 0.75) calc(50px * 0.75) calc(70px * 0.75);
     }
 
-    .design-selection {
-        width: calc(615px * 0.75);
-        padding: calc(55px * 0.75) calc(52px * 0.75) calc(45px * 0.75) calc(52px * 0.75);
-    }
-
-    .design-selection li {
-        width: calc(380px * 0.75);
-    }
-
-    .design-selection li a.designer-name {
-        width: calc(378px * 0.75);
-        font-size: calc(25px * 0.75);
-    }
-
-    .design-archives,
-    .zen-resources {
-        left: calc(458px * 0.75);
-        width: calc(204px * 0.75);
-    }
-
-    footer {
-        width: calc(75px * 0.75);
-        height: calc(450px * 0.75);
-        margin-top: calc(-225px * 0.75);
+    .main:hover div[role="article"] {
+        top: 10vh;
     }
 
     h1 {
@@ -128,27 +97,6 @@ footer {
 
 @media (max-width: 1023px) and (min-width: 800px) {
     /* Scale to 55% for smaller screens */
-
-    /* Retract wrapper (sidebar) to top, show on hover */
-    .wrapper {
-        top: -50%;
-        margin-top: 0;
-    }
-
-    .wrapper:hover {
-        top: 8vh;
-        margin-top: 0;
-    }
-
-    /* Retract main content articles to top, show on hover */
-    .main div[role="article"] {
-        top: -50%;
-        margin-top: 0;
-    }
-
-    .main:hover div[role="article"] {
-        top: 8vh;
-    }
 
     header {
         width: calc(450px * 0.55);
@@ -193,30 +141,8 @@ footer {
         padding: calc(55px * 0.55) calc(70px * 0.55) calc(50px * 0.55) calc(70px * 0.55);
     }
 
-    .design-selection {
-        width: calc(615px * 0.55);
-        padding: calc(55px * 0.55) calc(52px * 0.55) calc(45px * 0.55) calc(52px * 0.55);
-    }
-
-    .design-selection li {
-        width: calc(380px * 0.55);
-    }
-
-    .design-selection li a.designer-name {
-        width: calc(378px * 0.55);
-        font-size: calc(25px * 0.55);
-    }
-
-    .design-archives,
-    .zen-resources {
-        left: calc(458px * 0.55);
-        width: calc(204px * 0.55);
-    }
-
-    footer {
-        width: calc(75px * 0.55);
-        height: calc(450px * 0.55);
-        margin-top: calc(-225px * 0.55);
+    .main:hover div[role="article"] {
+        top: 8vh;
     }
 
     h1 {

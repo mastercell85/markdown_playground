@@ -1,0 +1,132 @@
+/**
+* Summary Panel - Download links
+*
+* Configuration:
+* - Position: Right side, retracts to top
+* - Width: 450px
+* - Hook: hook2.svg
+* - Initial state: Off-screen top (90% bottom), rotated/skewed opposite direction, scaled down
+* - Hover state: Drops to 40% from bottom, straightens, full scale
+*/
+
+.summary {
+    /* Panel configuration */
+    --summary-width: 450px;
+    --summary-margin-right-initial: -500px;
+    --summary-margin-right-hover: -460px;
+    --summary-bottom-initial: 90%;
+    --summary-bottom-hover: 40%;
+    --summary-hook: url(hook2.svg);
+    --summary-hook-offset: -34px;
+    --summary-frame-top-offset: 659px;
+
+    /* Positioning */
+    position: absolute;
+    right: 50%;
+    bottom: var(--summary-bottom-initial);
+    z-index: 6;
+    margin: 0 var(--summary-margin-right-initial) 0 0;
+    padding: 0;
+    width: var(--summary-width);
+
+    /* Visual */
+    background: url(layer-middle.svg) repeat-y center top;
+    background-color: transparent;
+    -moz-background-size: var(--summary-width) auto;
+    -o-background-size: var(--summary-width) auto;
+    -webkit-background-size: var(--summary-width) auto;
+    background-size: var(--summary-width) auto;
+    color: #999;
+
+    /* Initial transform - rotated and skewed opposite to preamble */
+    -moz-transform: rotate(5deg) skew(5deg) scale(0.8);
+    -ms-transform: rotate(5deg) skew(5deg) scale(0.8);
+    -o-transform: rotate(5deg) skew(5deg) scale(0.8);
+    -webkit-transform: rotate(5deg) skew(5deg) scale(0.8);
+    transform: rotate(5deg) skew(5deg) scale(0.8);
+
+    /* Transitions */
+    -moz-transition: -moz-transform 1s ease-out,
+                     bottom 1s ease-out,
+                     margin 1s 1s ease-out,
+                     left 1s 1s ease-out,
+                     right 1s 1s ease-out;
+    -o-transition: -o-transform 1s ease-out,
+                   bottom 1s ease-out,
+                   margin 1s 1s ease-out,
+                   left 1s 1s ease-out,
+                   right 1s 1s ease-out;
+    -webkit-transition: -webkit-transform 1s ease-out,
+                        bottom 1s ease-out,
+                        margin 1s 1s ease-out,
+                        left 1s 1s ease-out,
+                        right 1s 1s ease-out;
+    transition: transform 1s ease-out,
+                bottom 1s ease-out,
+                margin 1s 1s ease-out,
+                left 1s 1s ease-out,
+                right 1s 1s ease-out;
+}
+
+/* Hook and frame elements */
+.summary::before,
+.summary::after {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    display: block;
+    width: var(--summary-width);
+    content: '';
+}
+
+.summary::before {
+    top: -700px;
+    height: 700px;
+    background: var(--summary-hook) no-repeat center var(--summary-hook-offset),
+                url(layer-frame.svg) no-repeat center var(--summary-frame-top-offset);
+    -moz-background-size: auto auto, var(--summary-width) auto;
+    -o-background-size: auto auto, var(--summary-width) auto;
+    -webkit-background-size: auto auto, var(--summary-width) auto;
+    background-size: auto auto, var(--summary-width) auto;
+}
+
+.summary::after {
+    bottom: -41px;
+    height: 41px;
+    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    -moz-background-size: var(--summary-width) auto;
+    -o-background-size: var(--summary-width) auto;
+    -webkit-background-size: var(--summary-width) auto;
+    background-size: var(--summary-width) auto;
+}
+
+/* Hover state */
+.summary:hover {
+    right: 50%;
+    bottom: var(--summary-bottom-hover);
+    margin: 0 var(--summary-margin-right-hover) 0 0;
+    color: #fff;
+    -moz-transform: rotateY(0) scale(1);
+    -ms-transform: scale(1);
+    -o-transform: rotateY(0) scale(1);
+    -webkit-transform: rotateY(0) scale(1);
+    transform: rotateY(0) scale(1);
+}
+
+/* Link styling */
+.summary a {
+    background-color: #999;
+}
+
+.summary:hover a {
+    background-color: #fff;
+}
+
+/* Content spacing */
+.intro .summary p:first-child {
+    padding-top: 35px;
+}
+
+.intro .summary p:last-child {
+    padding: 10px 80px 35px 80px;
+}

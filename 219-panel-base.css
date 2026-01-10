@@ -1,0 +1,105 @@
+/**
+* Base panel system for modular Steel animation panels
+*
+* This file defines CSS custom properties (variables) and shared styles
+* for creating standalone animated panels that can be easily duplicated
+* and configured.
+*/
+
+:root {
+    /* Shared animation timing */
+    --panel-transition-transform: 1s ease-out;
+    --panel-transition-position: 1s ease-out;
+    --panel-transition-position-delay: 1s;
+    --panel-hover-delay: 1s;
+
+    /* Hook SVG heights for calculations */
+    --hook-height: 700px;
+    --hook-offset-top: -700px;
+
+    /* Frame heights */
+    --frame-bottom-height: 45px;
+}
+
+/* Shared panel base styles */
+.panel-base {
+    position: absolute;
+    padding: 0;
+    background-repeat: repeat-y;
+    background-position: center top;
+    -moz-transition: -moz-transform var(--panel-transition-transform),
+                     bottom var(--panel-transition-position),
+                     margin var(--panel-transition-position) var(--panel-hover-delay),
+                     left var(--panel-transition-position) var(--panel-hover-delay),
+                     right var(--panel-transition-position) var(--panel-hover-delay);
+    -o-transition: -o-transform var(--panel-transition-transform),
+                   bottom var(--panel-transition-position),
+                   margin var(--panel-transition-position) var(--panel-hover-delay),
+                   left var(--panel-transition-position) var(--panel-hover-delay),
+                   right var(--panel-transition-position) var(--panel-hover-delay);
+    -webkit-transition: -webkit-transform var(--panel-transition-transform),
+                        bottom var(--panel-transition-position),
+                        margin var(--panel-transition-position) var(--panel-hover-delay),
+                        left var(--panel-transition-position) var(--panel-hover-delay),
+                        right var(--panel-transition-position) var(--panel-hover-delay);
+    transition: transform var(--panel-transition-transform),
+                bottom var(--panel-transition-position),
+                margin var(--panel-transition-position) var(--panel-hover-delay),
+                left var(--panel-transition-position) var(--panel-hover-delay),
+                right var(--panel-transition-position) var(--panel-hover-delay);
+}
+
+/* Shared hook and frame styles */
+.panel-base::before,
+.panel-base::after {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    display: block;
+    content: '';
+}
+
+.panel-base::before {
+    top: var(--hook-offset-top);
+    height: var(--hook-height);
+}
+
+.panel-base::after {
+    bottom: calc(-1 * var(--frame-bottom-height));
+    height: var(--frame-bottom-height);
+}
+
+/* Typography and content styles */
+.panel-base h3,
+.panel-base p {
+    padding: 15px 80px 0 80px;
+    -moz-transition: background-color 1s ease-out;
+    -o-transition: background-color 1s ease-out;
+    -webkit-transition: background-color 1s ease-out;
+    transition: background-color 1s ease-out;
+}
+
+.panel-base h3 {
+    color: #999;
+    font-size: 30px;
+    line-height: 30px;
+}
+
+.panel-base:hover h3 {
+    color: #fff;
+}
+
+/* Default retracted state - panels start off-screen at top */
+.panel-retracted {
+    bottom: 90%;
+}
+
+/* Panel reveals on hover to specific bottom position */
+.panel-base:hover {
+    color: #fff;
+    -moz-transform: rotateY(0) scale(1);
+    -ms-transform: scale(1);
+    -o-transform: rotateY(0) scale(1);
+    -webkit-transform: rotateY(0) scale(1);
+    transform: rotateY(0) scale(1);
+}

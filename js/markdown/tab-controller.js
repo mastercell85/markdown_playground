@@ -146,13 +146,7 @@ class TabController {
      * @param {string} docId - Document ID
      */
     handleTabClose(docId) {
-        // Confirm if document has content
-        const doc = this.documentManager.getDocument(docId);
-        if (doc && !doc.isEmpty()) {
-            const confirmed = confirm(`Close "${doc.name}"? Unsaved changes will be lost.`);
-            if (!confirmed) return;
-        }
-
+        // No confirmation needed - documents are auto-saved to localStorage
         this.documentManager.closeDocument(docId);
         this.renderTabs();
     }

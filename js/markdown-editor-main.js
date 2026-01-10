@@ -45,6 +45,250 @@
                 window.location.href = 'index.html';
             });
         }
+
+        // Setup File menu buttons
+        setupFileMenuButtons();
+    }
+
+    /**
+     * Setup File menu button handlers
+     */
+    function setupFileMenuButtons() {
+        // New File button
+        const newFileBtn = document.getElementById('new-file-btn');
+        if (newFileBtn) {
+            newFileBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleNewFile();
+            });
+        }
+
+        // Open File button
+        const openFileBtn = document.getElementById('open-file-btn');
+        if (openFileBtn) {
+            openFileBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleOpenFile();
+            });
+        }
+
+        // Open Folder button
+        const openFolderBtn = document.getElementById('open-folder-btn');
+        if (openFolderBtn) {
+            openFolderBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleOpenFolder();
+            });
+        }
+
+        // Save button
+        const saveFileBtn = document.getElementById('save-file-btn');
+        if (saveFileBtn) {
+            saveFileBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleSaveFile();
+            });
+        }
+
+        // Save As button
+        const saveAsBtn = document.getElementById('save-as-btn');
+        if (saveAsBtn) {
+            saveAsBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleSaveAsFile();
+            });
+        }
+
+        // Close File button
+        const closeFileBtn = document.getElementById('close-file-btn');
+        if (closeFileBtn) {
+            closeFileBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleCloseFile();
+            });
+        }
+
+        // Close Folder button
+        const closeFolderBtn = document.getElementById('close-folder-btn');
+        if (closeFolderBtn) {
+            closeFolderBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleCloseFolder();
+            });
+        }
+
+        // Exit button
+        const exitBtn = document.getElementById('exit-btn');
+        if (exitBtn) {
+            exitBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleExit();
+            });
+        }
+
+        // File input change handler
+        const fileInput = document.getElementById('file-input');
+        if (fileInput) {
+            fileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const content = e.target.result;
+                    const filename = file.name.replace(/\.(md|markdown|txt)$/i, '');
+
+                    if (window.MarkdownEditor && window.MarkdownEditor.documentManager) {
+                        const newDoc = window.MarkdownEditor.documentManager.createDocument({
+                            name: filename,
+                            content: content
+                        });
+                        window.MarkdownEditor.documentManager.switchDocument(newDoc.id);
+                        window.MarkdownEditor.tabController.renderTabs();
+                        console.log('File opened:', filename);
+                    }
+
+                    // Reset file input
+                    event.target.value = '';
+                };
+                reader.readAsText(file);
+            });
+        }
+    }
+
+    /**
+     * Handle New File action
+     */
+    function handleNewFile() {
+        // Access the document manager from the global scope
+        if (window.MarkdownEditor && window.MarkdownEditor.documentManager) {
+            const newDoc = window.MarkdownEditor.documentManager.createDocument();
+            window.MarkdownEditor.documentManager.switchDocument(newDoc.id);
+            window.MarkdownEditor.tabController.renderTabs();
+            console.log('New file created:', newDoc.name);
+        }
+    }
+
+    /**
+     * Handle Open File action
+     */
+    function handleOpenFile() {
+        const fileInput = document.getElementById('file-input');
+        if (fileInput) {
+            fileInput.click();
+        }
+    }
+
+    /**
+     * Handle Open Folder action
+     */
+    function handleOpenFolder() {
+        alert('Open Folder feature will be available in the desktop app version.\n\nFor now, you can use "Open File" to open individual markdown files.');
+    }
+
+    /**
+     * Handle Save File action
+     */
+    function handleSaveFile() {
+        if (window.MarkdownEditor && window.MarkdownEditor.documentManager) {
+            const exportData = window.MarkdownEditor.documentManager.exportActiveDocument();
+            if (!exportData) {
+                console.warn('No active document to save');
+                return;
+            }
+
+            // Create a blob with the markdown content
+            const blob = new Blob([exportData.content], { type: 'text/markdown;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+
+            // Create a temporary download link
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = exportData.filename;
+            link.style.display = 'none';
+
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+
+            // Cleanup
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            console.log('File saved:', exportData.filename);
+        }
+    }
+
+    /**
+     * Handle Save As File action
+     */
+    function handleSaveAsFile() {
+        if (window.MarkdownEditor && window.MarkdownEditor.documentManager) {
+            const activeDoc = window.MarkdownEditor.documentManager.getActiveDocument();
+            if (!activeDoc) {
+                console.warn('No active document to save');
+                return;
+            }
+
+            // Prompt user for custom filename
+            const currentName = activeDoc.name.replace(/\.md$/, ''); // Remove .md if present
+            const customName = prompt('Enter filename (without .md extension):', currentName);
+
+            if (customName === null || customName.trim() === '') {
+                // User cancelled or entered empty name
+                return;
+            }
+
+            const filename = customName.trim() + '.md';
+
+            // Create a blob with the markdown content
+            const blob = new Blob([activeDoc.content], { type: 'text/markdown;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+
+            // Create a temporary download link
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.style.display = 'none';
+
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+
+            // Cleanup
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            console.log('File saved as:', filename);
+        }
+    }
+
+    /**
+     * Handle Close File action
+     */
+    function handleCloseFile() {
+        if (window.MarkdownEditor && window.MarkdownEditor.documentManager) {
+            const activeDoc = window.MarkdownEditor.documentManager.getActiveDocument();
+            if (activeDoc) {
+                window.MarkdownEditor.documentManager.closeDocument(activeDoc.id);
+                window.MarkdownEditor.tabController.renderTabs();
+                console.log('File closed:', activeDoc.name);
+            }
+        }
+    }
+
+    /**
+     * Handle Close Folder action
+     */
+    function handleCloseFolder() {
+        alert('Close Folder feature will be available in the desktop app version.\n\nFor now, you can close individual tabs by clicking the × button on each tab.');
+    }
+
+    /**
+     * Handle Exit action
+     */
+    function handleExit() {
+        window.location.href = 'index.html';
     }
 
     /**

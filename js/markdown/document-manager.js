@@ -114,9 +114,11 @@ class DocumentManager {
                 const newIndex = index > 0 ? index - 1 : 0;
                 this.switchDocument(this.documents[newIndex].id);
             } else {
-                this.activeDocumentId = null;
                 // Reset untitled counter when all documents are closed
                 this.untitledCounter = 1;
+                // Create a new empty document
+                const newDoc = this.createDocument();
+                this.switchDocument(newDoc.id);
             }
         }
 

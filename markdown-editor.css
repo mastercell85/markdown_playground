@@ -32,7 +32,7 @@ footer,
 /* Intro section needs to be positioned for absolute children */
 .intro {
     position: relative;
-    z-index: 3;
+    z-index: 15; /* Higher than document tabs to allow editor panels to appear above */
 }
 
 /* Hide header completely on markdown editor page */
@@ -45,6 +45,10 @@ header {
 .main.supporting {
     position: relative;
     z-index: 1;
+    width: 100% !important; /* Override base CSS width constraint */
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 /* Editor panel base styling */
@@ -422,7 +426,7 @@ header {
     margin-top: 105px; /* Panel tabs (70px) + Document tabs (35px) = 105px */
     gap: 0;
     width: 100%;
-    height: calc(100vh - 105px); /* Full viewport minus top offset */
+    height: calc(100vh - 125px); /* Full viewport minus top offset and extra padding for scrollbars */
     background: rgba(0, 0, 0, 0.6);
 }
 

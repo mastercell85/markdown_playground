@@ -16,7 +16,7 @@
     --preamble-margin-left-hover: -490px;
     --preamble-bottom-initial: 90%;
     --preamble-bottom-hover: 10%;
-    --preamble-hook: url(hook1.svg);
+    --preamble-hook: url(../assets/hook1.svg);
     --preamble-hook-offset: -40px;
     --preamble-frame-top-offset: 655px;
     --preamble-tab-height: 70px;
@@ -35,7 +35,7 @@
     overflow: hidden;
 
     /* Visual */
-    background: url(layer-middle.svg) repeat-y center top;
+    background: url(../assets/layer-middle.svg) repeat-y center top;
     -moz-background-size: var(--preamble-width) auto;
     -o-background-size: var(--preamble-width) auto;
     -webkit-background-size: var(--preamble-width) auto;
@@ -87,7 +87,7 @@
     top: -700px;
     height: 700px;
     background: var(--preamble-hook) no-repeat center var(--preamble-hook-offset),
-                url(layer-frame.svg) no-repeat center var(--preamble-frame-top-offset);
+                url(../assets/layer-frame.svg) no-repeat center var(--preamble-frame-top-offset);
     -moz-background-size: auto auto, var(--preamble-width) auto;
     -o-background-size: auto auto, var(--preamble-width) auto;
     -webkit-background-size: auto auto, var(--preamble-width) auto;
@@ -97,7 +97,7 @@
 .preamble::after {
     bottom: -45px;
     height: 45px;
-    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
     -moz-background-size: var(--preamble-width) auto;
     -o-background-size: var(--preamble-width) auto;
     -webkit-background-size: var(--preamble-width) auto;

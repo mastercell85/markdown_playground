@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>Markdown Editor - CSS Zen Garden</title>
 
-	<link rel="stylesheet" media="screen" href="markdown-editor.css">
+	<link rel="stylesheet" media="screen" href="css/markdown-editor.css">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="author" content="Dave Shea">
@@ -126,6 +126,18 @@
 <div class="extra1" role="presentation"></div><div class="extra2" role="presentation"></div><div class="extra3" role="presentation"></div>
 <div class="extra4" role="presentation"></div><div class="extra5" role="presentation"></div><div class="extra6" role="presentation"></div>
 
-<script src="markdown-editor.js"></script>
+<!-- Shared modules -->
+<script src="js/shared/panel-manager.js"></script>
+<script src="js/shared/resizable-pane.js"></script>
+
+<!-- Markdown modules -->
+<script src="js/markdown/rule-engine.js"></script>
+<script src="js/markdown/block-processor.js"></script>
+<script src="js/markdown/markdown-parser.js"></script>
+<script src="js/markdown/window-manager.js"></script>
+<script src="js/markdown/markdown-renderer.js"></script>
+
+<!-- Main application script -->
+<script src="js/markdown-editor-main.js"></script>
 </body>
 </html>

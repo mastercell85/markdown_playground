@@ -16,7 +16,7 @@
     --summary-margin-right-hover: -460px;
     --summary-bottom-initial: 90%;
     --summary-bottom-hover: 40%;
-    --summary-hook: url(hook2.svg);
+    --summary-hook: url(../assets/hook2.svg);
     --summary-hook-offset: -34px;
     --summary-frame-top-offset: 659px;
     --summary-tab-height: 70px;
@@ -35,7 +35,7 @@
     overflow: hidden;
 
     /* Visual */
-    background: url(layer-middle.svg) repeat-y center top;
+    background: url(../assets/layer-middle.svg) repeat-y center top;
     background-color: transparent;
     -moz-background-size: var(--summary-width) auto;
     -o-background-size: var(--summary-width) auto;
@@ -88,7 +88,7 @@
     top: -700px;
     height: 700px;
     background: var(--summary-hook) no-repeat center var(--summary-hook-offset),
-                url(layer-frame.svg) no-repeat center var(--summary-frame-top-offset);
+                url(../assets/layer-frame.svg) no-repeat center var(--summary-frame-top-offset);
     -moz-background-size: auto auto, var(--summary-width) auto;
     -o-background-size: auto auto, var(--summary-width) auto;
     -webkit-background-size: auto auto, var(--summary-width) auto;
@@ -98,7 +98,7 @@
 .summary::after {
     bottom: -41px;
     height: 41px;
-    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
     -moz-background-size: var(--summary-width) auto;
     -o-background-size: var(--summary-width) auto;
     -webkit-background-size: var(--summary-width) auto;

@@ -59,7 +59,7 @@ header {
     width: 225px;
     height: 35px;
     overflow: visible;
-    background: url(layer-middle.svg) repeat-y center top;
+    background: url(../assets/layer-middle.svg) repeat-y center top;
     background-size: 225px auto;
     color: #999;
     transition: transform 1s ease-out,
@@ -101,15 +101,15 @@ header {
 .files-panel::before {
     top: -350px;
     height: 350px;
-    background: url(hook1.svg) no-repeat center -20px,
-                url(layer-frame.svg) no-repeat center 328px;
+    background: url(../assets/hook1.svg) no-repeat center -20px,
+                url(../assets/layer-frame.svg) no-repeat center 328px;
     background-size: auto auto, 225px auto;
 }
 
 .files-panel::after {
     bottom: -23px;
     height: 23px;
-    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
     background-size: 225px auto;
 }
 
@@ -139,15 +139,15 @@ header {
 .edit-panel::before {
     top: -350px;
     height: 350px;
-    background: url(hook2.svg) no-repeat center -17px,
-                url(layer-frame.svg) no-repeat center 330px;
+    background: url(../assets/hook2.svg) no-repeat center -17px,
+                url(../assets/layer-frame.svg) no-repeat center 330px;
     background-size: auto auto, 225px auto;
 }
 
 .edit-panel::after {
     bottom: -21px;
     height: 21px;
-    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
     background-size: 225px auto;
 }
 
@@ -177,15 +177,15 @@ header {
 .view-panel::before {
     top: -350px;
     height: 350px;
-    background: url(hook1.svg) no-repeat center -20px,
-                url(layer-frame.svg) no-repeat center 328px;
+    background: url(../assets/hook1.svg) no-repeat center -20px,
+                url(../assets/layer-frame.svg) no-repeat center 328px;
     background-size: auto auto, 225px auto;
 }
 
 .view-panel::after {
     bottom: -23px;
     height: 23px;
-    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
     background-size: 225px auto;
 }
 
@@ -215,15 +215,15 @@ header {
 .settings-panel::before {
     top: -350px;
     height: 350px;
-    background: url(hook2.svg) no-repeat center -17px,
-                url(layer-frame.svg) no-repeat center 330px;
+    background: url(../assets/hook2.svg) no-repeat center -17px,
+                url(../assets/layer-frame.svg) no-repeat center 330px;
     background-size: auto auto, 225px auto;
 }
 
 .settings-panel::after {
     bottom: -21px;
     height: 21px;
-    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
     background-size: 225px auto;
 }
 
@@ -253,15 +253,15 @@ header {
 .back-panel::before {
     top: -350px;
     height: 350px;
-    background: url(hook1.svg) no-repeat center -20px,
-                url(layer-frame.svg) no-repeat center 328px;
+    background: url(../assets/hook1.svg) no-repeat center -20px,
+                url(../assets/layer-frame.svg) no-repeat center 328px;
     background-size: auto auto, 225px auto;
 }
 
 .back-panel::after {
     bottom: -23px;
     height: 23px;
-    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
     background-size: 225px auto;
 }
 

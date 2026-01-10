@@ -1,0 +1,158 @@
+/**
+* Benefits Panel - Right-side content panel
+*
+* Configuration:
+* - Position: Right side, retracts to top
+* - Width: 460px (content) + 140px padding
+* - Hook: hook3.svg
+* - Initial state: Off-screen top, rotated in 3D space
+* - Hover state: Visible at center-right, straightens
+* - Animation: Content slides with slider-benefits animation
+*/
+
+/* Main container for right-side panels */
+.main {
+    -moz-perspective: 1000px;
+    -ms-perspective: 1000px;
+    -o-perspective: 1000px;
+    -webkit-perspective: 1000px;
+    perspective: 1000px;
+    -moz-perspective-origin: right center;
+    -ms-perspective-origin: right center;
+    -webkit-perspective-origin: right center;
+    perspective-origin: right center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    width: 50%;
+    height: 100%;
+}
+
+/* Base article panel styling */
+.main div[role="article"] {
+    /* Panel configuration */
+    --article-width: 460px;
+    --article-padding-top: 55px;
+    --article-padding-right: 70px;
+    --article-padding-bottom: 50px;
+    --article-padding-left: 70px;
+    --article-height: 355px;
+    --article-right-position: 40px;
+    --article-top-initial: -50%;
+    --article-top-hover: 8vh;
+    --article-tab-height: 120px;
+
+    /* Positioning */
+    position: absolute;
+    top: var(--article-top-initial);
+    right: var(--article-right-position);
+    visibility: hidden;
+    margin-top: 0;
+    padding: var(--article-padding-top)
+             var(--article-padding-right)
+             var(--article-padding-bottom)
+             var(--article-padding-left);
+    width: var(--article-width);
+
+    /* Tab mode - show only top portion when retracted */
+    height: var(--article-tab-height);
+    overflow: hidden;
+
+    /* Visual */
+    background: url(layer.svg) no-repeat left center;
+    -moz-background-size: auto 100%;
+    -o-background-size: auto 100%;
+    -webkit-background-size: auto 100%;
+    background-size: auto 100%;
+
+    /* Initial 3D transform */
+    -moz-transform: rotateY(-30deg);
+    -ms-transform: scale(1);
+    -o-transform: rotateY(-30deg);
+    -webkit-transform: rotateY(-30deg);
+    transform: rotateY(-30deg);
+
+    /* Transitions */
+    -moz-transition: -moz-transform 1s ease-out,
+                     left 1s ease-out,
+                     right 1s ease-out,
+                     top 1s 1s ease-out,
+                     margin-top 1s 1s ease-out,
+                     height 1s ease-out;
+    -o-transition: -o-transform 1s ease-out,
+                   left 1s ease-out,
+                   right 1s ease-out,
+                   top 1s 1s ease-out,
+                   margin-top 1s 1s ease-out,
+                   height 1s ease-out;
+    -webkit-transition: -webkit-transform 1s ease-out,
+                        left 1s ease-out,
+                        right 1s ease-out,
+                        top 1s 1s ease-out,
+                        margin-top 1s 1s ease-out,
+                        height 1s ease-out;
+    transition: transform 1s ease-out,
+                left 1s ease-out,
+                right 1s ease-out,
+                top 1s 1s ease-out,
+                margin-top 1s 1s ease-out,
+                height 1s ease-out;
+}
+
+/* Show panel on main hover - expand from tab to full panel */
+.main:hover div[role="article"] {
+    top: var(--article-top-hover);
+    height: var(--article-height);
+}
+
+/* Hook element for articles */
+.main div[role="article"]::before {
+    position: absolute;
+    top: -658px;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 700px;
+    background: transparent url(hook3.svg) no-repeat center bottom;
+    -moz-background-size: auto 100%;
+    -o-background-size: auto 100%;
+    -webkit-background-size: auto 100%;
+    background-size: auto 100%;
+    content: '';
+}
+
+/* Typography */
+.main div[role="article"] p {
+    position: absolute;
+    padding: 10px 0;
+    width: var(--article-width);
+    text-align: justify;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+.main div[role="article"] h3 {
+    padding-top: 0;
+    font-size: 36px;
+    line-height: 40px;
+}
+
+/* Benefits-specific panel */
+.benefits {
+    -moz-transition: opacity 1s ease-out;
+    -o-transition: opacity 1s ease-out;
+    -webkit-transition: opacity 1s ease-out;
+    transition: opacity 1s ease-out;
+}
+
+/* Animation - content slides within panel */
+.main .benefits,
+.main .benefits p:nth-child(2) {
+    -moz-animation: slider-benefits 100s infinite linear;
+    -o-animation: slider-benefits 100s infinite linear;
+    -webkit-animation: slider-benefits 100s infinite linear;
+    animation: slider-benefits 100s infinite linear;
+}

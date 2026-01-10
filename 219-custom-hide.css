@@ -1,0 +1,23 @@
+/**
+* Custom rules to hide specific elements at all viewport sizes
+* This file loads last to override all other styles
+*/
+
+/* Hide sidebar and its contents at all sizes */
+.sidebar,
+aside.sidebar,
+.sidebar *,
+.design-selection,
+.design-archives,
+.zen-resources,
+.wrapper,
+footer,
+.explanation,
+.participation,
+.requirements,
+.benefits {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}

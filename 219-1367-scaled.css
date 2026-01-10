@@ -1,0 +1,148 @@
+/**
+* Scaled version of 219-1367.css
+* Uses modular panel system for easy customization and duplication
+*/
+
+/* Import the original 1367 CSS for base styles and animations */
+@import url("219-1367.css");
+
+/* Import modular panel system */
+@import url("219-panel-base.css");
+@import url("219-panel-header.css");
+@import url("219-panel-preamble.css");
+@import url("219-panel-summary.css");
+@import url("219-panel-tabs.css");
+@import url("219-panel-menu.css");
+
+/* Hide specific content panels */
+.explanation,
+.participation,
+.requirements,
+.sidebar,
+aside.sidebar,
+.sidebar .wrapper,
+.design-selection,
+.design-archives,
+.zen-resources,
+footer {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Add responsive scaling for viewports smaller than the design target */
+@media (max-width: 1366px) and (min-width: 1024px) {
+    /* Scale to 75% for medium screens */
+
+    header {
+        width: calc(450px * 0.75);
+        margin-left: calc(-190px * 0.75);
+    }
+
+    header::before,
+    header::after {
+        width: calc(450px * 0.75);
+    }
+
+    .preamble {
+        width: calc(495px * 0.75);
+        margin-left: calc(-580px * 0.75);
+        height: calc(70px * 0.75);
+    }
+
+    .preamble::before,
+    .preamble::after {
+        width: calc(495px * 0.75);
+    }
+
+    .preamble:hover {
+        margin-left: calc(-490px * 0.75);
+    }
+
+    .summary {
+        width: calc(450px * 0.75);
+        margin-right: calc(-500px * 0.75);
+        height: calc(70px * 0.75);
+    }
+
+    .summary::before,
+    .summary::after {
+        width: calc(450px * 0.75);
+    }
+
+    .summary:hover {
+        margin-right: calc(-460px * 0.75);
+    }
+
+    h1 {
+        font-size: calc(60px * 0.75);
+        padding: calc(40px * 0.75) calc(70px * 0.75) calc(10px * 0.75) calc(70px * 0.75);
+    }
+
+    h2 {
+        font-size: calc(16px * 0.75);
+        padding: calc(10px * 0.75) calc(70px * 0.75) calc(40px * 0.75) calc(70px * 0.75);
+    }
+}
+
+@media (max-width: 1023px) and (min-width: 800px) {
+    /* Scale to 55% for smaller screens */
+
+    header {
+        width: calc(450px * 0.55);
+        margin-left: calc(-190px * 0.55);
+    }
+
+    header::before,
+    header::after {
+        width: calc(450px * 0.55);
+    }
+
+    .preamble {
+        width: calc(495px * 0.55);
+        margin-left: calc(-580px * 0.55);
+        height: calc(70px * 0.55);
+    }
+
+    .preamble::before,
+    .preamble::after {
+        width: calc(495px * 0.55);
+    }
+
+    .preamble:hover {
+        margin-left: calc(-490px * 0.55);
+    }
+
+    .summary {
+        width: calc(450px * 0.55);
+        margin-right: calc(-500px * 0.55);
+        height: calc(70px * 0.55);
+    }
+
+    .summary::before,
+    .summary::after {
+        width: calc(450px * 0.55);
+    }
+
+    .summary:hover {
+        margin-right: calc(-460px * 0.55);
+    }
+
+    h1 {
+        font-size: calc(60px * 0.55);
+        padding: calc(40px * 0.55) calc(70px * 0.55) calc(10px * 0.55) calc(70px * 0.55);
+    }
+
+    h2 {
+        font-size: calc(16px * 0.55);
+        padding: calc(10px * 0.55) calc(70px * 0.55) calc(40px * 0.55) calc(70px * 0.55);
+    }
+
+    .main div[role="article"] p {
+        width: calc(460px * 0.55);
+        font-size: calc(20px * 0.55);
+    }
+
+    .main div[role="article"] h3 {
+        font-size: calc(36px * 0.55);
+    }
+}

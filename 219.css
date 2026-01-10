@@ -55,3 +55,5 @@
 @import url("219-1367-scaled.css") all and (min-width: 800px);
 @import url("219-1600.css") all and (min-width: 1600px);
 @import url("219-bg.css") all and (min-width: 400px);
+/* Custom hiding rules - loads last to override everything */
+@import url("219-custom-hide.css");

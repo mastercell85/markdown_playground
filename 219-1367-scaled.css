@@ -6,9 +6,46 @@
 /* Import the original unchanged */
 @import url("219-1367.css");
 
+/* Hide specific content panels */
+.explanation,
+.participation,
+.requirements,
+.sidebar,
+aside.sidebar,
+.sidebar .wrapper,
+.design-selection,
+.design-archives,
+.zen-resources,
+footer {
+    display: none !important;
+    visibility: hidden !important;
+}
+
 /* Add responsive scaling for viewports smaller than the design target */
 @media (max-width: 1366px) and (min-width: 1024px) {
     /* Scale to 75% for medium screens */
+
+    /* Retract wrapper (sidebar) to top, show on hover */
+    .wrapper {
+        top: -50%;
+        margin-top: 0;
+    }
+
+    .wrapper:hover {
+        top: 10vh;
+        margin-top: 0;
+    }
+
+    /* Retract main content articles to top, show on hover */
+    .main div[role="article"] {
+        top: -50%;
+        margin-top: 0;
+    }
+
+    .main:hover div[role="article"] {
+        top: 10vh;
+    }
+
     header {
         width: calc(450px * 0.75);
         margin-left: calc(-190px * 0.75);
@@ -91,6 +128,28 @@
 
 @media (max-width: 1023px) and (min-width: 800px) {
     /* Scale to 55% for smaller screens */
+
+    /* Retract wrapper (sidebar) to top, show on hover */
+    .wrapper {
+        top: -50%;
+        margin-top: 0;
+    }
+
+    .wrapper:hover {
+        top: 8vh;
+        margin-top: 0;
+    }
+
+    /* Retract main content articles to top, show on hover */
+    .main div[role="article"] {
+        top: -50%;
+        margin-top: 0;
+    }
+
+    .main:hover div[role="article"] {
+        top: 8vh;
+    }
+
     header {
         width: calc(450px * 0.55);
         margin-left: calc(-190px * 0.55);

@@ -51,11 +51,28 @@ The markdown editor now supports **universal CSS theme loading**, allowing you t
 - Uses the base CSS Zen Garden styling
 - No external CSS loaded
 
+### Cyberpunk
+- Type: `typora` (protected)
+- Modern cyberpunk theme with neon aesthetics and backlit glass UI
+- Located at `themes/cyberpunk.css`
+- **Protected**: Cannot be deleted from theme selector
+- Features:
+  - Neon color palette (cyan, pink, purple, yellow, green)
+  - Orbitron and Rajdhani fonts
+  - Glowing text effects on headings
+  - Matrix-style code blocks with green text
+  - Backlit glass effect on panel content areas
+  - Wire decorations disabled for clean modern look
+
 ### LCARS
 - Type: `typora` (protected)
 - Star Trek LCARS interface theme
 - Located at `themes/lcars-theme.css`
 - **Protected**: Cannot be deleted from theme selector
+- Features:
+  - Orange/purple LCARS color scheme
+  - Decorative wire frame elements
+  - Teko font for authentic LCARS typography
 
 ### Sample Dark
 - Type: `local`
@@ -299,7 +316,18 @@ To use Typora themes:
 
 ### Wire Decorations for Typora Themes
 
-Typora themes can optionally use LCARS-style wire decorations on panel tabs (FILE, EDIT, VIEW, etc.). These are decorative rectangles that appear before and after the tab text.
+Typora themes can optionally use LCARS-style wire decorations on panel tabs (FILE, EDIT, VIEW, etc.). These decorations consist of two types:
+
+1. **Tab Label Decorations** - Small rectangles before/after tab text (e.g., FILE, EDIT, VIEW)
+   - Defined in `css/219-panel-tabs.css` as `.panel-tab-label::before/::after`
+   - Only apply when `body.typora-mode` class is present
+   - Controlled by `disableWireDecorations` flag
+
+2. **Panel Container Decorations** - SVG background wire frames on panel containers
+   - Defined in `css/markdown-editor.css` as `.files-panel::before`, `.edit-panel::before`, etc.
+   - Use SVG backgrounds: `url(../assets/hook2.svg)` and `url(../assets/layer-frame.svg)`
+   - These are always present unless explicitly hidden by theme CSS
+   - Located at lines 111-287 in markdown-editor.css
 
 **Auto-Detection**:
 - Themes with "cyberpunk", "modern", or "minimal" in the filename automatically disable wire decorations
@@ -315,7 +343,39 @@ await themeLoader.loadCustomCSSFile(file, { disableWireDecorations: true });
 await themeLoader.loadCustomCSSFile(file, { disableWireDecorations: false });
 ```
 
-When wire decorations are disabled, the `typora-mode` class is removed from `<body>`, which prevents the CSS rules in `css/219-panel-tabs.css` from applying.
+**How It Works**:
+1. Setting `disableWireDecorations: true` removes the `typora-mode` class from `<body>`
+2. This prevents tab label decorations (::before/::after on .panel-tab-label) from applying
+3. Themes should also include CSS to hide panel container decorations:
+```css
+.files-panel::before,
+.files-panel::after,
+.edit-panel::before,
+.edit-panel::after,
+.view-panel::before,
+.view-panel::after,
+.settings-panel::before,
+.settings-panel::after,
+.back-panel::before,
+.back-panel::after {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: none !important;
+    content: normal !important;
+}
+```
+
+**Troubleshooting Wire Decorations**:
+If wire decorations are still visible after setting `disableWireDecorations: true`:
+1. Use browser DevTools to inspect the wire element
+2. Check the Styles panel to identify the source CSS file and line number
+3. Wire decorations can come from:
+   - `.panel-tab-label::before/::after` (tab labels) - controlled by typora-mode class
+   - `.files-panel::before`, `.edit-panel::before`, etc. (panel containers) - need explicit CSS hiding
+4. Add CSS rules targeting the specific selectors to your theme
 
 ## CSS Zen Garden Theme Support
 
@@ -327,6 +387,54 @@ CSS Zen Garden themes are fully supported:
 
 **Note**: Zen Garden themes redesign the entire page and may affect layout significantly.
 
+## Advanced Theme Features
+
+### Backlit Glass Effect
+
+The Cyberpunk theme demonstrates a realistic backlit glass effect for panel content areas. This creates an illuminated, translucent appearance similar to backlit frosted glass.
+
+**Implementation**:
+```css
+.panel-content {
+    position: relative !important;
+    background:
+        /* Edge lighting - brightest at borders */
+        radial-gradient(ellipse at top left, rgba(255, 255, 255, 0.12) 0%, transparent 40%),
+        radial-gradient(ellipse at top right, rgba(0, 245, 255, 0.10) 0%, transparent 40%),
+        radial-gradient(ellipse at bottom left, rgba(179, 0, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(ellipse at bottom right, rgba(255, 255, 255, 0.10) 0%, transparent 40%),
+        /* Base gradient */
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.06) 0%,
+            rgba(0, 245, 255, 0.04) 20%,
+            rgba(10, 10, 15, 0.98) 40%,
+            rgba(10, 10, 15, 0.98) 60%,
+            rgba(179, 0, 255, 0.04) 80%,
+            rgba(255, 255, 255, 0.06) 100%
+        ),
+        var(--cyber-black) !important;
+    box-shadow:
+        /* Inner glow layers for depth */
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        inset 0 -1px 0 rgba(0, 245, 255, 0.08),
+        inset 1px 0 0 rgba(179, 0, 255, 0.06),
+        inset -1px 0 0 rgba(255, 255, 255, 0.08),
+        /* Soft overall glow */
+        inset 0 0 60px rgba(255, 255, 255, 0.02),
+        inset 0 0 120px rgba(0, 245, 255, 0.015) !important;
+    backdrop-filter: blur(3px) brightness(1.05) !important;
+    border: 1px solid rgba(0, 245, 255, 0.1) !important;
+}
+```
+
+**Key Techniques**:
+1. **Radial gradients at corners** - Creates edge lighting effect where light appears brightest at borders
+2. **Layered inset box-shadows** - Simulates light hitting the inner surface from different angles
+3. **Diagonal base gradient** - Darker in center, brighter at edges mimics real backlit glass
+4. **Backdrop-filter with brightness** - Makes it look like light is passing through the glass
+5. **Low opacity values** (0.02-0.15) - Subtle effect that doesn't overwhelm content
+
 ## Best Practices
 
 ### Theme Design
@@ -334,17 +442,20 @@ CSS Zen Garden themes are fully supported:
 - Test with different content lengths
 - Ensure good contrast for readability
 - Support both light and dark preferences
+- Consider adding special effects (glow, glass, shadows) for immersive themes
 
 ### Performance
 - Keep CSS files small (<100KB recommended)
 - Minimize use of heavy shadows/effects
 - Use CSS variables for consistency
+- Multiple layered gradients and shadows can impact performance on low-end devices
 
 ### Compatibility
 - Test theme with editor features (tabs, panels, etc.)
 - Ensure buttons remain clickable
 - Check scrollbar visibility
 - Verify divider remains draggable
+- Test panel expansion/collapse animations with your theme styling
 
 ## Troubleshooting
 

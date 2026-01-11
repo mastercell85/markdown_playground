@@ -41,12 +41,16 @@
                 { element: null, selector: '.edit-panel', class: 'panel-open' },
                 { element: null, selector: '.view-panel', class: 'panel-open' },
                 { element: null, selector: '.settings-panel', class: 'panel-open' },
+                { element: null, selector: '.help-panel', class: 'panel-open' },
                 { element: null, selector: '.back-panel', class: 'panel-open' }
             ]
         };
 
         const panelManager = new PanelManager(panelConfig);
         panelManager.init();
+
+        // Initialize Help panel collapsible sections
+        initializeHelpPanel();
 
         // Setup Back button
         const backButton = document.getElementById('back-to-home');
@@ -609,6 +613,27 @@
                 handleZoomChange(150);
             });
         }
+    }
+
+    /**
+     * Initialize Help panel collapsible sections
+     */
+    function initializeHelpPanel() {
+        const helpSections = document.querySelectorAll('.help-section-header');
+
+        helpSections.forEach(header => {
+            header.addEventListener('click', function(event) {
+                event.stopPropagation();
+
+                // Get the parent section
+                const section = this.closest('.help-section');
+
+                if (section) {
+                    // Toggle expanded class
+                    section.classList.toggle('expanded');
+                }
+            });
+        });
     }
 
     /**

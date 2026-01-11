@@ -18,12 +18,15 @@ class RuleEngine {
      * Initialize default markdown rules
      */
     initializeDefaultRules() {
-        // Headers (must be processed in order from most specific to least)
-        this.addRule(/^### (.*$)/gim, '<h3>$1</h3>', 'header-3');
-        this.addRule(/^## (.*$)/gim, '<h2>$1</h2>', 'header-2');
-        this.addRule(/^# (.*$)/gim, '<h1>$1</h1>', 'header-1');
+        // Note: Headers are now processed by BlockProcessor, not here
 
-        // Bold and Italic
+        // Images (must come before links)
+        this.addRule(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" />', 'image');
+
+        // Links
+        this.addRule(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>', 'link');
+
+        // Bold and Italic (process in order from most specific to least)
         this.addRule(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>', 'bold-italic-asterisk');
         this.addRule(/\*\*(.+?)\*\*/g, '<strong>$1</strong>', 'bold-asterisk');
         this.addRule(/\*(.+?)\*/g, '<em>$1</em>', 'italic-asterisk');
@@ -31,8 +34,8 @@ class RuleEngine {
         this.addRule(/__(.+?)__/g, '<strong>$1</strong>', 'bold-underscore');
         this.addRule(/_(.+?)_/g, '<em>$1</em>', 'italic-underscore');
 
-        // Links
-        this.addRule(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>', 'link');
+        // Strikethrough
+        this.addRule(/~~(.+?)~~/g, '<del>$1</del>', 'strikethrough');
 
         // Inline code
         this.addRule(/`([^`]+)`/g, '<code>$1</code>', 'inline-code');

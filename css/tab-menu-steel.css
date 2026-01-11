@@ -363,16 +363,28 @@
     background-size: var(--steel-help-width) auto;
 }
 
-/* Help content padding */
+/* Help content padding - align content within the frame area */
+.intro.tab-menu-steel .help-panel .panel-content {
+    padding: 10px 40px 20px 80px !important;
+}
+
 .intro.tab-menu-steel .help-content {
-    padding: 10px 25px 20px 55px;
+    padding: 0;
 }
 
 .intro.tab-menu-steel .help-panel h3 {
-    padding-left: 40px;
-    padding-right: 40px;
+    padding: 8px 0 0 0;
     font-size: 1.5rem;
     margin-top: 0;
+}
+
+.intro.tab-menu-steel .help-panel p {
+    padding: 8px 0 0 0;
+}
+
+.intro.tab-menu-steel .help-panel .panel-button {
+    width: 100%;
+    margin: 10px 0;
 }
 
 /* Help section styling */

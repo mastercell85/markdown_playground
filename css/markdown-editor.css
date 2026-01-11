@@ -71,9 +71,33 @@ header {
     overflow: hidden;
 }
 
+/* ============================================================================
+   GRID LAYOUT SYSTEM FOR PANELS
+   ============================================================================ */
+
+/* Grid container for all editor panels */
+.intro {
+    display: grid;
+    grid-template-columns: repeat(6, auto); /* Auto-sized columns based on content */
+    justify-content: center; /* Center the tabs horizontally */
+    column-gap: 0px; /* Spacing between tabs - controlled by grid (tabs touching) */
+    position: fixed;
+    top: 10px;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    pointer-events: none; /* Allow clicks to pass through empty grid areas */
+    height: 50px; /* Base height for collapsed tabs */
+}
+
+/* Re-enable pointer events on actual panels */
+.intro .editor-panel {
+    pointer-events: auto;
+}
+
 /* Editor panel base styling */
 .editor-panel {
-    position: fixed;
+    position: relative; /* Changed from fixed to relative for grid positioning */
     z-index: 5;
     padding: 0;
     width: 225px;
@@ -82,15 +106,14 @@ header {
     background: url(../assets/layer-middle.svg) repeat-y center top;
     background-size: 225px auto;
     color: #999;
+    margin: 0 -35px 0 0; /* Negative right margin to pull tabs closer together */
     transition: transform 1s ease-out,
                 bottom 1s ease-out,
                 top 1s ease-out,
-                left 1s ease-out,
-                right 1s ease-out,
-                margin 1s 1s ease-out,
                 height 1s ease-out,
                 width 1s ease-out,
-                background-size 1s ease-out;
+                background-size 1s ease-out,
+                margin 1s ease-out;
 }
 
 /* Tab label sizing for editor panels - scaled to half */
@@ -104,9 +127,8 @@ header {
 
 /* Files Panel - First from left */
 .files-panel {
-    top: 10px;
-    left: 50%;
-    margin-left: -640px;
+    grid-column: 1; /* First column */
+    grid-row: 1;
     transform: rotate(-5deg) skew(-5deg) scale(0.8);
 }
 
@@ -137,14 +159,13 @@ header {
 
 .files-panel.panel-open,
 .files-panel:hover {
-    margin-left: -595px;
+    /* No margin needed - grid handles positioning */
 }
 
 /* Edit Panel - Second from left */
 .edit-panel {
-    top: 10px;
-    left: 50%;
-    margin-left: -450px;
+    grid-column: 2; /* Second column */
+    grid-row: 1;
     transform: rotate(-5deg) skew(-5deg) scale(0.8);
 }
 
@@ -175,14 +196,13 @@ header {
 
 .edit-panel.panel-open,
 .edit-panel:hover {
-    margin-left: -405px;
+    /* No margin needed - grid handles positioning */
 }
 
 /* View Panel - Third from left */
 .view-panel {
-    top: 10px;
-    left: 50%;
-    margin-left: -260px;
+    grid-column: 3; /* Third column */
+    grid-row: 1;
     transform: rotate(-5deg) skew(-5deg) scale(0.8);
 }
 
@@ -213,14 +233,13 @@ header {
 
 .view-panel.panel-open,
 .view-panel:hover {
-    margin-left: -215px;
+    /* No margin needed - grid handles positioning */
 }
 
 /* Settings Panel - Fourth from left */
 .settings-panel {
-    top: 10px;
-    left: 50%;
-    margin-left: -70px;
+    grid-column: 4; /* Fourth column */
+    grid-row: 1;
     transform: rotate(-5deg) skew(-5deg) scale(0.8);
 }
 
@@ -251,14 +270,13 @@ header {
 
 .settings-panel.panel-open,
 .settings-panel:hover {
-    margin-left: -25px;
+    /* No margin needed - grid handles positioning */
 }
 
-/* Help Panel - Fifth from left (takes old Back position) */
+/* Help Panel - Fifth from left */
 .help-panel {
-    top: 10px;
-    left: 50%;
-    margin-left: 120px;
+    grid-column: 5; /* Fifth column */
+    grid-row: 1;
     transform: rotate(-5deg) skew(-5deg) scale(0.8);
 }
 
@@ -290,7 +308,7 @@ header {
 
 .help-panel.panel-open,
 .help-panel:hover {
-    margin-left: 52.5px; /* Shift left to center the expansion: 165 - (675-450)/2 */
+    /* No margin needed - grid handles positioning */
 }
 
 .help-panel.panel-open::before,
@@ -310,11 +328,10 @@ header {
     background-size: 675px auto;
 }
 
-/* Back Panel - Sixth from left (shifted right by tab width + spacing) */
+/* Back Panel - Sixth from left */
 .back-panel {
-    top: 10px;
-    left: 50%;
-    margin-left: 310px;
+    grid-column: 6; /* Sixth column */
+    grid-row: 1;
     transform: rotate(-5deg) skew(-5deg) scale(0.8);
 }
 
@@ -345,7 +362,7 @@ header {
 
 .back-panel.panel-open,
 .back-panel:hover {
-    margin-left: 355px;
+    /* No margin needed - grid handles positioning */
 }
 
 /* Open state for editor panels */
@@ -1232,3 +1249,9 @@ body.typora-mode .editor-input {
 body.typora-mode .editor-section-content {
     background: transparent;
 }
+
+/* ============================================================================
+   RESPONSIVE MEDIA QUERIES - Browser Viewport Width
+   ============================================================================ */
+
+/* No media queries needed - vw units scale proportionally with viewport width */

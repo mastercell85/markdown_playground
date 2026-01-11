@@ -39,7 +39,7 @@
     --steel-frame-offset: -23px;
 
     /* Steel Menu - Help panel expanded width */
-    --steel-help-width: 850px;
+    --steel-help-width: 650px;
 }
 
 /* ============================================================================
@@ -336,6 +336,7 @@
     background-size: var(--steel-help-width) auto;
     z-index: 10;
     max-height: none;
+    /* Default: no transform for large screens (>=1400px) */
 }
 
 /* Help panel scrollable content */
@@ -345,12 +346,13 @@
     overflow-x: hidden !important;
 }
 
-/* Help panel decorations expand */
+/* Help panel decorations expand and shift with panel */
 .intro.tab-menu-steel .help-panel.panel-open::before,
 .intro.tab-menu-steel .help-panel:hover::before,
 .intro.tab-menu-steel .help-panel.panel-open::after,
 .intro.tab-menu-steel .help-panel:hover::after {
     width: var(--steel-help-width);
+    /* Decorations inherit transform from parent, no additional shift needed */
 }
 
 .intro.tab-menu-steel .help-panel.panel-open::before,
@@ -595,6 +597,34 @@
     border-top: none;
     margin-top: 10px;
     padding-top: 0;
+}
+
+/* ============================================================================
+   STEEL MENU - HELP PANEL RESPONSIVE POSITIONING
+   Shift Help panel left on smaller screens to keep it on viewport
+   ============================================================================ */
+
+@media (max-width: 1399px) {
+    .intro.tab-menu-steel .help-panel.panel-open,
+    .intro.tab-menu-steel .help-panel:hover {
+        /* Shift panel left to stay on screen */
+        transform: translateX(calc(-1 * (var(--steel-help-width) - var(--steel-panel-width)) - 60px));
+    }
+
+    /* Constrain panel content height on smaller screens */
+    .intro.tab-menu-steel .editor-panel.panel-open,
+    .intro.tab-menu-steel .editor-panel:hover {
+        max-height: 60vh;
+    }
+
+    .intro.tab-menu-steel .panel-content {
+        max-height: calc(60vh - 80px) !important;
+        overflow-y: auto !important;
+    }
+
+    .intro.tab-menu-steel .help-panel .panel-content {
+        max-height: calc(60vh - 100px) !important;
+    }
 }
 
 /* ============================================================================

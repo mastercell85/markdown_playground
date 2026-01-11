@@ -208,7 +208,7 @@
 .intro.tab-menu-steel .editor-panel:hover {
     height: auto;
     max-height: 80vh;
-    overflow: hidden;
+    overflow: visible;
     color: var(--steel-panel-text-hover);
     transform: rotateY(0) scale(var(--steel-panel-scale-hover));
 }

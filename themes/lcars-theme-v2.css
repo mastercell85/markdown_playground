@@ -1,0 +1,186 @@
+/**
+ * LCARS Theme - Star Trek LCARS Interface
+ * Refactored to use CSS variables only - no structural CSS
+ * Clean, maintainable, no conflicts
+ */
+
+/* Import LCARS fonts */
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+/* ============================================================================
+   LCARS COLOR PALETTE
+   Based on Star Trek: The Next Generation LCARS 2369
+   ============================================================================ */
+
+:root[data-theme="lcars"] {
+    /* LCARS Color Palette */
+    --lcars-yellow: #ffcc66;
+    --lcars-offblack: #333344;
+    --lcars-orange: #ff9900;
+    --lcars-peach: #ff9966;
+    --lcars-aubergine: #cc6666;
+    --lcars-purple: #cc6699;
+    --lcars-violet: #cc99cc;
+    --lcars-blue: #9999ff;
+    --lcars-grey: #9999cc;
+
+    /* Background Colors */
+    --body-bg: #000;
+    --editor-bg: rgba(0, 0, 0, 0.7);
+    --editor-section-bg: var(--lcars-offblack);
+
+    /* Panel Menu Tabs */
+    --panel-tab-bg: transparent;
+    --panel-tab-text: var(--lcars-grey);
+    --panel-tab-text-hover: var(--lcars-yellow);
+    --panel-tab-border: transparent;
+
+    /* Panel Content */
+    --panel-content-bg: var(--lcars-offblack);
+    --panel-content-text: var(--lcars-yellow);
+    --panel-content-border: var(--lcars-purple);
+    --panel-heading-color: var(--lcars-yellow);
+
+    /* Document Tabs */
+    --doc-tab-bg: rgba(153, 153, 204, 0.15);
+    --doc-tab-text: var(--lcars-grey);
+    --doc-tab-border: rgba(153, 153, 204, 0.3);
+    --doc-tab-active-bg: rgba(255, 204, 102, 0.2);
+    --doc-tab-active-text: var(--lcars-yellow);
+    --doc-tab-active-border: var(--lcars-orange);
+    --doc-tabs-container-bg: #000;
+    --doc-tabs-border: var(--lcars-purple);
+
+    /* Buttons */
+    --button-bg: rgba(255, 153, 0, 0.15);
+    --button-text: var(--lcars-yellow);
+    --button-border: var(--lcars-orange);
+    --button-hover-bg: rgba(255, 153, 0, 0.3);
+    --button-hover-border: var(--lcars-yellow);
+
+    /* Editor/Preview */
+    --textarea-bg: var(--lcars-offblack);
+    --textarea-text: var(--lcars-yellow);
+    --preview-bg: var(--lcars-offblack);
+    --preview-text: var(--lcars-yellow);
+    --divider-bg: var(--lcars-purple);
+    --divider-hover-bg: var(--lcars-orange);
+
+    /* Markdown Content */
+    --md-heading-color: var(--lcars-yellow);
+    --md-text-color: var(--lcars-yellow);
+    --md-link-color: var(--lcars-violet);
+    --md-link-hover: var(--lcars-orange);
+    --md-code-bg: rgba(0, 0, 0, 0.4);
+    --md-code-text: var(--lcars-orange);
+    --md-blockquote-border: var(--lcars-offblack);
+    --md-blockquote-text: var(--lcars-grey);
+    --md-hr-color: var(--lcars-orange);
+
+    /* Typography - LCARS Font */
+    --font-family: 'Teko', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-family-mono: 'Share Tech Mono', "Courier New", monospace;
+    --font-size-base: 16px;
+    --font-size-panel: 22px;
+
+    /* Spacing - LCARS uses compact spacing */
+    --panel-padding: 30px;
+    --button-padding: 8px 12px;
+    --tab-padding: 6px 15px;
+
+    /* Borders - LCARS prefers straight edges */
+    --border-radius: 0;
+    --border-width: 2px;
+
+    /* Transitions */
+    --transition-speed: 0.2s;
+}
+
+/* ============================================================================
+   LCARS-SPECIFIC OVERRIDES
+   (Styles that can't be done with variables alone)
+   ============================================================================ */
+
+/* LCARS text should be uppercase */
+[data-theme="lcars"] .panel-tab-label,
+[data-theme="lcars"] .document-tab,
+[data-theme="lcars"] .panel-button {
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+/* LCARS headings with decorative elements */
+[data-theme="lcars"] #write h1,
+[data-theme="lcars"] #write h2,
+[data-theme="lcars"] #write h3,
+[data-theme="lcars"] #write h4,
+[data-theme="lcars"] #write h5,
+[data-theme="lcars"] #write h6,
+[data-theme="lcars"] .markdown-output h1,
+[data-theme="lcars"] .markdown-output h2,
+[data-theme="lcars"] .markdown-output h3,
+[data-theme="lcars"] .markdown-output h4,
+[data-theme="lcars"] .markdown-output h5,
+[data-theme="lcars"] .markdown-output h6 {
+    text-transform: uppercase;
+    font-weight: 500;
+    line-height: 0.9em;
+}
+
+/* LCARS horizontal rules - thicker orange bar */
+[data-theme="lcars"] #write hr,
+[data-theme="lcars"] .markdown-output hr {
+    height: 4px;
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+/* LCARS selection color */
+[data-theme="lcars"] ::selection {
+    background-color: var(--lcars-yellow);
+    color: var(--lcars-offblack);
+}
+
+/* LCARS scrollbar */
+[data-theme="lcars"] ::-webkit-scrollbar-thumb {
+    background: var(--lcars-orange);
+}
+
+[data-theme="lcars"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--lcars-yellow);
+}
+
+/* LCARS table styling */
+[data-theme="lcars"] #write table,
+[data-theme="lcars"] .markdown-output table {
+    border-collapse: separate;
+    border-spacing: 0.5rem;
+    border: none;
+}
+
+[data-theme="lcars"] #write th,
+[data-theme="lcars"] .markdown-output th {
+    background-color: var(--lcars-grey);
+    color: var(--lcars-offblack);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+[data-theme="lcars"] #write td,
+[data-theme="lcars"] .markdown-output td {
+    background-color: var(--lcars-offblack);
+    color: var(--lcars-yellow);
+}
+
+/* LCARS list markers */
+[data-theme="lcars"] #write ul li::marker,
+[data-theme="lcars"] .markdown-output ul li::marker {
+    color: var(--lcars-aubergine);
+    font-size: 1.2em;
+}
+
+[data-theme="lcars"] #write ol li::marker,
+[data-theme="lcars"] .markdown-output ol li::marker {
+    color: var(--lcars-orange);
+    font-weight: 700;
+}

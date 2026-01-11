@@ -759,25 +759,9 @@
             });
 
             // Click to select theme
-            themeItem.addEventListener('click', async () => {
-                // Special handling for protected Typora themes - load them like custom CSS files
-                if (theme.isProtected && theme.type === 'typora') {
-                    try {
-                        const response = await fetch(theme.url);
-                        const cssText = await response.text();
-                        const blob = new Blob([cssText], { type: 'text/css' });
-                        const filename = theme.url.split('/').pop();
-                        const file = new File([blob], filename, { type: 'text/css' });
-                        await themeLoader.loadCustomCSSFile(file, {
-                            isProtected: true,
-                            disableWireDecorations: theme.disableWireDecorations
-                        });
-                    } catch (error) {
-                        console.error(`Failed to load ${theme.name} theme:`, error);
-                    }
-                } else {
-                    themeLoader.loadThemeById(themeId);
-                }
+            themeItem.addEventListener('click', () => {
+                // Load theme directly by ID - no fetch needed
+                themeLoader.loadThemeById(themeId);
                 modal.remove();
             });
 

@@ -1254,4 +1254,14 @@ body.typora-mode .editor-section-content {
    RESPONSIVE MEDIA QUERIES - Browser Viewport Width
    ============================================================================ */
 
-/* No media queries needed - vw units scale proportionally with viewport width */
+/* On smaller screens, align tabs to the left instead of center to prevent cutoff */
+@media screen and (max-width: 1400px) {
+    .intro {
+        justify-content: flex-start; /* Align tabs to the left on smaller screens */
+        padding-left: 20px; /* Small padding from edge */
+    }
+
+    .editor-panel {
+        margin: 0 -15px 0 0; /* Reduce negative margin on smaller screens (less overlap) */
+    }
+}

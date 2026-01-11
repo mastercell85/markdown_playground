@@ -88,7 +88,9 @@ header {
                 left 1s ease-out,
                 right 1s ease-out,
                 margin 1s 1s ease-out,
-                height 1s ease-out;
+                height 1s ease-out,
+                width 1s ease-out,
+                background-size 1s ease-out;
 }
 
 /* Tab label sizing for editor panels - scaled to half */
@@ -252,11 +254,67 @@ header {
     margin-left: -25px;
 }
 
-/* Back Panel - Fifth from left */
-.back-panel {
+/* Help Panel - Fifth from left (takes old Back position) */
+.help-panel {
     top: 10px;
     left: 50%;
     margin-left: 120px;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.help-panel::before,
+.help-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    display: block;
+    width: 225px;
+    content: '';
+    transition: width 1s ease-out, background-size 1s ease-out;
+}
+
+.help-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(../assets/hook1.svg) no-repeat center -18px,
+                url(../assets/layer-frame.svg) no-repeat center 329px;
+    background-size: auto auto, 225px auto;
+}
+
+.help-panel::after {
+    bottom: -22px;
+    height: 22px;
+    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.help-panel.panel-open,
+.help-panel:hover {
+    margin-left: 52.5px; /* Shift left to center the expansion: 165 - (675-450)/2 */
+}
+
+.help-panel.panel-open::before,
+.help-panel:hover::before,
+.help-panel.panel-open::after,
+.help-panel:hover::after {
+    width: 675px;
+}
+
+.help-panel.panel-open::before,
+.help-panel:hover::before {
+    background-size: auto auto, 675px auto;
+}
+
+.help-panel.panel-open::after,
+.help-panel:hover::after {
+    background-size: 675px auto;
+}
+
+/* Back Panel - Sixth from left (shifted right by tab width + spacing) */
+.back-panel {
+    top: 10px;
+    left: 50%;
+    margin-left: 310px;
     transform: rotate(-5deg) skew(-5deg) scale(0.8);
 }
 
@@ -287,7 +345,7 @@ header {
 
 .back-panel.panel-open,
 .back-panel:hover {
-    margin-left: 165px;
+    margin-left: 355px;
 }
 
 /* Open state for editor panels */
@@ -351,6 +409,135 @@ header {
 
 .editor-panel p:last-child {
     padding-bottom: 10px;
+}
+
+/* Help Panel Specific Styles */
+.help-panel.panel-open,
+.help-panel:hover {
+    width: 675px; /* 3x wider than default 225px (1.5x bigger than previous 450px) */
+    background-size: 675px auto; /* Expand the middle layer background */
+    z-index: 10; /* Higher z-index to appear above other panels */
+    max-height: none; /* Allow unlimited height expansion downward */
+}
+
+.help-panel .panel-content {
+    max-height: calc(80vh - 100px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.help-content {
+    padding: 10px 40px 20px 40px;
+}
+
+.help-panel h3 {
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.help-section {
+    margin: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.help-section:last-child {
+    border-bottom: none;
+}
+
+.help-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.help-section-header:hover {
+    color: #4a9eff;
+}
+
+.help-toggle {
+    display: inline-block;
+    width: 12px;
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.help-section.expanded .help-toggle {
+    transform: rotate(90deg);
+}
+
+.help-section-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+    padding: 0;
+}
+
+.help-section.expanded .help-section-content {
+    max-height: 1000px;
+    opacity: 1;
+    padding-bottom: 15px;
+}
+
+.help-section-content h4 {
+    color: #4a9eff;
+    font-size: 13px;
+    margin: 12px 0 6px 0;
+    font-weight: 600;
+}
+
+.help-section-content h4:first-child {
+    margin-top: 0;
+}
+
+.help-section-content p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 8px 0;
+    padding: 0;
+}
+
+.help-section-content code {
+    display: block;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #6cf;
+    margin: 8px 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.help-section-content ul {
+    margin: 8px 0;
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+.help-section-content li {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 4px 0;
+}
+
+.help-section-content strong {
+    color: #fff;
+    font-weight: 600;
 }
 
 /* Document Tabs Bar */
@@ -610,7 +797,15 @@ body.typora-mode .document-tab-new:hover {
 }
 
 /* Markdown rendered styles */
-.markdown-output h1 {
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6,
+.markdown-output h1, .markdown-output h2, .markdown-output h3,
+.markdown-output h4, .markdown-output h5, .markdown-output h6 {
+    padding: 0;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#write h1, .markdown-output h1 {
     font-size: 32px;
     margin: 20px 0 10px 0;
     color: #fff;
@@ -618,29 +813,67 @@ body.typora-mode .document-tab-new:hover {
     padding-bottom: 10px;
 }
 
-.markdown-output h2 {
+#write h2, .markdown-output h2 {
     font-size: 24px;
     margin: 18px 0 8px 0;
     color: #fff;
 }
 
-.markdown-output h3 {
+#write h3, .markdown-output h3 {
     font-size: 20px;
     margin: 16px 0 6px 0;
     color: #fff;
 }
 
-.markdown-output p {
+#write h4, .markdown-output h4 {
+    font-size: 18px;
+    margin: 14px 0 6px 0;
+    color: #ccc;
+}
+
+#write h5, .markdown-output h5 {
+    font-size: 16px;
+    margin: 12px 0 4px 0;
+    color: #aaa;
+}
+
+#write h6, .markdown-output h6 {
+    font-size: 14px;
+    margin: 10px 0 4px 0;
+    color: #999;
+}
+
+#write p, .markdown-output p {
     margin: 10px 0;
 }
 
-.markdown-output strong {
+#write strong, .markdown-output strong {
     font-weight: bold;
     color: #fff;
 }
 
-.markdown-output em {
+#write em, .markdown-output em {
     font-style: italic;
+}
+
+#write img, .markdown-output img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 15px 0;
+    border-radius: 4px;
+}
+
+#write a, .markdown-output a {
+    color: #4a9eff;
+    text-decoration: none;
+    border-bottom: 1px solid #4a9eff;
+    transition: color 0.3s ease;
+}
+
+#write a:hover, .markdown-output a:hover {
+    color: #6bb5ff;
+    border-bottom-color: #6bb5ff;
 }
 
 .markdown-output code {

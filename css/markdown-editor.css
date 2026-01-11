@@ -88,6 +88,7 @@ header {
     z-index: 100;
     pointer-events: none; /* Allow clicks to pass through empty grid areas */
     height: 50px; /* Base height for collapsed tabs */
+    overflow: visible; /* Allow wire decorations to extend outside container */
 }
 
 /* Re-enable pointer events on actual panels */
@@ -119,10 +120,12 @@ header {
 /* Tab label sizing for editor panels - scaled to half */
 .editor-panel .panel-tab-label {
     height: 35px;
-    font-size: 12px;
-    padding: 0 20px;
-    line-height: 35px;
-    letter-spacing: 1px;
+    font-size: 16px;
+    padding: 8px 15px 0 15px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Files Panel - First from left */
@@ -136,7 +139,7 @@ header {
 .files-panel::after {
     position: absolute;
     left: 0;
-    z-index: -1;
+    z-index: 1;
     display: block;
     width: 225px;
     content: '';
@@ -145,9 +148,8 @@ header {
 .files-panel::before {
     top: -350px;
     height: 350px;
-    background: url(../assets/hook1.svg) no-repeat center -20px,
-                url(../assets/layer-frame.svg) no-repeat center 328px;
-    background-size: auto auto, 225px auto;
+    background: url(../assets/hook1.svg) no-repeat center bottom;
+    background-size: auto auto;
 }
 
 .files-panel::after {
@@ -173,7 +175,7 @@ header {
 .edit-panel::after {
     position: absolute;
     left: 0;
-    z-index: -1;
+    z-index: 1;
     display: block;
     width: 225px;
     content: '';
@@ -182,9 +184,8 @@ header {
 .edit-panel::before {
     top: -350px;
     height: 350px;
-    background: url(../assets/hook2.svg) no-repeat center -17px,
-                url(../assets/layer-frame.svg) no-repeat center 330px;
-    background-size: auto auto, 225px auto;
+    background: url(../assets/hook2.svg) no-repeat center bottom;
+    background-size: auto auto;
 }
 
 .edit-panel::after {
@@ -210,7 +211,7 @@ header {
 .view-panel::after {
     position: absolute;
     left: 0;
-    z-index: -1;
+    z-index: 1;
     display: block;
     width: 225px;
     content: '';
@@ -219,9 +220,8 @@ header {
 .view-panel::before {
     top: -350px;
     height: 350px;
-    background: url(../assets/hook1.svg) no-repeat center -20px,
-                url(../assets/layer-frame.svg) no-repeat center 328px;
-    background-size: auto auto, 225px auto;
+    background: url(../assets/hook1.svg) no-repeat center bottom;
+    background-size: auto auto;
 }
 
 .view-panel::after {
@@ -247,7 +247,7 @@ header {
 .settings-panel::after {
     position: absolute;
     left: 0;
-    z-index: -1;
+    z-index: 1;
     display: block;
     width: 225px;
     content: '';
@@ -256,9 +256,8 @@ header {
 .settings-panel::before {
     top: -350px;
     height: 350px;
-    background: url(../assets/hook2.svg) no-repeat center -17px,
-                url(../assets/layer-frame.svg) no-repeat center 330px;
-    background-size: auto auto, 225px auto;
+    background: url(../assets/hook2.svg) no-repeat center bottom;
+    background-size: auto auto;
 }
 
 .settings-panel::after {
@@ -284,7 +283,7 @@ header {
 .help-panel::after {
     position: absolute;
     left: 0;
-    z-index: -1;
+    z-index: 1;
     display: block;
     width: 225px;
     content: '';
@@ -294,9 +293,8 @@ header {
 .help-panel::before {
     top: -350px;
     height: 350px;
-    background: url(../assets/hook1.svg) no-repeat center -18px,
-                url(../assets/layer-frame.svg) no-repeat center 329px;
-    background-size: auto auto, 225px auto;
+    background: url(../assets/hook1.svg) no-repeat center bottom;
+    background-size: auto auto;
 }
 
 .help-panel::after {
@@ -339,7 +337,7 @@ header {
 .back-panel::after {
     position: absolute;
     left: 0;
-    z-index: -1;
+    z-index: 1;
     display: block;
     width: 225px;
     content: '';
@@ -348,9 +346,8 @@ header {
 .back-panel::before {
     top: -350px;
     height: 350px;
-    background: url(../assets/hook1.svg) no-repeat center -20px,
-                url(../assets/layer-frame.svg) no-repeat center 328px;
-    background-size: auto auto, 225px auto;
+    background: url(../assets/hook1.svg) no-repeat center bottom;
+    background-size: auto auto;
 }
 
 .back-panel::after {
@@ -444,12 +441,14 @@ header {
 }
 
 .help-content {
-    padding: 10px 40px 20px 40px;
+    padding: 10px 25px 20px 55px;
 }
 
 .help-panel h3 {
     padding-left: 40px;
     padding-right: 40px;
+    font-size: 1.5rem;
+    margin-top: 0;
 }
 
 .help-section {
@@ -1263,5 +1262,31 @@ body.typora-mode .editor-section-content {
 
     .editor-panel {
         margin: 0 -15px 0 0; /* Reduce negative margin on smaller screens (less overlap) */
+    }
+
+    /* Scale down tab label text for smaller screens */
+    .editor-panel .panel-tab-label {
+        font-size: 12px;
+        padding: 9px 12px 0 12px;
+        letter-spacing: 0.3px;
+    }
+
+    /* Shift Help panel left and down when expanded on smaller screens */
+    .help-panel.panel-open,
+    .help-panel:hover {
+        transform: translateX(-200px) translateY(40px);
+    }
+
+    /* Adjust text padding to properly contain content within panel */
+    .help-content {
+        padding: 10px 20px 20px 60px; /* Shift content right for better alignment on smaller screens */
+    }
+
+    /* Adjust Help panel h3 positioning and padding on smaller screens */
+    .help-panel h3 {
+        margin-top: 0;
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-top: 10px;
     }
 }

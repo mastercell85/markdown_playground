@@ -397,6 +397,8 @@
 .view-panel::after,
 .settings-panel::before,
 .settings-panel::after,
+.help-panel::before,
+.help-panel::after,
 .back-panel::before,
 .back-panel::after {
     display: none !important;

@@ -21,20 +21,23 @@
 
 
 /** Page **/
-#write {
+#write,
+#write-input {
   position: relative;
   min-height: calc(100vh - 10rem);
   width: 80vw;
   max-width: 24cm;
-  
+
   margin: 6rem auto;
   padding: 2rem;
-  
+
   border-radius: 2rem 0rem 0rem 0rem;
-  box-shadow: 
+  box-shadow:
     -2rem -4rem 0 0 var(--purple),
     0rem  -4rem 0 0 var(--purple),
     -2rem 0rem 0 0 var(--purple);
+
+  overflow: visible !important;
 }
 
 #write:before {
@@ -363,3 +366,32 @@ mark {
 img {
   margin-left: 0 !important;
 }
+
+/* Prevent double scrollbars in markdown editor */
+.typora-write,
+.markdown-output {
+  overflow: visible !important;
+}
+
+/* ============================================================================
+   PANEL MENU TABS - Ensure LCARS decorations show
+   ============================================================================ */
+
+/* Override any theme defaults - ensure decorations are visible */
+.files-panel::before,
+.files-panel::after,
+.edit-panel::before,
+.edit-panel::after,
+.view-panel::before,
+.view-panel::after,
+.settings-panel::before,
+.settings-panel::after,
+.help-panel::before,
+.help-panel::after,
+.back-panel::before,
+.back-panel::after {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+

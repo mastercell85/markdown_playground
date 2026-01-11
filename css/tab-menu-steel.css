@@ -1,0 +1,641 @@
+/**
+ * Steel Tab Menu Layout
+ * Animated panel menu with 3D transforms, SVG decorations, and smooth transitions
+ *
+ * Activate by adding 'tab-menu-steel' class to .intro container
+ * Themes can customize colors via CSS variables defined below
+ */
+
+/* ============================================================================
+   STEEL MENU - CSS VARIABLES (Themeable)
+   Themes can override these to customize the Steel menu appearance
+   ============================================================================ */
+
+:root {
+    /* Steel Menu - Panel dimensions */
+    --steel-panel-width: 225px;
+    --steel-panel-height: 35px;
+    --steel-panel-margin-right: -35px;
+
+    /* Steel Menu - Colors */
+    --steel-panel-bg: url(../assets/layer-middle.svg);
+    --steel-panel-text: #999;
+    --steel-panel-text-hover: #fff;
+
+    /* Steel Menu - Transform values */
+    --steel-panel-rotate: -5deg;
+    --steel-panel-skew: -5deg;
+    --steel-panel-scale: 0.8;
+    --steel-panel-scale-hover: 1;
+
+    /* Steel Menu - Transition timing */
+    --steel-transition-duration: 1s;
+    --steel-transition-easing: ease-out;
+
+    /* Steel Menu - Hook/Frame dimensions */
+    --steel-hook-height: 350px;
+    --steel-hook-offset: -350px;
+    --steel-frame-height: 23px;
+    --steel-frame-offset: -23px;
+
+    /* Steel Menu - Help panel expanded width */
+    --steel-help-width: 675px;
+}
+
+/* ============================================================================
+   STEEL MENU - CONTAINER
+   Uses CSS Grid for panel positioning
+   ============================================================================ */
+
+.intro.tab-menu-steel {
+    display: grid;
+    grid-template-columns: repeat(6, auto);
+    grid-template-rows: var(--steel-panel-height);
+    justify-content: center;
+    align-items: start;
+    column-gap: 0;
+    position: fixed;
+    top: 10px;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    pointer-events: none;
+    overflow: visible;
+    padding: 0;
+    gap: 0;
+    /* Override base flexbox styles */
+    height: auto;
+}
+
+/* Re-enable pointer events on panels */
+.intro.tab-menu-steel .editor-panel {
+    pointer-events: auto;
+}
+
+/* ============================================================================
+   STEEL MENU - PANEL BASE STYLES
+   Collapsed state with 3D transform
+   ============================================================================ */
+
+.intro.tab-menu-steel .editor-panel {
+    position: relative;
+    z-index: 5;
+    padding: 0;
+    width: var(--steel-panel-width);
+    height: var(--steel-panel-height);
+    overflow: hidden;
+    background: var(--steel-panel-bg) repeat-y center top;
+    background-size: var(--steel-panel-width) auto;
+    color: var(--steel-panel-text);
+    margin: 0 var(--steel-panel-margin-right) 0 0;
+    transform: rotate(var(--steel-panel-rotate)) skew(var(--steel-panel-skew)) scale(var(--steel-panel-scale));
+    transition: transform var(--steel-transition-duration) var(--steel-transition-easing),
+                height var(--steel-transition-duration) var(--steel-transition-easing),
+                width var(--steel-transition-duration) var(--steel-transition-easing),
+                background-size var(--steel-transition-duration) var(--steel-transition-easing),
+                margin var(--steel-transition-duration) var(--steel-transition-easing),
+                color var(--steel-transition-duration) var(--steel-transition-easing),
+                overflow 0s var(--steel-transition-duration);
+}
+
+/* ============================================================================
+   STEEL MENU - TAB LABEL STYLING
+   ============================================================================ */
+
+.intro.tab-menu-steel .panel-tab-label {
+    height: var(--steel-panel-height);
+    font-size: 16px;
+    padding: 8px 15px 0 15px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: inherit;
+}
+
+/* Override base hover styles - Steel uses transform instead */
+.intro.tab-menu-steel .panel-tab-label:hover {
+    color: inherit;
+}
+
+/* ============================================================================
+   STEEL MENU - SVG DECORATIONS (Hooks and Frames)
+   ============================================================================ */
+
+.intro.tab-menu-steel .editor-panel::before,
+.intro.tab-menu-steel .editor-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    display: block;
+    width: var(--steel-panel-width);
+    content: '';
+    transition: width var(--steel-transition-duration) var(--steel-transition-easing),
+                background-size var(--steel-transition-duration) var(--steel-transition-easing);
+}
+
+/* Hook - positioned above panel */
+.intro.tab-menu-steel .editor-panel::before {
+    top: var(--steel-hook-offset);
+    height: var(--steel-hook-height);
+    background-size: auto auto;
+}
+
+/* Frame - positioned below panel */
+.intro.tab-menu-steel .editor-panel::after {
+    bottom: var(--steel-frame-offset);
+    height: var(--steel-frame-height);
+    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
+    background-size: var(--steel-panel-width) auto;
+}
+
+/* Alternating hook styles (odd/even panels) */
+.intro.tab-menu-steel .editor-panel:nth-child(odd)::before {
+    background: url(../assets/hook1.svg) no-repeat center bottom;
+}
+
+.intro.tab-menu-steel .editor-panel:nth-child(even)::before {
+    background: url(../assets/hook2.svg) no-repeat center bottom;
+}
+
+/* Slight variation in frame position for even panels */
+.intro.tab-menu-steel .editor-panel:nth-child(even)::after {
+    bottom: -21px;
+    height: 21px;
+}
+
+/* ============================================================================
+   STEEL MENU - GRID COLUMN ASSIGNMENTS
+   ============================================================================ */
+
+.intro.tab-menu-steel .files-panel {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.intro.tab-menu-steel .edit-panel {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.intro.tab-menu-steel .view-panel {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.intro.tab-menu-steel .settings-panel {
+    grid-column: 4;
+    grid-row: 1;
+}
+
+.intro.tab-menu-steel .help-panel {
+    grid-column: 5;
+    grid-row: 1;
+}
+
+.intro.tab-menu-steel .back-panel {
+    grid-column: 6;
+    grid-row: 1;
+}
+
+/* ============================================================================
+   STEEL MENU - EXPANDED STATE (Hover/Open)
+   ============================================================================ */
+
+.intro.tab-menu-steel .editor-panel.panel-open,
+.intro.tab-menu-steel .editor-panel:hover {
+    height: auto;
+    max-height: 80vh;
+    overflow: hidden;
+    color: var(--steel-panel-text-hover);
+    transform: rotateY(0) scale(var(--steel-panel-scale-hover));
+}
+
+/* ============================================================================
+   STEEL MENU - PANEL CONTENT STYLING
+   Override dropdown positioning - Steel uses inline expansion
+   ============================================================================ */
+
+.intro.tab-menu-steel .panel-content {
+    /* Override absolute positioning from base */
+    position: static !important;
+    display: block !important;
+    opacity: 1 !important;
+    transform: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    max-width: none !important;
+    min-width: auto !important;
+    top: auto !important;
+    left: auto !important;
+    /* Enable scrolling for panel content */
+    max-height: calc(80vh - 80px);
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+/* Content text styling */
+.intro.tab-menu-steel .editor-panel h3,
+.intro.tab-menu-steel .editor-panel p {
+    padding: 8px 40px 0 40px;
+    transition: background-color var(--steel-transition-duration) var(--steel-transition-easing);
+}
+
+.intro.tab-menu-steel .editor-panel h3 {
+    color: var(--steel-panel-text);
+    font-size: 15px;
+    line-height: 15px;
+    padding-top: 10px;
+    margin: 0;
+}
+
+.intro.tab-menu-steel .editor-panel:hover h3,
+.intro.tab-menu-steel .editor-panel.panel-open h3 {
+    color: var(--steel-panel-text-hover);
+}
+
+.intro.tab-menu-steel .editor-panel p {
+    font-size: 10px;
+    margin: 0;
+}
+
+.intro.tab-menu-steel .editor-panel p:last-child {
+    padding-bottom: 10px;
+}
+
+/* ============================================================================
+   STEEL MENU - PANEL BUTTONS
+   ============================================================================ */
+
+.intro.tab-menu-steel .panel-button {
+    display: block;
+    width: calc(100% - 80px);
+    margin: 10px 40px;
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.intro.tab-menu-steel .panel-button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.intro.tab-menu-steel .panel-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ============================================================================
+   STEEL MENU - PANEL SCROLLBAR STYLING
+   ============================================================================ */
+
+.intro.tab-menu-steel .panel-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.intro.tab-menu-steel .panel-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+}
+
+.intro.tab-menu-steel .panel-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 3px;
+}
+
+.intro.tab-menu-steel .panel-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* Firefox scrollbar */
+.intro.tab-menu-steel .panel-content {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.25) rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================================================
+   STEEL MENU - HELP PANEL (Wider Expansion)
+   ============================================================================ */
+
+.intro.tab-menu-steel .help-panel.panel-open,
+.intro.tab-menu-steel .help-panel:hover {
+    width: var(--steel-help-width);
+    background-size: var(--steel-help-width) auto;
+    z-index: 10;
+    max-height: none;
+}
+
+/* Help panel scrollable content */
+.intro.tab-menu-steel .help-panel .panel-content {
+    max-height: calc(80vh - 100px) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+/* Help panel decorations expand */
+.intro.tab-menu-steel .help-panel.panel-open::before,
+.intro.tab-menu-steel .help-panel:hover::before,
+.intro.tab-menu-steel .help-panel.panel-open::after,
+.intro.tab-menu-steel .help-panel:hover::after {
+    width: var(--steel-help-width);
+}
+
+.intro.tab-menu-steel .help-panel.panel-open::before,
+.intro.tab-menu-steel .help-panel:hover::before {
+    background-size: auto auto, var(--steel-help-width) auto;
+}
+
+.intro.tab-menu-steel .help-panel.panel-open::after,
+.intro.tab-menu-steel .help-panel:hover::after {
+    background-size: var(--steel-help-width) auto;
+}
+
+/* Help content padding */
+.intro.tab-menu-steel .help-content {
+    padding: 10px 25px 20px 55px;
+}
+
+.intro.tab-menu-steel .help-panel h3 {
+    padding-left: 40px;
+    padding-right: 40px;
+    font-size: 1.5rem;
+    margin-top: 0;
+}
+
+/* Help section styling */
+.intro.tab-menu-steel .help-section {
+    margin: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.intro.tab-menu-steel .help-section:last-child {
+    border-bottom: none;
+}
+
+.intro.tab-menu-steel .help-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.intro.tab-menu-steel .help-section-header:hover {
+    color: #4a9eff;
+}
+
+.intro.tab-menu-steel .help-toggle {
+    display: inline-block;
+    width: 12px;
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.intro.tab-menu-steel .help-section.expanded .help-toggle {
+    transform: rotate(90deg);
+}
+
+.intro.tab-menu-steel .help-section-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+    padding: 0;
+}
+
+.intro.tab-menu-steel .help-section.expanded .help-section-content {
+    max-height: 1000px;
+    opacity: 1;
+    padding-bottom: 15px;
+}
+
+.intro.tab-menu-steel .help-section-content h4 {
+    color: #4a9eff;
+    font-size: 13px;
+    margin: 12px 0 6px 0;
+    font-weight: 600;
+}
+
+.intro.tab-menu-steel .help-section-content h4:first-child {
+    margin-top: 0;
+}
+
+.intro.tab-menu-steel .help-section-content p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 8px 0;
+    padding: 0;
+}
+
+.intro.tab-menu-steel .help-section-content code {
+    display: block;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #6cf;
+    margin: 8px 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.intro.tab-menu-steel .help-section-content ul {
+    margin: 8px 0;
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+.intro.tab-menu-steel .help-section-content li {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 4px 0;
+}
+
+.intro.tab-menu-steel .help-section-content strong {
+    color: #fff;
+    font-weight: 600;
+}
+
+/* Panel section titles */
+.intro.tab-menu-steel .panel-section-title {
+    font-size: 11px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 15px 40px 5px 40px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.intro.tab-menu-steel .panel-section-title:first-of-type {
+    border-top: none;
+    margin-top: 10px;
+    padding-top: 0;
+}
+
+/* ============================================================================
+   STEEL MENU - RESPONSIVE SCALING
+   ============================================================================ */
+
+/* Medium screens: 75% scale */
+@media (max-width: 1366px) and (min-width: 1024px) {
+    .intro.tab-menu-steel .editor-panel {
+        width: calc(var(--steel-panel-width) * 0.75);
+        height: calc(var(--steel-panel-height) * 0.75);
+    }
+
+    .intro.tab-menu-steel .panel-tab-label {
+        height: calc(var(--steel-panel-height) * 0.75);
+        font-size: calc(16px * 0.75);
+        padding: 0 calc(15px * 0.75);
+        line-height: calc(var(--steel-panel-height) * 0.75);
+    }
+
+    .intro.tab-menu-steel .editor-panel::before,
+    .intro.tab-menu-steel .editor-panel::after {
+        width: calc(var(--steel-panel-width) * 0.75);
+    }
+
+    .intro.tab-menu-steel .editor-panel::before {
+        top: calc(var(--steel-hook-offset) * 0.75);
+        height: calc(var(--steel-hook-height) * 0.75);
+    }
+
+    .intro.tab-menu-steel .editor-panel h3 {
+        font-size: calc(15px * 0.75);
+        padding-top: calc(10px * 0.75);
+    }
+
+    .intro.tab-menu-steel .editor-panel p {
+        font-size: calc(10px * 0.75);
+        padding: calc(8px * 0.75) calc(40px * 0.75) 0 calc(40px * 0.75);
+    }
+
+    .intro.tab-menu-steel .panel-button {
+        width: calc(100% - calc(80px * 0.75));
+        margin: calc(10px * 0.75) calc(40px * 0.75);
+        padding: calc(10px * 0.75) calc(15px * 0.75);
+        font-size: calc(12px * 0.75);
+    }
+
+    .intro.tab-menu-steel .editor-panel.panel-open,
+    .intro.tab-menu-steel .editor-panel:hover {
+        max-height: calc(80vh * 0.75);
+    }
+}
+
+/* Small screens: 55% scale */
+@media (max-width: 1023px) and (min-width: 800px) {
+    .intro.tab-menu-steel .editor-panel {
+        width: calc(var(--steel-panel-width) * 0.55);
+        height: calc(var(--steel-panel-height) * 0.55);
+    }
+
+    .intro.tab-menu-steel .panel-tab-label {
+        height: calc(var(--steel-panel-height) * 0.55);
+        font-size: calc(16px * 0.55);
+        padding: 0 calc(15px * 0.55);
+        line-height: calc(var(--steel-panel-height) * 0.55);
+    }
+
+    .intro.tab-menu-steel .editor-panel::before,
+    .intro.tab-menu-steel .editor-panel::after {
+        width: calc(var(--steel-panel-width) * 0.55);
+    }
+
+    .intro.tab-menu-steel .editor-panel::before {
+        top: calc(var(--steel-hook-offset) * 0.55);
+        height: calc(var(--steel-hook-height) * 0.55);
+    }
+
+    .intro.tab-menu-steel .editor-panel h3 {
+        font-size: calc(15px * 0.55);
+        padding-top: calc(10px * 0.55);
+    }
+
+    .intro.tab-menu-steel .editor-panel p {
+        font-size: calc(10px * 0.55);
+        padding: calc(8px * 0.55) calc(40px * 0.55) 0 calc(40px * 0.55);
+    }
+
+    .intro.tab-menu-steel .panel-button {
+        width: calc(100% - calc(80px * 0.55));
+        margin: calc(10px * 0.55) calc(40px * 0.55);
+        padding: calc(10px * 0.55) calc(15px * 0.55);
+        font-size: calc(12px * 0.55);
+    }
+
+    .intro.tab-menu-steel .editor-panel.panel-open,
+    .intro.tab-menu-steel .editor-panel:hover {
+        max-height: calc(80vh * 0.55);
+    }
+}
+
+/* Extra small screens: align left */
+@media screen and (max-width: 1400px) {
+    .intro.tab-menu-steel {
+        justify-content: flex-start;
+        padding-left: 20px;
+    }
+
+    .intro.tab-menu-steel .editor-panel {
+        margin: 0 -15px 0 0;
+    }
+
+    .intro.tab-menu-steel .panel-tab-label {
+        font-size: 12px;
+        padding: 9px 12px 0 12px;
+        letter-spacing: 0.3px;
+    }
+
+    /* Shift Help panel left when expanded on smaller screens */
+    .intro.tab-menu-steel .help-panel.panel-open,
+    .intro.tab-menu-steel .help-panel:hover {
+        transform: translateX(-200px) translateY(40px);
+    }
+
+    .intro.tab-menu-steel .help-content {
+        padding: 10px 20px 20px 60px;
+    }
+
+    .intro.tab-menu-steel .help-panel h3 {
+        margin-top: 0;
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-top: 10px;
+    }
+}
+
+/* ============================================================================
+   STEEL MENU - HIDE DECORATIONS FOR EXTERNAL THEMES
+   When using external themes, hide the SVG hooks/frames
+   ============================================================================ */
+
+body.external-theme .intro.tab-menu-steel .editor-panel::before,
+body.external-theme .intro.tab-menu-steel .editor-panel::after {
+    display: none !important;
+}

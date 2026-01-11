@@ -39,7 +39,7 @@
     --steel-frame-offset: -23px;
 
     /* Steel Menu - Help panel expanded width */
-    --steel-help-width: 675px;
+    --steel-help-width: 850px;
 }
 
 /* ============================================================================
@@ -491,6 +491,94 @@
 .intro.tab-menu-steel .help-section-content strong {
     color: #fff;
     font-weight: 600;
+}
+
+/* ============================================================================
+   STEEL MENU - HELP PANEL TWO-COLUMN LAYOUT
+   Grid layout for syntax/preview side-by-side display
+   ============================================================================ */
+
+/* Column header row */
+.intro.tab-menu-steel .help-row-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.intro.tab-menu-steel .help-col-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Two-column grid container */
+.intro.tab-menu-steel .help-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+    margin: 8px 0;
+}
+
+/* Syntax column (code) - override default code block styles */
+.intro.tab-menu-steel .help-two-col code {
+    display: block;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #6cf;
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Preview column */
+.intro.tab-menu-steel .help-preview {
+    background: transparent;
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    min-height: 40px;
+}
+
+/* Preview column headings */
+.intro.tab-menu-steel .help-preview h1,
+.intro.tab-menu-steel .help-preview h2,
+.intro.tab-menu-steel .help-preview h3 {
+    color: #fff;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+/* Preview column links */
+.intro.tab-menu-steel .help-preview a {
+    color: #4a9eff;
+    text-decoration: underline;
+}
+
+/* Preview column blockquotes */
+.intro.tab-menu-steel .help-preview blockquote {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Preview column lists */
+.intro.tab-menu-steel .help-preview ul,
+.intro.tab-menu-steel .help-preview ol {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.intro.tab-menu-steel .help-preview li {
+    margin: 2px 0;
 }
 
 /* Panel section titles */

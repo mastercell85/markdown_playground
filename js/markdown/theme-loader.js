@@ -23,24 +23,26 @@ class ThemeLoader {
         // Initialize Typora adapter
         this.typoraAdapter = new TyporaAdapter();
 
-        // Built-in themes registry
+        // Built-in themes registry - Updated for v2 CSS variable system
         this.builtInThemes = {
             'default': {
                 name: 'Default',
                 type: 'builtin',
+                themeId: 'default',
                 url: null // No external CSS, uses base styles
             },
             'cyberpunk': {
                 name: 'Cyberpunk',
-                type: 'typora',
-                url: 'themes/cyberpunk.css',
-                isProtected: true,
-                disableWireDecorations: true
+                type: 'variable-theme',
+                themeId: 'cyberpunk',
+                url: 'themes/cyberpunk-theme-v2.css',
+                isProtected: true
             },
             'lcars': {
                 name: 'LCARS',
-                type: 'typora',
-                url: 'themes/lcars-theme.css',
+                type: 'variable-theme',
+                themeId: 'lcars',
+                url: 'themes/lcars-theme-v2.css',
                 isProtected: true
             }
         };
@@ -96,8 +98,8 @@ class ThemeLoader {
      */
     loadTheme(theme) {
         if (!theme) {
-            // If no theme provided, ensure typora-mode is removed
-            document.body.classList.remove('typora-mode');
+            // If no theme provided, remove data-theme attribute
+            document.documentElement.removeAttribute('data-theme');
             return;
         }
 
@@ -113,15 +115,36 @@ class ThemeLoader {
             duplicateStyle.remove();
         }
 
-        // Load Typora themes in main window
-        if (theme.type === 'typora') {
-            console.log('Typora theme detected, loading in main window');
+        // Remove old typora-mode class (from old system)
+        document.body.classList.remove('typora-mode');
+
+        // Handle new CSS variable-based themes
+        if (theme.type === 'variable-theme') {
+            console.log('CSS variable theme detected:', theme.name);
+
+            // Set data-theme attribute on root element
+            document.documentElement.setAttribute('data-theme', theme.themeId);
+            console.log('Set data-theme attribute:', theme.themeId);
+
+            // Load the theme CSS file
+            if (theme.url) {
+                this.themeLink = document.createElement('link');
+                this.themeLink.rel = 'stylesheet';
+                const cacheBuster = `?v=${Date.now()}`;
+                this.themeLink.href = theme.url + cacheBuster;
+                this.themeLink.id = 'dynamic-theme';
+                document.head.appendChild(this.themeLink);
+                console.log('Loaded theme CSS:', theme.url);
+            }
+
+        // Handle legacy Typora themes (for backward compatibility)
+        } else if (theme.type === 'typora') {
+            console.log('Legacy Typora theme detected, loading in compatibility mode');
 
             // Load the CSS in main window
             if (theme.url) {
                 this.themeLink = document.createElement('link');
                 this.themeLink.rel = 'stylesheet';
-                // Add cache-busting parameter for blob URLs to force reload
                 const cacheBuster = theme.url.includes('blob:') ? '' : `?v=${Date.now()}`;
                 this.themeLink.href = theme.url + cacheBuster;
                 this.themeLink.id = 'dynamic-theme';
@@ -133,30 +156,27 @@ class ThemeLoader {
                 });
             }
 
-            // Add typora-mode class to body for special styling
-            // But check if theme explicitly disables wire decorations
-            if (theme.disableWireDecorations) {
-                document.body.classList.remove('typora-mode');
-                console.log('Wire decorations disabled for this theme');
-            } else {
+            // Add typora-mode class for legacy themes
+            if (!theme.disableWireDecorations) {
                 document.body.classList.add('typora-mode');
-                console.log('Added typora-mode class to body. Body classes:', document.body.className);
             }
 
+        // Handle built-in default theme
+        } else if (theme.type === 'builtin') {
+            console.log('Built-in theme (uses base CSS variables)');
+            // Remove data-theme to use default :root variables
+            document.documentElement.removeAttribute('data-theme');
+
+        // Handle custom themes
         } else {
-            console.log('Non-Typora theme, loading normally (type: ' + theme.type + ')');
+            console.log('Custom theme, loading normally (type: ' + theme.type + ')');
 
-            // ALWAYS remove typora-mode class for non-Typora themes (builtin, custom, etc.)
-            document.body.classList.remove('typora-mode');
-
-            // For non-Typora themes, load normally
+            // For custom themes, load normally
             if (theme.url) {
                 this.themeLink = document.createElement('link');
                 this.themeLink.rel = 'stylesheet';
                 this.themeLink.href = theme.url;
                 this.themeLink.id = 'dynamic-theme';
-
-                // Add to head
                 document.head.appendChild(this.themeLink);
             }
         }

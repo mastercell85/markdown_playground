@@ -2,20 +2,21 @@ lsDOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Markdown Editor - CSS Zen Garden</title>
+	<title>Markdown Editor</title>
 
-	<link rel="stylesheet" media="screen" href="css/markdown-editor.css">
+	<!-- New base CSS with CSS variables - no Zen Garden dependencies -->
+	<link rel="stylesheet" media="screen" href="css/markdown-editor-base.css">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="author" content="Dave Shea">
-	<meta name="description" content="Markdown document editor with CSS Zen Garden styling.">
+	<meta name="description" content="Markdown document editor with live preview and theming.">
 	<meta name="robots" content="all">
 
+	<!-- Typekit fonts for themes -->
 	<script src="https://use.typekit.net/fzq7emy.js"></script>
 	<script>try{Typekit.load();}catch(e){}</script>
 </head>
 
-<body id="css-zen-garden">
+<body>
 <div class="page-wrapper">
 
 	<section class="intro" id="zen-intro">
@@ -320,9 +321,6 @@ lsDOCTYPE html>
 	</div>
 
 </div>
-
-<div class="extra1" role="presentation"></div><div class="extra2" role="presentation"></div><div class="extra3" role="presentation"></div>
-<div class="extra4" role="presentation"></div><div class="extra5" role="presentation"></div><div class="extra6" role="presentation"></div>
 
 <!-- Shared modules -->
 <script src="js/shared/panel-manager.js"></script>

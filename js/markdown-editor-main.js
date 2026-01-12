@@ -49,8 +49,7 @@
         const panelManager = new PanelManager(panelConfig);
         panelManager.init();
 
-        // Initialize Help panel collapsible sections
-        initializeHelpPanel();
+        // Tab menu JS is loaded via applyTabMenuStyle() in restoreViewPreferences()
 
         // Setup Back button
         const backButton = document.getElementById('back-to-home');
@@ -498,6 +497,16 @@
      * Setup View menu button handlers
      */
     function setupViewMenuButtons() {
+        // Tab Menu Style selector button
+        const tabMenuSelectorBtn = document.getElementById('tab-menu-selector-btn');
+
+        if (tabMenuSelectorBtn) {
+            tabMenuSelectorBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                showTabMenuSelector();
+            });
+        }
+
         // Theme selector button
         const themeSelectorBtn = document.getElementById('theme-selector-btn');
         const themeLoadCustomBtn = document.getElementById('theme-load-custom-btn');
@@ -613,27 +622,6 @@
                 handleZoomChange(150);
             });
         }
-    }
-
-    /**
-     * Initialize Help panel collapsible sections
-     */
-    function initializeHelpPanel() {
-        const helpSections = document.querySelectorAll('.help-section-header');
-
-        helpSections.forEach(header => {
-            header.addEventListener('click', function(event) {
-                event.stopPropagation();
-
-                // Get the parent section
-                const section = this.closest('.help-section');
-
-                if (section) {
-                    // Toggle expanded class
-                    section.classList.toggle('expanded');
-                }
-            });
-        });
     }
 
     /**
@@ -831,6 +819,222 @@
     }
 
     /**
+     * Available tab menu styles
+     * Add new styles here as they are created
+     */
+    const TAB_MENU_STYLES = {
+        'steel': {
+            name: 'Steel',
+            cssFile: 'css/tab-menus/tab-menu-steel.css',
+            jsFile: 'js/tab-menus/tab-menu-steel.js',
+            description: 'Industrial steel frame design with hooks'
+        },
+        'classic': {
+            name: 'Classic',
+            cssFile: 'css/tab-menus/tab-menu-classic.css',
+            jsFile: 'js/tab-menus/tab-menu-classic.js',
+            description: 'Clean dropdown-style menus'
+        }
+    };
+
+    /**
+     * Show tab menu style selector modal
+     */
+    function showTabMenuSelector() {
+        // Remove any existing modal
+        const existingModal = document.getElementById('tab-menu-selector-modal');
+        if (existingModal) existingModal.remove();
+
+        const currentStyle = localStorage.getItem('tab-menu-style') || 'steel';
+
+        // Create modal overlay
+        const modal = document.createElement('div');
+        modal.id = 'tab-menu-selector-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        `;
+
+        // Create modal content
+        const modalContent = document.createElement('div');
+        modalContent.style.cssText = `
+            background: rgba(40, 40, 40, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 70vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        `;
+
+        // Create title
+        const title = document.createElement('h2');
+        title.textContent = 'Select Tab Menu Style';
+        title.style.cssText = `
+            margin: 0 0 20px 0;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 18px;
+        `;
+
+        // Create style list
+        const styleList = document.createElement('div');
+
+        Object.keys(TAB_MENU_STYLES).forEach(styleId => {
+            const style = TAB_MENU_STYLES[styleId];
+            const isActive = currentStyle === styleId;
+
+            const styleItem = document.createElement('div');
+            styleItem.style.cssText = `
+                padding: 12px;
+                margin: 8px 0;
+                background: ${isActive ? 'rgba(100, 100, 255, 0.2)' : 'rgba(60, 60, 60, 0.5)'};
+                border: 1px solid ${isActive ? 'rgba(100, 100, 255, 0.5)' : 'rgba(255, 255, 255, 0.2)'};
+                border-radius: 4px;
+                cursor: pointer;
+                transition: all 0.2s;
+            `;
+
+            styleItem.innerHTML = `
+                <div style="color: rgba(255, 255, 255, 0.9); font-weight: bold; margin-bottom: 4px;">
+                    ${style.name}${isActive ? ' • ACTIVE' : ''}
+                </div>
+                <div style="color: rgba(255, 255, 255, 0.5); font-size: 11px;">
+                    ${style.description}
+                </div>
+            `;
+
+            // Hover effect
+            styleItem.addEventListener('mouseenter', () => {
+                if (!isActive) {
+                    styleItem.style.background = 'rgba(80, 80, 80, 0.5)';
+                }
+            });
+            styleItem.addEventListener('mouseleave', () => {
+                if (!isActive) {
+                    styleItem.style.background = 'rgba(60, 60, 60, 0.5)';
+                }
+            });
+
+            // Click to select style
+            styleItem.addEventListener('click', () => {
+                applyTabMenuStyle(styleId);
+                modal.remove();
+            });
+
+            styleList.appendChild(styleItem);
+        });
+
+        // Create close button
+        const closeButton = document.createElement('button');
+        closeButton.textContent = 'Close';
+        closeButton.style.cssText = `
+            margin-top: 20px;
+            padding: 8px 16px;
+            background: rgba(80, 80, 80, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            color: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            width: 100%;
+        `;
+
+        closeButton.addEventListener('click', () => {
+            modal.remove();
+        });
+
+        // Assemble modal
+        modalContent.appendChild(title);
+        modalContent.appendChild(styleList);
+        modalContent.appendChild(closeButton);
+        modal.appendChild(modalContent);
+
+        // Close on background click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+
+        // Close on Escape key
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                modal.remove();
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+
+        // Add to document
+        document.body.appendChild(modal);
+    }
+
+    /**
+     * Apply a tab menu style
+     * @param {string} styleId - The style ID (e.g., 'steel', 'classic')
+     */
+    function applyTabMenuStyle(styleId) {
+        const style = TAB_MENU_STYLES[styleId];
+        if (!style) return;
+
+        const introSection = document.getElementById('zen-intro');
+        const tabMenuDisplay = document.getElementById('current-tab-menu-display');
+        const stylesheet = document.getElementById('tab-menu-stylesheet');
+
+        if (!introSection || !stylesheet) return;
+
+        // Remove all tab menu classes
+        Object.keys(TAB_MENU_STYLES).forEach(id => {
+            introSection.classList.remove(`tab-menu-${id}`);
+        });
+
+        // Add the new class
+        introSection.classList.add(`tab-menu-${styleId}`);
+
+        // Update the CSS stylesheet href
+        stylesheet.href = style.cssFile;
+
+        // Load the corresponding JS file
+        loadTabMenuScript(styleId, style.jsFile);
+
+        // Update the display text
+        if (tabMenuDisplay) {
+            tabMenuDisplay.textContent = `Current: ${style.name}`;
+        }
+
+        // Save preference
+        localStorage.setItem('tab-menu-style', styleId);
+
+        console.log(`Tab menu style changed to: ${style.name}`);
+    }
+
+    /**
+     * Load tab menu JavaScript file
+     * @param {string} styleId - The style ID
+     * @param {string} jsFile - Path to the JS file
+     */
+    function loadTabMenuScript(styleId, jsFile) {
+        // Remove any existing tab menu scripts
+        const existingScripts = document.querySelectorAll('script[data-tab-menu-script]');
+        existingScripts.forEach(script => script.remove());
+
+        // Create and load the new script
+        const script = document.createElement('script');
+        script.src = jsFile;
+        script.setAttribute('data-tab-menu-script', styleId);
+        document.body.appendChild(script);
+    }
+
+    /**
      * Handle layout change
      * @param {string} layout - 'split', 'editor', or 'preview'
      */
@@ -906,6 +1110,10 @@
      */
     function restoreViewPreferences() {
         // Theme is restored by ThemeLoader.init()
+
+        // Restore tab menu style (default: steel)
+        const savedTabMenuStyle = localStorage.getItem('tab-menu-style') || 'steel';
+        applyTabMenuStyle(savedTabMenuStyle);
 
         // Restore layout
         const savedLayout = localStorage.getItem('editor-layout') || 'split';

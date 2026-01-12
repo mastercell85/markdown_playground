@@ -18,7 +18,7 @@
     --steel-panel-margin-right: -35px;
 
     /* Steel Menu - Colors */
-    --steel-panel-bg: url(../assets/layer-middle.svg);
+    --steel-panel-bg: url(../../assets/layer-middle.svg);
     --steel-panel-text: #999;
     --steel-panel-text-hover: #fff;
 
@@ -147,17 +147,17 @@
 .intro.tab-menu-steel .editor-panel::after {
     bottom: var(--steel-frame-offset);
     height: var(--steel-frame-height);
-    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
+    background: transparent url(../../assets/layer-frame.svg) no-repeat center bottom;
     background-size: var(--steel-panel-width) auto;
 }
 
 /* Alternating hook styles (odd/even panels) */
 .intro.tab-menu-steel .editor-panel:nth-child(odd)::before {
-    background: url(../assets/hook1.svg) no-repeat center bottom;
+    background: url(../../assets/hook1.svg) no-repeat center bottom;
 }
 
 .intro.tab-menu-steel .editor-panel:nth-child(even)::before {
-    background: url(../assets/hook2.svg) no-repeat center bottom;
+    background: url(../../assets/hook2.svg) no-repeat center bottom;
 }
 
 /* Slight variation in frame position for even panels */
@@ -387,6 +387,40 @@
 .intro.tab-menu-steel .help-panel .panel-button {
     width: 100%;
     margin: 10px 0;
+}
+
+/* Help header row with expand all toggle */
+.intro.tab-menu-steel .help-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.intro.tab-menu-steel .help-header-row h3 {
+    margin: 0;
+    padding: 0;
+}
+
+.intro.tab-menu-steel .expand-all-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    user-select: none;
+}
+
+.intro.tab-menu-steel .expand-all-toggle:hover {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.intro.tab-menu-steel .expand-all-toggle input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    accent-color: #4a9eff;
 }
 
 /* Help section styling */

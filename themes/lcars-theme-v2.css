@@ -494,6 +494,32 @@
     font-size: 1.1rem;
     letter-spacing: 0.05rem;
     font-family: 'Teko', sans-serif;
+    color: var(--lcars-yellow) !important;
+}
+
+/* Text formatting */
+[data-theme="lcars"] #write strong,
+[data-theme="lcars"] #write b,
+[data-theme="lcars"] .markdown-output strong,
+[data-theme="lcars"] .markdown-output b {
+    color: var(--lcars-yellow) !important;
+    font-weight: 600;
+}
+
+[data-theme="lcars"] #write em,
+[data-theme="lcars"] #write i,
+[data-theme="lcars"] .markdown-output em,
+[data-theme="lcars"] .markdown-output i {
+    color: var(--lcars-yellow) !important;
+    font-style: italic;
+}
+
+[data-theme="lcars"] #write del,
+[data-theme="lcars"] #write s,
+[data-theme="lcars"] .markdown-output del,
+[data-theme="lcars"] .markdown-output s {
+    color: var(--lcars-grey) !important;
+    text-decoration: line-through;
 }
 
 /* Blockquotes */
@@ -502,21 +528,22 @@
     z-index: 1;
     margin: 2rem 0;
     padding-left: 1rem;
-    border-left: 0.5rem solid var(--lcars-offblack);
+    border-left: 0.5rem solid var(--lcars-offblack) !important;
+    color: var(--lcars-grey) !important;
 }
 
 /* List markers */
 [data-theme="lcars"] #write *::marker,
 [data-theme="lcars"] .markdown-output *::marker {
-    color: var(--lcars-aubergine);
+    color: var(--lcars-aubergine) !important;
     font-weight: 800;
 }
 
 /* Horizontal rules */
 [data-theme="lcars"] #write hr,
 [data-theme="lcars"] .markdown-output hr {
-    border: none;
-    background-color: var(--lcars-yellow);
+    border: none !important;
+    background-color: var(--lcars-yellow) !important;
     height: 0.5rem;
     border-radius: 0 0.5rem 0.5rem 0;
 }
@@ -527,14 +554,16 @@
     padding: 1rem;
     background-color: var(--lcars-offblack) !important;
     font-family: 'Share Tech Mono', monospace;
+    color: var(--lcars-orange) !important;
 }
 
 [data-theme="lcars"] #write code,
 [data-theme="lcars"] .markdown-output code {
     box-sizing: border-box;
     padding: 0.1rem 0.5rem;
-    background-color: var(--lcars-offblack);
+    background-color: var(--lcars-offblack) !important;
     font-family: 'Share Tech Mono', monospace;
+    color: var(--lcars-orange) !important;
 }
 
 [data-theme="lcars"] #write pre code,
@@ -643,25 +672,25 @@
 
 [data-theme="lcars"] #write a,
 [data-theme="lcars"] .markdown-output a {
-    color: var(--lcars-violet);
-    border-bottom: none;
+    color: var(--lcars-violet) !important;
+    border-bottom: none !important;
 }
 
 [data-theme="lcars"] #write a:hover,
 [data-theme="lcars"] .markdown-output a:hover {
-    color: var(--lcars-orange);
+    color: var(--lcars-orange) !important;
 }
 
 [data-theme="lcars"] #write a:visited,
 [data-theme="lcars"] .markdown-output a:visited {
-    color: var(--lcars-blue);
+    color: var(--lcars-blue) !important;
 }
 
 [data-theme="lcars"] #write table a,
 [data-theme="lcars"] #write table a:visited,
 [data-theme="lcars"] .markdown-output table a,
 [data-theme="lcars"] .markdown-output table a:visited {
-    color: black;
+    color: black !important;
 }
 
 /* ============================================================================
@@ -732,16 +761,91 @@
 }
 
 /* ============================================================================
-   LCARS TYPOGRAPHY FOR UI ELEMENTS
+   LCARS TAB MENU STYLING
    ============================================================================ */
 
+/* Tab menu container - black background */
+[data-theme="lcars"] .intro {
+    background: #000;
+    padding: 0 1rem;
+    gap: 2rem;
+    height: 3.5rem;
+    align-items: center;
+}
+
+/* Hide the default header */
+[data-theme="lcars"] .intro header {
+    display: none;
+}
+
+/* Base tab label styling - LCARS style with bars before and rounded cap after */
 [data-theme="lcars"] .panel-tab-label {
     font-family: 'Teko', sans-serif;
-    font-size: 24px;
+    font-size: 2rem;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.1rem;
+    height: 2rem;
+    line-height: 2rem;
+    padding: 0 0.5rem;
+    background: transparent;
+    color: var(--lcars-orange);
+    border-radius: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0;
 }
+
+/* Two dark bars + orange bar before text using box-shadow on ::before */
+[data-theme="lcars"] .panel-tab-label::before {
+    content: "";
+    display: inline-block;
+    width: 1rem;
+    height: 1.4rem;
+    background: var(--lcars-orange);
+    margin-right: 0.3rem;
+    margin-left: 1rem; /* Space for the two dark bars */
+    flex-shrink: 0;
+    box-shadow:
+        -0.25rem 0 0 0 #000,
+        -0.5rem 0 0 0 var(--lcars-offblack),
+        -0.75rem 0 0 0 #000,
+        -1rem 0 0 0 var(--lcars-offblack);
+}
+
+/* Rounded cap after text */
+[data-theme="lcars"] .panel-tab-label::after {
+    content: "";
+    display: inline-block;
+    width: 0.7rem;
+    height: 1.4rem;
+    background: var(--lcars-orange);
+    border-radius: 0 0.7rem 0.7rem 0;
+    margin-left: 0.3rem;
+    flex-shrink: 0;
+}
+
+[data-theme="lcars"] .panel-tab-label:hover {
+    color: var(--lcars-yellow);
+}
+
+[data-theme="lcars"] .panel-tab-label:hover::before {
+    background: var(--lcars-yellow);
+    box-shadow:
+        -0.25rem 0 0 0 #000,
+        -0.5rem 0 0 0 var(--lcars-offblack),
+        -0.75rem 0 0 0 #000,
+        -1rem 0 0 0 var(--lcars-offblack);
+}
+
+[data-theme="lcars"] .panel-tab-label:hover::after {
+    background: var(--lcars-yellow);
+}
+
+/* ============================================================================
+   LCARS TYPOGRAPHY FOR UI ELEMENTS
+   ============================================================================ */
 
 [data-theme="lcars"] .document-tab {
     font-family: 'Teko', sans-serif;
@@ -750,11 +854,29 @@
     text-transform: uppercase;
 }
 
+/* ============================================================================
+   LCARS PANEL BUTTONS - Simple text styling
+   ============================================================================ */
+
 [data-theme="lcars"] .panel-button {
     font-family: 'Teko', sans-serif;
-    font-size: 16px;
+    font-size: 1.8rem;
+    font-weight: 500;
     text-transform: uppercase;
-    border-radius: 0 1rem 1rem 0;
+    letter-spacing: 0.05rem;
+    line-height: 1;
+    background: transparent !important;
+    color: var(--lcars-orange) !important;
+    border: none !important;
+    border-radius: 0;
+    padding: 0.3rem 0.5rem;
+    margin: 0.2rem 0;
+    cursor: pointer;
+}
+
+[data-theme="lcars"] .panel-button:hover {
+    color: var(--lcars-yellow) !important;
+    background: transparent !important;
 }
 
 /* ============================================================================
@@ -762,52 +884,105 @@
    ============================================================================ */
 
 [data-theme="lcars"] .panel-content {
-    background: var(--lcars-offblack);
-    border: 2px solid var(--lcars-purple);
-    border-radius: 0 0 1.5rem 0;
+    background: #000;
+    border: none;
+    border-radius: 0;
+    padding: 1rem;
 }
 
-[data-theme="lcars"] .panel-content h3 {
-    font-family: 'Teko', sans-serif;
-    font-size: 22px;
-    color: var(--lcars-yellow);
-    text-transform: uppercase;
-    border-bottom: 2px solid var(--lcars-purple);
-    padding-bottom: 8px;
-}
-
+/* Panel h4 titles - smaller LCARS header style */
 [data-theme="lcars"] .panel-content h4 {
     font-family: 'Teko', sans-serif;
-    font-size: 18px;
-    color: var(--lcars-orange);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--lcars-peach);
     text-transform: uppercase;
+    padding: 0 0.2rem;
+    margin: 0.8rem 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+/* Bar before h4 */
+[data-theme="lcars"] .panel-content h4::before {
+    content: "";
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.9rem;
+    background: var(--lcars-peach);
+    margin-right: 0.2rem;
+    margin-left: 0.5rem;
+    flex-shrink: 0;
+    box-shadow:
+        -0.12rem 0 0 0 #000,
+        -0.25rem 0 0 0 var(--lcars-offblack),
+        -0.37rem 0 0 0 #000,
+        -0.5rem 0 0 0 var(--lcars-offblack);
+}
+
+/* Rounded cap after h4 */
+[data-theme="lcars"] .panel-content h4::after {
+    content: "";
+    display: inline-block;
+    width: 0.45rem;
+    height: 0.9rem;
+    background: var(--lcars-peach);
+    border-radius: 0 0.45rem 0.45rem 0;
+    margin-left: 0.2rem;
+    flex-shrink: 0;
 }
 
 [data-theme="lcars"] .panel-content p {
     font-family: 'Teko', sans-serif;
-    font-size: 16px;
+    font-size: 1rem;
+    color: var(--lcars-grey);
 }
 
+/* Section headers in Help and View panels - simple text styling */
 [data-theme="lcars"] .help-section-header,
 [data-theme="lcars"] .view-section-header {
-    font-family: 'Teko', sans-serif;
-    font-size: 16px;
-    color: var(--lcars-yellow);
+    font-family: 'Teko', sans-serif !important;
+    font-size: 1.5rem !important;
+    font-weight: 500 !important;
+    color: var(--lcars-violet) !important;
+    text-transform: uppercase !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0.3rem 0.5rem !important;
+    margin: 0.3rem 0 !important;
+    cursor: pointer;
 }
 
 [data-theme="lcars"] .help-section-header:hover,
 [data-theme="lcars"] .view-section-header:hover {
-    color: var(--lcars-orange);
+    color: var(--lcars-yellow) !important;
 }
 
+/* Hide the default toggle arrow - we use the bar style instead */
 [data-theme="lcars"] .help-toggle,
 [data-theme="lcars"] .view-toggle {
-    color: var(--lcars-orange);
+    display: none;
 }
 
 [data-theme="lcars"] .expand-all-toggle {
     font-family: 'Teko', sans-serif;
+    font-size: 1rem;
     color: var(--lcars-grey);
+    text-transform: uppercase;
+}
+
+[data-theme="lcars"] .expand-all-toggle input[type="checkbox"] {
+    accent-color: var(--lcars-orange);
+}
+
+/* Current display text */
+[data-theme="lcars"] .current-display {
+    font-family: 'Teko', sans-serif;
+    font-size: 0.9rem;
+    color: var(--lcars-grey);
+    text-transform: uppercase;
+    margin-left: 1.5rem;
 }
 
 [data-theme="lcars"] .expand-all-toggle input[type="checkbox"] {
@@ -850,17 +1025,64 @@
    LCARS HELP PANEL
    ============================================================================ */
 
-[data-theme="lcars"] .help-two-col code {
+/* Syntax code column */
+[data-theme="lcars"] .help-two-col > code {
     font-family: 'Share Tech Mono', monospace;
     background: var(--lcars-offblack);
     color: var(--lcars-orange);
 }
 
+/* Help preview inherits from .markdown-output styles automatically */
+/* Only override layout-specific properties here */
 [data-theme="lcars"] .help-preview {
-    font-family: 'Teko', sans-serif;
-    color: var(--lcars-yellow);
+    font-size: 1.1rem;
+    letter-spacing: 0.05rem;
 }
 
+/* Compact sizes for help panel headings (no decorative bars) */
+[data-theme="lcars"] .help-preview h1,
+[data-theme="lcars"] .help-preview h2,
+[data-theme="lcars"] .help-preview h3 {
+    box-shadow: none !important;
+    margin: 0;
+}
+
+[data-theme="lcars"] .help-preview h1::before,
+[data-theme="lcars"] .help-preview h1::after,
+[data-theme="lcars"] .help-preview h2::before,
+[data-theme="lcars"] .help-preview h2::after,
+[data-theme="lcars"] .help-preview h3::before,
+[data-theme="lcars"] .help-preview h3::after {
+    display: none;
+}
+
+[data-theme="lcars"] .help-preview h1 { font-size: 1.5rem; }
+[data-theme="lcars"] .help-preview h2 { font-size: 1.3rem; margin-top: 4px; }
+[data-theme="lcars"] .help-preview h3 { font-size: 1.1rem; margin-top: 4px; }
+
+/* Help preview lists - compact sizing */
+[data-theme="lcars"] .help-preview ul,
+[data-theme="lcars"] .help-preview ol {
+    margin: 0;
+    padding-left: 16px;
+}
+
+[data-theme="lcars"] .help-preview li {
+    margin: 2px 0;
+}
+
+/* Help preview code - compact sizing */
+[data-theme="lcars"] .help-preview pre {
+    padding: 6px 10px;
+    margin: 4px 0 0 0;
+}
+
+/* Help preview images */
+[data-theme="lcars"] .help-preview img {
+    box-shadow: none !important;
+}
+
+/* Column labels */
 [data-theme="lcars"] .help-col-label {
     font-family: 'Teko', sans-serif;
     color: var(--lcars-grey);

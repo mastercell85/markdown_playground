@@ -196,17 +196,17 @@ lsDOCTYPE html>
 						<h4>Headers</h4>
 						<div class="help-two-col">
 							<code># H1 Header<br>## H2 Header<br>### H3 Header</code>
-							<div class="help-preview">
-								<h1 style="font-size: 18px; margin: 0;">H1 Header</h1>
-								<h2 style="font-size: 16px; margin: 4px 0 0 0;">H2 Header</h2>
-								<h3 style="font-size: 14px; margin: 4px 0 0 0;">H3 Header</h3>
+							<div class="help-preview markdown-output">
+								<h1>H1 Header</h1>
+								<h2>H2 Header</h2>
+								<h3>H3 Header</h3>
 							</div>
 						</div>
 
 						<h4>Text Formatting</h4>
 						<div class="help-two-col">
 							<code>**bold** or __bold__<br>*italic* or _italic_<br>~~strikethrough~~</code>
-							<div class="help-preview">
+							<div class="help-preview markdown-output">
 								<strong>bold</strong> or <strong>bold</strong><br>
 								<em>italic</em> or <em>italic</em><br>
 								<del>strikethrough</del>
@@ -216,28 +216,28 @@ lsDOCTYPE html>
 						<h4>Links & Images</h4>
 						<div class="help-two-col">
 							<code>[Link text](url)<br>![Image alt](image-url)</code>
-							<div class="help-preview">
-								<a href="#" style="color: #4a9eff;">Link text</a><br>
-								<img src="assets/sample-photo.jpg" alt="Sample" style="max-width: 100%; height: auto; margin-top: 4px; border-radius: 3px;">
+							<div class="help-preview markdown-output">
+								<a href="#">Link text</a><br>
+								<img src="assets/sample-photo.jpg" alt="Sample">
 							</div>
 						</div>
 
 						<h4>Lists</h4>
 						<div class="help-two-col">
 							<code>- Unordered item<br>1. Ordered item<br>- [ ] Task item</code>
-							<div class="help-preview">
-								<ul style="margin: 0; padding-left: 16px;"><li>Unordered item</li></ul>
-								<ol style="margin: 0; padding-left: 16px;"><li>Ordered item</li></ol>
-								<span style="font-family: monospace;">[ ]</span> Task item
+							<div class="help-preview markdown-output">
+								<ul><li>Unordered item</li></ul>
+								<ol><li>Ordered item</li></ol>
+								<code>[ ]</code> Task item
 							</div>
 						</div>
 
 						<h4>Code</h4>
 						<div class="help-two-col">
 							<code>`inline code`<br>```language<br>code block<br>```</code>
-							<div class="help-preview">
-								<code style="background: rgba(0,0,0,0.3); padding: 2px 4px; border-radius: 3px;">inline code</code><br>
-								<pre style="background: rgba(0,0,0,0.3); padding: 4px 8px; margin: 4px 0 0 0; border-radius: 3px; font-size: 10px;">code block</pre>
+							<div class="help-preview markdown-output">
+								<code>inline code</code><br>
+								<pre>code block</pre>
 							</div>
 						</div>
 					</div>
@@ -258,18 +258,18 @@ lsDOCTYPE html>
 						<h4>Headers</h4>
 						<div class="help-two-col">
 							<code>h1: Header Text<br>heading1: Header Text<br>&lt;h1&gt;Header Text&lt;/h1&gt;<br>title: Main Title</code>
-							<div class="help-preview">
-								<h1 style="font-size: 18px; margin: 0;">Header Text</h1>
-								<h1 style="font-size: 18px; margin: 4px 0 0 0;">Header Text</h1>
-								<h1 style="font-size: 18px; margin: 4px 0 0 0;">Header Text</h1>
-								<h1 style="font-size: 20px; margin: 4px 0 0 0;">Main Title</h1>
+							<div class="help-preview markdown-output">
+								<h1>Header Text</h1>
+								<h1>Header Text</h1>
+								<h1>Header Text</h1>
+								<h1>Main Title</h1>
 							</div>
 						</div>
 
 						<h4>Text Formatting</h4>
 						<div class="help-two-col">
 							<code>&lt;b&gt;bold&lt;/b&gt;<br>[b]bold[/b]<br>:b:bold:b:<br>b{bold}</code>
-							<div class="help-preview">
+							<div class="help-preview markdown-output">
 								<strong>bold</strong><br>
 								<strong>bold</strong><br>
 								<strong>bold</strong><br>
@@ -280,45 +280,45 @@ lsDOCTYPE html>
 						<h4>Links</h4>
 						<div class="help-two-col">
 							<code>link: text | url<br>&lt;link href="url"&gt;text&lt;/link&gt;<br>[url=url]text[/url]</code>
-							<div class="help-preview">
-								<a href="#" style="color: #4a9eff;">text</a><br>
-								<a href="#" style="color: #4a9eff;">text</a><br>
-								<a href="#" style="color: #4a9eff;">text</a>
+							<div class="help-preview markdown-output">
+								<a href="#">text</a><br>
+								<a href="#">text</a><br>
+								<a href="#">text</a>
 							</div>
 						</div>
 
 						<h4>Images</h4>
 						<div class="help-two-col">
 							<code>img: alt | url<br>&lt;img src="url" alt="alt" /&gt;<br>[img=url]alt[/img]</code>
-							<div class="help-preview">
-								<img src="assets/sample-photo.jpg" alt="Sample" style="max-width: 100%; height: auto; border-radius: 3px;">
+							<div class="help-preview markdown-output">
+								<img src="assets/sample-photo.jpg" alt="Sample">
 							</div>
 						</div>
 
 						<h4>Lists</h4>
 						<div class="help-two-col">
 							<code>ul: List item<br>ol: Numbered item<br>task: Task item<br>done: Completed task</code>
-							<div class="help-preview">
-								<ul style="margin: 0; padding-left: 16px;"><li>List item</li></ul>
-								<ol style="margin: 0; padding-left: 16px;"><li>Numbered item</li></ol>
-								<span style="font-family: monospace;">[ ]</span> Task item<br>
-								<span style="font-family: monospace;">[x]</span> Completed task
+							<div class="help-preview markdown-output">
+								<ul><li>List item</li></ul>
+								<ol><li>Numbered item</li></ol>
+								<code>[ ]</code> Task item<br>
+								<code>[x]</code> Completed task
 							</div>
 						</div>
 
 						<h4>Blockquotes</h4>
 						<div class="help-two-col">
 							<code>quote: Quote text<br>bq: Quote text<br>&lt;blockquote&gt;text&lt;/blockquote&gt;</code>
-							<div class="help-preview">
-								<blockquote style="margin: 0; padding-left: 10px; border-left: 3px solid #4a9eff; font-style: italic;">Quote text</blockquote>
+							<div class="help-preview markdown-output">
+								<blockquote>Quote text</blockquote>
 							</div>
 						</div>
 
 						<h4>Horizontal Rules</h4>
 						<div class="help-two-col">
 							<code>hr:<br>divider:<br>&lt;hr&gt;</code>
-							<div class="help-preview">
-								<hr style="border: none; border-top: 1px solid rgba(255,255,255,0.3); margin: 8px 0;">
+							<div class="help-preview markdown-output">
+								<hr>
 							</div>
 						</div>
 					</div>

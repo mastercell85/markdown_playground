@@ -95,6 +95,7 @@
     --md-blockquote-border: rgba(255, 255, 255, 0.3);
     --md-blockquote-text: #ccc;
     --md-hr-color: rgba(255, 255, 255, 0.2);
+    --md-list-marker-color: inherit;
 
     /* Typography */
     --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -356,15 +357,11 @@ body {
     scrollbar-color: var(--tab-scrollbar-thumb, rgba(255, 255, 255, 0.3)) var(--tab-scrollbar-track, rgba(0, 0, 0, 0.2));
 }
 
-/* Panel headings */
-.panel-content h3 {
-    margin: 0 0 15px 0;
-    padding: 0;
-    color: var(--panel-heading-color);
-    font-size: 18px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+/* Panel headings - hidden by default since tab label shows the name */
+.panel-content > h3,
+.panel-content .panel-header-row h3,
+.panel-content .help-header-row h3 {
+    display: none;
 }
 
 /* Panel section titles */
@@ -425,6 +422,88 @@ body {
     padding: 8px 0;
     font-size: 11px;
     color: rgba(255, 255, 255, 0.6);
+}
+
+/* ============================================================================
+   HELP PANEL PREVIEW - Layout styles only
+   Content inherits from .markdown-output (same class added to help-preview divs)
+   ============================================================================ */
+
+/* Two-column layout container */
+.help-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 8px 0;
+    align-items: start;
+}
+
+/* Syntax column (code) - standalone styling */
+.help-two-col > code {
+    display: block;
+    background: var(--md-code-bg);
+    padding: 10px 12px;
+    border-radius: var(--border-radius);
+    font-family: var(--font-family-mono);
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--md-code-text);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* Preview column container - layout only, content inherits from .markdown-output */
+.help-preview {
+    padding: 10px 12px;
+}
+
+/* Compact heading sizes for help panel */
+.help-preview h1 { font-size: 18px; margin: 0; }
+.help-preview h2 { font-size: 16px; margin: 4px 0 0 0; }
+.help-preview h3 { font-size: 14px; margin: 4px 0 0 0; }
+
+/* Compact list sizing */
+.help-preview ul,
+.help-preview ol {
+    margin: 0;
+    padding-left: 16px;
+}
+
+.help-preview li {
+    margin: 2px 0;
+}
+
+/* Compact code block sizing */
+.help-preview pre {
+    padding: 4px 8px;
+    margin: 4px 0 0 0;
+    font-size: 10px;
+}
+
+/* Compact blockquote */
+.help-preview blockquote {
+    margin: 0;
+}
+
+/* Compact hr */
+.help-preview hr {
+    margin: 8px 0;
+}
+
+/* Help preview images */
+.help-preview img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 4px;
+}
+
+/* Column labels */
+.help-col-label {
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 8px;
 }
 
 /* ============================================================================

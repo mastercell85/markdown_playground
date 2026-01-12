@@ -220,13 +220,34 @@ window.YourStyleTabMenu = {
 ### Built-in Themes
 - **Default**: Clean dark theme
 - **Cyberpunk**: Neon-styled with matrix effects
-- **LCARS**: Star Trek inspired interface
+- **LCARS**: Star Trek inspired interface with purple L-shaped frames
 
 ### Theme Loading
 Themes are managed by `theme-loader.js`:
 - Stored in localStorage for persistence
 - Custom CSS files can be loaded
 - Themes apply to editor, preview, and panels
+
+### LCARS Theme Structure
+The LCARS theme uses a combination of CSS pseudo-elements and HTML elements for the frame:
+
+**CSS Pseudo-elements** (fixed frame decorations):
+- `::before` - Left sidebar (purple vertical bar)
+- `::after` - Top bar (purple horizontal bar with rounded corner)
+
+**HTML Elements** (header decorations in `.lcars-frame`):
+```html
+<div class="lcars-frame">
+    <div class="lcars-header-blocks">
+        <div class="lcars-block-grey"></div>
+        <div class="lcars-block-orange"></div>
+        <div class="lcars-title">INPUT</div>
+        <div class="lcars-block-pink"></div>
+    </div>
+</div>
+```
+
+The frame stays fixed while content scrolls inside. Each editor pane (input and preview) has its own independent LCARS frame.
 
 ### Adding a Theme
 1. Create CSS file in `themes/` folder

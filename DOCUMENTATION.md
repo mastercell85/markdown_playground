@@ -110,6 +110,8 @@ Website playground/
 - Word wrap toggle
 - Tab menu style switching
 - Theme selection
+- Collapsible sections with Expand All toggle
+- Two-column layout (Steel theme)
 
 ### External Preview
 - Open preview in separate window
@@ -153,8 +155,8 @@ Tab menus are fully modular with separate CSS and JS files.
 ### Available Styles
 | Style | Description |
 |-------|-------------|
-| **Steel** | Industrial frame design with SVG hooks and decorations |
-| **Classic** | Clean dropdown-style menus |
+| **Steel** | Industrial frame design with SVG hooks, two-column View panel layout |
+| **Classic** | Clean dropdown-style menus with single-column layout |
 
 ### File Structure
 Each tab menu style has:
@@ -165,12 +167,14 @@ Each tab menu style has:
 
 1. **Create CSS file** (`css/tab-menus/tab-menu-{name}.css`):
    - Define panel appearance, hover states, animations
-   - Include help section accordion styles
-   - Include two-column help layout styles
+   - Include Help panel accordion styles
+   - Include View panel collapsible section styles
+   - Include two-column layout styles (if applicable)
 
 2. **Create JS file** (`js/tab-menus/tab-menu-{name}.js`):
-   - Initialize collapsible sections
-   - Handle expand all toggle
+   - Initialize Help panel collapsible sections
+   - Initialize View panel collapsible sections
+   - Handle Expand All toggles for both panels
    - Add any style-specific interactivity
 
 3. **Register in main.js** (`TAB_MENU_STYLES` object):
@@ -184,6 +188,28 @@ const TAB_MENU_STYLES = {
         jsFile: 'js/tab-menus/tab-menu-newstyle.js',
         description: 'Description of your style'
     }
+};
+```
+
+### Tab Menu Switching
+
+When switching tab menu styles at runtime, the system:
+
+1. **Loads new CSS**: Removes old stylesheet, loads new one
+2. **Loads new JS**: Removes old script, loads new one with `onload` callback
+3. **Re-initializes**: Calls the appropriate `init()` function after script loads
+4. **Cleans up listeners**: Each tab menu JS has a `cleanupListeners()` function that clones and replaces DOM elements to remove old event listeners before attaching new ones
+
+This ensures collapsible sections and other interactive features work correctly without requiring a page refresh.
+
+**Required exports for tab menu JS:**
+```javascript
+window.YourStyleTabMenu = {
+    init: initYourStyleTabMenu,
+    toggleAllHelpSections: toggleAllHelpSections,
+    toggleAllViewSections: toggleAllViewSections,
+    updateHelpExpandAllCheckbox: updateHelpExpandAllCheckbox,
+    updateViewExpandAllCheckbox: updateViewExpandAllCheckbox
 };
 ```
 
@@ -314,6 +340,21 @@ Edit `js/markdown/rule-engine.js`:
 // Add to rules array
 { pattern: /regex/, replacement: 'html' }
 ```
+
+---
+
+## Panel Structure
+
+### Help Panel
+- Collapsible accordion sections (Markdown Basics, Shortcut Syntax)
+- Two-column layout showing syntax and rendered preview
+- Expand All checkbox to toggle all sections
+
+### View Panel
+- Collapsible sections: Tab Menu, Theme, Layout, Editor, Zoom, External Window
+- Expand All checkbox to toggle all sections
+- **Steel theme**: Two-column layout (left: Tab Menu/Theme/Layout, right: Editor/Zoom/External Window)
+- **Classic theme**: Single-column layout
 
 ---
 

@@ -1031,6 +1031,17 @@
         const script = document.createElement('script');
         script.src = jsFile;
         script.setAttribute('data-tab-menu-script', styleId);
+
+        // Re-initialize the tab menu after script loads
+        script.onload = function() {
+            // Call the appropriate init function based on style
+            if (styleId === 'steel' && window.SteelTabMenu) {
+                window.SteelTabMenu.init();
+            } else if (styleId === 'classic' && window.ClassicTabMenu) {
+                window.ClassicTabMenu.init();
+            }
+        };
+
         document.body.appendChild(script);
     }
 

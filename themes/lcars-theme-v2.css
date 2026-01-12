@@ -1335,3 +1335,40 @@
 [data-theme="lcars"] .editor-container {
     overflow: hidden;
 }
+
+/* ============================================================================
+   LCARS SCROLL SYNC CONTROLS
+   ============================================================================ */
+
+/* LCARS sync button on divider */
+[data-theme="lcars"] .divider-sync-btn {
+    background: var(--lcars-offblack);
+    color: var(--lcars-grey);
+    border: 2px solid var(--lcars-purple);
+    border-radius: 0;
+}
+
+[data-theme="lcars"] .divider-sync-btn:hover {
+    background: var(--lcars-purple);
+    color: var(--lcars-offblack);
+}
+
+[data-theme="lcars"] .divider-sync-btn.sync-active {
+    background: var(--lcars-orange);
+    color: var(--lcars-offblack);
+    border-color: var(--lcars-orange);
+}
+
+[data-theme="lcars"] .divider-sync-btn.sync-active:hover {
+    background: var(--lcars-yellow);
+}
+
+/* LCARS sync toggle button in panel */
+[data-theme="lcars"] .sync-toggle-btn.sync-active {
+    border-color: var(--lcars-orange);
+    color: var(--lcars-orange);
+}
+
+[data-theme="lcars"] .sync-toggle-btn.sync-active .sync-icon {
+    color: var(--lcars-orange);
+}

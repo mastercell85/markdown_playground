@@ -387,6 +387,38 @@
     box-shadow: 0 0 20px var(--glow-purple);
 }
 
+/* Cyberpunk sync button on divider */
+[data-theme="cyberpunk"] .divider-sync-btn {
+    background: var(--cyber-grid);
+    color: var(--text-secondary);
+    border: 1px solid var(--neon-purple);
+}
+
+[data-theme="cyberpunk"] .divider-sync-btn:hover {
+    background: var(--cyber-black);
+    color: var(--neon-cyan);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 10px var(--glow-cyan);
+}
+
+[data-theme="cyberpunk"] .divider-sync-btn.sync-active {
+    background: rgba(0, 245, 255, 0.1);
+    color: var(--neon-cyan);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 15px var(--glow-cyan);
+}
+
+/* Cyberpunk sync toggle button in panel */
+[data-theme="cyberpunk"] .sync-toggle-btn.sync-active {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    text-shadow: 0 0 5px var(--glow-cyan);
+}
+
+[data-theme="cyberpunk"] .sync-toggle-btn.sync-active .sync-icon {
+    color: var(--neon-cyan);
+}
+
 /* Cyberpunk help panel - wider for larger fonts and decorative prefixes */
 [data-theme="cyberpunk"] .help-panel .panel-content {
     min-width: 700px;
@@ -406,3 +438,66 @@
 [data-theme="cyberpunk"] .help-preview h2 { font-size: 1.2rem !important; }
 [data-theme="cyberpunk"] .help-preview h3 { font-size: 1.1rem !important; }
 [data-theme="cyberpunk"] .help-preview h4 { font-size: 1rem !important; }
+
+/* ============================================================================
+   CYBERPUNK INPUT/PREVIEW LABELS
+   Position labels to the right, out of the workspace
+   ============================================================================ */
+
+/* Show the LCARS frame in cyberpunk theme */
+[data-theme="cyberpunk"] .lcars-frame {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: auto;
+    height: 2rem;
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Hide the decorative blocks - only show the title */
+[data-theme="cyberpunk"] .lcars-frame .lcars-sidebar,
+[data-theme="cyberpunk"] .lcars-frame .lcars-topbar,
+[data-theme="cyberpunk"] .lcars-frame .lcars-corner,
+[data-theme="cyberpunk"] .lcars-frame .lcars-block-grey,
+[data-theme="cyberpunk"] .lcars-frame .lcars-block-orange,
+[data-theme="cyberpunk"] .lcars-frame .lcars-block-pink {
+    display: none;
+}
+
+/* Position header blocks to the right */
+[data-theme="cyberpunk"] .lcars-frame .lcars-header-blocks {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Cyberpunk-styled title labels */
+[data-theme="cyberpunk"] .lcars-frame .lcars-title {
+    height: 2rem;
+    background: transparent;
+    color: var(--neon-cyan);
+    font-family: 'Orbitron', 'Rajdhani', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 2rem;
+    padding: 0 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    opacity: 0.6;
+    text-shadow: 0 0 5px var(--glow-cyan);
+}
+
+/* Ensure editor sections have relative positioning for the labels */
+[data-theme="cyberpunk"] .editor-section {
+    position: relative;
+}
+
+/* Adjust content to not be blocked by the label */
+[data-theme="cyberpunk"] .editor-section-content {
+    margin-top: 0;
+}

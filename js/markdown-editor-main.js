@@ -8,6 +8,7 @@
 
     // Module-level variables
     let themeLoader = null;
+    let scrollSync = null;
 
     // Initialize when DOM is ready
     function init() {
@@ -581,6 +582,25 @@
             });
         }
 
+        // Scroll Sync toggle buttons
+        const toggleScrollSyncBtn = document.getElementById('toggle-scroll-sync-btn');
+        const dividerSyncBtn = document.getElementById('divider-sync-btn');
+
+        if (toggleScrollSyncBtn) {
+            toggleScrollSyncBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleToggleScrollSync();
+            });
+        }
+
+        if (dividerSyncBtn) {
+            dividerSyncBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                event.preventDefault();
+                handleToggleScrollSync();
+            });
+        }
+
         // Zoom buttons
         const zoom90Btn = document.getElementById('zoom-90-btn');
         const zoom100Btn = document.getElementById('zoom-100-btn');
@@ -1097,6 +1117,79 @@
     }
 
     /**
+     * Handle toggle scroll sync
+     */
+    function handleToggleScrollSync() {
+        if (!scrollSync) {
+            initializeScrollSync();
+        }
+
+        const enabled = scrollSync.toggle();
+
+        // Update UI to reflect state
+        updateScrollSyncUI(enabled);
+
+        // Save preference to localStorage
+        localStorage.setItem('editor-scroll-sync', enabled ? 'true' : 'false');
+
+        console.log(`Scroll sync: ${enabled ? 'enabled' : 'disabled'}`);
+    }
+
+    /**
+     * Initialize scroll sync module
+     */
+    function initializeScrollSync() {
+        if (scrollSync) return;
+
+        const inputElement = document.querySelector('.editor-input .markdown-textarea');
+        const previewElement = document.querySelector('.editor-preview .markdown-output');
+
+        if (!inputElement || !previewElement) {
+            console.warn('ScrollSync: Could not find input or preview elements');
+            return;
+        }
+
+        scrollSync = new ScrollSync();
+        scrollSync.init(inputElement, previewElement);
+
+        // Listen for content changes to update block map
+        if (inputElement.tagName === 'TEXTAREA') {
+            inputElement.addEventListener('input', () => {
+                if (scrollSync && scrollSync.isEnabled()) {
+                    // Debounce the block map update
+                    clearTimeout(scrollSync.blockMapUpdateTimeout);
+                    scrollSync.blockMapUpdateTimeout = setTimeout(() => {
+                        scrollSync.updateBlockMap();
+                    }, 500);
+                }
+            });
+        }
+
+        console.log('ScrollSync: Initialized');
+    }
+
+    /**
+     * Update scroll sync UI elements to reflect state
+     */
+    function updateScrollSyncUI(enabled) {
+        const toggleBtn = document.getElementById('toggle-scroll-sync-btn');
+        const dividerBtn = document.getElementById('divider-sync-btn');
+
+        if (toggleBtn) {
+            const label = toggleBtn.querySelector('.sync-label');
+            if (label) {
+                label.textContent = enabled ? 'Sync Scroll: On' : 'Sync Scroll: Off';
+            }
+            toggleBtn.classList.toggle('sync-active', enabled);
+        }
+
+        if (dividerBtn) {
+            dividerBtn.classList.toggle('sync-active', enabled);
+            dividerBtn.title = enabled ? 'Scroll Sync: On (Click to disable)' : 'Scroll Sync: Off (Click to enable)';
+        }
+    }
+
+    /**
      * Handle zoom change
      * @param {number} percent - Zoom percentage (90, 100, 110, 125, 150)
      */
@@ -1146,6 +1239,25 @@
         // Restore zoom
         const savedZoom = parseInt(localStorage.getItem('editor-zoom') || '100', 10);
         handleZoomChange(savedZoom);
+
+        // Restore scroll sync (default: off)
+        const savedScrollSync = localStorage.getItem('editor-scroll-sync') === 'true';
+        if (savedScrollSync) {
+            // Delay initialization to ensure DOM is ready
+            setTimeout(() => {
+                initializeScrollSync();
+                if (scrollSync) {
+                    scrollSync.enable();
+                    updateScrollSyncUI(true);
+                }
+            }, 100);
+        } else {
+            // Initialize but don't enable, just update UI
+            setTimeout(() => {
+                initializeScrollSync();
+                updateScrollSyncUI(false);
+            }, 100);
+        }
 
         console.log('View preferences restored');
     }

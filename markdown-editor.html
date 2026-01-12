@@ -126,6 +126,10 @@ lsDOCTYPE html>
 							<div class="view-section-content">
 								<button id="toggle-line-numbers-btn" class="panel-button">Toggle Line Numbers</button>
 								<button id="toggle-word-wrap-btn" class="panel-button">Toggle Word Wrap</button>
+								<button id="toggle-scroll-sync-btn" class="panel-button sync-toggle-btn">
+									<span class="sync-icon">&#x1F517;</span>
+									<span class="sync-label">Sync Scroll: Off</span>
+								</button>
 							</div>
 						</div>
 
@@ -465,7 +469,11 @@ lsDOCTYPE html>
 			</section>
 
 			<!-- Resizable divider -->
-			<div class="editor-divider" id="editor-divider"></div>
+			<div class="editor-divider" id="editor-divider">
+				<button class="divider-sync-btn" id="divider-sync-btn" title="Toggle Scroll Sync">
+					<span class="sync-chain">&#x1F517;</span>
+				</button>
+			</div>
 
 			<!-- Preview section -->
 			<section class="editor-section editor-preview">
@@ -501,6 +509,7 @@ lsDOCTYPE html>
 <!-- Shared modules -->
 <script src="js/shared/panel-manager.js"></script>
 <script src="js/shared/resizable-pane.js"></script>
+<script src="js/shared/scroll-sync.js"></script>
 
 <!-- Markdown modules -->
 <script src="js/markdown/rule-engine.js"></script>

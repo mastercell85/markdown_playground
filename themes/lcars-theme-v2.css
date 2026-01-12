@@ -1,7 +1,7 @@
 /**
- * LCARS Theme - Star Trek LCARS Interface
- * Refactored to use CSS variables only - no structural CSS
- * Clean, maintainable, no conflicts
+ * LCARS Theme v2 - Star Trek LCARS Interface
+ * Adapted from original Typora LCARS theme to work with modular editor structure
+ * Each editor pane (input and preview) gets its own LCARS frame using box-shadow technique
  */
 
 /* Import LCARS fonts */
@@ -9,12 +9,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
 /* ============================================================================
-   LCARS COLOR PALETTE
-   Based on Star Trek: The Next Generation LCARS 2369
+   LCARS COLOR PALETTE (Theme Variables)
    ============================================================================ */
 
 :root[data-theme="lcars"] {
-    /* LCARS Color Palette */
+    /* LCARS 2369 Color Palette */
     --lcars-yellow: #ffcc66;
     --lcars-offblack: #333344;
     --lcars-orange: #ff9900;
@@ -27,26 +26,25 @@
 
     /* Background Colors */
     --body-bg: #000;
-    --editor-bg: rgba(0, 0, 0, 0.7);
-    --editor-section-bg: var(--lcars-offblack);
+    --editor-bg: #000;
+    --editor-section-bg: #000;
 
-    /* Panel Menu Tabs */
-    --panel-tab-bg: transparent;
-    --panel-tab-text: var(--lcars-grey);
-    --panel-tab-text-hover: var(--lcars-yellow);
-    --panel-tab-border: transparent;
+    /* Tab Menu System */
+    --tab-label-bg: transparent;
+    --tab-label-text: var(--lcars-grey);
+    --tab-label-text-hover: var(--lcars-yellow);
+    --tab-dropdown-bg: var(--lcars-offblack);
+    --tab-dropdown-text: var(--lcars-yellow);
+    --tab-dropdown-border-color: var(--lcars-purple);
 
     /* Panel Content */
-    --panel-content-bg: var(--lcars-offblack);
-    --panel-content-text: var(--lcars-yellow);
-    --panel-content-border: var(--lcars-purple);
     --panel-heading-color: var(--lcars-yellow);
 
     /* Document Tabs */
-    --doc-tab-bg: rgba(153, 153, 204, 0.15);
+    --doc-tab-bg: rgba(51, 51, 68, 0.6);
     --doc-tab-text: var(--lcars-grey);
-    --doc-tab-border: rgba(153, 153, 204, 0.3);
-    --doc-tab-active-bg: rgba(255, 204, 102, 0.2);
+    --doc-tab-border: var(--lcars-purple);
+    --doc-tab-active-bg: rgba(255, 153, 0, 0.2);
     --doc-tab-active-text: var(--lcars-yellow);
     --doc-tab-active-border: var(--lcars-orange);
     --doc-tabs-container-bg: #000;
@@ -60,9 +58,9 @@
     --button-hover-border: var(--lcars-yellow);
 
     /* Editor/Preview */
-    --textarea-bg: var(--lcars-offblack);
+    --textarea-bg: transparent;
     --textarea-text: var(--lcars-yellow);
-    --preview-bg: var(--lcars-offblack);
+    --preview-bg: transparent;
     --preview-text: var(--lcars-yellow);
     --divider-bg: var(--lcars-purple);
     --divider-hover-bg: var(--lcars-orange);
@@ -72,45 +70,247 @@
     --md-text-color: var(--lcars-yellow);
     --md-link-color: var(--lcars-violet);
     --md-link-hover: var(--lcars-orange);
-    --md-code-bg: rgba(0, 0, 0, 0.4);
+    --md-code-bg: var(--lcars-offblack);
     --md-code-text: var(--lcars-orange);
     --md-blockquote-border: var(--lcars-offblack);
     --md-blockquote-text: var(--lcars-grey);
-    --md-hr-color: var(--lcars-orange);
+    --md-hr-color: var(--lcars-yellow);
 
-    /* Typography - LCARS Font */
-    --font-family: 'Teko', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --font-family-mono: 'Share Tech Mono', "Courier New", monospace;
-    --font-size-base: 16px;
-    --font-size-panel: 22px;
+    /* Typography */
+    --font-family: 'Teko', sans-serif;
+    --font-family-mono: 'Share Tech Mono', monospace;
+    --font-size-base: 10pt;
 
-    /* Spacing - LCARS uses compact spacing */
-    --panel-padding: 30px;
-    --button-padding: 8px 12px;
-    --tab-padding: 6px 15px;
-
-    /* Borders - LCARS prefers straight edges */
+    /* Borders */
     --border-radius: 0;
     --border-width: 2px;
-
-    /* Transitions */
     --transition-speed: 0.2s;
 }
 
 /* ============================================================================
-   LCARS-SPECIFIC OVERRIDES
-   (Styles that can't be done with variables alone)
+   BASE LCARS STYLING
    ============================================================================ */
 
-/* LCARS text should be uppercase */
-[data-theme="lcars"] .panel-tab-label,
-[data-theme="lcars"] .document-tab,
-[data-theme="lcars"] .panel-button {
-    text-transform: uppercase;
-    font-weight: 500;
+[data-theme="lcars"] {
+    background-color: black;
+    color: var(--lcars-yellow);
+    font-family: 'Teko', sans-serif;
+    font-size: 10pt;
 }
 
-/* LCARS headings with decorative elements */
+/* ============================================================================
+   LCARS FRAME HTML ELEMENTS - Header decorations only
+   ============================================================================ */
+
+/* Hide by default, show for LCARS theme */
+.lcars-frame {
+    display: none !important;
+}
+
+/* Enable LCARS frame for LCARS theme - header elements only */
+[data-theme="lcars"] .lcars-frame {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    left: 0.5rem;
+    right: 0;
+    height: 3rem;
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Hide the sidebar/topbar/corner - we use CSS for those */
+[data-theme="lcars"] .lcars-frame .lcars-sidebar,
+[data-theme="lcars"] .lcars-frame .lcars-topbar,
+[data-theme="lcars"] .lcars-frame .lcars-corner {
+    display: none;
+}
+
+/* Header blocks container - positioned from the right */
+[data-theme="lcars"] .lcars-frame .lcars-header-blocks {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+/* Grey block */
+[data-theme="lcars"] .lcars-frame .lcars-block-grey {
+    width: 6rem;
+    height: 3rem;
+    background-color: var(--lcars-grey);
+    margin-right: 0.5rem; /* Black gap */
+}
+
+/* Orange block */
+[data-theme="lcars"] .lcars-frame .lcars-block-orange {
+    width: 2rem;
+    height: 3rem;
+    background-color: var(--lcars-orange);
+    margin-right: 0.5rem; /* Black gap */
+}
+
+/* Title text */
+[data-theme="lcars"] .lcars-frame .lcars-title {
+    height: 3rem;
+    background-color: black;
+    color: var(--lcars-orange);
+    font-family: 'Teko', sans-serif;
+    font-size: 3rem;
+    font-weight: 500;
+    line-height: 3.5rem;
+    padding: 0 1rem;
+    margin-right: 0.5rem; /* Black gap before pink block */
+}
+
+/* Pink/purple block on far right - continuation of the top bar */
+[data-theme="lcars"] .lcars-frame .lcars-block-pink {
+    width: 3rem;
+    height: 3rem;
+    background-color: var(--lcars-purple);
+}
+
+/* ============================================================================
+   LCARS FRAME ON EACH EDITOR PANE (Using Original Box-Shadow Technique)
+   ============================================================================ */
+
+/* Editor container */
+[data-theme="lcars"] .editor-container {
+    background: #000;
+    gap: 0;
+}
+
+/* Editor sections need overflow visible for the frame effect */
+[data-theme="lcars"] .editor-section {
+    position: relative;
+    background: #000;
+    margin: 0;
+    padding: 0;
+    overflow: visible !important;
+}
+
+/* Ensure both input and preview sections have same internal structure */
+[data-theme="lcars"] .editor-input,
+[data-theme="lcars"] .editor-preview {
+    display: flex;
+    flex-direction: column;
+}
+
+/* NOTE: #write and #write-input frame styles are defined separately below
+   in the "EDITOR SECTION SCROLLING & ALIGNMENT" section to handle
+   different scroll behaviors for input (textarea) vs preview (div) */
+
+/* Header decorations for INPUT and PREVIEW panes are now handled by
+   .lcars-frame HTML elements styled above */
+
+/* Ensure content stays within bounds */
+[data-theme="lcars"] #write *,
+[data-theme="lcars"] #write-input * {
+    max-width: 100%;
+}
+
+/* Editor section content wrapper */
+[data-theme="lcars"] .editor-section-content {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+}
+
+/* Textarea styling - sits inside #write-input which has the LCARS frame */
+[data-theme="lcars"] .markdown-textarea {
+    background: transparent;
+    color: var(--lcars-yellow);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    resize: none;
+    overflow-y: scroll !important;
+    overflow-x: hidden;
+}
+
+/* Preview output styling */
+[data-theme="lcars"] .markdown-output {
+    background: transparent;
+    color: var(--lcars-yellow);
+    padding: 0;
+    overflow: auto;
+}
+
+/* Divider between panes */
+[data-theme="lcars"] .editor-divider {
+    background: #000;
+    width: 10px;
+}
+
+[data-theme="lcars"] .editor-divider:hover {
+    background: var(--lcars-orange);
+}
+
+/* ============================================================================
+   LCARS SIDE BARS ON CONTENT ELEMENTS
+   ============================================================================ */
+
+/* Headings and HR get orange side bar */
+[data-theme="lcars"] #write h1,
+[data-theme="lcars"] #write h2,
+[data-theme="lcars"] #write h3,
+[data-theme="lcars"] #write h4,
+[data-theme="lcars"] #write h5,
+[data-theme="lcars"] #write h6,
+[data-theme="lcars"] #write hr,
+[data-theme="lcars"] .markdown-output h1,
+[data-theme="lcars"] .markdown-output h2,
+[data-theme="lcars"] .markdown-output h3,
+[data-theme="lcars"] .markdown-output h4,
+[data-theme="lcars"] .markdown-output h5,
+[data-theme="lcars"] .markdown-output h6,
+[data-theme="lcars"] .markdown-output hr {
+    box-shadow:
+        -1rem 0 0 0 black,
+        -2rem 0 0 0 #ff9900,
+        -2rem 0 0 0.25rem black !important;
+}
+
+/* Pre and img get grey side bar */
+[data-theme="lcars"] #write pre,
+[data-theme="lcars"] #write img,
+[data-theme="lcars"] .markdown-output pre,
+[data-theme="lcars"] .markdown-output img {
+    box-shadow:
+        -1rem 0 0 0 black,
+        -2rem 0 0 0 #9999cc,
+        -2rem 0 0 0.25rem black !important;
+}
+
+/* Remove side bars from nested elements */
+[data-theme="lcars"] #write blockquote *,
+[data-theme="lcars"] .markdown-output blockquote *,
+[data-theme="lcars"] #write li hr,
+[data-theme="lcars"] #write table hr,
+[data-theme="lcars"] #write li pre,
+[data-theme="lcars"] #write table pre,
+[data-theme="lcars"] #write li img,
+[data-theme="lcars"] #write table img,
+[data-theme="lcars"] .markdown-output li hr,
+[data-theme="lcars"] .markdown-output table hr,
+[data-theme="lcars"] .markdown-output li pre,
+[data-theme="lcars"] .markdown-output table pre,
+[data-theme="lcars"] .markdown-output li img,
+[data-theme="lcars"] .markdown-output table img {
+    box-shadow: none;
+}
+
+/* ============================================================================
+   LCARS HEADINGS
+   ============================================================================ */
+
 [data-theme="lcars"] #write h1,
 [data-theme="lcars"] #write h2,
 [data-theme="lcars"] #write h3,
@@ -123,45 +323,268 @@
 [data-theme="lcars"] .markdown-output h4,
 [data-theme="lcars"] .markdown-output h5,
 [data-theme="lcars"] .markdown-output h6 {
+    position: relative;
+    margin: 2rem 0;
     text-transform: uppercase;
     font-weight: 500;
-    line-height: 0.9em;
+    font-family: 'Teko', sans-serif;
+    color: var(--lcars-yellow);
+    line-height: 0.8em !important;
+    border-bottom: none;
+    padding-bottom: 0;
 }
 
-/* LCARS horizontal rules - thicker orange bar */
+[data-theme="lcars"] #write h1,
+[data-theme="lcars"] .markdown-output h1 { font-size: 2.5rem; }
+
+[data-theme="lcars"] #write h2,
+[data-theme="lcars"] .markdown-output h2 { font-size: 2rem; }
+
+[data-theme="lcars"] #write h3,
+[data-theme="lcars"] .markdown-output h3 { font-size: 1.75rem; }
+
+[data-theme="lcars"] #write h4,
+[data-theme="lcars"] .markdown-output h4 { font-size: 1.5rem; }
+
+[data-theme="lcars"] #write h5,
+[data-theme="lcars"] .markdown-output h5 { font-size: 1.25rem; }
+
+[data-theme="lcars"] #write h6,
+[data-theme="lcars"] .markdown-output h6 { font-size: 1rem; }
+
+/* Bar before headings */
+[data-theme="lcars"] #write h1:before,
+[data-theme="lcars"] #write h2:before,
+[data-theme="lcars"] #write h3:before,
+[data-theme="lcars"] #write h4:before,
+[data-theme="lcars"] #write h5:before,
+[data-theme="lcars"] #write h6:before,
+[data-theme="lcars"] .markdown-output h1:before,
+[data-theme="lcars"] .markdown-output h2:before,
+[data-theme="lcars"] .markdown-output h3:before,
+[data-theme="lcars"] .markdown-output h4:before,
+[data-theme="lcars"] .markdown-output h5:before,
+[data-theme="lcars"] .markdown-output h6:before {
+    position: relative;
+    display: inline-block;
+    content: " ";
+    background-color: var(--lcars-orange);
+    width: 1rem;
+    height: 0.7em;
+    margin-right: 0.15em;
+    vertical-align: middle;
+}
+
+/* Semicircle cap after headings */
+[data-theme="lcars"] #write h1:after,
+[data-theme="lcars"] #write h2:after,
+[data-theme="lcars"] #write h3:after,
+[data-theme="lcars"] #write h4:after,
+[data-theme="lcars"] #write h5:after,
+[data-theme="lcars"] #write h6:after,
+[data-theme="lcars"] .markdown-output h1:after,
+[data-theme="lcars"] .markdown-output h2:after,
+[data-theme="lcars"] .markdown-output h3:after,
+[data-theme="lcars"] .markdown-output h4:after,
+[data-theme="lcars"] .markdown-output h5:after,
+[data-theme="lcars"] .markdown-output h6:after {
+    position: relative;
+    display: inline-block;
+    content: " ";
+    background-color: var(--lcars-orange);
+    width: 0.4em;
+    border-radius: 0 0.4em 0.4em 0;
+    height: 0.7em;
+    margin-left: 0.15em;
+    vertical-align: middle;
+}
+
+/* Extra bars before subheadings - increasing count by heading level */
+[data-theme="lcars"] #write h1:before,
+[data-theme="lcars"] .markdown-output h1:before {
+    margin-left: 0.5rem;
+    box-shadow:
+        -0.25rem 0 0 0 black,
+        -0.5rem 0 0 0 var(--lcars-offblack);
+}
+
+[data-theme="lcars"] #write h2:before,
+[data-theme="lcars"] .markdown-output h2:before {
+    margin-left: 1rem;
+    box-shadow:
+        -0.25rem 0 0 0 black,
+        -0.5rem 0 0 0 var(--lcars-offblack),
+        -0.75rem 0 0 0 black,
+        -1rem 0 0 0 var(--lcars-offblack);
+}
+
+[data-theme="lcars"] #write h3:before,
+[data-theme="lcars"] .markdown-output h3:before {
+    margin-left: 1.5rem;
+    box-shadow:
+        -0.25rem 0 0 0 black,
+        -0.5rem 0 0 0 var(--lcars-offblack),
+        -0.75rem 0 0 0 black,
+        -1rem 0 0 0 var(--lcars-offblack),
+        -1.25rem 0 0 0 black,
+        -1.5rem 0 0 0 var(--lcars-offblack);
+}
+
+[data-theme="lcars"] #write h4:before,
+[data-theme="lcars"] .markdown-output h4:before {
+    margin-left: 2rem;
+    box-shadow:
+        -0.25rem 0 0 0 black,
+        -0.5rem 0 0 0 var(--lcars-offblack),
+        -0.75rem 0 0 0 black,
+        -1rem 0 0 0 var(--lcars-offblack),
+        -1.25rem 0 0 0 black,
+        -1.5rem 0 0 0 var(--lcars-offblack),
+        -1.75rem 0 0 0 black,
+        -2rem 0 0 0 var(--lcars-offblack);
+}
+
+[data-theme="lcars"] #write h5:before,
+[data-theme="lcars"] .markdown-output h5:before {
+    margin-left: 2.5rem;
+    box-shadow:
+        -0.25rem 0 0 0 black,
+        -0.5rem 0 0 0 var(--lcars-offblack),
+        -0.75rem 0 0 0 black,
+        -1rem 0 0 0 var(--lcars-offblack),
+        -1.25rem 0 0 0 black,
+        -1.5rem 0 0 0 var(--lcars-offblack),
+        -1.75rem 0 0 0 black,
+        -2rem 0 0 0 var(--lcars-offblack),
+        -2.25rem 0 0 0 black,
+        -2.5rem 0 0 0 var(--lcars-offblack);
+}
+
+[data-theme="lcars"] #write h6:before,
+[data-theme="lcars"] .markdown-output h6:before {
+    margin-left: 3rem;
+    box-shadow:
+        -0.25rem 0 0 0 black,
+        -0.5rem 0 0 0 var(--lcars-offblack),
+        -0.75rem 0 0 0 black,
+        -1rem 0 0 0 var(--lcars-offblack),
+        -1.25rem 0 0 0 black,
+        -1.5rem 0 0 0 var(--lcars-offblack),
+        -1.75rem 0 0 0 black,
+        -2rem 0 0 0 var(--lcars-offblack),
+        -2.25rem 0 0 0 black,
+        -2.5rem 0 0 0 var(--lcars-offblack),
+        -2.75rem 0 0 0 black,
+        -3rem 0 0 0 var(--lcars-offblack);
+}
+
+/* ============================================================================
+   LCARS TEXT CONTENT
+   ============================================================================ */
+
+[data-theme="lcars"] #write p,
+[data-theme="lcars"] #write li,
+[data-theme="lcars"] #write table,
+[data-theme="lcars"] #write dl,
+[data-theme="lcars"] .markdown-output p,
+[data-theme="lcars"] .markdown-output li,
+[data-theme="lcars"] .markdown-output table,
+[data-theme="lcars"] .markdown-output dl {
+    margin: 1rem 0;
+    font-size: 1.1rem;
+    letter-spacing: 0.05rem;
+    font-family: 'Teko', sans-serif;
+}
+
+/* Blockquotes */
+[data-theme="lcars"] #write blockquote,
+[data-theme="lcars"] .markdown-output blockquote {
+    z-index: 1;
+    margin: 2rem 0;
+    padding-left: 1rem;
+    border-left: 0.5rem solid var(--lcars-offblack);
+}
+
+/* List markers */
+[data-theme="lcars"] #write *::marker,
+[data-theme="lcars"] .markdown-output *::marker {
+    color: var(--lcars-aubergine);
+    font-weight: 800;
+}
+
+/* Horizontal rules */
 [data-theme="lcars"] #write hr,
 [data-theme="lcars"] .markdown-output hr {
-    height: 4px;
+    border: none;
+    background-color: var(--lcars-yellow);
+    height: 0.5rem;
     border-radius: 0 0.5rem 0.5rem 0;
 }
 
-/* LCARS selection color */
-[data-theme="lcars"] ::selection {
+/* Code blocks */
+[data-theme="lcars"] #write pre,
+[data-theme="lcars"] .markdown-output pre {
+    padding: 1rem;
+    background-color: var(--lcars-offblack) !important;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+[data-theme="lcars"] #write code,
+[data-theme="lcars"] .markdown-output code {
+    box-sizing: border-box;
+    padding: 0.1rem 0.5rem;
+    background-color: var(--lcars-offblack);
+    font-family: 'Share Tech Mono', monospace;
+}
+
+[data-theme="lcars"] #write pre code,
+[data-theme="lcars"] .markdown-output pre code {
+    background: none;
+    padding: 0;
+    box-shadow: none;
+}
+
+/* Mark/highlight */
+[data-theme="lcars"] #write mark,
+[data-theme="lcars"] .markdown-output mark {
+    box-sizing: border-box;
+    padding: 0.1rem 0.5rem;
     background-color: var(--lcars-yellow);
-    color: var(--lcars-offblack);
+    color: black;
 }
 
-/* LCARS scrollbar */
-[data-theme="lcars"] ::-webkit-scrollbar-thumb {
-    background: var(--lcars-orange);
+/* Images */
+[data-theme="lcars"] #write img,
+[data-theme="lcars"] .markdown-output img {
+    margin-left: 0 !important;
 }
 
-[data-theme="lcars"] ::-webkit-scrollbar-thumb:hover {
-    background: var(--lcars-yellow);
-}
+/* ============================================================================
+   LCARS TABLES
+   ============================================================================ */
 
-/* LCARS table styling */
 [data-theme="lcars"] #write table,
 [data-theme="lcars"] .markdown-output table {
+    position: relative;
     border-collapse: separate;
     border-spacing: 0.5rem;
-    border: none;
+    left: 0.5rem;
+    width: calc(100% - 3rem);
+}
+
+[data-theme="lcars"] #write th,
+[data-theme="lcars"] #write td,
+[data-theme="lcars"] .markdown-output th,
+[data-theme="lcars"] .markdown-output td {
+    padding: 0.5rem 1rem;
+    position: relative;
 }
 
 [data-theme="lcars"] #write th,
 [data-theme="lcars"] .markdown-output th {
     background-color: var(--lcars-grey);
-    color: var(--lcars-offblack);
+    color: black;
+    font-family: 'Teko', sans-serif;
     font-weight: 600;
     text-transform: uppercase;
 }
@@ -170,17 +593,430 @@
 [data-theme="lcars"] .markdown-output td {
     background-color: var(--lcars-offblack);
     color: var(--lcars-yellow);
+    font-family: 'Teko', sans-serif;
 }
 
-/* LCARS list markers */
-[data-theme="lcars"] #write ul li::marker,
-[data-theme="lcars"] .markdown-output ul li::marker {
-    color: var(--lcars-aubergine);
-    font-size: 1.2em;
+/* Table row caps - left side */
+[data-theme="lcars"] #write th:first-child:before,
+[data-theme="lcars"] #write td:first-child:before,
+[data-theme="lcars"] .markdown-output th:first-child:before,
+[data-theme="lcars"] .markdown-output td:first-child:before {
+    content: " ";
+    position: absolute;
+    right: calc(100% + 0.5rem);
+    top: 0;
+    bottom: 0;
+    width: 0.5rem;
 }
 
-[data-theme="lcars"] #write ol li::marker,
-[data-theme="lcars"] .markdown-output ol li::marker {
+/* Table row caps - right side (rounded) */
+[data-theme="lcars"] #write th:last-child:after,
+[data-theme="lcars"] #write td:last-child:after,
+[data-theme="lcars"] .markdown-output th:last-child:after,
+[data-theme="lcars"] .markdown-output td:last-child:after {
+    content: " ";
+    position: absolute;
+    left: calc(100% + 0.5rem);
+    top: 0;
+    bottom: 0;
+    width: 2rem;
+    border-radius: 0 2rem 2rem 0;
+}
+
+[data-theme="lcars"] #write th:last-child:after,
+[data-theme="lcars"] #write th:first-child:before,
+[data-theme="lcars"] .markdown-output th:last-child:after,
+[data-theme="lcars"] .markdown-output th:first-child:before {
+    background-color: var(--lcars-grey);
+}
+
+[data-theme="lcars"] #write td:last-child:after,
+[data-theme="lcars"] #write td:first-child:before,
+[data-theme="lcars"] .markdown-output td:last-child:after,
+[data-theme="lcars"] .markdown-output td:first-child:before {
+    background-color: var(--lcars-offblack);
+}
+
+/* ============================================================================
+   LCARS LINKS
+   ============================================================================ */
+
+[data-theme="lcars"] #write a,
+[data-theme="lcars"] .markdown-output a {
+    color: var(--lcars-violet);
+    border-bottom: none;
+}
+
+[data-theme="lcars"] #write a:hover,
+[data-theme="lcars"] .markdown-output a:hover {
     color: var(--lcars-orange);
-    font-weight: 700;
+}
+
+[data-theme="lcars"] #write a:visited,
+[data-theme="lcars"] .markdown-output a:visited {
+    color: var(--lcars-blue);
+}
+
+[data-theme="lcars"] #write table a,
+[data-theme="lcars"] #write table a:visited,
+[data-theme="lcars"] .markdown-output table a,
+[data-theme="lcars"] .markdown-output table a:visited {
+    color: black;
+}
+
+/* ============================================================================
+   LCARS SELECTION & SCROLLBAR
+   ============================================================================ */
+
+[data-theme="lcars"] ::selection {
+    background-color: var(--lcars-yellow);
+    color: black;
+}
+
+[data-theme="lcars"] ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+[data-theme="lcars"] ::-webkit-scrollbar-track {
+    background: var(--lcars-offblack);
+}
+
+[data-theme="lcars"] ::-webkit-scrollbar-thumb {
+    background: var(--lcars-orange);
+    border-radius: 0;
+    min-height: 40px;
+}
+
+[data-theme="lcars"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--lcars-yellow);
+}
+
+/* Hide horizontal scrollbars */
+[data-theme="lcars"] ::-webkit-scrollbar:horizontal {
+    display: none;
+}
+
+/* Force scrollbars to always be visible on editor panes */
+[data-theme="lcars"] #write,
+[data-theme="lcars"] #write-input,
+[data-theme="lcars"] .editor-section-content {
+    scrollbar-gutter: stable;
+}
+
+/* Ensure scrollbar is visible even when not scrolling (webkit) */
+[data-theme="lcars"] .editor-section-content::-webkit-scrollbar-track {
+    background: var(--lcars-offblack);
+}
+
+[data-theme="lcars"] .editor-section-content::-webkit-scrollbar-thumb {
+    background: var(--lcars-orange);
+}
+
+/* Textarea scrollbar styling */
+[data-theme="lcars"] .markdown-textarea::-webkit-scrollbar {
+    width: 12px;
+}
+
+[data-theme="lcars"] .markdown-textarea::-webkit-scrollbar-track {
+    background: var(--lcars-offblack);
+}
+
+[data-theme="lcars"] .markdown-textarea::-webkit-scrollbar-thumb {
+    background: var(--lcars-orange);
+    min-height: 40px;
+}
+
+[data-theme="lcars"] .markdown-textarea::-webkit-scrollbar-thumb:hover {
+    background: var(--lcars-yellow);
+}
+
+/* ============================================================================
+   LCARS TYPOGRAPHY FOR UI ELEMENTS
+   ============================================================================ */
+
+[data-theme="lcars"] .panel-tab-label {
+    font-family: 'Teko', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+}
+
+[data-theme="lcars"] .document-tab {
+    font-family: 'Teko', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+[data-theme="lcars"] .panel-button {
+    font-family: 'Teko', sans-serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    border-radius: 0 1rem 1rem 0;
+}
+
+/* ============================================================================
+   LCARS PANELS
+   ============================================================================ */
+
+[data-theme="lcars"] .panel-content {
+    background: var(--lcars-offblack);
+    border: 2px solid var(--lcars-purple);
+    border-radius: 0 0 1.5rem 0;
+}
+
+[data-theme="lcars"] .panel-content h3 {
+    font-family: 'Teko', sans-serif;
+    font-size: 22px;
+    color: var(--lcars-yellow);
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--lcars-purple);
+    padding-bottom: 8px;
+}
+
+[data-theme="lcars"] .panel-content h4 {
+    font-family: 'Teko', sans-serif;
+    font-size: 18px;
+    color: var(--lcars-orange);
+    text-transform: uppercase;
+}
+
+[data-theme="lcars"] .panel-content p {
+    font-family: 'Teko', sans-serif;
+    font-size: 16px;
+}
+
+[data-theme="lcars"] .help-section-header,
+[data-theme="lcars"] .view-section-header {
+    font-family: 'Teko', sans-serif;
+    font-size: 16px;
+    color: var(--lcars-yellow);
+}
+
+[data-theme="lcars"] .help-section-header:hover,
+[data-theme="lcars"] .view-section-header:hover {
+    color: var(--lcars-orange);
+}
+
+[data-theme="lcars"] .help-toggle,
+[data-theme="lcars"] .view-toggle {
+    color: var(--lcars-orange);
+}
+
+[data-theme="lcars"] .expand-all-toggle {
+    font-family: 'Teko', sans-serif;
+    color: var(--lcars-grey);
+}
+
+[data-theme="lcars"] .expand-all-toggle input[type="checkbox"] {
+    accent-color: var(--lcars-orange);
+}
+
+[data-theme="lcars"] .current-display {
+    font-family: 'Teko', sans-serif;
+    color: var(--lcars-grey);
+}
+
+/* ============================================================================
+   LCARS DOCUMENT TABS
+   ============================================================================ */
+
+[data-theme="lcars"] .document-tabs-container {
+    border-bottom: 3px solid var(--lcars-purple);
+}
+
+[data-theme="lcars"] .document-tab {
+    border-left: 3px solid var(--lcars-purple);
+}
+
+[data-theme="lcars"] .document-tab:hover {
+    background: rgba(204, 102, 153, 0.2);
+    border-left-color: var(--lcars-orange);
+}
+
+[data-theme="lcars"] .document-tab.active {
+    background: rgba(255, 153, 0, 0.2);
+    border-left: 4px solid var(--lcars-orange);
+}
+
+[data-theme="lcars"] .document-tab-new {
+    font-family: 'Teko', sans-serif;
+    border-left: 3px solid var(--lcars-purple);
+}
+
+/* ============================================================================
+   LCARS HELP PANEL
+   ============================================================================ */
+
+[data-theme="lcars"] .help-two-col code {
+    font-family: 'Share Tech Mono', monospace;
+    background: var(--lcars-offblack);
+    color: var(--lcars-orange);
+}
+
+[data-theme="lcars"] .help-preview {
+    font-family: 'Teko', sans-serif;
+    color: var(--lcars-yellow);
+}
+
+[data-theme="lcars"] .help-col-label {
+    font-family: 'Teko', sans-serif;
+    color: var(--lcars-grey);
+    text-transform: uppercase;
+}
+
+/* ============================================================================
+   EDITOR SECTION SCROLLING & ALIGNMENT
+   ============================================================================ */
+
+/* Note: .editor-section overflow is set to visible !important earlier for frame effects */
+
+/* ============================================================================
+   LEFT PANEL (Input) - Fixed frame, scrolling textarea
+   ============================================================================ */
+
+/* The input section itself gets the fixed frame decorations */
+[data-theme="lcars"] .editor-input {
+    position: relative;
+}
+
+/* Left sidebar - fixed position within the input section */
+[data-theme="lcars"] .editor-input::before {
+    content: "";
+    position: absolute;
+    top: 3rem;
+    left: 0.5rem;
+    width: 1.5rem;
+    bottom: 0;
+    background-color: var(--lcars-purple);
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* Top bar - fixed position within the input section */
+[data-theme="lcars"] .editor-input::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0.5rem;
+    right: 0;  /* Flush against splitter */
+    height: 3rem;
+    background-color: var(--lcars-purple);
+    z-index: 5;
+    pointer-events: none;
+    border-radius: 1.5rem 0 0 0;
+}
+
+/* Editor section content for input panel - uses flex layout like default */
+[data-theme="lcars"] .editor-input .editor-section-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+    margin: 3.5rem 0 0 2rem !important; /* Top for header, left flush with sidebar edge */
+    overflow: hidden !important;
+    background: #000;
+    z-index: 1;
+}
+
+/* #write-input container - fills flex parent */
+[data-theme="lcars"] #write-input {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100%;
+    height: 100%;
+}
+
+/* Textarea - fills container and scrolls its own content */
+[data-theme="lcars"] .markdown-textarea {
+    flex: 1;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 1rem !important;
+    margin: 0 !important;
+    overflow-y: scroll !important; /* Textarea scrolls its own content */
+    overflow-x: hidden !important;
+    resize: none !important;
+    box-sizing: border-box !important;
+}
+
+/* ============================================================================
+   RIGHT PANEL (Preview) - Fixed frame, scrolling content
+   ============================================================================ */
+
+/* The preview section itself gets the fixed frame decorations */
+[data-theme="lcars"] .editor-preview {
+    position: relative;
+}
+
+/* Left sidebar - fixed position within the preview section */
+[data-theme="lcars"] .editor-preview::before {
+    content: "";
+    position: absolute;
+    top: 3rem;
+    left: 0.5rem;
+    width: 1.5rem;
+    bottom: 0;
+    background-color: var(--lcars-purple);
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* Top bar - fixed position within the preview section */
+[data-theme="lcars"] .editor-preview::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0.5rem;
+    right: 0;  /* Flush against edge */
+    height: 3rem;
+    background-color: var(--lcars-purple);
+    z-index: 5;
+    pointer-events: none;
+    border-radius: 1.5rem 0 0 0;
+}
+
+[data-theme="lcars"] .editor-preview .editor-section-content {
+    padding: 0;
+    margin: 3.5rem 0 0 2rem !important;  /* Match input panel margins */
+    flex: 1;
+    display: block;
+    overflow-y: scroll !important;
+    overflow-x: hidden;
+    background: #000;
+    position: relative;
+    z-index: 1;
+}
+
+/* #write content area - no additional margins needed, parent handles offset */
+[data-theme="lcars"] #write {
+    position: relative;
+    margin: 0 !important;
+    padding: 1rem !important;
+    min-height: 100%;
+    height: auto;
+    overflow: visible !important;
+}
+
+/* Preview typora-write container inherits */
+[data-theme="lcars"] .editor-preview .typora-write {
+    overflow: visible;
+    height: auto;
+}
+
+/* Reset any default margins on markdown-output */
+[data-theme="lcars"] .markdown-output {
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+}
+
+/* Prevent horizontal overflow from box-shadows */
+[data-theme="lcars"] .editor-container {
+    overflow: hidden;
 }

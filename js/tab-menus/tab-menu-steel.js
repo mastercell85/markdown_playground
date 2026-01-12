@@ -10,10 +10,44 @@
      * Initialize Steel tab menu features
      */
     function initSteelTabMenu() {
+        // Clean up any existing listeners by cloning elements
+        cleanupListeners();
+
+        // Initialize fresh
         initializeHelpPanelSections();
         initializeHelpExpandAllToggle();
         initializeViewPanelSections();
         initializeViewExpandAllToggle();
+    }
+
+    /**
+     * Clean up existing event listeners by cloning elements
+     */
+    function cleanupListeners() {
+        // Clone and replace help section headers to remove old listeners
+        document.querySelectorAll('.help-section-header').forEach(header => {
+            const clone = header.cloneNode(true);
+            header.parentNode.replaceChild(clone, header);
+        });
+
+        // Clone and replace view section headers
+        document.querySelectorAll('.view-section-header').forEach(header => {
+            const clone = header.cloneNode(true);
+            header.parentNode.replaceChild(clone, header);
+        });
+
+        // Clone and replace expand all checkboxes
+        const helpExpandAll = document.getElementById('expand-all-sections');
+        if (helpExpandAll) {
+            const clone = helpExpandAll.cloneNode(true);
+            helpExpandAll.parentNode.replaceChild(clone, helpExpandAll);
+        }
+
+        const viewExpandAll = document.getElementById('view-expand-all-sections');
+        if (viewExpandAll) {
+            const clone = viewExpandAll.cloneNode(true);
+            viewExpandAll.parentNode.replaceChild(clone, viewExpandAll);
+        }
     }
 
     /**

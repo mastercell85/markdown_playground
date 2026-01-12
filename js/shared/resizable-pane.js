@@ -124,25 +124,27 @@ class ResizablePane {
         const deltaX = e.clientX - this.startX;
         const containerWidth = this.container.offsetWidth;
 
-        // Calculate new widths
+        // Calculate new left width
         const newLeftWidth = this.startLeftWidth + deltaX;
-        const newRightWidth = this.startRightWidth - deltaX;
+
+        // Calculate available space for right pane (accounting for gap if present)
+        const gap = this.container.querySelector('.editor-gap');
+        const gapWidth = gap ? gap.offsetWidth : 0;
+        const availableForRight = containerWidth - newLeftWidth - gapWidth;
 
         // Enforce minimum widths
-        if (newLeftWidth >= this.minPaneWidth && newRightWidth >= this.minPaneWidth) {
-            const leftFlex = newLeftWidth / containerWidth;
-            const rightFlex = newRightWidth / containerWidth;
-
-            this.leftPane.style.flex = `${leftFlex} 0 0px`;
-            this.rightPane.style.flex = `${rightFlex} 0 0px`;
+        if (newLeftWidth >= this.minPaneWidth && availableForRight >= this.minPaneWidth) {
+            // Only set left pane width explicitly - right pane uses flex: 1 to fill remaining space
+            this.leftPane.style.flex = `0 0 ${newLeftWidth}px`;
+            this.rightPane.style.flex = '1 1 0px';
 
             // Trigger callback if provided
             if (this.onResize) {
                 this.onResize({
                     leftWidth: newLeftWidth,
-                    rightWidth: newRightWidth,
-                    leftFlex,
-                    rightFlex
+                    rightWidth: availableForRight,
+                    leftFlex: newLeftWidth / containerWidth,
+                    rightFlex: availableForRight / containerWidth
                 });
             }
         }
@@ -162,8 +164,8 @@ class ResizablePane {
      * Reset panes to equal width
      */
     reset() {
-        this.leftPane.style.flex = '1 0 0px';
-        this.rightPane.style.flex = '1 0 0px';
+        this.leftPane.style.flex = '1 1 0px';
+        this.rightPane.style.flex = '1 1 0px';
     }
 
     /**
@@ -171,9 +173,14 @@ class ResizablePane {
      * @param {number} leftPercent - Left pane percentage (0-100)
      */
     setWidths(leftPercent) {
-        const rightPercent = 100 - leftPercent;
-        this.leftPane.style.flex = `${leftPercent / 100} 0 0px`;
-        this.rightPane.style.flex = `${rightPercent / 100} 0 0px`;
+        const containerWidth = this.container.offsetWidth;
+        const gap = this.container.querySelector('.editor-gap');
+        const gapWidth = gap ? gap.offsetWidth : 0;
+        const availableWidth = containerWidth - gapWidth;
+        const leftWidth = (availableWidth * leftPercent) / 100;
+
+        this.leftPane.style.flex = `0 0 ${leftWidth}px`;
+        this.rightPane.style.flex = '1 1 0px';
     }
 }
 

@@ -473,11 +473,18 @@ lsDOCTYPE html>
 				</div>
 			</section>
 
-			<!-- Resizable divider -->
-			<div class="editor-divider" id="editor-divider">
-				<button class="divider-sync-btn" id="divider-sync-btn" title="Toggle Scroll Sync">
-					<span class="sync-chain">&#x1F517;</span>
-				</button>
+			<!-- Center gap with toolbar and resize handle -->
+			<div class="editor-gap" id="editor-gap">
+				<!-- Resize handle at top of gap -->
+				<div class="editor-divider" id="editor-divider" title="Drag to resize panels">
+					<span class="divider-grip">&#x2194;</span>
+				</div>
+				<!-- Toolbar area for buttons -->
+				<div class="gap-toolbar" id="gap-toolbar">
+					<button class="divider-sync-btn" id="divider-sync-btn" title="Toggle Scroll Sync">
+						<span class="sync-chain">&#x1F517;</span>
+					</button>
+				</div>
 			</div>
 
 			<!-- Preview section -->

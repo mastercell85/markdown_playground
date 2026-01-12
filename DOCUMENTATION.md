@@ -103,8 +103,14 @@ Website playground/
 - **Split View**: Editor and preview side-by-side (equal height panels)
 - **Editor Only**: Full-width editor
 - **Preview Only**: Full-width preview
-- Resizable divider between panes
+- Resizable divider between panes (located at top of center gap)
 - Input and preview panels always match in height across all themes
+
+**Resize Behavior:**
+- Only the left (input) pane gets an explicit width during resize
+- Right (preview) pane uses `flex: 1` to fill remaining space
+- This prevents right edge shifting during resize operations
+- Theme-specific scrollbar positioning ensures scrollbars are flush with panel edges
 
 ### View Options
 - Zoom levels: 90%, 100%, 110%, 125%, 150%
@@ -292,6 +298,20 @@ The LCARS theme uses a combination of CSS pseudo-elements and HTML elements for 
 ```
 
 The frame stays fixed while content scrolls inside. Each editor pane (input and preview) has its own independent LCARS frame.
+
+### Theme-Specific Scrollbar Positioning
+
+Both LCARS and Cyberpunk themes use special CSS to ensure scrollbars are flush with panel edges:
+
+**Cyberpunk Theme:**
+- Preview panel uses absolute positioning on `#write` container
+- `padding-right: 0` on `#write` places scrollbar at right edge
+- Inner `.markdown-output` has `padding-right: 1rem` for readable text spacing
+
+**LCARS Theme:**
+- Input panel uses negative right margin (`-10px`) to push scrollbar to edge
+- Preview panel uses absolute positioning with `right: 0` on `.editor-section-content`
+- Frame decorations (::before, ::after) stop before edges to avoid overlap with gap
 
 ### Adding a Theme
 1. Create CSS file in `themes/` folder

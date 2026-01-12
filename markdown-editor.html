@@ -64,51 +64,91 @@ lsDOCTYPE html>
 		<div class="editor-panel view-panel" id="view-panel" role="article">
 			<div class="panel-tab-label">View</div>
 			<div class="panel-content">
-				<h3>View Options</h3>
-
-				<!-- Tab Menu Style -->
-				<h4 class="panel-section-title">Tab Menu</h4>
-				<button id="tab-menu-selector-btn" class="panel-button">Select Tab Menu Style...</button>
-				<div id="current-tab-menu-display" style="padding: 8px 40px; font-size: 11px; color: rgba(255, 255, 255, 0.6);">
-					Current: Steel
+				<div class="panel-header-row">
+					<h3>View Options</h3>
+					<label class="expand-all-toggle">
+						<input type="checkbox" id="view-expand-all-sections">
+						<span>Expand All</span>
+					</label>
 				</div>
 
-				<!-- Theme -->
-				<h4 class="panel-section-title">Theme</h4>
-				<button id="theme-selector-btn" class="panel-button">Select Theme...</button>
-				<button id="theme-load-custom-btn" class="panel-button">Load Custom CSS</button>
-				<div id="current-theme-display" style="padding: 8px 40px; font-size: 11px; color: rgba(255, 255, 255, 0.6);">
-					Current: Default
+				<!-- Tab Menu Section -->
+				<div class="view-section">
+					<button class="view-section-header">
+						<span class="view-toggle">▶</span>
+						<span>Tab Menu</span>
+					</button>
+					<div class="view-section-content">
+						<button id="tab-menu-selector-btn" class="panel-button">Select Tab Menu Style...</button>
+						<div id="current-tab-menu-display" class="current-display">Current: Steel</div>
+					</div>
 				</div>
-				<input type="file" id="custom-theme-input" accept=".css" style="display: none;">
 
-				<!-- Layout -->
-				<h4 class="panel-section-title">Layout</h4>
-				<button id="layout-split-btn" class="panel-button">Split View</button>
-				<button id="layout-editor-btn" class="panel-button">Editor Only</button>
-				<button id="layout-preview-btn" class="panel-button">Preview Only</button>
+				<!-- Theme Section -->
+				<div class="view-section">
+					<button class="view-section-header">
+						<span class="view-toggle">▶</span>
+						<span>Theme</span>
+					</button>
+					<div class="view-section-content">
+						<button id="theme-selector-btn" class="panel-button">Select Theme...</button>
+						<button id="theme-load-custom-btn" class="panel-button">Load Custom CSS</button>
+						<div id="current-theme-display" class="current-display">Current: Default</div>
+						<input type="file" id="custom-theme-input" accept=".css" style="display: none;">
+					</div>
+				</div>
 
-				<!-- Editor Options -->
-				<h4 class="panel-section-title">Editor</h4>
-				<button id="toggle-line-numbers-btn" class="panel-button">Toggle Line Numbers</button>
-				<button id="toggle-word-wrap-btn" class="panel-button">Toggle Word Wrap</button>
+				<!-- Layout Section -->
+				<div class="view-section">
+					<button class="view-section-header">
+						<span class="view-toggle">▶</span>
+						<span>Layout</span>
+					</button>
+					<div class="view-section-content">
+						<button id="layout-split-btn" class="panel-button">Split View</button>
+						<button id="layout-editor-btn" class="panel-button">Editor Only</button>
+						<button id="layout-preview-btn" class="panel-button">Preview Only</button>
+					</div>
+				</div>
 
-				<!-- Zoom -->
-				<h4 class="panel-section-title">Zoom</h4>
-				<button id="zoom-90-btn" class="panel-button">90%</button>
-				<button id="zoom-100-btn" class="panel-button">100%</button>
-				<button id="zoom-110-btn" class="panel-button">110%</button>
-				<button id="zoom-125-btn" class="panel-button">125%</button>
-				<button id="zoom-150-btn" class="panel-button">150%</button>
+				<!-- Editor Section -->
+				<div class="view-section">
+					<button class="view-section-header">
+						<span class="view-toggle">▶</span>
+						<span>Editor</span>
+					</button>
+					<div class="view-section-content">
+						<button id="toggle-line-numbers-btn" class="panel-button">Toggle Line Numbers</button>
+						<button id="toggle-word-wrap-btn" class="panel-button">Toggle Word Wrap</button>
+					</div>
+				</div>
 
-				<!-- External Preview -->
-				<h4 class="panel-section-title">External Window</h4>
-				<button id="open-external-preview" class="panel-button">
-					Open Preview in New Window
-				</button>
-				<button id="close-external-preview" class="panel-button" disabled>
-					Close External Window
-				</button>
+				<!-- Zoom Section -->
+				<div class="view-section">
+					<button class="view-section-header">
+						<span class="view-toggle">▶</span>
+						<span>Zoom</span>
+					</button>
+					<div class="view-section-content">
+						<button id="zoom-90-btn" class="panel-button">90%</button>
+						<button id="zoom-100-btn" class="panel-button">100%</button>
+						<button id="zoom-110-btn" class="panel-button">110%</button>
+						<button id="zoom-125-btn" class="panel-button">125%</button>
+						<button id="zoom-150-btn" class="panel-button">150%</button>
+					</div>
+				</div>
+
+				<!-- External Window Section -->
+				<div class="view-section">
+					<button class="view-section-header">
+						<span class="view-toggle">▶</span>
+						<span>External Window</span>
+					</button>
+					<div class="view-section-content">
+						<button id="open-external-preview" class="panel-button">Open Preview in New Window</button>
+						<button id="close-external-preview" class="panel-button" disabled>Close External Window</button>
+					</div>
+				</div>
 			</div>
 		</div>
 

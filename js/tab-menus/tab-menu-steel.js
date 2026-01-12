@@ -11,7 +11,9 @@
      */
     function initSteelTabMenu() {
         initializeHelpPanelSections();
-        initializeExpandAllToggle();
+        initializeHelpExpandAllToggle();
+        initializeViewPanelSections();
+        initializeViewExpandAllToggle();
     }
 
     /**
@@ -27,30 +29,30 @@
                 const section = this.closest('.help-section');
                 if (section) {
                     section.classList.toggle('expanded');
-                    updateExpandAllCheckbox();
+                    updateHelpExpandAllCheckbox();
                 }
             });
         });
     }
 
     /**
-     * Initialize expand all checkbox
+     * Initialize Help panel expand all checkbox
      */
-    function initializeExpandAllToggle() {
+    function initializeHelpExpandAllToggle() {
         const expandAllCheckbox = document.getElementById('expand-all-sections');
         if (expandAllCheckbox) {
             expandAllCheckbox.addEventListener('change', function(event) {
                 event.stopPropagation();
-                toggleAllSections(this.checked);
+                toggleAllHelpSections(this.checked);
             });
         }
     }
 
     /**
-     * Toggle all collapsible sections expanded/collapsed
+     * Toggle all Help panel sections expanded/collapsed
      * @param {boolean} expand - True to expand all, false to collapse all
      */
-    function toggleAllSections(expand) {
+    function toggleAllHelpSections(expand) {
         const sections = document.querySelectorAll('.help-section');
         sections.forEach(section => {
             if (expand) {
@@ -62,14 +64,74 @@
     }
 
     /**
-     * Update expand all checkbox state based on current section states
+     * Update Help expand all checkbox state based on current section states
      */
-    function updateExpandAllCheckbox() {
+    function updateHelpExpandAllCheckbox() {
         const expandAllCheckbox = document.getElementById('expand-all-sections');
         if (!expandAllCheckbox) return;
 
         const sections = document.querySelectorAll('.help-section');
         const expandedSections = document.querySelectorAll('.help-section.expanded');
+
+        expandAllCheckbox.checked = sections.length > 0 && sections.length === expandedSections.length;
+    }
+
+    /**
+     * Initialize View panel collapsible sections
+     */
+    function initializeViewPanelSections() {
+        const viewSections = document.querySelectorAll('.view-section-header');
+
+        viewSections.forEach(header => {
+            header.addEventListener('click', function(event) {
+                event.stopPropagation();
+
+                const section = this.closest('.view-section');
+                if (section) {
+                    section.classList.toggle('expanded');
+                    updateViewExpandAllCheckbox();
+                }
+            });
+        });
+    }
+
+    /**
+     * Initialize View panel expand all checkbox
+     */
+    function initializeViewExpandAllToggle() {
+        const expandAllCheckbox = document.getElementById('view-expand-all-sections');
+        if (expandAllCheckbox) {
+            expandAllCheckbox.addEventListener('change', function(event) {
+                event.stopPropagation();
+                toggleAllViewSections(this.checked);
+            });
+        }
+    }
+
+    /**
+     * Toggle all View panel sections expanded/collapsed
+     * @param {boolean} expand - True to expand all, false to collapse all
+     */
+    function toggleAllViewSections(expand) {
+        const sections = document.querySelectorAll('.view-section');
+        sections.forEach(section => {
+            if (expand) {
+                section.classList.add('expanded');
+            } else {
+                section.classList.remove('expanded');
+            }
+        });
+    }
+
+    /**
+     * Update View expand all checkbox state based on current section states
+     */
+    function updateViewExpandAllCheckbox() {
+        const expandAllCheckbox = document.getElementById('view-expand-all-sections');
+        if (!expandAllCheckbox) return;
+
+        const sections = document.querySelectorAll('.view-section');
+        const expandedSections = document.querySelectorAll('.view-section.expanded');
 
         expandAllCheckbox.checked = sections.length > 0 && sections.length === expandedSections.length;
     }
@@ -84,7 +146,9 @@
     // Expose functions globally if needed
     window.SteelTabMenu = {
         init: initSteelTabMenu,
-        toggleAllSections: toggleAllSections,
-        updateExpandAllCheckbox: updateExpandAllCheckbox
+        toggleAllHelpSections: toggleAllHelpSections,
+        toggleAllViewSections: toggleAllViewSections,
+        updateHelpExpandAllCheckbox: updateHelpExpandAllCheckbox,
+        updateViewExpandAllCheckbox: updateViewExpandAllCheckbox
     };
 })();

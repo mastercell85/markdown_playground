@@ -376,9 +376,16 @@ Edit `js/markdown/rule-engine.js`:
 The help panel preview (`.help-preview`) renders markdown examples in the current theme's style:
 
 **Architecture:**
-- Base styles in `css/markdown-editor-base.css` use CSS custom properties
-- Each theme overrides these properties for consistent styling
-- Uses high-specificity selectors to ensure theme colors apply
+- Help preview elements have the `markdown-output` class, allowing them to inherit styles from main preview
+- Base styles in `css/markdown-editor-base.css` use CSS custom properties for default styling
+- Theme-specific styles (like LCARS heading decorations) are inherited from `.markdown-output` selectors
+- Help preview only overrides compact sizing and removes decorative elements that are too large for the compact view
+
+**Inheritance Model:**
+The help preview inherits from main preview styles, ensuring consistency:
+- Heading decorations (::before/::after bars) come from `.markdown-output h1-h6` styles
+- Colors, fonts, and formatting inherit from theme's `.markdown-output` rules
+- Help preview overrides only: compact margins, smaller font sizes, removed box-shadows
 
 **CSS Custom Properties Used:**
 | Property | Purpose |
@@ -394,24 +401,28 @@ The help panel preview (`.help-preview`) renders markdown examples in the curren
 | `--md-hr-color` | Horizontal rule color |
 
 **Adding Theme Support for Help Preview:**
-When creating a new theme, add styles for `.help-preview` elements:
+Since help preview inherits from `.markdown-output`, most styling is automatic. Only add overrides for compact sizing:
 ```css
-[data-theme="yourtheme"] .help-preview {
-    color: var(--your-text-color) !important;
-    font-family: var(--your-font) !important;
-}
-
+/* Help preview inherits from .markdown-output - only override sizing */
 [data-theme="yourtheme"] .help-preview h1,
 [data-theme="yourtheme"] .help-preview h2,
 [data-theme="yourtheme"] .help-preview h3 {
-    color: var(--your-heading-color) !important;
+    box-shadow: none !important;  /* Remove side decorations */
+    margin: 0.5rem 0 !important;  /* Compact margins */
 }
 
-[data-theme="yourtheme"] .help-preview a {
-    color: var(--your-link-color) !important;
+/* Remove extra decorative elements for compact view */
+[data-theme="yourtheme"] .help-preview h1::before,
+[data-theme="yourtheme"] .help-preview h2::before,
+[data-theme="yourtheme"] .help-preview h3::before {
+    margin-left: 0 !important;
+    box-shadow: none !important;
 }
 
-/* ... additional element styles */
+/* Compact font sizes */
+[data-theme="yourtheme"] .help-preview h1 { font-size: 1.5rem !important; }
+[data-theme="yourtheme"] .help-preview h2 { font-size: 1.3rem !important; }
+[data-theme="yourtheme"] .help-preview h3 { font-size: 1.1rem !important; }
 ```
 
 ### View Panel

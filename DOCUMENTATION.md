@@ -53,7 +53,8 @@ Website playground/
 │   ├── index-main.js                      # Home page scripts
 │   ├── shared/                            # Shared modules
 │   │   ├── panel-manager.js               # Tab/panel switching
-│   │   └── resizable-pane.js              # Draggable divider
+│   │   ├── resizable-pane.js              # Draggable divider
+│   │   └── scroll-sync.js                 # Bidirectional scroll synchronization
 │   ├── markdown/                          # Markdown processing
 │   │   ├── markdown-parser.js             # Parser orchestrator
 │   │   ├── rule-engine.js                 # Standard markdown rules
@@ -109,6 +110,7 @@ Website playground/
 - Zoom levels: 90%, 100%, 110%, 125%, 150%
 - Line numbers toggle
 - Word wrap toggle
+- Scroll sync toggle (bidirectional sync between input and preview)
 - Tab menu style switching
 - Theme selection
 - Collapsible sections with Expand/Collapse All toggle
@@ -117,6 +119,27 @@ Website playground/
 ### External Preview
 - Open preview in separate window
 - Real-time sync via postMessage API
+
+### Scroll Sync
+Bidirectional synchronized scrolling between input and preview panes.
+
+**UI Controls:**
+- Toggle button in View panel → Editor section
+- Sync icon button on the resizable divider
+
+**Architecture:**
+- Managed by `ScrollSync` class in `js/shared/scroll-sync.js`
+- State persisted to localStorage (`editor-scroll-sync`)
+- Debounced scroll handlers prevent feedback loops
+
+**Implementation Status:**
+Currently a placeholder awaiting row-based index synchronization. The planned implementation will:
+1. Modify the markdown parser to add `data-line` attributes to rendered HTML elements
+2. Map source line numbers to corresponding preview elements
+3. Use visibility detection to find the topmost visible line/element
+4. Scroll the opposite pane to the matching position
+
+This approach (used by VS Code, Joplin, etc.) provides accurate sync regardless of content height differences.
 
 ---
 
@@ -129,6 +152,7 @@ The editor follows SOLID principles with modular components:
 markdown-editor-main.js (Orchestrator)
     ├── PanelManager (panel switching)
     ├── ResizablePane (divider handling)
+    ├── ScrollSync (bidirectional scroll sync)
     ├── DocumentManager (document storage)
     │   └── Document (individual docs)
     ├── TabController (tab UI)
@@ -471,6 +495,7 @@ Each theme/tab menu style may override the background to match its styling:
 | `editor-zoom` | Zoom percentage |
 | `editor-line-numbers` | Line numbers enabled |
 | `editor-word-wrap` | Word wrap enabled |
+| `editor-scroll-sync` | Scroll sync enabled |
 | `markdown-documents` | Stored documents JSON |
 | `active-document-id` | Current document ID |
 

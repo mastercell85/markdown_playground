@@ -384,6 +384,42 @@ body {
     padding-top: 0;
 }
 
+/* Panel header row with expand all toggle */
+.help-header-row,
+.panel-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.help-header-row h3,
+.panel-header-row h3 {
+    margin: 0;
+    padding: 0;
+}
+
+.expand-all-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    user-select: none;
+}
+
+.expand-all-toggle:hover {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.expand-all-toggle input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    accent-color: #4a9eff;
+}
+
 /* Panel buttons */
 .panel-button {
     display: block;

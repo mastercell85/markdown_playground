@@ -412,10 +412,10 @@ body {
     cursor: not-allowed;
 }
 
-/* Help panel - wider */
+/* Help panel - wider for two-column layout */
 .help-panel .panel-content {
-    min-width: 500px;
-    max-width: 600px;
+    min-width: 550px;
+    max-width: 650px;
 }
 
 /* ============================================================================
@@ -879,4 +879,203 @@ header[role="banner"] {
         padding: 0 15px;
         height: 40px;
     }
+}
+
+/* ============================================================================
+   HELP SECTION ACCORDION/DROPDOWN
+   Collapsible sections in the Help panel
+   ============================================================================ */
+
+/* Help section styling */
+.help-section {
+    margin: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.help-section:last-child {
+    border-bottom: none;
+}
+
+.help-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.help-section-header:hover {
+    color: #4a9eff;
+}
+
+.help-toggle {
+    display: inline-block;
+    width: 12px;
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.help-section.expanded .help-toggle {
+    transform: rotate(90deg);
+}
+
+.help-section-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+    padding: 0;
+}
+
+.help-section.expanded .help-section-content {
+    max-height: 1000px;
+    opacity: 1;
+    padding-bottom: 15px;
+}
+
+.help-section-content h4 {
+    color: #4a9eff;
+    font-size: 13px;
+    margin: 12px 0 6px 0;
+    font-weight: 600;
+}
+
+.help-section-content h4:first-child {
+    margin-top: 0;
+}
+
+.help-section-content p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 8px 0;
+    padding: 0;
+}
+
+.help-section-content code {
+    display: block;
+    background: transparent;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #6cf;
+    margin: 8px 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.help-section-content ul {
+    margin: 8px 0;
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+.help-section-content li {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 4px 0;
+}
+
+.help-section-content strong {
+    color: #fff;
+    font-weight: 600;
+}
+
+/* ============================================================================
+   HELP PANEL TWO-COLUMN LAYOUT
+   Grid layout for syntax/preview side-by-side display
+   ============================================================================ */
+
+/* Column header row */
+.help-row-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.help-col-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Two-column grid container */
+.help-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-items: start;
+    margin: 8px 0;
+}
+
+/* Syntax column (code) */
+.help-two-col code {
+    display: block;
+    background: transparent;
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #6cf;
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Preview column */
+.help-preview {
+    background: transparent;
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    min-height: 40px;
+}
+
+/* Preview column headings */
+.help-preview h1,
+.help-preview h2,
+.help-preview h3 {
+    color: #fff;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+/* Preview column links */
+.help-preview a {
+    color: #4a9eff;
+    text-decoration: underline;
+}
+
+/* Preview column blockquotes */
+.help-preview blockquote {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Preview column lists */
+.help-preview ul,
+.help-preview ol {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.help-preview li {
+    margin: 2px 0;
 }

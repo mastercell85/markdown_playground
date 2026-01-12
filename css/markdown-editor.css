@@ -762,6 +762,8 @@ body.typora-mode .document-tab-new:hover {
     cursor: col-resize;
     position: relative;
     transition: background 0.2s ease;
+    z-index: 20;
+    overflow: visible;
 }
 
 .editor-divider:hover,
@@ -784,9 +786,9 @@ body.typora-mode .document-tab-new:hover {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 24px;
-    height: 24px;
-    border: none;
+    width: 26px;
+    height: 26px;
+    border: 2px solid rgba(100, 100, 110, 0.6);
     border-radius: 50%;
     background: rgba(40, 40, 45, 0.95);
     color: rgba(255, 255, 255, 0.5);
@@ -797,24 +799,44 @@ body.typora-mode .document-tab-new:hover {
     font-size: 12px;
     padding: 0;
     transition: all 0.2s ease;
-    z-index: 10;
+    z-index: 25;
+    opacity: 0.6;
+}
+
+/* Off state - muted/greyed out appearance */
+.divider-sync-btn .sync-chain {
+    filter: grayscale(80%);
     opacity: 0.7;
+    transition: all 0.2s ease;
 }
 
 .divider-sync-btn:hover {
     opacity: 1;
     background: rgba(60, 60, 65, 0.95);
-    color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(150, 150, 160, 0.8);
 }
 
+.divider-sync-btn:hover .sync-chain {
+    filter: grayscale(40%);
+    opacity: 0.9;
+}
+
+/* Active/On state - bright blue glow */
 .divider-sync-btn.sync-active {
-    background: rgba(74, 158, 255, 0.3);
-    color: #4a9eff;
+    background: rgba(74, 158, 255, 0.2);
+    border-color: #4a9eff;
+    box-shadow: 0 0 8px rgba(74, 158, 255, 0.5);
+    opacity: 1;
+}
+
+.divider-sync-btn.sync-active .sync-chain {
+    filter: grayscale(0%) brightness(1.1);
     opacity: 1;
 }
 
 .divider-sync-btn.sync-active:hover {
-    background: rgba(74, 158, 255, 0.5);
+    background: rgba(74, 158, 255, 0.35);
+    box-shadow: 0 0 12px rgba(74, 158, 255, 0.7);
 }
 
 .sync-chain {
@@ -832,12 +854,29 @@ body.typora-mode .document-tab-new:hover {
 
 .sync-toggle-btn .sync-icon {
     font-size: 14px;
-    opacity: 0.6;
-    transition: opacity 0.2s ease;
+    opacity: 0.5;
+    filter: grayscale(80%);
+    transition: all 0.2s ease;
 }
 
 .sync-toggle-btn.sync-active .sync-icon {
     opacity: 1;
+    filter: grayscale(0%);
+    color: #4a9eff;
+}
+
+/* Sync status indicator text */
+.sync-toggle-btn::after {
+    content: 'OFF';
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-left: auto;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.sync-toggle-btn.sync-active::after {
+    content: 'ON';
     color: #4a9eff;
 }
 
@@ -848,6 +887,44 @@ body.typora-mode .document-tab-new:hover {
 .sync-toggle-btn.sync-active {
     border-color: #4a9eff;
     color: #4a9eff;
+}
+
+/* Sync Offset Control */
+.sync-offset-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.sync-offset-control label {
+    white-space: nowrap;
+}
+
+.sync-offset-control input[type="number"] {
+    width: 60px;
+    padding: 4px 6px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    text-align: center;
+}
+
+.sync-offset-control input[type="number"]:focus {
+    outline: none;
+    border-color: #4a9eff;
+}
+
+.sync-offset-hint {
+    opacity: 0.5;
+    font-size: 11px;
 }
 
 /* Preview Area */

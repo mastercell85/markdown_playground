@@ -381,7 +381,16 @@
     font-weight: 700;
 }
 
-/* Cyberpunk divider glow */
+/* Cyberpunk divider - bring above all other layers */
+[data-theme="cyberpunk"] .editor-divider {
+    z-index: 9999 !important;
+    overflow: visible !important;
+}
+
+[data-theme="cyberpunk"] .divider-sync-btn {
+    z-index: 10000 !important;
+}
+
 [data-theme="cyberpunk"] .editor-divider:hover,
 [data-theme="cyberpunk"] .editor-divider.dragging {
     box-shadow: 0 0 20px var(--glow-purple);
@@ -390,25 +399,77 @@
 /* Cyberpunk sync button on divider */
 [data-theme="cyberpunk"] .divider-sync-btn {
     background: var(--cyber-grid);
-    color: var(--text-secondary);
-    border: 1px solid var(--neon-purple);
+    border: 2px solid var(--neon-purple);
+    opacity: 1;
+    width: 28px;
+    height: 28px;
+}
+
+/* Hide the emoji and use a custom symbol for off state */
+[data-theme="cyberpunk"] .divider-sync-btn .sync-chain {
+    font-size: 14px;
+    filter: grayscale(100%) brightness(0.6);
+}
+
+[data-theme="cyberpunk"] .divider-sync-btn::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 2px;
+    background: var(--neon-purple);
+    box-shadow: 0 0 5px var(--glow-purple);
 }
 
 [data-theme="cyberpunk"] .divider-sync-btn:hover {
     background: var(--cyber-black);
-    color: var(--neon-cyan);
     border-color: var(--neon-cyan);
     box-shadow: 0 0 10px var(--glow-cyan);
 }
 
+[data-theme="cyberpunk"] .divider-sync-btn:hover .sync-chain {
+    filter: grayscale(0%) brightness(1);
+}
+
+[data-theme="cyberpunk"] .divider-sync-btn:hover::after {
+    background: var(--neon-cyan);
+    box-shadow: 0 0 5px var(--glow-cyan);
+}
+
+/* Active/On state - bright neon cyan glow */
 [data-theme="cyberpunk"] .divider-sync-btn.sync-active {
-    background: rgba(0, 245, 255, 0.1);
-    color: var(--neon-cyan);
+    background: rgba(0, 245, 255, 0.15);
     border-color: var(--neon-cyan);
-    box-shadow: 0 0 15px var(--glow-cyan);
+    box-shadow:
+        0 0 10px var(--glow-cyan),
+        0 0 20px var(--glow-cyan),
+        inset 0 0 10px rgba(0, 245, 255, 0.2);
+}
+
+[data-theme="cyberpunk"] .divider-sync-btn.sync-active .sync-chain {
+    filter: grayscale(0%) brightness(1.2);
+}
+
+[data-theme="cyberpunk"] .divider-sync-btn.sync-active::after {
+    background: var(--neon-cyan);
+    box-shadow: 0 0 8px var(--glow-cyan);
+}
+
+[data-theme="cyberpunk"] .divider-sync-btn.sync-active:hover {
+    box-shadow:
+        0 0 15px var(--glow-cyan),
+        0 0 30px var(--glow-cyan),
+        inset 0 0 15px rgba(0, 245, 255, 0.3);
 }
 
 /* Cyberpunk sync toggle button in panel */
+[data-theme="cyberpunk"] .sync-toggle-btn .sync-icon {
+    filter: grayscale(100%) brightness(0.5);
+}
+
+[data-theme="cyberpunk"] .sync-toggle-btn::after {
+    color: var(--text-muted);
+}
+
 [data-theme="cyberpunk"] .sync-toggle-btn.sync-active {
     border-color: var(--neon-cyan);
     color: var(--neon-cyan);
@@ -417,6 +478,42 @@
 
 [data-theme="cyberpunk"] .sync-toggle-btn.sync-active .sync-icon {
     color: var(--neon-cyan);
+    filter: grayscale(0%) brightness(1.2);
+}
+
+[data-theme="cyberpunk"] .sync-toggle-btn.sync-active::after {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 5px var(--glow-cyan);
+}
+
+/* Cyberpunk sync offset control styling */
+[data-theme="cyberpunk"] .sync-offset-control {
+    background: rgba(26, 26, 46, 0.8);
+    border: 1px solid var(--neon-purple);
+    border-radius: 0;
+}
+
+[data-theme="cyberpunk"] .sync-offset-control label {
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+}
+
+[data-theme="cyberpunk"] .sync-offset-control input[type="number"] {
+    background: var(--cyber-black);
+    border: 1px solid var(--neon-cyan);
+    border-radius: 0;
+    color: var(--neon-cyan);
+}
+
+[data-theme="cyberpunk"] .sync-offset-control input[type="number"]:focus {
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 5px var(--glow-pink);
+}
+
+[data-theme="cyberpunk"] .sync-offset-hint {
+    color: var(--text-muted);
 }
 
 /* Cyberpunk help panel - wider for larger fonts and decorative prefixes */

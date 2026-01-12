@@ -1152,20 +1152,41 @@
         scrollSync = new ScrollSync();
         scrollSync.init(inputElement, previewElement);
 
-        // Listen for content changes to update block map
-        if (inputElement.tagName === 'TEXTAREA') {
-            inputElement.addEventListener('input', () => {
-                if (scrollSync && scrollSync.isEnabled()) {
-                    // Debounce the block map update
-                    clearTimeout(scrollSync.blockMapUpdateTimeout);
-                    scrollSync.blockMapUpdateTimeout = setTimeout(() => {
-                        scrollSync.updateBlockMap();
-                    }, 500);
+        // Expose scrollSync globally for debugging and UI controls
+        window.scrollSync = scrollSync;
+
+        // Setup offset control
+        setupSyncOffsetControl();
+
+        console.log('ScrollSync: Initialized');
+    }
+
+    /**
+     * Setup the sync offset control UI
+     */
+    function setupSyncOffsetControl() {
+        const offsetInput = document.getElementById('sync-offset-input');
+        const offsetControl = document.getElementById('sync-offset-control');
+
+        if (offsetInput && scrollSync) {
+            // Load saved offset from localStorage
+            const savedOffset = localStorage.getItem('editor-scroll-sync-offset');
+            if (savedOffset !== null) {
+                const offset = parseInt(savedOffset, 10);
+                offsetInput.value = offset;
+                scrollSync.setLineOffset(offset);
+            }
+
+            // Handle offset changes
+            offsetInput.addEventListener('change', function() {
+                const offset = parseInt(this.value, 10);
+                if (!isNaN(offset) && scrollSync) {
+                    scrollSync.setLineOffset(offset);
+                    localStorage.setItem('editor-scroll-sync-offset', offset.toString());
+                    console.log(`Scroll sync offset set to: ${offset} lines`);
                 }
             });
         }
-
-        console.log('ScrollSync: Initialized');
     }
 
     /**
@@ -1174,6 +1195,7 @@
     function updateScrollSyncUI(enabled) {
         const toggleBtn = document.getElementById('toggle-scroll-sync-btn');
         const dividerBtn = document.getElementById('divider-sync-btn');
+        const offsetControl = document.getElementById('sync-offset-control');
 
         if (toggleBtn) {
             const label = toggleBtn.querySelector('.sync-label');
@@ -1186,6 +1208,11 @@
         if (dividerBtn) {
             dividerBtn.classList.toggle('sync-active', enabled);
             dividerBtn.title = enabled ? 'Scroll Sync: On (Click to disable)' : 'Scroll Sync: Off (Click to enable)';
+        }
+
+        // Show/hide offset control based on sync state
+        if (offsetControl) {
+            offsetControl.style.display = enabled ? 'flex' : 'none';
         }
     }
 
@@ -1202,6 +1229,11 @@
         const newFontSize = (baseFontSize * percent) / 100;
 
         editorContainer.style.fontSize = `${newFontSize}px`;
+
+        // Invalidate scroll sync cache since line height changes with zoom
+        if (scrollSync) {
+            scrollSync.invalidateCache();
+        }
 
         // Save preference to localStorage
         localStorage.setItem('editor-zoom', percent.toString());
@@ -1413,6 +1445,9 @@
         const ruleEngine = new RuleEngine();
         const blockProcessor = new BlockProcessor();
         const parser = new MarkdownParser(ruleEngine, blockProcessor);
+
+        // Enable line tracking for scroll sync (adds data-line attributes to output)
+        parser.setLineTracking(true);
 
         // Create window manager for external preview
         const windowManager = new WindowManager({

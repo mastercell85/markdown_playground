@@ -386,3 +386,23 @@
 [data-theme="cyberpunk"] .editor-divider.dragging {
     box-shadow: 0 0 20px var(--glow-purple);
 }
+
+/* Cyberpunk help panel - wider for larger fonts and decorative prefixes */
+[data-theme="cyberpunk"] .help-panel .panel-content {
+    min-width: 700px;
+    max-width: 850px;
+}
+
+/* Compact help preview styles - remove excessive glow for readability */
+[data-theme="cyberpunk"] .help-preview h1,
+[data-theme="cyberpunk"] .help-preview h2,
+[data-theme="cyberpunk"] .help-preview h3,
+[data-theme="cyberpunk"] .help-preview h4 {
+    text-shadow: none !important;
+    margin: 0.3rem 0 !important;
+}
+
+[data-theme="cyberpunk"] .help-preview h1 { font-size: 1.4rem !important; }
+[data-theme="cyberpunk"] .help-preview h2 { font-size: 1.2rem !important; }
+[data-theme="cyberpunk"] .help-preview h3 { font-size: 1.1rem !important; }
+[data-theme="cyberpunk"] .help-preview h4 { font-size: 1rem !important; }

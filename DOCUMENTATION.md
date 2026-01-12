@@ -99,10 +99,11 @@ Website playground/
 - Document persistence across sessions
 
 ### Layout Options
-- **Split View**: Editor and preview side-by-side
+- **Split View**: Editor and preview side-by-side (equal height panels)
 - **Editor Only**: Full-width editor
 - **Preview Only**: Full-width preview
 - Resizable divider between panes
+- Input and preview panels always match in height across all themes
 
 ### View Options
 - Zoom levels: 90%, 100%, 110%, 125%, 150%
@@ -110,7 +111,7 @@ Website playground/
 - Word wrap toggle
 - Tab menu style switching
 - Theme selection
-- Collapsible sections with Expand All toggle
+- Collapsible sections with Expand/Collapse All toggle
 - Two-column layout (Steel theme)
 
 ### External Preview
@@ -369,7 +370,7 @@ Edit `js/markdown/rule-engine.js`:
 ### Help Panel
 - Collapsible accordion sections (Markdown Basics, Shortcut Syntax)
 - Two-column layout showing syntax and rendered preview
-- Expand All checkbox to toggle all sections
+- Expand/Collapse All checkbox to toggle all sections
 - **Theme-aware preview**: Preview column renders using current theme styles
 
 ### Help Panel Preview System
@@ -427,12 +428,12 @@ Since help preview inherits from `.markdown-output`, most styling is automatic. 
 
 ### View Panel
 - Collapsible sections: Tab Menu, Theme, Layout, Editor, Zoom, External Window
-- Expand All checkbox to toggle all sections
+- Expand/Collapse All checkbox to toggle all sections
 - **Steel theme**: Two-column layout (left: Tab Menu/Theme/Layout, right: Editor/Zoom/External Window)
 - **Classic theme**: Single-column layout
 
-### Sticky Expand All Checkbox
-The "Expand All" checkbox in Help and View panels is sticky, remaining visible at the top when scrolling through panel content.
+### Sticky Expand/Collapse All Checkbox
+The "Expand/Collapse All" checkbox in Help and View panels is sticky, remaining visible at the top when scrolling through panel content.
 
 **Implementation:**
 - `.help-header-row` and `.panel-header-row` use `position: sticky`

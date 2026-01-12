@@ -370,6 +370,49 @@ Edit `js/markdown/rule-engine.js`:
 - Collapsible accordion sections (Markdown Basics, Shortcut Syntax)
 - Two-column layout showing syntax and rendered preview
 - Expand All checkbox to toggle all sections
+- **Theme-aware preview**: Preview column renders using current theme styles
+
+### Help Panel Preview System
+The help panel preview (`.help-preview`) renders markdown examples in the current theme's style:
+
+**Architecture:**
+- Base styles in `css/markdown-editor-base.css` use CSS custom properties
+- Each theme overrides these properties for consistent styling
+- Uses high-specificity selectors to ensure theme colors apply
+
+**CSS Custom Properties Used:**
+| Property | Purpose |
+|----------|---------|
+| `--preview-text` | Base text color |
+| `--md-heading-color` | Heading color |
+| `--md-link-color` | Link color |
+| `--md-link-hover` | Link hover color |
+| `--md-code-bg` | Code background |
+| `--md-code-text` | Code text color |
+| `--md-blockquote-border` | Blockquote border |
+| `--md-blockquote-text` | Blockquote text color |
+| `--md-hr-color` | Horizontal rule color |
+
+**Adding Theme Support for Help Preview:**
+When creating a new theme, add styles for `.help-preview` elements:
+```css
+[data-theme="yourtheme"] .help-preview {
+    color: var(--your-text-color) !important;
+    font-family: var(--your-font) !important;
+}
+
+[data-theme="yourtheme"] .help-preview h1,
+[data-theme="yourtheme"] .help-preview h2,
+[data-theme="yourtheme"] .help-preview h3 {
+    color: var(--your-heading-color) !important;
+}
+
+[data-theme="yourtheme"] .help-preview a {
+    color: var(--your-link-color) !important;
+}
+
+/* ... additional element styles */
+```
 
 ### View Panel
 - Collapsible sections: Tab Menu, Theme, Layout, Editor, Zoom, External Window

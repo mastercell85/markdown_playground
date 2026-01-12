@@ -329,7 +329,7 @@
     font-weight: 500;
     font-family: 'Teko', sans-serif;
     color: var(--lcars-yellow);
-    line-height: 0.8em !important;
+    line-height: 1 !important;
     border-bottom: none;
     padding-bottom: 0;
 }
@@ -370,7 +370,7 @@
     content: " ";
     background-color: var(--lcars-orange);
     width: 1rem;
-    height: 0.7em;
+    height: 0.85em;
     margin-right: 0.15em;
     vertical-align: middle;
 }
@@ -392,9 +392,9 @@
     display: inline-block;
     content: " ";
     background-color: var(--lcars-orange);
-    width: 0.4em;
-    border-radius: 0 0.4em 0.4em 0;
-    height: 0.7em;
+    width: 0.42em;
+    border-radius: 0 0.42em 0.42em 0;
+    height: 0.85em;
     margin-left: 0.15em;
     vertical-align: middle;
 }
@@ -1022,71 +1022,153 @@
 }
 
 /* ============================================================================
-   LCARS HELP PANEL
+   LCARS HELP PANEL - Complete theme styling
    ============================================================================ */
 
 /* Syntax code column */
 [data-theme="lcars"] .help-two-col > code {
-    font-family: 'Share Tech Mono', monospace;
-    background: var(--lcars-offblack);
-    color: var(--lcars-orange);
+    font-family: 'Share Tech Mono', monospace !important;
+    background: var(--lcars-offblack) !important;
+    color: var(--lcars-orange) !important;
 }
 
-/* Help preview inherits from .markdown-output styles automatically */
-/* Only override layout-specific properties here */
+/* Help preview container */
 [data-theme="lcars"] .help-preview {
-    font-size: 1.1rem;
-    letter-spacing: 0.05rem;
+    font-family: 'Teko', sans-serif !important;
+    font-size: 1.1rem !important;
+    letter-spacing: 0.05rem !important;
+    color: var(--lcars-yellow) !important;
 }
 
-/* Compact sizes for help panel headings (no decorative bars) */
+/* Help preview headings - inherit from .markdown-output, just adjust sizing and remove side bars */
 [data-theme="lcars"] .help-preview h1,
 [data-theme="lcars"] .help-preview h2,
-[data-theme="lcars"] .help-preview h3 {
+[data-theme="lcars"] .help-preview h3,
+[data-theme="lcars"] .help-preview h4,
+[data-theme="lcars"] .help-preview h5,
+[data-theme="lcars"] .help-preview h6 {
+    /* Inherits decorative bars from .markdown-output h1-h6 styles */
+    /* Only override compact sizing and remove side bar shadows */
     box-shadow: none !important;
-    margin: 0;
+    margin: 0.5rem 0 !important;
 }
 
+/* Remove the extra dark bars before headings in help preview (too cluttered for compact view) */
 [data-theme="lcars"] .help-preview h1::before,
-[data-theme="lcars"] .help-preview h1::after,
 [data-theme="lcars"] .help-preview h2::before,
-[data-theme="lcars"] .help-preview h2::after,
-[data-theme="lcars"] .help-preview h3::before,
-[data-theme="lcars"] .help-preview h3::after {
-    display: none;
+[data-theme="lcars"] .help-preview h3::before {
+    margin-left: 0 !important;
+    box-shadow: none !important;
 }
 
-[data-theme="lcars"] .help-preview h1 { font-size: 1.5rem; }
-[data-theme="lcars"] .help-preview h2 { font-size: 1.3rem; margin-top: 4px; }
-[data-theme="lcars"] .help-preview h3 { font-size: 1.1rem; margin-top: 4px; }
+/* Compact font sizes for help preview */
+[data-theme="lcars"] .help-preview h1 { font-size: 1.5rem !important; }
+[data-theme="lcars"] .help-preview h2 { font-size: 1.3rem !important; }
+[data-theme="lcars"] .help-preview h3 { font-size: 1.1rem !important; }
 
-/* Help preview lists - compact sizing */
+/* Help preview text - LCARS yellow */
+[data-theme="lcars"] .help-preview strong,
+[data-theme="lcars"] .help-preview b {
+    color: var(--lcars-yellow) !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="lcars"] .help-preview em,
+[data-theme="lcars"] .help-preview i {
+    color: var(--lcars-yellow) !important;
+    font-style: italic !important;
+}
+
+[data-theme="lcars"] .help-preview del,
+[data-theme="lcars"] .help-preview s {
+    color: var(--lcars-grey) !important;
+    text-decoration: line-through !important;
+}
+
+/* Help preview links - LCARS violet */
+[data-theme="lcars"] .help-preview a {
+    color: var(--lcars-violet) !important;
+    text-decoration: none !important;
+    border-bottom: none !important;
+}
+
+[data-theme="lcars"] .help-preview a:hover {
+    color: var(--lcars-orange) !important;
+}
+
+[data-theme="lcars"] .help-preview a:visited {
+    color: var(--lcars-blue) !important;
+}
+
+/* Help preview lists - LCARS colors */
 [data-theme="lcars"] .help-preview ul,
 [data-theme="lcars"] .help-preview ol {
-    margin: 0;
-    padding-left: 16px;
+    margin: 0 !important;
+    padding-left: 16px !important;
+    color: var(--lcars-yellow) !important;
 }
 
 [data-theme="lcars"] .help-preview li {
-    margin: 2px 0;
+    margin: 2px 0 !important;
+    color: var(--lcars-yellow) !important;
+    font-family: 'Teko', sans-serif !important;
 }
 
-/* Help preview code - compact sizing */
+[data-theme="lcars"] .help-preview *::marker {
+    color: var(--lcars-aubergine) !important;
+}
+
+/* Help preview code - LCARS orange on offblack */
+[data-theme="lcars"] .help-preview code {
+    font-family: 'Share Tech Mono', monospace !important;
+    background: var(--lcars-offblack) !important;
+    color: var(--lcars-orange) !important;
+    padding: 2px 6px !important;
+}
+
 [data-theme="lcars"] .help-preview pre {
-    padding: 6px 10px;
-    margin: 4px 0 0 0;
+    font-family: 'Share Tech Mono', monospace !important;
+    background: var(--lcars-offblack) !important;
+    color: var(--lcars-orange) !important;
+    padding: 6px 10px !important;
+    margin: 4px 0 0 0 !important;
+    box-shadow: none !important;
 }
 
-/* Help preview images */
+[data-theme="lcars"] .help-preview pre code {
+    background: none !important;
+    padding: 0 !important;
+}
+
+/* Help preview blockquote - LCARS grey */
+[data-theme="lcars"] .help-preview blockquote {
+    border-left: 0.5rem solid var(--lcars-offblack) !important;
+    color: var(--lcars-grey) !important;
+    padding-left: 1rem !important;
+    margin: 0 !important;
+    font-style: normal !important;
+}
+
+/* Help preview hr - LCARS yellow */
+[data-theme="lcars"] .help-preview hr {
+    border: none !important;
+    background: var(--lcars-yellow) !important;
+    height: 0.5rem !important;
+    border-radius: 0 0.5rem 0.5rem 0 !important;
+    margin: 8px 0 !important;
+    box-shadow: none !important;
+}
+
+/* Help preview images - no decorative bars */
 [data-theme="lcars"] .help-preview img {
     box-shadow: none !important;
 }
 
 /* Column labels */
 [data-theme="lcars"] .help-col-label {
-    font-family: 'Teko', sans-serif;
-    color: var(--lcars-grey);
-    text-transform: uppercase;
+    font-family: 'Teko', sans-serif !important;
+    color: var(--lcars-grey) !important;
+    text-transform: uppercase !important;
 }
 
 /* ============================================================================

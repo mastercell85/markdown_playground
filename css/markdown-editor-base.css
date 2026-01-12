@@ -425,8 +425,8 @@ body {
 }
 
 /* ============================================================================
-   HELP PANEL PREVIEW - Layout styles only
-   Content inherits from .markdown-output (same class added to help-preview divs)
+   HELP PANEL PREVIEW - Complete styled rendering
+   Uses CSS custom properties for theme support
    ============================================================================ */
 
 /* Two-column layout container */
@@ -452,42 +452,113 @@ body {
     word-break: break-word;
 }
 
-/* Preview column container - layout only, content inherits from .markdown-output */
+/* Preview column container */
 .help-preview {
     padding: 10px 12px;
+    font-family: var(--font-family);
+    color: var(--preview-text);
 }
 
-/* Compact heading sizes for help panel */
-.help-preview h1 { font-size: 18px; margin: 0; }
-.help-preview h2 { font-size: 16px; margin: 4px 0 0 0; }
-.help-preview h3 { font-size: 14px; margin: 4px 0 0 0; }
+/* Help preview headings - compact */
+.help-preview h1,
+.help-preview h2,
+.help-preview h3,
+.help-preview h4,
+.help-preview h5,
+.help-preview h6 {
+    color: var(--md-heading-color);
+    font-family: var(--font-family);
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+.help-preview h1 { font-size: 18px; }
+.help-preview h2 { font-size: 16px; margin-top: 4px; }
+.help-preview h3 { font-size: 14px; margin-top: 4px; }
 
-/* Compact list sizing */
+/* Help preview text formatting */
+.help-preview strong,
+.help-preview b {
+    color: var(--md-heading-color);
+    font-weight: bold;
+}
+
+.help-preview em,
+.help-preview i {
+    color: var(--preview-text);
+    font-style: italic;
+}
+
+.help-preview del,
+.help-preview s {
+    color: var(--md-blockquote-text);
+    text-decoration: line-through;
+}
+
+/* Help preview links */
+.help-preview a {
+    color: var(--md-link-color);
+    text-decoration: none;
+}
+
+.help-preview a:hover {
+    color: var(--md-link-hover);
+}
+
+/* Help preview lists - compact */
 .help-preview ul,
 .help-preview ol {
     margin: 0;
     padding-left: 16px;
+    color: var(--preview-text);
 }
 
 .help-preview li {
     margin: 2px 0;
+    color: var(--preview-text);
 }
 
-/* Compact code block sizing */
+/* Help preview code */
+.help-preview code {
+    background: var(--md-code-bg);
+    color: var(--md-code-text);
+    padding: 2px 6px;
+    border-radius: var(--border-radius);
+    font-family: var(--font-family-mono);
+    font-size: 11px;
+}
+
 .help-preview pre {
+    background: var(--md-code-bg);
+    color: var(--md-code-text);
     padding: 4px 8px;
     margin: 4px 0 0 0;
     font-size: 10px;
+    font-family: var(--font-family-mono);
+    border-radius: var(--border-radius);
 }
 
-/* Compact blockquote */
+.help-preview pre code {
+    background: none;
+    padding: 0;
+}
+
+/* Help preview blockquote */
 .help-preview blockquote {
     margin: 0;
+    padding-left: 10px;
+    border-left: 3px solid var(--md-blockquote-border);
+    color: var(--md-blockquote-text);
+    font-style: italic;
 }
 
-/* Compact hr */
+/* Help preview hr */
 .help-preview hr {
     margin: 8px 0;
+    border: none;
+    height: 2px;
+    background: var(--md-hr-color);
 }
 
 /* Help preview images */

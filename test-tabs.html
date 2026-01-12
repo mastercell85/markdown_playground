@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tab Test</title>
+    <style>
+        .document-tabs-container {
+            padding: 20px;
+            background: #333;
+        }
+        .document-tabs {
+            display: flex;
+            gap: 5px;
+        }
+        .document-tab {
+            padding: 10px;
+            background: #555;
+            color: white;
+            cursor: pointer;
+        }
+        .document-tab.active {
+            background: #777;
+        }
+        .document-tab-new {
+            padding: 10px;
+            background: #666;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Document Tab Test</h1>
+    <div class="document-tabs-container">
+        <div class="document-tabs" id="document-tabs"></div>
+        <button class="document-tab-new" id="new-document-btn">+</button>
+    </div>
+    <div id="output"></div>
+
+    <script src="js/markdown/document.js"></script>
+    <script src="js/markdown/document-manager.js"></script>
+    <script src="js/markdown/tab-controller.js"></script>
+    <script>
+        const output = document.getElementById('output');
+
+        // Test 1: Check if classes exist
+        output.innerHTML += '<h2>Test 1: Classes Available?</h2>';
+        output.innerHTML += 'MarkdownDocument: ' + (typeof MarkdownDocument !== 'undefined' ? '✅' : '❌') + '<br>';
+        output.innerHTML += 'DocumentManager: ' + (typeof DocumentManager !== 'undefined' ? '✅' : '❌') + '<br>';
+        output.innerHTML += 'TabController: ' + (typeof TabController !== 'undefined' ? '✅' : '❌') + '<br>';
+
+        // Test 2: Create document manager
+        output.innerHTML += '<h2>Test 2: Create DocumentManager</h2>';
+        try {
+            const docManager = new DocumentManager({ autoSave: false });
+            output.innerHTML += 'DocumentManager created ✅<br>';
+
+            // Test 3: Create document
+            const doc = docManager.createDocument();
+            output.innerHTML += 'Document created: ' + doc.name + ' ✅<br>';
+            docManager.switchDocument(doc.id);
+            output.innerHTML += 'Document switched ✅<br>';
+
+            // Test 4: Create tab controller
+            const tabController = new TabController({
+                documentManager: docManager,
+                tabsContainer: document.getElementById('document-tabs'),
+                newTabButton: document.getElementById('new-document-btn')
+            });
+            tabController.init();
+            output.innerHTML += 'TabController initialized ✅<br>';
+
+        } catch (error) {
+            output.innerHTML += 'ERROR: ' + error.message + ' ❌<br>';
+            console.error(error);
+        }
+    </script>
+</body>
+</html>

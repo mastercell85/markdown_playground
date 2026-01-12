@@ -15,7 +15,7 @@ header {
     --header-margin-left: -190px;
     --header-top-initial: 50px;
     --header-top-hover: 260px;
-    --header-hook: url(hook3.svg);
+    --header-hook: url(../assets/hook3.svg);
     --header-hook-offset: bottom;
     --header-hook-size: 360px auto;
     --header-frame-top-offset: 559px;
@@ -31,7 +31,7 @@ header {
     width: var(--header-width);
 
     /* Visual */
-    background: url(layer-middle.svg) repeat-y center top;
+    background: url(../assets/layer-middle.svg) repeat-y center top;
     background-color: transparent;
     -moz-background-size: var(--header-width) auto;
     -o-background-size: var(--header-width) auto;
@@ -79,7 +79,7 @@ header::before {
     top: -600px;
     height: 600px;
     background: var(--header-hook) no-repeat center var(--header-hook-offset),
-                url(layer-frame.svg) no-repeat center var(--header-frame-top-offset);
+                url(../assets/layer-frame.svg) no-repeat center var(--header-frame-top-offset);
     -moz-background-size: var(--header-hook-size), var(--header-width) auto;
     -o-background-size: var(--header-hook-size), var(--header-width) auto;
     -webkit-background-size: var(--header-hook-size), var(--header-width) auto;
@@ -89,7 +89,7 @@ header::before {
 header::after {
     bottom: -41px;
     height: 41px;
-    background: transparent url(layer-frame.svg) no-repeat center bottom;
+    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
     -moz-background-size: var(--header-width) auto;
     -o-background-size: var(--header-width) auto;
     -webkit-background-size: var(--header-width) auto;

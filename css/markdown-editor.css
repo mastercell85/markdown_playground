@@ -1,0 +1,1314 @@
+/**
+* Markdown Editor CSS
+* Uses the same background and base styles as the main Zen Garden page
+*/
+
+/* Import the original 1367 CSS for base styles and animations */
+@import url("219-1367.css");
+
+/* Import panel base for consistent styling */
+@import url("219-panel-base.css");
+@import url("219-panel-header.css");
+@import url("219-panel-tabs.css");
+
+/* Hide all unnecessary content panels from the original design */
+.explanation,
+.participation,
+.requirements,
+.benefits,
+.sidebar,
+aside.sidebar,
+.sidebar .wrapper,
+.design-selection,
+.design-archives,
+.zen-resources,
+footer,
+.preamble,
+.summary {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Use CSS Grid for clean layout: panel tabs, document tabs, editor */
+body {
+    display: grid;
+    grid-template-rows: 70px 47px 1fr;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.page-wrapper {
+    display: contents; /* Makes children participate in body's grid */
+}
+
+/* Intro section needs to be positioned for absolute children */
+.intro {
+    position: relative;
+    z-index: 15; /* Higher than document tabs to allow editor panels to appear above */
+    grid-row: 1; /* First row - panel tabs */
+}
+
+/* Hide header completely on markdown editor page */
+header {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Document tabs in second row */
+.document-tabs-container {
+    grid-row: 2;
+}
+
+/* Main content area in third row */
+.main.supporting {
+    grid-row: 3;
+    position: relative;
+    z-index: 1;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+/* ============================================================================
+   GRID LAYOUT SYSTEM FOR PANELS
+   ============================================================================ */
+
+/* Grid container for all editor panels */
+.intro {
+    display: grid;
+    grid-template-columns: repeat(6, auto); /* Auto-sized columns based on content */
+    justify-content: center; /* Center the tabs horizontally */
+    column-gap: 0px; /* Spacing between tabs - controlled by grid (tabs touching) */
+    position: fixed;
+    top: 10px;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    pointer-events: none; /* Allow clicks to pass through empty grid areas */
+    height: 50px; /* Base height for collapsed tabs */
+    overflow: visible; /* Allow wire decorations to extend outside container */
+}
+
+/* Re-enable pointer events on actual panels */
+.intro .editor-panel {
+    pointer-events: auto;
+}
+
+/* Editor panel base styling */
+.editor-panel {
+    position: relative; /* Changed from fixed to relative for grid positioning */
+    z-index: 5;
+    padding: 0;
+    width: 225px;
+    height: 35px;
+    overflow: visible;
+    background: url(../assets/layer-middle.svg) repeat-y center top;
+    background-size: 225px auto;
+    color: #999;
+    margin: 0 -35px 0 0; /* Negative right margin to pull tabs closer together */
+    transition: transform 1s ease-out,
+                bottom 1s ease-out,
+                top 1s ease-out,
+                height 1s ease-out,
+                width 1s ease-out,
+                background-size 1s ease-out,
+                margin 1s ease-out;
+}
+
+/* Tab label sizing for editor panels - scaled to half */
+.editor-panel .panel-tab-label {
+    height: 35px;
+    font-size: 16px;
+    padding: 8px 15px 0 15px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Files Panel - First from left */
+.files-panel {
+    grid-column: 1; /* First column */
+    grid-row: 1;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.files-panel::before,
+.files-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    display: block;
+    width: 225px;
+    content: '';
+}
+
+.files-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(../assets/hook1.svg) no-repeat center bottom;
+    background-size: auto auto;
+}
+
+.files-panel::after {
+    bottom: -23px;
+    height: 23px;
+    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.files-panel.panel-open,
+.files-panel:hover {
+    /* No margin needed - grid handles positioning */
+}
+
+/* Edit Panel - Second from left */
+.edit-panel {
+    grid-column: 2; /* Second column */
+    grid-row: 1;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.edit-panel::before,
+.edit-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    display: block;
+    width: 225px;
+    content: '';
+}
+
+.edit-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(../assets/hook2.svg) no-repeat center bottom;
+    background-size: auto auto;
+}
+
+.edit-panel::after {
+    bottom: -21px;
+    height: 21px;
+    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.edit-panel.panel-open,
+.edit-panel:hover {
+    /* No margin needed - grid handles positioning */
+}
+
+/* View Panel - Third from left */
+.view-panel {
+    grid-column: 3; /* Third column */
+    grid-row: 1;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.view-panel::before,
+.view-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    display: block;
+    width: 225px;
+    content: '';
+}
+
+.view-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(../assets/hook1.svg) no-repeat center bottom;
+    background-size: auto auto;
+}
+
+.view-panel::after {
+    bottom: -23px;
+    height: 23px;
+    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.view-panel.panel-open,
+.view-panel:hover {
+    /* No margin needed - grid handles positioning */
+}
+
+/* Settings Panel - Fourth from left */
+.settings-panel {
+    grid-column: 4; /* Fourth column */
+    grid-row: 1;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.settings-panel::before,
+.settings-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    display: block;
+    width: 225px;
+    content: '';
+}
+
+.settings-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(../assets/hook2.svg) no-repeat center bottom;
+    background-size: auto auto;
+}
+
+.settings-panel::after {
+    bottom: -21px;
+    height: 21px;
+    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.settings-panel.panel-open,
+.settings-panel:hover {
+    /* No margin needed - grid handles positioning */
+}
+
+/* Help Panel - Fifth from left */
+.help-panel {
+    grid-column: 5; /* Fifth column */
+    grid-row: 1;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.help-panel::before,
+.help-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    display: block;
+    width: 225px;
+    content: '';
+    transition: width 1s ease-out, background-size 1s ease-out;
+}
+
+.help-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(../assets/hook1.svg) no-repeat center bottom;
+    background-size: auto auto;
+}
+
+.help-panel::after {
+    bottom: -22px;
+    height: 22px;
+    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.help-panel.panel-open,
+.help-panel:hover {
+    /* No margin needed - grid handles positioning */
+}
+
+.help-panel.panel-open::before,
+.help-panel:hover::before,
+.help-panel.panel-open::after,
+.help-panel:hover::after {
+    width: 675px;
+}
+
+.help-panel.panel-open::before,
+.help-panel:hover::before {
+    background-size: auto auto, 675px auto;
+}
+
+.help-panel.panel-open::after,
+.help-panel:hover::after {
+    background-size: 675px auto;
+}
+
+/* Back Panel - Sixth from left */
+.back-panel {
+    grid-column: 6; /* Sixth column */
+    grid-row: 1;
+    transform: rotate(-5deg) skew(-5deg) scale(0.8);
+}
+
+.back-panel::before,
+.back-panel::after {
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    display: block;
+    width: 225px;
+    content: '';
+}
+
+.back-panel::before {
+    top: -350px;
+    height: 350px;
+    background: url(../assets/hook1.svg) no-repeat center bottom;
+    background-size: auto auto;
+}
+
+.back-panel::after {
+    bottom: -23px;
+    height: 23px;
+    background: transparent url(../assets/layer-frame.svg) no-repeat center bottom;
+    background-size: 225px auto;
+}
+
+.back-panel.panel-open,
+.back-panel:hover {
+    /* No margin needed - grid handles positioning */
+}
+
+/* Open state for editor panels */
+.editor-panel.panel-open,
+.editor-panel:hover {
+    height: auto;
+    max-height: 80vh; /* Limit panel height to 80% of viewport */
+    color: #fff;
+    transform: rotateY(0) scale(1);
+}
+
+/* Content styling */
+.editor-panel h3,
+.editor-panel p {
+    padding: 8px 40px 0 40px;
+    transition: background-color 1s ease-out;
+}
+
+/* Panel buttons */
+.panel-button {
+    display: block;
+    width: calc(100% - 80px);
+    margin: 10px 40px;
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.panel-button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.panel-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.editor-panel h3 {
+    color: #999;
+    font-size: 15px;
+    line-height: 15px;
+    padding-top: 10px;
+}
+
+.editor-panel:hover h3,
+.editor-panel.panel-open h3 {
+    color: #fff;
+}
+
+.editor-panel p {
+    font-size: 10px;
+}
+
+.editor-panel p:last-child {
+    padding-bottom: 10px;
+}
+
+/* Help Panel Specific Styles */
+.help-panel.panel-open,
+.help-panel:hover {
+    width: 675px; /* 3x wider than default 225px (1.5x bigger than previous 450px) */
+    background-size: 675px auto; /* Expand the middle layer background */
+    z-index: 10; /* Higher z-index to appear above other panels */
+    max-height: none; /* Allow unlimited height expansion downward */
+}
+
+.help-panel .panel-content {
+    max-height: calc(80vh - 100px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.help-content {
+    padding: 10px 25px 20px 55px;
+}
+
+.help-panel h3 {
+    padding-left: 40px;
+    padding-right: 40px;
+    font-size: 1.5rem;
+    margin-top: 0;
+}
+
+.help-section {
+    margin: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.help-section:last-child {
+    border-bottom: none;
+}
+
+.help-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.help-section-header:hover {
+    color: #4a9eff;
+}
+
+.help-toggle {
+    display: inline-block;
+    width: 12px;
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.help-section.expanded .help-toggle {
+    transform: rotate(90deg);
+}
+
+.help-section-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+    padding: 0;
+}
+
+.help-section.expanded .help-section-content {
+    max-height: 1000px;
+    opacity: 1;
+    padding-bottom: 15px;
+}
+
+.help-section-content h4 {
+    color: #4a9eff;
+    font-size: 13px;
+    margin: 12px 0 6px 0;
+    font-weight: 600;
+}
+
+.help-section-content h4:first-child {
+    margin-top: 0;
+}
+
+.help-section-content p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 8px 0;
+    padding: 0;
+}
+
+.help-section-content code {
+    display: block;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #6cf;
+    margin: 8px 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.help-section-content ul {
+    margin: 8px 0;
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+.help-section-content li {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 4px 0;
+}
+
+.help-section-content strong {
+    color: #fff;
+    font-weight: 600;
+}
+
+/* Document Tabs Bar */
+.document-tabs-container {
+    display: flex;
+    z-index: 4;
+    align-items: center;
+    padding: 0 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-bottom: 2px solid rgba(255, 165, 0, 0.3);
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.document-tabs {
+    display: flex;
+    gap: 8px;
+    height: 100%;
+    align-items: center;
+}
+
+/* Default theme: subtle document tabs */
+.document-tab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-left: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.document-tab:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-left-color: rgba(255, 255, 255, 0.3);
+}
+
+.document-tab.active {
+    background: linear-gradient(90deg, rgba(66, 153, 225, 0.25), rgba(66, 153, 225, 0.1));
+    color: #fff;
+    border-left: 4px solid rgb(66, 153, 225);
+    box-shadow: 0 0 15px rgba(66, 153, 225, 0.3);
+}
+
+/* LCARS-style document tabs - only in Typora mode */
+body.typora-mode .document-tab {
+    background: linear-gradient(90deg, rgba(255, 165, 0, 0.15), rgba(255, 165, 0, 0.05));
+    border-left: 3px solid rgba(255, 165, 0, 0.5);
+}
+
+body.typora-mode .document-tab:hover {
+    background: linear-gradient(90deg, rgba(255, 165, 0, 0.25), rgba(255, 165, 0, 0.1));
+    border-left-color: rgba(255, 165, 0, 0.8);
+}
+
+body.typora-mode .document-tab.active {
+    background: linear-gradient(90deg, rgba(255, 165, 0, 0.35), rgba(255, 165, 0, 0.15));
+    border-left: 4px solid rgb(255, 165, 0);
+    box-shadow: 0 0 10px rgba(255, 165, 0, 0.3);
+}
+
+.document-tab-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 2px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.2s ease;
+}
+
+.document-tab-close:hover {
+    background: rgba(255, 100, 100, 0.3);
+    color: #fff;
+}
+
+/* Default theme: subtle new tab button */
+.document-tab-new {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-left: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.document-tab-new:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-left-color: rgba(255, 255, 255, 0.3);
+}
+
+/* LCARS-style new tab button - only in Typora mode */
+body.typora-mode .document-tab-new {
+    background: linear-gradient(90deg, rgba(100, 200, 255, 0.15), rgba(100, 200, 255, 0.05));
+    border-left: 3px solid rgba(100, 200, 255, 0.5);
+}
+
+body.typora-mode .document-tab-new:hover {
+    background: linear-gradient(90deg, rgba(100, 200, 255, 0.25), rgba(100, 200, 255, 0.1));
+    border-left-color: rgba(100, 200, 255, 0.8);
+}
+
+/* Editor Container - Split-screen layout */
+.editor-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    background: rgba(0, 0, 0, 0.6);
+    box-sizing: border-box;
+    z-index: 2;
+}
+
+.editor-container[data-layout="split"] {
+    flex-direction: row;
+}
+
+.editor-container[data-layout="full"] .editor-preview {
+    display: none;
+}
+
+/* Editor Sections */
+.editor-section {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: rgba(50, 50, 50, 0.8);
+    overflow: hidden;
+    border: none;
+}
+
+.editor-section-content {
+    flex: 1;
+    padding: 0 20px 0 20px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Input Area */
+.editor-input {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.editor-input .editor-section-content {
+    padding: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.editor-section-content .typora-write {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin: 0;
+    padding: 0;
+}
+
+.editor-section-content .typora-write .markdown-textarea,
+.editor-section-content .typora-write .markdown-output {
+    flex: 1;
+    margin: 0;
+    min-height: 0;
+}
+
+/* Resizable Divider */
+.editor-divider {
+    width: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: col-resize;
+    position: relative;
+    transition: background 0.2s ease;
+}
+
+.editor-divider:hover,
+.editor-divider.dragging {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.editor-divider::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -2px;
+    right: -2px;
+}
+
+/* Preview Area */
+.editor-preview {
+    flex: 1;
+    min-width: 200px;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.editor-preview .editor-section-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.editor-preview .markdown-output {
+    flex: 1;
+    height: 100%;
+}
+
+.markdown-textarea {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: none;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+    outline: none;
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+.markdown-textarea::placeholder {
+    color: #666;
+}
+
+.markdown-output {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow: auto;
+    box-sizing: border-box;
+}
+
+/* Markdown rendered styles */
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6,
+.markdown-output h1, .markdown-output h2, .markdown-output h3,
+.markdown-output h4, .markdown-output h5, .markdown-output h6 {
+    padding: 0;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#write h1, .markdown-output h1 {
+    font-size: 32px;
+    margin: 20px 0 10px 0;
+    color: #fff;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
+}
+
+#write h2, .markdown-output h2 {
+    font-size: 24px;
+    margin: 18px 0 8px 0;
+    color: #fff;
+}
+
+#write h3, .markdown-output h3 {
+    font-size: 20px;
+    margin: 16px 0 6px 0;
+    color: #fff;
+}
+
+#write h4, .markdown-output h4 {
+    font-size: 18px;
+    margin: 14px 0 6px 0;
+    color: #ccc;
+}
+
+#write h5, .markdown-output h5 {
+    font-size: 16px;
+    margin: 12px 0 4px 0;
+    color: #aaa;
+}
+
+#write h6, .markdown-output h6 {
+    font-size: 14px;
+    margin: 10px 0 4px 0;
+    color: #999;
+}
+
+#write p, .markdown-output p {
+    margin: 10px 0;
+}
+
+#write strong, .markdown-output strong {
+    font-weight: bold;
+    color: #fff;
+}
+
+#write em, .markdown-output em {
+    font-style: italic;
+}
+
+#write img, .markdown-output img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 15px 0;
+    border-radius: 4px;
+}
+
+#write a, .markdown-output a {
+    color: #4a9eff;
+    text-decoration: none;
+    border-bottom: 1px solid #4a9eff;
+    transition: color 0.3s ease;
+}
+
+#write a:hover, .markdown-output a:hover {
+    color: #6bb5ff;
+    border-bottom-color: #6bb5ff;
+}
+
+.markdown-output code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 13px;
+}
+
+.markdown-output pre {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+.markdown-output pre code {
+    background: none;
+    padding: 0;
+}
+
+.markdown-output ul, .markdown-output ol {
+    margin: 10px 0;
+    padding-left: 30px;
+}
+
+.markdown-output li {
+    margin: 5px 0;
+}
+
+.markdown-output a {
+    color: #66b3ff;
+    text-decoration: none;
+}
+
+.markdown-output a:hover {
+    text-decoration: underline;
+}
+
+.markdown-output blockquote {
+    border-left: 4px solid rgba(255, 255, 255, 0.3);
+    padding-left: 15px;
+    margin: 10px 0;
+    color: #ccc;
+    font-style: italic;
+}
+
+/* Responsive scaling for viewports smaller than the design target */
+@media (max-width: 1366px) and (min-width: 1024px) {
+    /* Scale to 75% for medium laptop screens */
+
+    .editor-panel {
+        width: calc(225px * 0.75);
+        height: calc(35px * 0.75);
+    }
+
+    .editor-panel .panel-tab-label {
+        height: calc(35px * 0.75);
+        font-size: calc(12px * 0.75);
+        padding: 0 calc(20px * 0.75);
+        line-height: calc(35px * 0.75);
+    }
+
+    .editor-panel::before,
+    .editor-panel::after {
+        width: calc(225px * 0.75);
+    }
+
+    .editor-panel::before {
+        top: calc(-350px * 0.75);
+        height: calc(350px * 0.75);
+        background-size: auto auto, calc(225px * 0.75) auto;
+    }
+
+    /* Files Panel */
+    .files-panel {
+        margin-left: calc(-640px * 0.75);
+    }
+
+    .files-panel.panel-open,
+    .files-panel:hover {
+        margin-left: calc(-595px * 0.75);
+    }
+
+    /* Edit Panel */
+    .edit-panel {
+        margin-left: calc(-450px * 0.75);
+    }
+
+    .edit-panel.panel-open,
+    .edit-panel:hover {
+        margin-left: calc(-405px * 0.75);
+    }
+
+    /* View Panel */
+    .view-panel {
+        margin-left: calc(-260px * 0.75);
+    }
+
+    .view-panel.panel-open,
+    .view-panel:hover {
+        margin-left: calc(-215px * 0.75);
+    }
+
+    /* Settings Panel */
+    .settings-panel {
+        margin-left: calc(-70px * 0.75);
+    }
+
+    .settings-panel.panel-open,
+    .settings-panel:hover {
+        margin-left: calc(-25px * 0.75);
+    }
+
+    /* Back Panel */
+    .back-panel {
+        margin-left: calc(120px * 0.75);
+    }
+
+    .back-panel.panel-open,
+    .back-panel:hover {
+        margin-left: calc(165px * 0.75);
+    }
+
+    .editor-panel h3 {
+        font-size: calc(15px * 0.75);
+        padding-top: calc(10px * 0.75);
+    }
+
+    .editor-panel p {
+        font-size: calc(10px * 0.75);
+        padding: calc(8px * 0.75) calc(40px * 0.75) 0 calc(40px * 0.75);
+    }
+
+    .panel-button {
+        width: calc(100% - calc(80px * 0.75));
+        margin: calc(10px * 0.75) calc(40px * 0.75);
+        padding: calc(10px * 0.75) calc(15px * 0.75);
+        font-size: calc(12px * 0.75);
+    }
+
+    /* Scale panel content container and max heights */
+    .panel-content {
+        max-height: calc((80vh - 100px) * 0.75);
+    }
+
+    .editor-panel.panel-open,
+    .editor-panel:hover {
+        max-height: calc(80vh * 0.75);
+    }
+}
+
+@media (max-width: 1023px) and (min-width: 800px) {
+    /* Scale to 55% for smaller laptop screens */
+
+    .editor-panel {
+        width: calc(225px * 0.55);
+        height: calc(35px * 0.55);
+    }
+
+    .editor-panel .panel-tab-label {
+        height: calc(35px * 0.55);
+        font-size: calc(12px * 0.55);
+        padding: 0 calc(20px * 0.55);
+        line-height: calc(35px * 0.55);
+    }
+
+    .editor-panel::before,
+    .editor-panel::after {
+        width: calc(225px * 0.55);
+    }
+
+    .editor-panel::before {
+        top: calc(-350px * 0.55);
+        height: calc(350px * 0.55);
+        background-size: auto auto, calc(225px * 0.55) auto;
+    }
+
+    /* Files Panel */
+    .files-panel {
+        margin-left: calc(-640px * 0.55);
+    }
+
+    .files-panel.panel-open,
+    .files-panel:hover {
+        margin-left: calc(-595px * 0.55);
+    }
+
+    /* Edit Panel */
+    .edit-panel {
+        margin-left: calc(-450px * 0.55);
+    }
+
+    .edit-panel.panel-open,
+    .edit-panel:hover {
+        margin-left: calc(-405px * 0.55);
+    }
+
+    /* View Panel */
+    .view-panel {
+        margin-left: calc(-260px * 0.55);
+    }
+
+    .view-panel.panel-open,
+    .view-panel:hover {
+        margin-left: calc(-215px * 0.55);
+    }
+
+    /* Settings Panel */
+    .settings-panel {
+        margin-left: calc(-70px * 0.55);
+    }
+
+    .settings-panel.panel-open,
+    .settings-panel:hover {
+        margin-left: calc(-25px * 0.55);
+    }
+
+    /* Back Panel */
+    .back-panel {
+        margin-left: calc(120px * 0.55);
+    }
+
+    .back-panel.panel-open,
+    .back-panel:hover {
+        margin-left: calc(165px * 0.55);
+    }
+
+    .editor-panel h3 {
+        font-size: calc(15px * 0.55);
+        padding-top: calc(10px * 0.55);
+    }
+
+    .editor-panel p {
+        font-size: calc(10px * 0.55);
+        padding: calc(8px * 0.55) calc(40px * 0.55) 0 calc(40px * 0.55);
+    }
+
+    .panel-button {
+        width: calc(100% - calc(80px * 0.55));
+        margin: calc(10px * 0.55) calc(40px * 0.55);
+        padding: calc(10px * 0.55) calc(15px * 0.55);
+        font-size: calc(12px * 0.55);
+    }
+
+    /* Scale panel content container and max heights */
+    .panel-content {
+        max-height: calc((80vh - 100px) * 0.55);
+    }
+
+    .editor-panel.panel-open,
+    .editor-panel:hover {
+        max-height: calc(80vh * 0.55);
+    }
+}
+
+/* ============================================
+   VIEW MENU FEATURES - Phase 1
+   ============================================ */
+
+/* Panel section titles */
+.panel-section-title {
+    font-size: 11px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 15px 40px 5px 40px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.panel-section-title:first-of-type {
+    border-top: none;
+    margin-top: 10px;
+    padding-top: 0;
+}
+
+/* Theme Support - Removed old CSS variable-based theme system */
+/* Universal theme system now uses dynamically loaded CSS files */
+/* Default theme uses the base dark styles defined earlier in this file */
+
+/* Layout Modes */
+.editor-container[data-layout="split"] .editor-input,
+.editor-container[data-layout="split"] .editor-preview,
+.editor-container[data-layout="split"] .editor-divider {
+    display: flex;
+}
+
+.editor-container[data-layout="editor"] .editor-input {
+    display: flex;
+    flex: 1;
+}
+
+.editor-container[data-layout="editor"] .editor-preview,
+.editor-container[data-layout="editor"] .editor-divider {
+    display: none;
+}
+
+.editor-container[data-layout="preview"] .editor-preview {
+    display: flex;
+    flex: 1;
+}
+
+.editor-container[data-layout="preview"] .editor-input,
+.editor-container[data-layout="preview"] .editor-divider {
+    display: none;
+}
+
+/* Line Numbers (simulated with background gradient) */
+.markdown-textarea.show-line-numbers {
+    padding-left: 50px;
+    background-image: linear-gradient(
+        to right,
+        rgba(128, 128, 128, 0.1) 0,
+        rgba(128, 128, 128, 0.1) 45px,
+        transparent 45px,
+        transparent 100%
+    );
+    background-attachment: local;
+}
+
+/* Word Wrap is handled via inline styles in JavaScript */
+/* Default is pre-wrap, toggling sets it to pre */
+
+/* ============================================
+   TYPORA MODE STYLING
+   ============================================ */
+
+/* Typora themes target #write and #write-input containers */
+/* Ensure both areas have proper dimensions */
+#write,
+#write-input,
+.typora-write {
+    width: 100%;
+    height: 100%;
+}
+
+/* Make textarea inherit Typora theme styling */
+body.typora-mode #write-input {
+    background: inherit;
+}
+
+body.typora-mode #write-input textarea {
+    background: transparent !important;
+    color: inherit;
+    border: none;
+    outline: none;
+}
+
+/* Remove default editor styling when Typora theme is active */
+body.typora-mode .editor-input {
+    background: transparent;
+}
+
+body.typora-mode .editor-section-content {
+    background: transparent;
+}
+
+/* ============================================================================
+   RESPONSIVE MEDIA QUERIES - Browser Viewport Width
+   ============================================================================ */
+
+/* On smaller screens, align tabs to the left instead of center to prevent cutoff */
+@media screen and (max-width: 1400px) {
+    .intro {
+        justify-content: flex-start; /* Align tabs to the left on smaller screens */
+        padding-left: 20px; /* Small padding from edge */
+    }
+
+    .editor-panel {
+        margin: 0 -15px 0 0; /* Reduce negative margin on smaller screens (less overlap) */
+    }
+
+    /* Scale down tab label text for smaller screens */
+    .editor-panel .panel-tab-label {
+        font-size: 12px;
+        padding: 9px 12px 0 12px;
+        letter-spacing: 0.3px;
+    }
+
+    /* Shift Help panel left and down when expanded on smaller screens */
+    .help-panel.panel-open,
+    .help-panel:hover {
+        transform: translateX(-200px) translateY(40px);
+    }
+
+    /* Adjust text padding to properly contain content within panel */
+    .help-content {
+        padding: 10px 20px 20px 60px; /* Shift content right for better alignment on smaller screens */
+    }
+
+    /* Adjust Help panel h3 positioning and padding on smaller screens */
+    .help-panel h3 {
+        margin-top: 0;
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-top: 10px;
+    }
+}

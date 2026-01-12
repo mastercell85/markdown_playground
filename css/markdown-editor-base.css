@@ -1,0 +1,1139 @@
+/**
+ * Markdown Editor - Base Styles with CSS Variables
+ * Self-contained, no Zen Garden dependencies
+ * All styling controlled through CSS custom properties
+ */
+
+/* ============================================================================
+   CSS CUSTOM PROPERTIES (Variables) - Default Theme
+   ============================================================================ */
+
+:root {
+    /* Colors - Background */
+    --body-bg: #000;
+    --editor-bg: rgba(0, 0, 0, 0.6);
+    --editor-section-bg: rgba(50, 50, 50, 0.8);
+
+    /* Tab Menu System - Container */
+    --tab-menu-gap: 20px;
+    --tab-menu-padding: 10px 20px;
+
+    /* Tab Menu System - Tab Labels */
+    --tab-label-height: 70px;
+    --tab-label-padding: 0 40px;
+    --tab-label-bg: transparent;
+    --tab-label-text: #fff;
+    --tab-label-text-hover: rgba(255, 165, 0, 0.9);
+    --tab-label-border-width: 2px;
+    --tab-label-border-color: transparent;
+    --tab-label-border-color-hover: transparent;
+    --tab-label-bg-hover: transparent;
+    --tab-label-border-radius: 0;
+    --tab-label-font-size: 24px;
+    --tab-label-font-weight: 700;
+    --tab-label-text-transform: uppercase;
+    --tab-label-letter-spacing: 2px;
+
+    /* Tab Menu System - Dropdown Content */
+    --tab-dropdown-min-width: 300px;
+    --tab-dropdown-max-width: 400px;
+    --tab-dropdown-max-height: 400px;
+    --tab-dropdown-margin-top: 10px;
+    --tab-dropdown-padding: 20px;
+    --tab-dropdown-bg: rgba(30, 30, 30, 0.98);
+    --tab-dropdown-text: rgba(255, 255, 255, 0.9);
+    --tab-dropdown-border-width: 2px;
+    --tab-dropdown-border-color: rgba(255, 255, 255, 0.3);
+    --tab-dropdown-border-radius: 0;
+    --tab-dropdown-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+    /* Tab Menu System - Scrollbar */
+    --tab-scrollbar-width: 8px;
+    --tab-scrollbar-track: rgba(0, 0, 0, 0.2);
+    --tab-scrollbar-thumb: rgba(255, 255, 255, 0.3);
+    --tab-scrollbar-thumb-hover: rgba(255, 255, 255, 0.5);
+    --tab-scrollbar-radius: 4px;
+
+    /* Tab Menu System - Transitions */
+    --tab-transition-speed: 0.3s;
+
+    /* Panel Content Headings */
+    --panel-heading-color: #fff;
+
+    /* Colors - Document Tabs */
+    --doc-tab-bg: rgba(255, 255, 255, 0.05);
+    --doc-tab-text: rgba(255, 255, 255, 0.7);
+    --doc-tab-border: rgba(255, 255, 255, 0.1);
+    --doc-tab-active-bg: linear-gradient(90deg, rgba(66, 153, 225, 0.25), rgba(66, 153, 225, 0.1));
+    --doc-tab-active-text: #fff;
+    --doc-tab-active-border: rgb(66, 153, 225);
+    --doc-tabs-container-bg: rgba(0, 0, 0, 0.7);
+    --doc-tabs-border: rgba(255, 165, 0, 0.3);
+
+    /* Colors - Buttons */
+    --button-bg: rgba(255, 255, 255, 0.1);
+    --button-text: #fff;
+    --button-border: rgba(255, 255, 255, 0.3);
+    --button-hover-bg: rgba(255, 255, 255, 0.2);
+    --button-hover-border: rgba(255, 255, 255, 0.5);
+
+    /* Colors - Editor/Preview */
+    --textarea-bg: rgba(0, 0, 0, 0.5);
+    --textarea-text: #fff;
+    --preview-bg: rgba(0, 0, 0, 0.2);
+    --preview-text: #fff;
+    --divider-bg: rgba(255, 255, 255, 0.1);
+    --divider-hover-bg: rgba(255, 255, 255, 0.3);
+
+    /* Colors - Markdown Content */
+    --md-heading-color: #fff;
+    --md-text-color: #fff;
+    --md-link-color: #4a9eff;
+    --md-link-hover: #6bb5ff;
+    --md-code-bg: rgba(255, 255, 255, 0.1);
+    --md-code-text: #fff;
+    --md-blockquote-border: rgba(255, 255, 255, 0.3);
+    --md-blockquote-text: #ccc;
+    --md-hr-color: rgba(255, 255, 255, 0.2);
+    --md-list-marker-color: inherit;
+
+    /* Typography */
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-family-mono: "Courier New", Courier, monospace;
+    --font-size-base: 14px;
+    --font-size-panel: 24px;
+    --font-size-button: 12px;
+
+    /* Spacing */
+    --panel-padding: 40px;
+    --button-padding: 10px 15px;
+    --tab-padding: 8px 20px;
+
+    /* Borders & Radius */
+    --border-radius: 3px;
+    --border-width: 1px;
+
+    /* Transitions */
+    --transition-speed: 0.3s;
+
+    /* Z-index layers */
+    --z-panels: 15;
+    --z-doc-tabs: 4;
+    --z-editor: 2;
+    --z-modal: 1000;
+}
+
+/* ============================================================================
+   GLOBAL STYLES
+   ============================================================================ */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    background: var(--body-bg);
+    color: var(--textarea-text);
+    overflow: hidden;
+}
+
+/* Grid Layout: Panel Tabs, Document Tabs, Editor */
+body {
+    display: grid;
+    grid-template-rows: 70px 47px 1fr;
+    height: 100vh;
+}
+
+.page-wrapper {
+    display: contents;
+}
+
+/* ============================================================================
+   PANEL MENU TABS - BASE CLASS SYSTEM
+   Provides structure and behavior - themes control colors/styling
+   ============================================================================ */
+
+/* Tab menu container */
+.tab-menu-container {
+    position: relative;
+    z-index: var(--z-panels);
+    grid-row: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--tab-menu-gap, 20px);
+    padding: var(--tab-menu-padding, 10px 20px);
+}
+
+/* Individual tab panel wrapper */
+.tab-panel {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+/* Tab label - visible when closed */
+.tab-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--tab-label-height, 70px);
+    padding: var(--tab-label-padding, 0 40px);
+    background: var(--tab-label-bg, transparent);
+    color: var(--tab-label-text, #fff);
+    border: var(--tab-label-border-width, 2px) solid var(--tab-label-border-color, transparent);
+    border-radius: var(--tab-label-border-radius, 0);
+    font-size: var(--tab-label-font-size, 24px);
+    font-weight: var(--tab-label-font-weight, 700);
+    font-family: var(--font-family);
+    text-transform: var(--tab-label-text-transform, uppercase);
+    letter-spacing: var(--tab-label-letter-spacing, 2px);
+    cursor: pointer;
+    user-select: none;
+    transition: color var(--tab-transition-speed, 0.3s) ease;
+}
+
+.tab-label:hover {
+    color: var(--tab-label-text-hover, #fff);
+}
+
+/* Tab dropdown content - absolutely positioned below the tab */
+.tab-dropdown {
+    display: none;
+    opacity: 0;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: var(--tab-dropdown-min-width, 300px);
+    max-width: var(--tab-dropdown-max-width, 400px);
+    max-height: var(--tab-dropdown-max-height, 400px);
+    margin-top: var(--tab-dropdown-margin-top, 10px);
+    padding: var(--tab-dropdown-padding, 20px);
+    background: var(--tab-dropdown-bg, rgba(30, 30, 30, 0.98));
+    color: var(--tab-dropdown-text, rgba(255, 255, 255, 0.9));
+    border: var(--tab-dropdown-border-width, 2px) solid var(--tab-dropdown-border-color, rgba(255, 255, 255, 0.2));
+    border-radius: var(--tab-dropdown-border-radius, 0);
+    box-shadow: var(--tab-dropdown-shadow, 0 10px 30px rgba(0, 0, 0, 0.5));
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 100;
+    transition: opacity var(--tab-transition-speed, 0.5s) ease;
+}
+
+/* Panel dropdown slides down and fades in on hover */
+.tab-panel.panel-open .tab-dropdown,
+.tab-panel:hover .tab-dropdown {
+    display: block;
+    opacity: 1;
+}
+
+/* Tab dropdown scrollbar */
+.tab-dropdown::-webkit-scrollbar {
+    width: var(--tab-scrollbar-width, 8px);
+}
+
+.tab-dropdown::-webkit-scrollbar-track {
+    background: var(--tab-scrollbar-track, rgba(0, 0, 0, 0.2));
+}
+
+.tab-dropdown::-webkit-scrollbar-thumb {
+    background: var(--tab-scrollbar-thumb, rgba(255, 255, 255, 0.3));
+    border-radius: var(--tab-scrollbar-radius, 4px);
+}
+
+.tab-dropdown::-webkit-scrollbar-thumb:hover {
+    background: var(--tab-scrollbar-thumb-hover, rgba(255, 255, 255, 0.5));
+}
+
+.tab-dropdown {
+    scrollbar-width: thin;
+    scrollbar-color: var(--tab-scrollbar-thumb, rgba(255, 255, 255, 0.3)) var(--tab-scrollbar-track, rgba(0, 0, 0, 0.2));
+}
+
+/* ============================================================================
+   BACKWARDS COMPATIBILITY ALIASES
+   Maps old class names to new tab menu system
+   ============================================================================ */
+
+.intro {
+    /* Alias for tab-menu-container */
+    position: relative;
+    z-index: var(--z-panels);
+    grid-row: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--tab-menu-gap, 20px);
+    padding: var(--tab-menu-padding, 10px 20px);
+}
+
+.editor-panel {
+    /* Alias for tab-panel */
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.panel-tab-label {
+    /* Alias for tab-label */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--tab-label-height, 70px);
+    padding: var(--tab-label-padding, 0 40px);
+    background: var(--tab-label-bg, transparent);
+    color: var(--tab-label-text, #fff);
+    border: var(--tab-label-border-width, 2px) solid var(--tab-label-border-color, transparent);
+    border-radius: var(--tab-label-border-radius, 0);
+    font-size: var(--tab-label-font-size, 24px);
+    font-weight: var(--tab-label-font-weight, 700);
+    font-family: var(--font-family);
+    text-transform: var(--tab-label-text-transform, uppercase);
+    letter-spacing: var(--tab-label-letter-spacing, 2px);
+    cursor: pointer;
+    user-select: none;
+    transition: color var(--tab-transition-speed, 0.3s) ease;
+}
+
+.panel-tab-label:hover {
+    color: var(--tab-label-text-hover, #fff);
+}
+
+.panel-content {
+    /* Alias for tab-dropdown */
+    display: none;
+    opacity: 0;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: var(--tab-dropdown-min-width, 300px);
+    max-width: var(--tab-dropdown-max-width, 400px);
+    max-height: var(--tab-dropdown-max-height, 400px);
+    margin-top: var(--tab-dropdown-margin-top, 10px);
+    padding: var(--tab-dropdown-padding, 20px);
+    background: var(--tab-dropdown-bg, rgba(30, 30, 30, 0.98));
+    color: var(--tab-dropdown-text, rgba(255, 255, 255, 0.9));
+    border: var(--tab-dropdown-border-width, 2px) solid var(--tab-dropdown-border-color, rgba(255, 255, 255, 0.2));
+    border-radius: var(--tab-dropdown-border-radius, 0);
+    box-shadow: var(--tab-dropdown-shadow, 0 10px 30px rgba(0, 0, 0, 0.5));
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 100;
+    transition: opacity var(--tab-transition-speed, 0.5s) ease;
+}
+
+.editor-panel.panel-open .panel-content,
+.editor-panel:hover .panel-content {
+    display: block;
+    opacity: 1;
+}
+
+/* Panel content scrollbar */
+.panel-content::-webkit-scrollbar {
+    width: var(--tab-scrollbar-width, 8px);
+}
+
+.panel-content::-webkit-scrollbar-track {
+    background: var(--tab-scrollbar-track, rgba(0, 0, 0, 0.2));
+}
+
+.panel-content::-webkit-scrollbar-thumb {
+    background: var(--tab-scrollbar-thumb, rgba(255, 255, 255, 0.3));
+    border-radius: var(--tab-scrollbar-radius, 4px);
+}
+
+.panel-content::-webkit-scrollbar-thumb:hover {
+    background: var(--tab-scrollbar-thumb-hover, rgba(255, 255, 255, 0.5));
+}
+
+.panel-content {
+    scrollbar-width: thin;
+    scrollbar-color: var(--tab-scrollbar-thumb, rgba(255, 255, 255, 0.3)) var(--tab-scrollbar-track, rgba(0, 0, 0, 0.2));
+}
+
+/* Panel headings - hidden by default since tab label shows the name */
+.panel-content > h3,
+.panel-content .panel-header-row h3,
+.panel-content .help-header-row h3 {
+    display: none;
+}
+
+/* Panel section titles */
+.panel-section-title {
+    font-size: 11px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 15px 0 5px 0;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-transform: uppercase;
+}
+
+.panel-section-title:first-of-type {
+    border-top: none;
+    margin-top: 10px;
+    padding-top: 0;
+}
+
+/* Panel header row with expand all toggle - sticky for scrolling */
+.help-header-row,
+.panel-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    position: sticky;
+    top: -20px;
+    z-index: 100;
+    background: var(--tab-dropdown-bg, rgba(30, 30, 35, 0.98));
+    padding: 20px 0 10px 0;
+    margin-top: -20px;
+}
+
+.help-header-row h3,
+.panel-header-row h3 {
+    margin: 0;
+    padding: 0;
+}
+
+.expand-all-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    user-select: none;
+}
+
+.expand-all-toggle:hover {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.expand-all-toggle input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    accent-color: #4a9eff;
+}
+
+/* Current display text */
+.current-display {
+    padding: 8px 0;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* ============================================================================
+   HELP PANEL PREVIEW - Complete styled rendering
+   Uses CSS custom properties for theme support
+   ============================================================================ */
+
+/* Two-column layout container */
+.help-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 8px 0;
+    align-items: start;
+}
+
+/* Syntax column (code) - standalone styling */
+.help-two-col > code {
+    display: block;
+    background: var(--md-code-bg);
+    padding: 10px 12px;
+    border-radius: var(--border-radius);
+    font-family: var(--font-family-mono);
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--md-code-text);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* Preview column container */
+.help-preview {
+    padding: 10px 12px;
+    font-family: var(--font-family);
+    color: var(--preview-text);
+}
+
+/* Help preview headings - compact */
+.help-preview h1,
+.help-preview h2,
+.help-preview h3,
+.help-preview h4,
+.help-preview h5,
+.help-preview h6 {
+    color: var(--md-heading-color);
+    font-family: var(--font-family);
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+.help-preview h1 { font-size: 18px; }
+.help-preview h2 { font-size: 16px; margin-top: 4px; }
+.help-preview h3 { font-size: 14px; margin-top: 4px; }
+
+/* Help preview text formatting */
+.help-preview strong,
+.help-preview b {
+    color: var(--md-heading-color);
+    font-weight: bold;
+}
+
+.help-preview em,
+.help-preview i {
+    color: var(--preview-text);
+    font-style: italic;
+}
+
+.help-preview del,
+.help-preview s {
+    color: var(--md-blockquote-text);
+    text-decoration: line-through;
+}
+
+/* Help preview links */
+.help-preview a {
+    color: var(--md-link-color);
+    text-decoration: none;
+}
+
+.help-preview a:hover {
+    color: var(--md-link-hover);
+}
+
+/* Help preview lists - compact */
+.help-preview ul,
+.help-preview ol {
+    margin: 0;
+    padding-left: 16px;
+    color: var(--preview-text);
+}
+
+.help-preview li {
+    margin: 2px 0;
+    color: var(--preview-text);
+}
+
+/* Help preview code */
+.help-preview code {
+    background: var(--md-code-bg);
+    color: var(--md-code-text);
+    padding: 2px 6px;
+    border-radius: var(--border-radius);
+    font-family: var(--font-family-mono);
+    font-size: 11px;
+}
+
+.help-preview pre {
+    background: var(--md-code-bg);
+    color: var(--md-code-text);
+    padding: 4px 8px;
+    margin: 4px 0 0 0;
+    font-size: 10px;
+    font-family: var(--font-family-mono);
+    border-radius: var(--border-radius);
+}
+
+.help-preview pre code {
+    background: none;
+    padding: 0;
+}
+
+/* Help preview blockquote */
+.help-preview blockquote {
+    margin: 0;
+    padding-left: 10px;
+    border-left: 3px solid var(--md-blockquote-border);
+    color: var(--md-blockquote-text);
+    font-style: italic;
+}
+
+/* Help preview hr */
+.help-preview hr {
+    margin: 8px 0;
+    border: none;
+    height: 2px;
+    background: var(--md-hr-color);
+}
+
+/* Help preview images */
+.help-preview img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 4px;
+}
+
+/* Column labels */
+.help-col-label {
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 8px;
+}
+
+/* ============================================================================
+   VIEW PANEL COLLAPSIBLE SECTIONS
+   ============================================================================ */
+
+.view-section {
+    margin: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.view-section:last-child {
+    border-bottom: none;
+}
+
+.view-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.view-section-header:hover {
+    color: #4a9eff;
+}
+
+.view-toggle {
+    display: inline-block;
+    width: 12px;
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.view-section.expanded .view-toggle {
+    transform: rotate(90deg);
+}
+
+.view-section-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+    padding: 0;
+}
+
+.view-section.expanded .view-section-content {
+    max-height: 500px;
+    opacity: 1;
+    padding-bottom: 15px;
+}
+
+/* Panel buttons */
+.panel-button {
+    display: block;
+    width: 100%;
+    margin: 8px 0;
+    padding: var(--button-padding);
+    background: var(--button-bg);
+    color: var(--button-text);
+    border: var(--border-width) solid var(--button-border);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-button);
+    font-family: var(--font-family);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+
+.panel-button:hover:not(:disabled) {
+    background: var(--button-hover-bg);
+    border-color: var(--button-hover-border);
+}
+
+.panel-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Help panel - wider */
+.help-panel .panel-content {
+    min-width: 500px;
+    max-width: 600px;
+}
+
+/* ============================================================================
+   DOCUMENT TABS BAR
+   ============================================================================ */
+
+.document-tabs-container {
+    grid-row: 2;
+    z-index: var(--z-doc-tabs);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    background: var(--doc-tabs-container-bg);
+    border-bottom: 2px solid var(--doc-tabs-border);
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.document-tabs {
+    display: flex;
+    gap: 8px;
+    height: 100%;
+    align-items: center;
+}
+
+/* Individual document tab */
+.document-tab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: var(--tab-padding);
+    background: var(--doc-tab-bg);
+    color: var(--doc-tab-text);
+    border: none;
+    border-left: 3px solid var(--doc-tab-border);
+    border-radius: 0;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--font-family);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+
+.document-tab:hover {
+    background: var(--button-hover-bg);
+    color: #fff;
+    border-left-color: rgba(255, 255, 255, 0.3);
+}
+
+.document-tab.active {
+    background: var(--doc-tab-active-bg);
+    color: var(--doc-tab-active-text);
+    border-left: 4px solid var(--doc-tab-active-border);
+    box-shadow: 0 0 15px rgba(66, 153, 225, 0.3);
+}
+
+/* Tab close button */
+.document-tab-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 2px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.2s ease;
+}
+
+.document-tab-close:hover {
+    background: rgba(255, 100, 100, 0.3);
+    color: #fff;
+}
+
+/* New tab button */
+.document-tab-new {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--doc-tab-bg);
+    color: var(--doc-tab-text);
+    border: none;
+    border-left: 3px solid var(--doc-tab-border);
+    border-radius: 0;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+
+.document-tab-new:hover {
+    background: var(--button-hover-bg);
+    color: #fff;
+    border-left-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================================================
+   EDITOR CONTAINER (Split View)
+   ============================================================================ */
+
+.main.supporting {
+    grid-row: 3;
+    position: relative;
+    z-index: var(--z-editor);
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.editor-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    background: var(--editor-bg);
+}
+
+/* Layout modes */
+.editor-container[data-layout="split"] {
+    flex-direction: row;
+}
+
+.editor-container[data-layout="editor"] .editor-preview,
+.editor-container[data-layout="editor"] .editor-divider {
+    display: none;
+}
+
+.editor-container[data-layout="preview"] .editor-input,
+.editor-container[data-layout="preview"] .editor-divider {
+    display: none;
+}
+
+/* Editor sections (input and preview) */
+.editor-section {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 200px;
+    background: var(--editor-section-bg);
+    overflow: hidden;
+}
+
+.editor-section-content {
+    flex: 1;
+    padding: 20px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.editor-input .editor-section-content {
+    padding: 0;
+}
+
+/* Textarea for markdown input - fills entire area */
+.markdown-textarea {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 20px;
+    background: var(--textarea-bg);
+    color: var(--textarea-text);
+    border: none;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    resize: none;
+    outline: none;
+    overflow: auto;
+    box-sizing: border-box;
+}
+
+/* Ensure parent containers don't add extra padding */
+.editor-input .editor-section-content {
+    padding: 0;
+}
+
+.typora-write {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.markdown-textarea::placeholder {
+    color: #666;
+}
+
+/* Resizable divider */
+.editor-divider {
+    width: 4px;
+    background: var(--divider-bg);
+    cursor: col-resize;
+    position: relative;
+    transition: background 0.2s ease;
+}
+
+.editor-divider:hover,
+.editor-divider.dragging {
+    background: var(--divider-hover-bg);
+}
+
+.editor-divider::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -2px;
+    right: -2px;
+}
+
+/* Preview area */
+.editor-preview {
+    flex: 1;
+    min-width: 200px;
+    background: var(--preview-bg);
+}
+
+.markdown-output {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    color: var(--preview-text);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    overflow: auto;
+}
+
+/* ============================================================================
+   MARKDOWN RENDERED CONTENT
+   ============================================================================ */
+
+#write,
+.markdown-output {
+    padding: 20px;
+}
+
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6,
+.markdown-output h1, .markdown-output h2, .markdown-output h3,
+.markdown-output h4, .markdown-output h5, .markdown-output h6 {
+    padding: 0;
+    margin-left: 0;
+    margin-right: 0;
+    color: var(--md-heading-color);
+}
+
+#write h1, .markdown-output h1 {
+    font-size: 32px;
+    margin: 20px 0 10px 0;
+    border-bottom: 2px solid var(--md-hr-color);
+    padding-bottom: 10px;
+}
+
+#write h2, .markdown-output h2 {
+    font-size: 24px;
+    margin: 18px 0 8px 0;
+}
+
+#write h3, .markdown-output h3 {
+    font-size: 20px;
+    margin: 16px 0 6px 0;
+}
+
+#write h4, .markdown-output h4 {
+    font-size: 18px;
+    margin: 14px 0 6px 0;
+}
+
+#write h5, .markdown-output h5 {
+    font-size: 16px;
+    margin: 12px 0 4px 0;
+}
+
+#write h6, .markdown-output h6 {
+    font-size: 14px;
+    margin: 10px 0 4px 0;
+}
+
+#write p, .markdown-output p {
+    margin: 10px 0;
+    color: var(--md-text-color);
+}
+
+#write strong, .markdown-output strong {
+    font-weight: bold;
+    color: var(--md-heading-color);
+}
+
+#write em, .markdown-output em {
+    font-style: italic;
+}
+
+#write a, .markdown-output a {
+    color: var(--md-link-color);
+    text-decoration: none;
+    border-bottom: 1px solid var(--md-link-color);
+    transition: color var(--transition-speed) ease;
+}
+
+#write a:hover, .markdown-output a:hover {
+    color: var(--md-link-hover);
+    border-bottom-color: var(--md-link-hover);
+}
+
+#write img, .markdown-output img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 15px 0;
+    border-radius: var(--border-radius);
+}
+
+#write code, .markdown-output code {
+    background: var(--md-code-bg);
+    color: var(--md-code-text);
+    padding: 2px 6px;
+    border-radius: var(--border-radius);
+    font-family: var(--font-family-mono);
+    font-size: 13px;
+}
+
+#write pre, .markdown-output pre {
+    background: var(--md-code-bg);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+#write pre code, .markdown-output pre code {
+    background: none;
+    padding: 0;
+}
+
+#write ul, #write ol, .markdown-output ul, .markdown-output ol {
+    margin: 10px 0;
+    padding-left: 30px;
+}
+
+#write li, .markdown-output li {
+    margin: 5px 0;
+}
+
+#write blockquote, .markdown-output blockquote {
+    border-left: 4px solid var(--md-blockquote-border);
+    padding-left: 15px;
+    margin: 10px 0;
+    color: var(--md-blockquote-text);
+    font-style: italic;
+}
+
+#write hr, .markdown-output hr {
+    border: none;
+    height: 2px;
+    background: var(--md-hr-color);
+    margin: 20px 0;
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
+
+/* Hide elements from original Zen Garden */
+.explanation,
+.participation,
+.requirements,
+.benefits,
+.sidebar,
+aside.sidebar,
+.sidebar .wrapper,
+.design-selection,
+.design-archives,
+.zen-resources,
+footer,
+.preamble,
+.summary,
+header[role="banner"] {
+    display: none !important;
+}
+
+/* Line numbers for textarea */
+.markdown-textarea.show-line-numbers {
+    padding-left: 50px;
+    background-image: linear-gradient(
+        to right,
+        rgba(128, 128, 128, 0.1) 0,
+        rgba(128, 128, 128, 0.1) 45px,
+        transparent 45px,
+        transparent 100%
+    );
+    background-attachment: local;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================ */
+
+@media (max-width: 1024px) {
+    .panel-tab-label {
+        font-size: 18px;
+        padding: 0 20px;
+    }
+
+    .panel-content {
+        min-width: 250px;
+        max-width: 350px;
+    }
+
+    .help-panel .panel-content {
+        min-width: 400px;
+        max-width: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        grid-template-rows: auto auto 1fr;
+    }
+
+    .intro {
+        flex-wrap: wrap;
+        height: auto;
+    }
+
+    .panel-tab-label {
+        font-size: 14px;
+        padding: 0 15px;
+        height: 40px;
+    }
+}

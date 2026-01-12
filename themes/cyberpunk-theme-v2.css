@@ -669,3 +669,49 @@
 [data-theme="cyberpunk"] .editor-preview #write .markdown-output {
     padding-right: 1rem;
 }
+
+/* ============================================================================
+   INPUT PANEL - MATCHING HEIGHT WITH PREVIEW
+   Apply same absolute positioning technique for consistent heights
+   ============================================================================ */
+
+/* Input panel needs relative positioning and hidden overflow */
+[data-theme="cyberpunk"] .editor-input {
+    position: relative;
+    overflow: hidden !important;
+}
+
+/* Input content - absolute positioning to match preview panel */
+[data-theme="cyberpunk"] .editor-input .editor-section-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+/* The #write-input container holds the scrollbar - make it fill and scroll */
+[data-theme="cyberpunk"] .editor-input #write-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Textarea fills the container with proper padding for text */
+[data-theme="cyberpunk"] .editor-input .markdown-textarea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    resize: none;
+}

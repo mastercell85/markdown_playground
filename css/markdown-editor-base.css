@@ -794,6 +794,7 @@ body {
 .editor-container {
     display: flex;
     flex-direction: row;
+    align-items: stretch; /* Ensure children stretch to full height */
     width: 100%;
     height: 100%;
     gap: 0;
@@ -808,12 +809,12 @@ body {
 }
 
 .editor-container[data-layout="editor"] .editor-preview,
-.editor-container[data-layout="editor"] .editor-divider {
+.editor-container[data-layout="editor"] .editor-gap {
     display: none;
 }
 
 .editor-container[data-layout="preview"] .editor-input,
-.editor-container[data-layout="preview"] .editor-divider {
+.editor-container[data-layout="preview"] .editor-gap {
     display: none;
 }
 
@@ -825,6 +826,57 @@ body {
     min-width: 200px;
     background: var(--editor-section-bg);
     overflow: hidden;
+    position: relative; /* For label positioning */
+}
+
+/* Input Area */
+.editor-input {
+    flex: 1 1 0;
+    min-width: 200px;
+}
+
+/* Default theme INPUT label */
+.editor-input::before {
+    content: "INPUT";
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Preview Area */
+.editor-preview {
+    flex: 1 1 0;
+    min-width: 200px;
+    background: var(--preview-bg);
+}
+
+/* Default theme PREVIEW label */
+.editor-preview::before {
+    content: "PREVIEW";
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Hide LCARS frame elements by default - themed CSS files can override */
+.lcars-frame {
+    display: none !important;
 }
 
 .editor-section-content {
@@ -874,13 +926,18 @@ body {
     color: #666;
 }
 
-/* Resizable divider */
+/* Resizable Divider - horizontal bar at top of gap */
 .editor-divider {
-    width: 4px;
+    width: 100%;
+    height: 32px;
     background: var(--divider-bg);
     cursor: col-resize;
     position: relative;
     transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .editor-divider:hover,
@@ -888,20 +945,106 @@ body {
     background: var(--divider-hover-bg);
 }
 
-.editor-divider::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: -2px;
-    right: -2px;
+/* Double-ended arrow for divider */
+.divider-grip {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.4);
+    transition: color 0.2s ease;
+    user-select: none;
+    letter-spacing: -2px;
 }
 
-/* Preview area */
-.editor-preview {
+.editor-divider:hover .divider-grip,
+.editor-divider.dragging .divider-grip {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Editor Gap - center column between input and preview */
+.editor-gap {
+    width: 80px;
+    min-width: 80px;
+    flex: 0 0 80px; /* Don't grow or shrink, fixed at 80px */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 20;
+}
+
+/* Gap Toolbar - area for buttons below the divider */
+.gap-toolbar {
     flex: 1;
-    min-width: 200px;
-    background: var(--preview-bg);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 4px;
+    gap: 8px;
+}
+
+/* Divider Sync Button - in gap toolbar */
+.divider-sync-btn {
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(100, 100, 110, 0.6);
+    border-radius: 50%;
+    background: rgba(40, 40, 45, 0.95);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    padding: 0;
+    transition: all 0.2s ease;
+    opacity: 0.7;
+}
+
+.divider-sync-btn .sync-chain {
+    filter: grayscale(80%);
+    opacity: 0.7;
+    transition: all 0.2s ease;
+}
+
+.divider-sync-btn:hover {
+    opacity: 1;
+    background: rgba(60, 60, 65, 0.95);
+    border-color: rgba(150, 150, 160, 0.8);
+}
+
+.divider-sync-btn:hover .sync-chain {
+    filter: grayscale(40%);
+    opacity: 0.9;
+}
+
+/* Active/On state - bright blue glow */
+.divider-sync-btn.sync-active {
+    background: rgba(74, 158, 255, 0.2);
+    border-color: #4a9eff;
+    box-shadow: 0 0 8px rgba(74, 158, 255, 0.5);
+    opacity: 1;
+}
+
+.divider-sync-btn.sync-active .sync-chain {
+    filter: grayscale(0%) brightness(1.1);
+    opacity: 1;
+}
+
+.divider-sync-btn.sync-active:hover {
+    background: rgba(74, 158, 255, 0.35);
+    box-shadow: 0 0 12px rgba(74, 158, 255, 0.7);
+}
+
+.sync-chain {
+    font-size: 12px;
+    line-height: 1;
 }
 
 .markdown-output {

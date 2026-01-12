@@ -422,12 +422,19 @@
     margin: 10px 0;
 }
 
-/* Help header row with expand all toggle */
+/* Help header row with expand all toggle - sticky for scrolling */
 .intro.tab-menu-steel .help-header-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    position: sticky;
+    top: -10px;
+    z-index: 100;
+    background: url(../../assets/layer-middle.svg) repeat-y center top;
+    background-size: var(--steel-help-width, 650px) auto;
+    padding: 20px 0 10px 0;
+    margin-top: -20px;
 }
 
 .intro.tab-menu-steel .help-header-row h3 {
@@ -640,12 +647,19 @@
     padding: 10px 20px 20px 40px !important;
 }
 
-/* View panel header row with expand all toggle */
+/* View panel header row with expand all toggle - sticky for scrolling */
 .intro.tab-menu-steel .view-panel .panel-header-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    position: sticky;
+    top: -10px;
+    z-index: 100;
+    background: url(../../assets/layer-middle.svg) repeat-y center top;
+    background-size: var(--steel-view-width, 500px) auto;
+    padding: 20px 0 10px 0;
+    margin-top: -20px;
 }
 
 .intro.tab-menu-steel .view-panel .panel-header-row h3 {

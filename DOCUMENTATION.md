@@ -431,6 +431,33 @@ Since help preview inherits from `.markdown-output`, most styling is automatic. 
 - **Steel theme**: Two-column layout (left: Tab Menu/Theme/Layout, right: Editor/Zoom/External Window)
 - **Classic theme**: Single-column layout
 
+### Sticky Expand All Checkbox
+The "Expand All" checkbox in Help and View panels is sticky, remaining visible at the top when scrolling through panel content.
+
+**Implementation:**
+- `.help-header-row` and `.panel-header-row` use `position: sticky`
+- `top` value set negative to close gap at top of panel
+- `z-index: 100` ensures scrolling content goes behind the sticky header
+- Background color matches panel background to hide content scrolling underneath
+
+**CSS Structure:**
+```css
+.help-header-row,
+.panel-header-row {
+    position: sticky;
+    top: -20px;
+    z-index: 100;
+    background: var(--tab-dropdown-bg);
+    padding: 20px 0 10px 0;
+    margin-top: -20px;
+}
+```
+
+**Theme Overrides:**
+Each theme/tab menu style may override the background to match its styling:
+- Steel menu: Uses `layer-middle.svg` background
+- LCARS theme: Uses solid black (`#000`) background
+
 ---
 
 ## localStorage Keys

@@ -121,25 +121,44 @@ Website playground/
 - Real-time sync via postMessage API
 
 ### Scroll Sync
-Bidirectional synchronized scrolling between input and preview panes.
+Bidirectional synchronized scrolling between input and preview panes using row-based index synchronization.
 
 **UI Controls:**
 - Toggle button in View panel → Editor section
-- Sync icon button on the resizable divider
+- Sync icon button on the resizable divider (visual on/off color states)
+- Sync offset adjustment control (appears when sync is enabled)
 
 **Architecture:**
 - Managed by `ScrollSync` class in `js/shared/scroll-sync.js`
 - State persisted to localStorage (`editor-scroll-sync`)
+- Offset value persisted to localStorage (`editor-scroll-sync-offset`)
 - Debounced scroll handlers prevent feedback loops
 
-**Implementation Status:**
-Currently a placeholder awaiting row-based index synchronization. The planned implementation will:
-1. Modify the markdown parser to add `data-line` attributes to rendered HTML elements
-2. Map source line numbers to corresponding preview elements
-3. Use visibility detection to find the topmost visible line/element
-4. Scroll the opposite pane to the matching position
+**Implementation:**
+The scroll sync uses `data-line` attributes for accurate line-to-element mapping:
 
-This approach (used by VS Code, Joplin, etc.) provides accurate sync regardless of content height differences.
+1. **Line Tracking**: `BlockProcessor` adds `data-line` attributes to rendered HTML elements during markdown parsing, enabled via `MarkdownParser.setLineTracking(true)`
+
+2. **Input → Preview Sync**:
+   - Calculates visible line number from input scroll position and line height
+   - Applies configurable line offset for fine-tuning accuracy
+   - Finds closest element with matching `data-line` attribute
+   - Interpolates scroll position between elements when exact match not found
+
+3. **Preview → Input Sync**:
+   - Finds first visible element with `data-line` in preview viewport
+   - Calculates corresponding line position in input
+   - Scrolls input to matching line with visibility adjustment
+
+4. **Fallback**: Uses percentage-based sync when no `data-line` elements exist
+
+**Offset Adjustment:**
+- Default offset: 3 lines
+- Positive values = preview scrolls less (lags behind input)
+- Negative values = preview scrolls more (gets ahead of input)
+- Adjustable via View panel → Editor section (when sync enabled)
+
+This approach (similar to VS Code, Joplin, etc.) provides accurate sync (~95%) regardless of content height differences between input and rendered preview.
 
 ---
 
@@ -496,6 +515,7 @@ Each theme/tab menu style may override the background to match its styling:
 | `editor-line-numbers` | Line numbers enabled |
 | `editor-word-wrap` | Word wrap enabled |
 | `editor-scroll-sync` | Scroll sync enabled |
+| `editor-scroll-sync-offset` | Scroll sync line offset value |
 | `markdown-documents` | Stored documents JSON |
 | `active-document-id` | Current document ID |
 

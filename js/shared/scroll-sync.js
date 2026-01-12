@@ -1,9 +1,7 @@
 /**
  * Scroll Sync Module
  * Provides bidirectional synchronized scrolling between input and preview panes
- *
- * TODO: Implement row-based index synchronization for accurate scroll sync
- * This requires modifying the markdown parser to add data-line attributes
+ * Uses row-based index synchronization with data-line attributes for accuracy
  */
 
 class ScrollSync {
@@ -17,9 +15,25 @@ class ScrollSync {
         // Debounce delay to prevent scroll loops
         this.debounceDelay = 50;
 
+        // Cache for line height calculation
+        this.cachedLineHeight = null;
+
+        // Offset adjustment (in lines) - positive = preview scrolls less (lags behind)
+        // Negative = preview scrolls more (gets ahead)
+        // Default of 3 lines helps account for rendering differences
+        this.lineOffset = config.lineOffset !== undefined ? config.lineOffset : 3;
+
         // Bind methods
         this.handleInputScroll = this.handleInputScroll.bind(this);
         this.handlePreviewScroll = this.handlePreviewScroll.bind(this);
+    }
+
+    /**
+     * Set the line offset for fine-tuning sync accuracy
+     * @param {number} offset - Number of lines to offset (can be negative)
+     */
+    setLineOffset(offset) {
+        this.lineOffset = offset;
     }
 
     /**
@@ -33,6 +47,9 @@ class ScrollSync {
             console.warn('ScrollSync: Missing input or preview element');
             return false;
         }
+
+        // Invalidate line height cache when font changes
+        this.cachedLineHeight = null;
 
         return true;
     }
@@ -140,19 +157,56 @@ class ScrollSync {
     syncPreviewToInput() {
         if (!this.inputElement || !this.previewElement) return;
 
-        // Find visible line in input
-        const visibleLine = this.getVisibleLineInInput();
+        // Get all elements with data-line in preview
+        const elements = this.previewElement.querySelectorAll('[data-line]');
+        if (elements.length === 0) {
+            // Fall back to percentage-based sync if no data-line elements
+            this.syncByPercentage(this.inputElement, this.previewElement);
+            return;
+        }
+
+        // Find visible line in input (with offset adjustment)
+        let visibleLine = this.getVisibleLineInInput();
         if (visibleLine === null) return;
 
-        // Find corresponding element in preview
-        const targetElement = this.previewElement.querySelector(`[data-line="${visibleLine}"]`);
+        // Apply line offset for fine-tuning
+        visibleLine = Math.max(0, visibleLine - this.lineOffset);
+
+        // Find the closest element to the visible line
+        const { element: targetElement, before, after } = this.findClosestElements(elements, visibleLine);
+
         if (targetElement) {
-            // Calculate how much of the current line is scrolled past
-            const linePercent = this.getLineVisibilityPercent(visibleLine);
+            const targetLine = parseInt(targetElement.dataset.line, 10);
+
+            // Calculate how far through the current line we are
+            const lineProgress = this.getLineVisibilityPercent(visibleLine);
+
+            // Get the element's position in the preview
             const targetTop = targetElement.offsetTop;
             const targetHeight = targetElement.offsetHeight;
 
-            this.previewElement.scrollTop = targetTop - (targetHeight * linePercent);
+            // If there's a gap between the visible line and the closest element,
+            // interpolate the scroll position
+            if (targetLine !== visibleLine && before && after) {
+                const beforeLine = parseInt(before.dataset.line, 10);
+                const afterLine = parseInt(after.dataset.line, 10);
+                const beforeTop = before.offsetTop;
+                const afterTop = after.offsetTop;
+
+                // Calculate interpolation factor
+                const lineRange = afterLine - beforeLine;
+                const positionRange = afterTop - beforeTop;
+                const lineDiff = visibleLine - beforeLine + lineProgress;
+
+                if (lineRange > 0) {
+                    const interpolatedTop = beforeTop + (lineDiff / lineRange) * positionRange;
+                    this.previewElement.scrollTop = interpolatedTop;
+                    return;
+                }
+            }
+
+            // Simple case: scroll to the target element
+            this.previewElement.scrollTop = targetTop + (targetHeight * lineProgress);
         }
     }
 
@@ -165,10 +219,17 @@ class ScrollSync {
 
         // Find first visible element with data-line in preview
         const visibleElement = this.getFirstVisibleElementInPreview();
-        if (!visibleElement) return;
+        if (!visibleElement) {
+            // Fall back to percentage-based sync
+            this.syncByPercentage(this.previewElement, this.inputElement);
+            return;
+        }
 
-        const line = parseInt(visibleElement.dataset.line, 10);
+        let line = parseInt(visibleElement.dataset.line, 10);
         if (isNaN(line)) return;
+
+        // Apply line offset (reverse direction for input->preview)
+        line = line + this.lineOffset;
 
         // Scroll input to that line
         const lineHeight = this.getInputLineHeight();
@@ -176,7 +237,55 @@ class ScrollSync {
 
         // Adjust for partial visibility
         const elementPercent = this.getElementVisibilityPercent(visibleElement);
-        this.inputElement.scrollTop = targetTop - (lineHeight * elementPercent);
+        this.inputElement.scrollTop = targetTop + (lineHeight * elementPercent);
+    }
+
+    /**
+     * Find the closest elements to a given line number
+     * Returns the exact match if found, or the elements before and after
+     */
+    findClosestElements(elements, targetLine) {
+        let before = null;
+        let after = null;
+        let exact = null;
+
+        for (const element of elements) {
+            const line = parseInt(element.dataset.line, 10);
+            if (isNaN(line)) continue;
+
+            if (line === targetLine) {
+                exact = element;
+                break;
+            } else if (line < targetLine) {
+                if (!before || line > parseInt(before.dataset.line, 10)) {
+                    before = element;
+                }
+            } else {
+                if (!after || line < parseInt(after.dataset.line, 10)) {
+                    after = element;
+                }
+            }
+        }
+
+        // Return exact match if found, otherwise the closest before element
+        return {
+            element: exact || before || after,
+            before,
+            after
+        };
+    }
+
+    /**
+     * Fallback: sync by percentage when no data-line elements exist
+     */
+    syncByPercentage(source, target) {
+        const sourceMaxScroll = source.scrollHeight - source.clientHeight;
+        const targetMaxScroll = target.scrollHeight - target.clientHeight;
+
+        if (sourceMaxScroll <= 0) return;
+
+        const scrollPercent = source.scrollTop / sourceMaxScroll;
+        target.scrollTop = scrollPercent * targetMaxScroll;
     }
 
     /**
@@ -192,7 +301,7 @@ class ScrollSync {
     }
 
     /**
-     * Get what percentage of the current line is visible (0-1)
+     * Get what percentage of the current line is scrolled past (0-1)
      */
     getLineVisibilityPercent(lineNumber) {
         const lineHeight = this.getInputLineHeight();
@@ -208,7 +317,6 @@ class ScrollSync {
     getFirstVisibleElementInPreview() {
         const elements = this.previewElement.querySelectorAll('[data-line]');
         const containerRect = this.previewElement.getBoundingClientRect();
-        const scrollTop = this.previewElement.scrollTop;
 
         for (const element of elements) {
             const rect = element.getBoundingClientRect();
@@ -221,7 +329,7 @@ class ScrollSync {
     }
 
     /**
-     * Get visibility percentage of an element (0 = fully visible, 1 = just entering)
+     * Get visibility percentage of an element (0 = top visible, 1 = bottom just entering)
      */
     getElementVisibilityPercent(element) {
         const rect = element.getBoundingClientRect();
@@ -234,13 +342,23 @@ class ScrollSync {
     }
 
     /**
-     * Get the line height of the input textarea
+     * Get the line height of the input textarea (cached for performance)
      */
     getInputLineHeight() {
+        if (this.cachedLineHeight) return this.cachedLineHeight;
+
         if (!this.inputElement) return 22.4; // Default
 
         const computedStyle = window.getComputedStyle(this.inputElement);
-        return parseFloat(computedStyle.lineHeight) || 22.4;
+        this.cachedLineHeight = parseFloat(computedStyle.lineHeight) || 22.4;
+        return this.cachedLineHeight;
+    }
+
+    /**
+     * Invalidate cached values (call when font/zoom changes)
+     */
+    invalidateCache() {
+        this.cachedLineHeight = null;
     }
 
     /**
@@ -258,6 +376,7 @@ class ScrollSync {
         this.disable();
         this.inputElement = null;
         this.previewElement = null;
+        this.cachedLineHeight = null;
     }
 }
 

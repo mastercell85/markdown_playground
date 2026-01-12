@@ -1331,9 +1331,20 @@
     overflow: visible;
 }
 
-/* Prevent horizontal overflow from box-shadows */
+/* Prevent horizontal overflow from box-shadows, but allow divider button to show */
 [data-theme="lcars"] .editor-container {
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: visible;
+}
+
+/* Ensure divider and its button are visible above all other layers */
+[data-theme="lcars"] .editor-divider {
+    z-index: 9999 !important;
+    overflow: visible !important;
+}
+
+[data-theme="lcars"] .divider-sync-btn {
+    z-index: 10000 !important;
 }
 
 /* ============================================================================
@@ -1371,4 +1382,37 @@
 
 [data-theme="lcars"] .sync-toggle-btn.sync-active .sync-icon {
     color: var(--lcars-orange);
+}
+
+/* LCARS sync offset control styling */
+[data-theme="lcars"] .sync-offset-control {
+    background: var(--lcars-offblack);
+    border: 2px solid var(--lcars-purple);
+    border-radius: 0;
+    font-family: 'Teko', sans-serif;
+}
+
+[data-theme="lcars"] .sync-offset-control label {
+    color: var(--lcars-grey);
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+}
+
+[data-theme="lcars"] .sync-offset-control input[type="number"] {
+    background: #000;
+    border: 2px solid var(--lcars-orange);
+    border-radius: 0;
+    color: var(--lcars-orange);
+    font-family: 'Teko', sans-serif;
+    font-size: 14px;
+}
+
+[data-theme="lcars"] .sync-offset-control input[type="number"]:focus {
+    border-color: var(--lcars-yellow);
+}
+
+[data-theme="lcars"] .sync-offset-hint {
+    color: var(--lcars-grey);
+    font-size: 13px;
 }

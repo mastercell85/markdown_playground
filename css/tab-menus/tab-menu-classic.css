@@ -1044,3 +1044,41 @@ header[role="banner"] {
 
 /* NOTE: Content styling (colors, fonts) removed - now inherits from .markdown-output class
    which is styled by the active theme. See markdown-editor-base.css for layout overrides. */
+
+/* ============================================================================
+   STICKY EXPAND ALL HEADER ROWS
+   Keep the expand all checkbox visible when scrolling
+   ============================================================================ */
+
+.help-header-row,
+.panel-header-row {
+    position: sticky;
+    top: -20px;
+    z-index: 100;
+    background: var(--tab-dropdown-bg, rgba(30, 30, 35, 0.98));
+    padding: 20px 0 10px 0;
+    margin-top: -20px;
+    margin-bottom: 10px;
+}
+
+/* Expand all toggle styling */
+.expand-all-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    user-select: none;
+}
+
+.expand-all-toggle:hover {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.expand-all-toggle input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    accent-color: #4a9eff;
+}

@@ -965,6 +965,17 @@
     display: none;
 }
 
+/* Sticky header rows for expand all toggle */
+[data-theme="lcars"] .help-header-row,
+[data-theme="lcars"] .panel-header-row {
+    background: #000 !important;
+    z-index: 100 !important;
+    position: sticky !important;
+    top: -10px !important;
+    padding-top: 10px !important;
+    margin-top: -10px !important;
+}
+
 [data-theme="lcars"] .expand-all-toggle {
     font-family: 'Teko', sans-serif;
     font-size: 1rem;

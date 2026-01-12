@@ -1,35 +1,46 @@
-<!DOCTYPE html>
+lsDOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Markdown Editor - CSS Zen Garden</title>
+	<title>Markdown Editor</title>
 
-	<link rel="stylesheet" media="screen" href="markdown-editor.css">
+	<!-- New base CSS with CSS variables - no Zen Garden dependencies -->
+	<link rel="stylesheet" media="screen" href="css/markdown-editor-base.css">
+	<!-- Tab Menu Layout (can be swapped for other layouts) -->
+	<link rel="stylesheet" media="screen" href="css/tab-menus/tab-menu-steel.css" id="tab-menu-stylesheet">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="author" content="Dave Shea">
-	<meta name="description" content="Markdown document editor with CSS Zen Garden styling.">
+	<meta name="description" content="Markdown document editor with live preview and theming.">
 	<meta name="robots" content="all">
 
+	<!-- Typekit fonts for themes -->
 	<script src="https://use.typekit.net/fzq7emy.js"></script>
 	<script>try{Typekit.load();}catch(e){}</script>
 </head>
 
-<body id="css-zen-garden">
+<body>
 <div class="page-wrapper">
 
-	<section class="intro" id="zen-intro">
+	<section class="intro tab-menu-steel" id="zen-intro">
 		<header role="banner">
 			<h1>Markdown Editor</h1>
 			<h2>Create Your Document</h2>
 		</header>
 
-		<!-- Files Tab -->
+		<!-- File Tab -->
 		<div class="editor-panel files-panel" id="files-panel" role="article">
-			<div class="panel-tab-label">Files</div>
+			<div class="panel-tab-label">File</div>
 			<div class="panel-content">
-				<h3>Files</h3>
-				<p>File management coming soon...</p>
+				<h3>File</h3>
+				<button id="new-file-btn" class="panel-button">New File</button>
+				<button id="open-file-btn" class="panel-button">Open File</button>
+				<button id="open-folder-btn" class="panel-button">Open Folder</button>
+				<button id="save-file-btn" class="panel-button">Save</button>
+				<button id="save-as-btn" class="panel-button">Save As...</button>
+				<button id="close-file-btn" class="panel-button">Close File</button>
+				<button id="close-folder-btn" class="panel-button">Close Folder</button>
+				<button id="exit-btn" class="panel-button">Exit</button>
+				<input type="file" id="file-input" accept=".md,.markdown,.txt" style="display: none;">
 			</div>
 		</div>
 
@@ -38,7 +49,14 @@
 			<div class="panel-tab-label">Edit</div>
 			<div class="panel-content">
 				<h3>Edit</h3>
-				<p>Edit options coming soon...</p>
+				<button id="undo-btn" class="panel-button">Undo</button>
+				<button id="redo-btn" class="panel-button">Redo</button>
+				<button id="cut-btn" class="panel-button">Cut</button>
+				<button id="copy-btn" class="panel-button">Copy</button>
+				<button id="paste-btn" class="panel-button">Paste</button>
+				<button id="select-all-btn" class="panel-button">Select All</button>
+				<button id="find-btn" class="panel-button">Find</button>
+				<button id="replace-btn" class="panel-button">Replace</button>
 			</div>
 		</div>
 
@@ -46,13 +64,99 @@
 		<div class="editor-panel view-panel" id="view-panel" role="article">
 			<div class="panel-tab-label">View</div>
 			<div class="panel-content">
-				<h3>View Options</h3>
-				<button id="open-external-preview" class="panel-button">
-					Open Preview in New Window
-				</button>
-				<button id="close-external-preview" class="panel-button" disabled>
-					Close External Window
-				</button>
+				<div class="panel-header-row">
+					<h3>View Options</h3>
+					<label class="expand-all-toggle">
+						<input type="checkbox" id="view-expand-all-sections">
+						<span>Expand/Collapse All</span>
+					</label>
+				</div>
+
+				<div class="view-two-col">
+					<!-- Left Column -->
+					<div class="view-col-left">
+						<!-- Tab Menu Section -->
+						<div class="view-section">
+							<button class="view-section-header">
+								<span class="view-toggle">▶</span>
+								<span>Tab Menu</span>
+							</button>
+							<div class="view-section-content">
+								<button id="tab-menu-selector-btn" class="panel-button">Select Tab Menu Style...</button>
+								<div id="current-tab-menu-display" class="current-display">Current: Steel</div>
+							</div>
+						</div>
+
+						<!-- Theme Section -->
+						<div class="view-section">
+							<button class="view-section-header">
+								<span class="view-toggle">▶</span>
+								<span>Theme</span>
+							</button>
+							<div class="view-section-content">
+								<button id="theme-selector-btn" class="panel-button">Select Theme...</button>
+								<button id="theme-load-custom-btn" class="panel-button">Load Custom CSS</button>
+								<div id="current-theme-display" class="current-display">Current: Default</div>
+								<input type="file" id="custom-theme-input" accept=".css" style="display: none;">
+							</div>
+						</div>
+
+						<!-- Layout Section -->
+						<div class="view-section">
+							<button class="view-section-header">
+								<span class="view-toggle">▶</span>
+								<span>Layout</span>
+							</button>
+							<div class="view-section-content">
+								<button id="layout-split-btn" class="panel-button">Split View</button>
+								<button id="layout-editor-btn" class="panel-button">Editor Only</button>
+								<button id="layout-preview-btn" class="panel-button">Preview Only</button>
+							</div>
+						</div>
+					</div>
+
+					<!-- Right Column -->
+					<div class="view-col-right">
+						<!-- Editor Section -->
+						<div class="view-section">
+							<button class="view-section-header">
+								<span class="view-toggle">▶</span>
+								<span>Editor</span>
+							</button>
+							<div class="view-section-content">
+								<button id="toggle-line-numbers-btn" class="panel-button">Toggle Line Numbers</button>
+								<button id="toggle-word-wrap-btn" class="panel-button">Toggle Word Wrap</button>
+							</div>
+						</div>
+
+						<!-- Zoom Section -->
+						<div class="view-section">
+							<button class="view-section-header">
+								<span class="view-toggle">▶</span>
+								<span>Zoom</span>
+							</button>
+							<div class="view-section-content">
+								<button id="zoom-90-btn" class="panel-button">90%</button>
+								<button id="zoom-100-btn" class="panel-button">100%</button>
+								<button id="zoom-110-btn" class="panel-button">110%</button>
+								<button id="zoom-125-btn" class="panel-button">125%</button>
+								<button id="zoom-150-btn" class="panel-button">150%</button>
+							</div>
+						</div>
+
+						<!-- External Window Section -->
+						<div class="view-section">
+							<button class="view-section-header">
+								<span class="view-toggle">▶</span>
+								<span>External Window</span>
+							</button>
+							<div class="view-section-content">
+								<button id="open-external-preview" class="panel-button">Open Preview in New Window</button>
+								<button id="close-external-preview" class="panel-button" disabled>Close External Window</button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -62,6 +166,251 @@
 			<div class="panel-content">
 				<h3>Settings</h3>
 				<p>Settings coming soon...</p>
+			</div>
+		</div>
+
+		<!-- Help Panel -->
+		<div class="editor-panel help-panel" id="help-panel" role="article">
+			<div class="panel-tab-label">Help</div>
+			<div class="panel-content help-content">
+				<div class="help-header-row">
+					<h3>Help & Documentation</h3>
+					<label class="expand-all-toggle">
+						<input type="checkbox" id="expand-all-sections">
+						<span>Expand/Collapse All</span>
+					</label>
+				</div>
+
+				<!-- Markdown Basics Section -->
+				<div class="help-section">
+					<button class="help-section-header">
+						<span class="help-toggle">▶</span>
+						<span>Markdown Basics</span>
+					</button>
+					<div class="help-section-content">
+						<div class="help-row-header">
+							<span class="help-col-label">Syntax</span>
+							<span class="help-col-label">Preview</span>
+						</div>
+
+						<h4>Headers</h4>
+						<div class="help-two-col">
+							<code># H1 Header<br>## H2 Header<br>### H3 Header</code>
+							<div class="help-preview markdown-output">
+								<h1>H1 Header</h1>
+								<h2>H2 Header</h2>
+								<h3>H3 Header</h3>
+							</div>
+						</div>
+
+						<h4>Text Formatting</h4>
+						<div class="help-two-col">
+							<code>**bold** or __bold__<br>*italic* or _italic_<br>~~strikethrough~~</code>
+							<div class="help-preview markdown-output">
+								<strong>bold</strong> or <strong>bold</strong><br>
+								<em>italic</em> or <em>italic</em><br>
+								<del>strikethrough</del>
+							</div>
+						</div>
+
+						<h4>Links & Images</h4>
+						<div class="help-two-col">
+							<code>[Link text](url)<br>![Image alt](image-url)</code>
+							<div class="help-preview markdown-output">
+								<a href="#">Link text</a><br>
+								<img src="assets/sample-photo.jpg" alt="Sample">
+							</div>
+						</div>
+
+						<h4>Lists</h4>
+						<div class="help-two-col">
+							<code>- Unordered item<br>1. Ordered item<br>- [ ] Task item</code>
+							<div class="help-preview markdown-output">
+								<ul><li>Unordered item</li></ul>
+								<ol><li>Ordered item</li></ol>
+								<code>[ ]</code> Task item
+							</div>
+						</div>
+
+						<h4>Code</h4>
+						<div class="help-two-col">
+							<code>`inline code`<br>```language<br>code block<br>```</code>
+							<div class="help-preview markdown-output">
+								<code>inline code</code><br>
+								<pre>code block</pre>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Shortcut Syntax Section -->
+				<div class="help-section">
+					<button class="help-section-header">
+						<span class="help-toggle">▶</span>
+						<span>Shortcut Syntax</span>
+					</button>
+					<div class="help-section-content">
+						<div class="help-row-header">
+							<span class="help-col-label">Syntax</span>
+							<span class="help-col-label">Preview</span>
+						</div>
+
+						<h4>Headers</h4>
+						<div class="help-two-col">
+							<code>h1: Header Text<br>heading1: Header Text<br>&lt;h1&gt;Header Text&lt;/h1&gt;<br>title: Main Title</code>
+							<div class="help-preview markdown-output">
+								<h1>Header Text</h1>
+								<h1>Header Text</h1>
+								<h1>Header Text</h1>
+								<h1>Main Title</h1>
+							</div>
+						</div>
+
+						<h4>Text Formatting</h4>
+						<div class="help-two-col">
+							<code>&lt;b&gt;bold&lt;/b&gt;<br>[b]bold[/b]<br>:b:bold:b:<br>b{bold}</code>
+							<div class="help-preview markdown-output">
+								<strong>bold</strong><br>
+								<strong>bold</strong><br>
+								<strong>bold</strong><br>
+								<strong>bold</strong>
+							</div>
+						</div>
+
+						<h4>Links</h4>
+						<div class="help-two-col">
+							<code>link: text | url<br>&lt;link href="url"&gt;text&lt;/link&gt;<br>[url=url]text[/url]</code>
+							<div class="help-preview markdown-output">
+								<a href="#">text</a><br>
+								<a href="#">text</a><br>
+								<a href="#">text</a>
+							</div>
+						</div>
+
+						<h4>Images</h4>
+						<div class="help-two-col">
+							<code>img: alt | url<br>&lt;img src="url" alt="alt" /&gt;<br>[img=url]alt[/img]</code>
+							<div class="help-preview markdown-output">
+								<img src="assets/sample-photo.jpg" alt="Sample">
+							</div>
+						</div>
+
+						<h4>Lists</h4>
+						<div class="help-two-col">
+							<code>ul: List item<br>ol: Numbered item<br>task: Task item<br>done: Completed task</code>
+							<div class="help-preview markdown-output">
+								<ul><li>List item</li></ul>
+								<ol><li>Numbered item</li></ol>
+								<code>[ ]</code> Task item<br>
+								<code>[x]</code> Completed task
+							</div>
+						</div>
+
+						<h4>Blockquotes</h4>
+						<div class="help-two-col">
+							<code>quote: Quote text<br>bq: Quote text<br>&lt;blockquote&gt;text&lt;/blockquote&gt;</code>
+							<div class="help-preview markdown-output">
+								<blockquote>Quote text</blockquote>
+							</div>
+						</div>
+
+						<h4>Horizontal Rules</h4>
+						<div class="help-two-col">
+							<code>hr:<br>divider:<br>&lt;hr&gt;</code>
+							<div class="help-preview markdown-output">
+								<hr>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Keyboard Shortcuts Section -->
+				<div class="help-section">
+					<button class="help-section-header">
+						<span class="help-toggle">▶</span>
+						<span>Keyboard Shortcuts</span>
+					</button>
+					<div class="help-section-content">
+						<h4>File Operations</h4>
+						<code>Ctrl+S - Save<br>Ctrl+Shift+S - Save As<br>Ctrl+N - New File<br>Ctrl+O - Open File</code>
+
+						<h4>Editing</h4>
+						<code>Ctrl+Z - Undo<br>Ctrl+Y - Redo<br>Ctrl+X - Cut<br>Ctrl+C - Copy<br>Ctrl+V - Paste<br>Ctrl+A - Select All</code>
+
+						<h4>Find & Replace</h4>
+						<code>Ctrl+F - Find<br>Ctrl+H - Replace</code>
+					</div>
+				</div>
+
+				<!-- Theme Guide Section -->
+				<div class="help-section">
+					<button class="help-section-header">
+						<span class="help-toggle">▶</span>
+						<span>Theme Guide</span>
+					</button>
+					<div class="help-section-content">
+						<h4>Available Themes</h4>
+						<p><strong>Default:</strong> Clean, professional light theme</p>
+						<p><strong>Cyberpunk:</strong> Neon-styled dark theme with matrix effects</p>
+						<p><strong>LCARS:</strong> Star Trek inspired interface</p>
+
+						<h4>How to Switch Themes</h4>
+						<p>1. Click the <strong>Settings</strong> tab<br>
+						2. Select your preferred theme from the dropdown<br>
+						3. Theme applies instantly</p>
+
+						<h4>Protected Themes</h4>
+						<p>Built-in themes (Default, Cyberpunk, LCARS) cannot be deleted to preserve core functionality.</p>
+					</div>
+				</div>
+
+				<!-- Tips & Tricks Section -->
+				<div class="help-section">
+					<button class="help-section-header">
+						<span class="help-toggle">▶</span>
+						<span>Tips & Tricks</span>
+					</button>
+					<div class="help-section-content">
+						<h4>Auto-Save</h4>
+						<p>Your work is automatically saved every second to prevent data loss.</p>
+
+						<h4>Mix Syntax Styles</h4>
+						<p>You can use standard markdown and shortcuts together in the same document!</p>
+
+						<h4>Multiple Shortcuts</h4>
+						<p>Most features support 5-7 different syntax options. Use whichever feels most natural!</p>
+
+						<h4>Live Preview</h4>
+						<p>Changes appear instantly in the preview pane as you type.</p>
+
+						<h4>Image Paths</h4>
+						<p>Use relative paths for local images (e.g., image.jpg) or full URLs for web images.</p>
+					</div>
+				</div>
+
+				<!-- About Section -->
+				<div class="help-section">
+					<button class="help-section-header">
+						<span class="help-toggle">▶</span>
+						<span>About</span>
+					</button>
+					<div class="help-section-content">
+						<h4>Markdown Editor</h4>
+						<p><strong>Version:</strong> 1.0.0</p>
+						<p><strong>Features:</strong></p>
+						<ul>
+							<li>Full GitHub Flavored Markdown support</li>
+							<li>Multiple shortcut syntax options</li>
+							<li>Live preview rendering</li>
+							<li>Auto-save functionality</li>
+							<li>Multiple theme support</li>
+							<li>Document management</li>
+						</ul>
+
+						<h4>Supported Markdown</h4>
+						<p>Headers (H1-H6), Bold, Italic, Strikethrough, Links, Images, Code (inline & block), Lists (ordered, unordered, tasks), Blockquotes, Horizontal Rules, Tables</p>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -80,11 +429,7 @@
 	<!-- Document Tabs Bar -->
 	<div class="document-tabs-container">
 		<div class="document-tabs" id="document-tabs">
-			<!-- Tabs will be added dynamically -->
-			<div class="document-tab active" data-doc-id="untitled-1">
-				<span class="document-tab-name">Untitled-1</span>
-				<span class="document-tab-close">×</span>
-			</div>
+			<!-- Tabs will be added dynamically by TabController -->
 		</div>
 		<button class="document-tab-new" id="new-document-btn" title="New Document">+</button>
 	</div>
@@ -94,13 +439,28 @@
 		<div class="editor-container" data-layout="split">
 			<!-- Input section -->
 			<section class="editor-section editor-input">
+				<!-- LCARS Frame Elements -->
+				<div class="lcars-frame">
+					<div class="lcars-sidebar"></div>
+					<div class="lcars-topbar"></div>
+					<div class="lcars-corner"></div>
+					<div class="lcars-header-blocks">
+						<div class="lcars-block-grey"></div>
+						<div class="lcars-block-orange"></div>
+						<div class="lcars-title">INPUT</div>
+						<div class="lcars-block-pink"></div>
+					</div>
+				</div>
 				<div class="editor-section-content">
-					<textarea
-						id="markdown-input"
-						class="markdown-textarea"
-						placeholder="Start typing your markdown here..."
-						aria-label="Markdown input"
-					></textarea>
+					<!-- Typora wrapper for input -->
+					<div id="write-input" class="typora-write">
+						<textarea
+							id="markdown-input"
+							class="markdown-textarea"
+							placeholder="Start typing your markdown here..."
+							aria-label="Markdown input"
+						></textarea>
+					</div>
 				</div>
 			</section>
 
@@ -109,13 +469,28 @@
 
 			<!-- Preview section -->
 			<section class="editor-section editor-preview">
+				<!-- LCARS Frame Elements -->
+				<div class="lcars-frame">
+					<div class="lcars-sidebar"></div>
+					<div class="lcars-topbar"></div>
+					<div class="lcars-corner"></div>
+					<div class="lcars-header-blocks">
+						<div class="lcars-block-grey"></div>
+						<div class="lcars-block-orange"></div>
+						<div class="lcars-title">PREVIEW</div>
+						<div class="lcars-block-pink"></div>
+					</div>
+				</div>
 				<div class="editor-section-content">
-					<div
-						id="markdown-preview"
-						class="markdown-output"
-						aria-label="Rendered markdown preview"
-						aria-live="polite"
-					></div>
+					<!-- Typora wrapper for preview -->
+					<div id="write" class="typora-write">
+						<div
+							id="markdown-preview"
+							class="markdown-output"
+							aria-label="Rendered markdown preview"
+							aria-live="polite"
+						></div>
+					</div>
 				</div>
 			</section>
 		</div>
@@ -123,9 +498,24 @@
 
 </div>
 
-<div class="extra1" role="presentation"></div><div class="extra2" role="presentation"></div><div class="extra3" role="presentation"></div>
-<div class="extra4" role="presentation"></div><div class="extra5" role="presentation"></div><div class="extra6" role="presentation"></div>
+<!-- Shared modules -->
+<script src="js/shared/panel-manager.js"></script>
+<script src="js/shared/resizable-pane.js"></script>
 
-<script src="markdown-editor.js"></script>
+<!-- Markdown modules -->
+<script src="js/markdown/rule-engine.js"></script>
+<script src="js/markdown/block-processor.js"></script>
+<script src="js/markdown/shortcut-processor.js"></script>
+<script src="js/markdown/markdown-parser.js"></script>
+<script src="js/markdown/window-manager.js"></script>
+<script src="js/markdown/markdown-renderer.js"></script>
+<script src="js/markdown/document.js"></script>
+<script src="js/markdown/document-manager.js"></script>
+<script src="js/markdown/tab-controller.js"></script>
+<script src="js/markdown/typora-adapter.js"></script>
+<script src="js/markdown/theme-loader.js"></script>
+
+<!-- Main application script -->
+<script src="js/markdown-editor-main.js"></script>
 </body>
 </html>

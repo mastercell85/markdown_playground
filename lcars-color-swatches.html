@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCARS Color Swatches</title>
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 40px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .swatches {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .swatch {
+            text-align: center;
+        }
+        .color-box {
+            width: 100%;
+            height: 100px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .color-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .color-hex {
+            font-size: 14px;
+            color: #999;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>LCARS Color Palette</h1>
+    <div class="swatches">
+        <div class="swatch">
+            <div class="color-box" style="background: #ffcc66;"></div>
+            <div class="color-name">Yellow</div>
+            <div class="color-hex">#ffcc66</div>
+        </div>
+        <div class="swatch">
+            <div class="color-box" style="background: #ff9900;"></div>
+            <div class="color-name">Orange (current)</div>
+            <div class="color-hex">#ff9900</div>
+        </div>
+        <div class="swatch">
+            <div class="color-box" style="background: #ff9966;"></div>
+            <div class="color-name">Peach</div>
+            <div class="color-hex">#ff9966</div>
+        </div>
+        <div class="swatch">
+            <div class="color-box" style="background: #cc6666;"></div>
+            <div class="color-name">Aubergine</div>
+            <div class="color-hex">#cc6666</div>
+        </div>
+        <div class="swatch">
+            <div class="color-box" style="background: #cc6699;"></div>
+            <div class="color-name">Purple</div>
+            <div class="color-hex">#cc6699</div>
+        </div>
+        <div class="swatch">
+            <div class="color-box" style="background: #cc99cc;"></div>
+            <div class="color-name">Violet</div>
+            <div class="color-hex">#cc99cc</div>
+        </div>
+        <div class="swatch">
+            <div class="color-box" style="background: #9999ff;"></div>
+            <div class="color-name">Blue</div>
+            <div class="color-hex">#9999ff</div>
+        </div>
+        <div class="swatch">
+            <div class="color-box" style="background: #9999cc;"></div>
+            <div class="color-name">Grey</div>
+            <div class="color-hex">#9999cc</div>
+        </div>
+        <div class="swatch">
+            <div class="color-box" style="background: #333344;"></div>
+            <div class="color-name">Off-Black</div>
+            <div class="color-hex">#333344</div>
+        </div>
+    </div>
+</body>
+</html>

@@ -40,6 +40,9 @@
 
     /* Steel Menu - Help panel expanded width */
     --steel-help-width: 650px;
+
+    /* Steel Menu - View panel expanded width */
+    --steel-view-width: 500px;
 }
 
 /* ============================================================================
@@ -363,6 +366,36 @@
 .intro.tab-menu-steel .help-panel.panel-open::after,
 .intro.tab-menu-steel .help-panel:hover::after {
     background-size: var(--steel-help-width) auto;
+}
+
+/* ============================================================================
+   STEEL MENU - VIEW PANEL (Wider Expansion for Two-Column Layout)
+   ============================================================================ */
+
+.intro.tab-menu-steel .view-panel.panel-open,
+.intro.tab-menu-steel .view-panel:hover {
+    width: var(--steel-view-width);
+    background-size: var(--steel-view-width) auto;
+    z-index: 10;
+    max-height: none;
+}
+
+/* View panel decorations expand with panel */
+.intro.tab-menu-steel .view-panel.panel-open::before,
+.intro.tab-menu-steel .view-panel:hover::before,
+.intro.tab-menu-steel .view-panel.panel-open::after,
+.intro.tab-menu-steel .view-panel:hover::after {
+    width: var(--steel-view-width);
+}
+
+.intro.tab-menu-steel .view-panel.panel-open::before,
+.intro.tab-menu-steel .view-panel:hover::before {
+    background-size: auto auto, var(--steel-view-width) auto;
+}
+
+.intro.tab-menu-steel .view-panel.panel-open::after,
+.intro.tab-menu-steel .view-panel:hover::after {
+    background-size: var(--steel-view-width) auto;
 }
 
 /* Help content padding - align content within the frame area */
@@ -721,6 +754,18 @@
     margin: 8px 0;
     font-size: 11px;
     color: rgba(255, 255, 255, 0.6);
+}
+
+/* View panel two-column layout */
+.intro.tab-menu-steel .view-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.intro.tab-menu-steel .view-col-left,
+.intro.tab-menu-steel .view-col-right {
+    min-width: 0;
 }
 
 /* ============================================================================

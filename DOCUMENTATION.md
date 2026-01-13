@@ -130,6 +130,7 @@ The editor container uses Flexbox with `align-items: stretch` to ensure input an
 - Right (preview) pane uses `flex: 1` to fill remaining space
 - Divider positioned at top of center gap (32px height, full-width horizontal bar)
 - Resize grip provides visual feedback with opacity changes on hover
+- **Double-click divider** to instantly center split to 50/50 layout with smooth animation
 - This prevents right edge shifting during resize operations
 - Theme-specific scrollbar positioning ensures scrollbars are flush with panel edges
 
@@ -681,10 +682,13 @@ This section tracks features planned for future implementation.
 - Regular expression support
 - Replace and Replace All functionality
 
-**Double-Click Center Split**
+**Double-Click Center Split** ✓ IMPLEMENTED
 - Double-click the divider grip to instantly center the split
-- Smooth animation to 50/50 layout
-- Visual feedback on double-click
+- Smooth 0.3s animation to 50/50 layout
+- Visual feedback with pulse animation and blue glow
+- Properly accounts for 80px gap width in calculations
+- Implemented in `js/shared/resizable-pane.js` with `centerSplit()` method
+- CSS animations in `css/markdown-editor-base.css` with `.centering` class
 
 **Sync Offset Documentation**
 - Add Scroll Sync section to Help panel explaining offset behavior

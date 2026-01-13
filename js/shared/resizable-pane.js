@@ -49,6 +49,7 @@ class ResizablePane {
         this.setupMouseMoveListener();
         this.setupMouseUpListener();
         this.setupCursorHandling();
+        this.setupDoubleClickListener();
 
         return this;
     }
@@ -92,6 +93,16 @@ class ResizablePane {
 
         document.addEventListener('mouseup', () => {
             document.body.style.cursor = '';
+        });
+    }
+
+    /**
+     * Setup double-click listener to center split
+     */
+    setupDoubleClickListener() {
+        this.divider.addEventListener('dblclick', (e) => {
+            this.centerSplit();
+            e.preventDefault();
         });
     }
 
@@ -181,6 +192,47 @@ class ResizablePane {
 
         this.leftPane.style.flex = `0 0 ${leftWidth}px`;
         this.rightPane.style.flex = '1 1 0px';
+    }
+
+    /**
+     * Center the split (50/50 layout)
+     * Animates the transition smoothly
+     */
+    centerSplit() {
+        // Calculate 50% split accounting for gap
+        const containerWidth = this.container.offsetWidth;
+        const gap = this.container.querySelector('.editor-gap');
+        const gapWidth = gap ? gap.offsetWidth : 0;
+        const availableWidth = containerWidth - gapWidth;
+        const halfWidth = availableWidth / 2;
+
+        // Add transition for smooth animation
+        this.leftPane.style.transition = 'flex 0.3s ease-in-out';
+        this.rightPane.style.transition = 'flex 0.3s ease-in-out';
+
+        // Set to 50/50
+        this.leftPane.style.flex = `0 0 ${halfWidth}px`;
+        this.rightPane.style.flex = '1 1 0px';
+
+        // Visual feedback - briefly add a class to the divider
+        this.divider.classList.add('centering');
+
+        // Remove transition and visual feedback after animation completes
+        setTimeout(() => {
+            this.leftPane.style.transition = '';
+            this.rightPane.style.transition = '';
+            this.divider.classList.remove('centering');
+        }, 300);
+
+        // Trigger callback if provided
+        if (this.onResize) {
+            this.onResize({
+                leftWidth: halfWidth,
+                rightWidth: halfWidth,
+                leftFlex: 0.5,
+                rightFlex: 0.5
+            });
+        }
     }
 }
 

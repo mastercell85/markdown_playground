@@ -76,6 +76,16 @@ class FindManager {
             this.findInput.addEventListener('input', () => this.findAll());
         }
 
+        // Textarea - re-search when document content changes
+        if (this.textarea) {
+            this.textarea.addEventListener('input', () => {
+                // Only re-search if dialog is open and there's a search term
+                if (this.isOpen() && this.findInput.value) {
+                    this.findAll();
+                }
+            });
+        }
+
         // Options checkboxes
         const caseSensitiveCheckbox = document.getElementById('find-case-sensitive');
         const wholeWordCheckbox = document.getElementById('find-whole-word');
@@ -312,11 +322,29 @@ class FindManager {
                 let match;
 
                 while ((match = regex.exec(text)) !== null) {
-                    this.matches.push({
-                        start: match.index,
-                        end: match.index + match[0].length,
-                        text: match[0]
-                    });
+                    const matchStart = match.index;
+                    const matchEnd = match.index + match[0].length;
+
+                    // Check whole word if needed (apply word boundary check to regex matches)
+                    if (this.wholeWord) {
+                        const before = matchStart > 0 ? text[matchStart - 1] : ' ';
+                        const after = matchEnd < text.length ? text[matchEnd] : ' ';
+                        const isWordBoundary = /\W/.test(before) && /\W/.test(after);
+
+                        if (isWordBoundary) {
+                            this.matches.push({
+                                start: matchStart,
+                                end: matchEnd,
+                                text: match[0]
+                            });
+                        }
+                    } else {
+                        this.matches.push({
+                            start: matchStart,
+                            end: matchEnd,
+                            text: match[0]
+                        });
+                    }
                 }
             } else {
                 // Plain text search

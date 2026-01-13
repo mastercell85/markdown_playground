@@ -319,22 +319,41 @@
         }
 
         function runTests() {
-            // Intercept console
-            interceptConsole();
+            try {
+                // Check if FindManager is available
+                if (typeof FindManager === 'undefined') {
+                    alert('ERROR: FindManager class not found! Check if find-manager.js loaded correctly.');
+                    console.error('FindManager is undefined');
+                    return;
+                }
 
-            // Create new test suite
-            testSuite = new FindManagerTests();
+                // Check if test suite is available
+                if (typeof FindManagerTests === 'undefined') {
+                    alert('ERROR: FindManagerTests class not found! Check if find-manager.test.js loaded correctly.');
+                    console.error('FindManagerTests is undefined');
+                    return;
+                }
 
-            // Run all tests
-            const results = testSuite.runAllTests();
+                // Intercept console
+                interceptConsole();
 
-            // Restore console
-            restoreConsole();
+                // Create new test suite
+                testSuite = new FindManagerTests();
 
-            // Display results
-            displaySummary(results);
-            displayResults(results);
-            displayConsole();
+                // Run all tests
+                const results = testSuite.runAllTests();
+
+                // Restore console
+                restoreConsole();
+
+                // Display results
+                displaySummary(results);
+                displayResults(results);
+                displayConsole();
+            } catch (error) {
+                alert('ERROR running tests: ' + error.message);
+                console.error('Test execution error:', error);
+            }
         }
 
         function displaySummary(results) {

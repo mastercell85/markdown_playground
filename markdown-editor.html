@@ -55,8 +55,7 @@ lsDOCTYPE html>
 				<button id="copy-btn" class="panel-button">Copy</button>
 				<button id="paste-btn" class="panel-button">Paste</button>
 				<button id="select-all-btn" class="panel-button">Select All</button>
-				<button id="find-btn" class="panel-button">Find</button>
-				<button id="replace-btn" class="panel-button">Replace</button>
+				<button id="find-btn" class="panel-button">Find & Replace</button>
 			</div>
 		</div>
 
@@ -514,6 +513,47 @@ lsDOCTYPE html>
 				</div>
 			</section>
 		</div>
+
+		<!-- Find/Replace Dialog -->
+		<div class="find-replace-dialog" id="find-replace-dialog" style="display: none;">
+			<div class="find-replace-header">
+				<span class="find-replace-title">Find & Replace</span>
+				<button class="find-close-btn" id="find-close-btn" title="Close (Esc)" aria-label="Close find dialog">&times;</button>
+			</div>
+			<div class="find-replace-body">
+				<!-- Find input row -->
+				<div class="find-input-row">
+					<input type="text" id="find-input" class="find-input" placeholder="Find" aria-label="Find text">
+					<span class="find-match-counter" id="find-match-counter"></span>
+				</div>
+				<!-- Replace input row -->
+				<div class="replace-input-row">
+					<input type="text" id="replace-input" class="replace-input" placeholder="Replace" aria-label="Replace text">
+				</div>
+				<!-- Options row -->
+				<div class="find-options-row">
+					<label class="find-option">
+						<input type="checkbox" id="find-case-sensitive">
+						<span>Case sensitive (Aa)</span>
+					</label>
+					<label class="find-option">
+						<input type="checkbox" id="find-whole-word">
+						<span>Whole word (Ab|)</span>
+					</label>
+					<label class="find-option">
+						<input type="checkbox" id="find-regex">
+						<span>Regex (.*)</span>
+					</label>
+				</div>
+				<!-- Buttons row -->
+				<div class="find-buttons-row">
+					<button class="find-btn" id="find-previous-btn" title="Previous (Shift+Enter)">◀ Previous</button>
+					<button class="find-btn" id="find-next-btn" title="Next (Enter)">Next ▶</button>
+					<button class="find-btn" id="find-replace-btn" title="Replace">Replace</button>
+					<button class="find-btn" id="find-replace-all-btn" title="Replace All">Replace All</button>
+				</div>
+			</div>
+		</div>
 	</div>
 
 </div>
@@ -522,6 +562,7 @@ lsDOCTYPE html>
 <script src="js/shared/panel-manager.js"></script>
 <script src="js/shared/resizable-pane.js"></script>
 <script src="js/shared/scroll-sync.js"></script>
+<script src="js/shared/find-manager.js"></script>
 
 <!-- Markdown modules -->
 <script src="js/markdown/rule-engine.js"></script>

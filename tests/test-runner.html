@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindManager Test Runner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00d9ff;
+            margin-bottom: 30px;
+            font-size: 2em;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #clear-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        #clear-btn:hover {
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+        }
+
+        .summary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #00d9ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
+        }
+
+        .summary h2 {
+            color: #00d9ff;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #00d9ff;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #00d9ff;
+        }
+
+        .stat.passed .stat-value {
+            color: #4ade80;
+        }
+
+        .stat.failed .stat-value {
+            color: #f87171;
+        }
+
+        .stat.rate .stat-value {
+            color: #fbbf24;
+        }
+
+        .results {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .results h2 {
+            color: #00d9ff;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .test-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 4px solid;
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.2s ease;
+        }
+
+        .test-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .test-item.pass {
+            border-left-color: #4ade80;
+        }
+
+        .test-item.fail {
+            border-left-color: #f87171;
+        }
+
+        .test-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+
+        .test-status.pass {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+        }
+
+        .test-status.fail {
+            background: rgba(248, 113, 113, 0.2);
+            color: #f87171;
+        }
+
+        .test-name {
+            color: #e0e0e0;
+            font-size: 1em;
+        }
+
+        .test-details {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .test-details div {
+            margin-bottom: 5px;
+        }
+
+        .expected, .actual {
+            font-family: 'Courier New', monospace;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+            margin-top: 3px;
+        }
+
+        #console-output {
+            background: #000;
+            color: #0f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            border: 2px solid #00d9ff;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #00d9ff;
+            font-size: 1.2em;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00d9ff;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00b8d4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 FindManager Unit Test Suite</h1>
+
+        <div class="controls">
+            <button id="run-tests-btn" onclick="runTests()">▶ Run All Tests</button>
+            <button id="clear-btn" onclick="clearResults()">🗑 Clear Results</button>
+        </div>
+
+        <div id="summary-section" class="summary hidden">
+            <h2>📊 Test Summary</h2>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-label">Total Tests</div>
+                    <div class="stat-value" id="total-tests">0</div>
+                </div>
+                <div class="stat passed">
+                    <div class="stat-label">Passed</div>
+                    <div class="stat-value" id="passed-tests">0</div>
+                </div>
+                <div class="stat failed">
+                    <div class="stat-label">Failed</div>
+                    <div class="stat-value" id="failed-tests">0</div>
+                </div>
+                <div class="stat rate">
+                    <div class="stat-label">Success Rate</div>
+                    <div class="stat-value" id="success-rate">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="results-section" class="results hidden">
+            <h2>📋 Test Results</h2>
+            <div id="test-results"></div>
+        </div>
+
+        <div id="console-section" class="results hidden">
+            <h2>💻 Console Output</h2>
+            <div id="console-output"></div>
+        </div>
+    </div>
+
+    <!-- Load dependencies -->
+    <script src="../js/shared/find-manager.js"></script>
+    <script src="find-manager.test.js"></script>
+
+    <script>
+        let testSuite = null;
+        let originalConsoleLog = console.log;
+        let originalConsoleError = console.error;
+        let consoleOutput = [];
+
+        // Intercept console output
+        function interceptConsole() {
+            consoleOutput = [];
+
+            console.log = function(...args) {
+                consoleOutput.push(args.join(' '));
+                originalConsoleLog.apply(console, args);
+            };
+
+            console.error = function(...args) {
+                consoleOutput.push('ERROR: ' + args.join(' '));
+                originalConsoleError.apply(console, args);
+            };
+        }
+
+        function restoreConsole() {
+            console.log = originalConsoleLog;
+            console.error = originalConsoleError;
+        }
+
+        function runTests() {
+            // Intercept console
+            interceptConsole();
+
+            // Create new test suite
+            testSuite = new FindManagerTests();
+
+            // Run all tests
+            const results = testSuite.runAllTests();
+
+            // Restore console
+            restoreConsole();
+
+            // Display results
+            displaySummary(results);
+            displayResults(results);
+            displayConsole();
+        }
+
+        function displaySummary(results) {
+            const summarySection = document.getElementById('summary-section');
+            summarySection.classList.remove('hidden');
+
+            document.getElementById('total-tests').textContent = results.total;
+            document.getElementById('passed-tests').textContent = results.passed;
+            document.getElementById('failed-tests').textContent = results.failed;
+
+            const successRate = results.total > 0
+                ? ((results.passed / results.total) * 100).toFixed(2)
+                : 0;
+            document.getElementById('success-rate').textContent = successRate + '%';
+        }
+
+        function displayResults(results) {
+            const resultsSection = document.getElementById('results-section');
+            const resultsContainer = document.getElementById('test-results');
+
+            resultsSection.classList.remove('hidden');
+            resultsContainer.innerHTML = '';
+
+            results.results.forEach((result, index) => {
+                const testItem = document.createElement('div');
+                testItem.className = `test-item ${result.status.toLowerCase()}`;
+
+                let html = `
+                    <span class="test-status ${result.status.toLowerCase()}">${result.status}</span>
+                    <span class="test-name">${result.name}</span>
+                `;
+
+                if (result.status === 'FAIL') {
+                    html += `
+                        <div class="test-details">
+                            <div><strong>Expected:</strong></div>
+                            <div class="expected">${escapeHtml(String(result.expected))}</div>
+                            <div><strong>Actual:</strong></div>
+                            <div class="actual">${escapeHtml(String(result.actual))}</div>
+                        </div>
+                    `;
+                }
+
+                testItem.innerHTML = html;
+                resultsContainer.appendChild(testItem);
+            });
+        }
+
+        function displayConsole() {
+            const consoleSection = document.getElementById('console-section');
+            const consoleOutputEl = document.getElementById('console-output');
+
+            consoleSection.classList.remove('hidden');
+            consoleOutputEl.textContent = consoleOutput.join('\n');
+
+            // Auto-scroll to bottom
+            consoleOutputEl.scrollTop = consoleOutputEl.scrollHeight;
+        }
+
+        function clearResults() {
+            document.getElementById('summary-section').classList.add('hidden');
+            document.getElementById('results-section').classList.add('hidden');
+            document.getElementById('console-section').classList.add('hidden');
+            consoleOutput = [];
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Run tests automatically on load
+        window.addEventListener('load', () => {
+            console.log('Test runner loaded. Click "Run All Tests" to start.');
+        });
+    </script>
+</body>
+</html>

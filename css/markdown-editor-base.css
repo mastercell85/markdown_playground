@@ -1264,6 +1264,196 @@ header[role="banner"] {
 }
 
 /* ============================================================================
+   FIND/REPLACE DIALOG
+   ============================================================================ */
+
+.find-replace-dialog {
+    position: fixed !important;
+    /* Position will be set dynamically by JavaScript - centered horizontally, upper area */
+    width: 500px;
+    background: var(--tab-dropdown-bg, rgba(20, 20, 25, 0.98));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    z-index: 999999 !important; /* Force highest z-index - must be above all panels and menus */
+    font-family: var(--font-family-base);
+    animation: findDialogSlideIn 0.2s ease-out;
+    cursor: default;
+}
+
+@keyframes findDialogSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header */
+.find-replace-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px 8px 0 0;
+    cursor: move; /* Indicate draggable */
+    user-select: none; /* Prevent text selection while dragging */
+}
+
+.find-replace-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--preview-text, rgba(255, 255, 255, 0.9));
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.find-close-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.find-close-btn:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
+/* Body */
+.find-replace-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Input rows */
+.find-input-row,
+.replace-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.find-input,
+.replace-input {
+    flex: 1;
+    padding: 8px 12px;
+    background: var(--textarea-bg, rgba(0, 0, 0, 0.4));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: var(--textarea-text, rgba(255, 255, 255, 0.9));
+    font-size: 14px;
+    font-family: var(--font-family-mono);
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.find-input:focus,
+.replace-input:focus {
+    border-color: var(--md-link-color, rgba(100, 150, 255, 0.6));
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.find-input::placeholder,
+.replace-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.find-match-counter {
+    font-size: 12px;
+    color: var(--preview-text, rgba(255, 255, 255, 0.6));
+    min-width: 60px;
+    text-align: center;
+    font-family: var(--font-family-mono);
+}
+
+/* Options row */
+.find-options-row {
+    display: flex;
+    gap: 16px;
+    padding: 4px 0;
+}
+
+.find-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--preview-text, rgba(255, 255, 255, 0.7));
+    user-select: none;
+}
+
+.find-option input[type="checkbox"] {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+.find-option:hover {
+    color: var(--md-link-hover, rgba(255, 255, 255, 0.9));
+}
+
+/* Buttons row */
+.find-buttons-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.find-btn {
+    flex: 1;
+    padding: 8px 12px;
+    background: rgba(60, 60, 70, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: var(--preview-text, rgba(255, 255, 255, 0.9));
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.find-btn:hover {
+    background: rgba(80, 80, 90, 0.9);
+    border-color: var(--md-link-color, rgba(255, 255, 255, 0.3));
+    color: var(--md-link-hover, rgba(255, 255, 255, 1));
+}
+
+.find-btn:active {
+    background: rgba(50, 50, 60, 0.9);
+}
+
+.find-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Highlight styles for matches in textarea */
+.find-highlight {
+    background-color: rgba(255, 200, 0, 0.3);
+}
+
+.find-highlight-current {
+    background-color: rgba(255, 150, 0, 0.6);
+}
+
+/* ============================================================================
    RESPONSIVE DESIGN
    ============================================================================ */
 

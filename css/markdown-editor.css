@@ -66,6 +66,7 @@ header {
     z-index: 1;
     width: 100% !important;
     max-width: 100% !important;
+    height: 100%; /* Ensure it fills the grid row */
     margin: 0 !important;
     padding: 0 !important;
     overflow: hidden;
@@ -684,8 +685,10 @@ body.typora-mode .document-tab-new:hover {
 .editor-container {
     display: flex;
     flex-direction: row;
+    align-items: stretch; /* Force all children to same height */
     width: 100%;
     height: 100%;
+    min-height: 0; /* Critical for flex children to not overflow parent */
     gap: 0;
     margin: 0;
     padding: 0;
@@ -707,97 +710,331 @@ body.typora-mode .document-tab-new:hover {
     display: flex;
     flex-direction: column;
     min-width: 0;
+    min-height: 0; /* Allow shrinking in flex context */
     background: rgba(50, 50, 50, 0.8);
     overflow: hidden;
     border: none;
+    position: relative;
+}
+
+/* Hide LCARS frame elements by default - themed CSS files can override */
+.lcars-frame {
+    display: none !important;
+}
+
+/* Default theme labels - standalone, not using LCARS frame */
+.editor-input::before {
+    content: "INPUT";
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    pointer-events: none;
+}
+
+.editor-preview::before {
+    content: "PREVIEW";
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    pointer-events: none;
 }
 
 .editor-section-content {
     flex: 1;
-    padding: 0 20px 0 20px;
+    padding: 0;
     overflow: auto;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    min-height: 0;
 }
 
 /* Input Area */
 .editor-input {
-    flex: 1;
+    flex: 1 1 0;
     min-width: 200px;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+    min-height: 0; /* Allow proper flex behavior */
+    position: relative;
+    overflow: hidden;
 }
 
 .editor-input .editor-section-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     padding: 0;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+    overflow: hidden;
 }
 
-.editor-section-content .typora-write {
-    width: 100%;
-    height: 100%;
+.editor-input #write-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     flex-direction: column;
-    flex: 1;
-    margin: 0;
-    padding: 0;
 }
 
-.editor-section-content .typora-write .markdown-textarea,
-.editor-section-content .typora-write .markdown-output {
+.editor-input .markdown-textarea {
     flex: 1;
-    margin: 0;
+    padding: 1rem;
+    overflow-y: auto;
+    overflow-x: hidden;
     min-height: 0;
 }
 
-/* Resizable Divider */
+/* Editor Gap - center column between input and preview */
+.editor-gap {
+    width: 240px;
+    min-width: 240px;
+    flex: 0 0 240px; /* Don't grow or shrink, fixed at 240px */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    position: relative;
+    z-index: 20;
+}
+
+/* Resizable Divider - now a horizontal bar at top of gap */
 .editor-divider {
-    width: 4px;
+    width: 100%;
+    height: 28px;
     background: rgba(255, 255, 255, 0.1);
     cursor: col-resize;
     position: relative;
     transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .editor-divider:hover,
 .editor-divider.dragging {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.25);
 }
 
-.editor-divider::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: -2px;
-    right: -2px;
+/* Double-ended arrow for divider - spans full width */
+.divider-grip {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.4);
+    transition: color 0.2s ease;
+    user-select: none;
+    letter-spacing: -2px;
+}
+
+.editor-divider:hover .divider-grip,
+.editor-divider.dragging .divider-grip {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Gap Toolbar - area for buttons below the divider */
+.gap-toolbar {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 4px;
+    gap: 8px;
+}
+
+/* Divider Sync Button - now in gap toolbar */
+.divider-sync-btn {
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(100, 100, 110, 0.6);
+    border-radius: 50%;
+    background: rgba(40, 40, 45, 0.95);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    padding: 0;
+    transition: all 0.2s ease;
+    opacity: 0.7;
+}
+
+/* Off state - muted/greyed out appearance */
+.divider-sync-btn .sync-chain {
+    filter: grayscale(80%);
+    opacity: 0.7;
+    transition: all 0.2s ease;
+}
+
+.divider-sync-btn:hover {
+    opacity: 1;
+    background: rgba(60, 60, 65, 0.95);
+    border-color: rgba(150, 150, 160, 0.8);
+}
+
+.divider-sync-btn:hover .sync-chain {
+    filter: grayscale(40%);
+    opacity: 0.9;
+}
+
+/* Active/On state - bright blue glow */
+.divider-sync-btn.sync-active {
+    background: rgba(74, 158, 255, 0.2);
+    border-color: #4a9eff;
+    box-shadow: 0 0 8px rgba(74, 158, 255, 0.5);
+    opacity: 1;
+}
+
+.divider-sync-btn.sync-active .sync-chain {
+    filter: grayscale(0%) brightness(1.1);
+    opacity: 1;
+}
+
+.divider-sync-btn.sync-active:hover {
+    background: rgba(74, 158, 255, 0.35);
+    box-shadow: 0 0 12px rgba(74, 158, 255, 0.7);
+}
+
+.sync-chain {
+    font-size: 12px;
+    line-height: 1;
+}
+
+/* Sync Toggle Button in View Panel */
+.sync-toggle-btn {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-start;
+}
+
+.sync-toggle-btn .sync-icon {
+    font-size: 14px;
+    opacity: 0.5;
+    filter: grayscale(80%);
+    transition: all 0.2s ease;
+}
+
+.sync-toggle-btn.sync-active .sync-icon {
+    opacity: 1;
+    filter: grayscale(0%);
+    color: #4a9eff;
+}
+
+/* Sync status indicator text */
+.sync-toggle-btn::after {
+    content: 'OFF';
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-left: auto;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.sync-toggle-btn.sync-active::after {
+    content: 'ON';
+    color: #4a9eff;
+}
+
+.sync-toggle-btn .sync-label {
+    flex: 1;
+}
+
+.sync-toggle-btn.sync-active {
+    border-color: #4a9eff;
+    color: #4a9eff;
+}
+
+/* Sync Offset Control */
+.sync-offset-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.sync-offset-control label {
+    white-space: nowrap;
+}
+
+.sync-offset-control input[type="number"] {
+    width: 60px;
+    padding: 4px 6px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    text-align: center;
+}
+
+.sync-offset-control input[type="number"]:focus {
+    outline: none;
+    border-color: #4a9eff;
+}
+
+.sync-offset-hint {
+    opacity: 0.5;
+    font-size: 11px;
 }
 
 /* Preview Area */
 .editor-preview {
-    flex: 1;
+    flex: 1 1 0;
     min-width: 200px;
+    min-height: 0; /* Allow proper flex behavior */
     background: rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
 .editor-preview .editor-section-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.editor-preview #write {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .editor-preview .markdown-output {
-    flex: 1;
-    height: 100%;
+    width: 100%;
 }
 
 .markdown-textarea {
@@ -825,13 +1062,18 @@ body.typora-mode .document-tab-new:hover {
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: 0;
+    padding: 10px 0 0 0;
     color: #fff;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 1.6;
     overflow: auto;
     box-sizing: border-box;
+}
+
+/* Prevent margin collapse on first element */
+.markdown-output > *:first-child {
+    margin-top: 0;
 }
 
 /* Markdown rendered styles */
@@ -1197,7 +1439,7 @@ body.typora-mode .document-tab-new:hover {
 /* Layout Modes */
 .editor-container[data-layout="split"] .editor-input,
 .editor-container[data-layout="split"] .editor-preview,
-.editor-container[data-layout="split"] .editor-divider {
+.editor-container[data-layout="split"] .editor-gap {
     display: flex;
 }
 
@@ -1207,7 +1449,7 @@ body.typora-mode .document-tab-new:hover {
 }
 
 .editor-container[data-layout="editor"] .editor-preview,
-.editor-container[data-layout="editor"] .editor-divider {
+.editor-container[data-layout="editor"] .editor-gap {
     display: none;
 }
 
@@ -1217,7 +1459,7 @@ body.typora-mode .document-tab-new:hover {
 }
 
 .editor-container[data-layout="preview"] .editor-input,
-.editor-container[data-layout="preview"] .editor-divider {
+.editor-container[data-layout="preview"] .editor-gap {
     display: none;
 }
 

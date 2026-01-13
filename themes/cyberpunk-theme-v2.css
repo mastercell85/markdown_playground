@@ -381,10 +381,168 @@
     font-weight: 700;
 }
 
-/* Cyberpunk divider glow */
+/* Cyberpunk editor gap styling */
+[data-theme="cyberpunk"] .editor-gap {
+    width: 80px;
+    min-width: 80px;
+    flex: 0 0 80px !important;  /* Force fixed width, don't shrink */
+    background: linear-gradient(180deg,
+        rgba(139, 0, 255, 0.1) 0%,
+        rgba(26, 26, 46, 0.8) 20%,
+        rgba(26, 26, 46, 0.8) 80%,
+        rgba(0, 245, 255, 0.1) 100%
+    );
+    border-left: 1px solid var(--neon-purple);
+    border-right: 1px solid var(--neon-cyan);
+    z-index: 10;  /* Ensure gap is visible above any overlapping elements */
+}
+
+/* Cyberpunk divider (resize handle at top) - spans full width */
+[data-theme="cyberpunk"] .editor-divider {
+    width: 100%;
+    height: 32px;
+    background: linear-gradient(90deg,
+        var(--neon-purple) 0%,
+        rgba(139, 0, 255, 0.3) 50%,
+        var(--neon-cyan) 100%
+    );
+}
+
 [data-theme="cyberpunk"] .editor-divider:hover,
 [data-theme="cyberpunk"] .editor-divider.dragging {
-    box-shadow: 0 0 20px var(--glow-purple);
+    background: linear-gradient(90deg,
+        var(--neon-purple) 0%,
+        rgba(139, 0, 255, 0.4) 20%,
+        rgba(0, 245, 255, 0.4) 80%,
+        var(--neon-cyan) 100%
+    );
+    box-shadow: 0 0 10px var(--glow-purple);
+}
+
+[data-theme="cyberpunk"] .divider-grip {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 8px var(--glow-cyan);
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+[data-theme="cyberpunk"] .editor-divider:hover .divider-grip {
+    color: var(--neon-pink);
+    text-shadow: 0 0 10px var(--glow-pink);
+}
+
+/* Cyberpunk gap toolbar */
+[data-theme="cyberpunk"] .gap-toolbar {
+    background: transparent;
+}
+
+/* Cyberpunk sync button in gap toolbar - spans full width */
+[data-theme="cyberpunk"] .divider-sync-btn {
+    background: var(--cyber-grid);
+    border: 2px solid var(--neon-purple);
+    opacity: 1;
+    width: 100%;
+    height: 30px;
+    border-radius: 0;
+}
+
+/* Hide the emoji and use a custom symbol for off state */
+[data-theme="cyberpunk"] .divider-sync-btn .sync-chain {
+    font-size: 14px;
+    filter: grayscale(100%) brightness(0.6);
+}
+
+
+[data-theme="cyberpunk"] .divider-sync-btn:hover {
+    background: var(--cyber-black);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 10px var(--glow-cyan);
+}
+
+[data-theme="cyberpunk"] .divider-sync-btn:hover .sync-chain {
+    filter: grayscale(0%) brightness(1);
+}
+
+
+/* Active/On state - bright neon cyan glow */
+[data-theme="cyberpunk"] .divider-sync-btn.sync-active {
+    background: rgba(0, 245, 255, 0.15);
+    border-color: var(--neon-cyan);
+    box-shadow:
+        0 0 10px var(--glow-cyan),
+        0 0 20px var(--glow-cyan),
+        inset 0 0 10px rgba(0, 245, 255, 0.2);
+}
+
+[data-theme="cyberpunk"] .divider-sync-btn.sync-active .sync-chain {
+    filter: grayscale(0%) brightness(1.2);
+}
+
+
+[data-theme="cyberpunk"] .divider-sync-btn.sync-active:hover {
+    box-shadow:
+        0 0 15px var(--glow-cyan),
+        0 0 30px var(--glow-cyan),
+        inset 0 0 15px rgba(0, 245, 255, 0.3);
+}
+
+/* Cyberpunk sync toggle button in panel */
+[data-theme="cyberpunk"] .sync-toggle-btn .sync-icon {
+    filter: grayscale(100%) brightness(0.5);
+}
+
+[data-theme="cyberpunk"] .sync-toggle-btn::after {
+    color: var(--text-muted);
+}
+
+[data-theme="cyberpunk"] .sync-toggle-btn.sync-active {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    text-shadow: 0 0 5px var(--glow-cyan);
+}
+
+[data-theme="cyberpunk"] .sync-toggle-btn.sync-active .sync-icon {
+    color: var(--neon-cyan);
+    filter: grayscale(0%) brightness(1.2);
+}
+
+[data-theme="cyberpunk"] .sync-toggle-btn.sync-active::after {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 5px var(--glow-cyan);
+}
+
+/* Cyberpunk sync offset control styling */
+[data-theme="cyberpunk"] .sync-offset-control {
+    background: rgba(26, 26, 46, 0.8);
+    border: 1px solid var(--neon-purple);
+    border-radius: 0;
+}
+
+[data-theme="cyberpunk"] .sync-offset-control label {
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+}
+
+[data-theme="cyberpunk"] .sync-offset-control input[type="number"] {
+    background: var(--cyber-black);
+    border: 1px solid var(--neon-cyan);
+    border-radius: 0;
+    color: var(--neon-cyan);
+}
+
+[data-theme="cyberpunk"] .sync-offset-control input[type="number"]:focus {
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 5px var(--glow-pink);
+}
+
+[data-theme="cyberpunk"] .sync-offset-hint {
+    color: var(--text-muted);
 }
 
 /* Cyberpunk help panel - wider for larger fonts and decorative prefixes */
@@ -406,3 +564,154 @@
 [data-theme="cyberpunk"] .help-preview h2 { font-size: 1.2rem !important; }
 [data-theme="cyberpunk"] .help-preview h3 { font-size: 1.1rem !important; }
 [data-theme="cyberpunk"] .help-preview h4 { font-size: 1rem !important; }
+
+/* ============================================================================
+   CYBERPUNK INPUT/PREVIEW LABELS
+   Position labels to the right, out of the workspace
+   ============================================================================ */
+
+/* Show the LCARS frame in cyberpunk theme */
+[data-theme="cyberpunk"] .lcars-frame {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: auto;
+    height: 2rem;
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Hide the decorative blocks - only show the title */
+[data-theme="cyberpunk"] .lcars-frame .lcars-sidebar,
+[data-theme="cyberpunk"] .lcars-frame .lcars-topbar,
+[data-theme="cyberpunk"] .lcars-frame .lcars-corner,
+[data-theme="cyberpunk"] .lcars-frame .lcars-block-grey,
+[data-theme="cyberpunk"] .lcars-frame .lcars-block-orange,
+[data-theme="cyberpunk"] .lcars-frame .lcars-block-pink {
+    display: none;
+}
+
+/* Position header blocks to the right */
+[data-theme="cyberpunk"] .lcars-frame .lcars-header-blocks {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Cyberpunk-styled title labels */
+[data-theme="cyberpunk"] .lcars-frame .lcars-title {
+    height: 2rem;
+    background: transparent;
+    color: var(--neon-cyan);
+    font-family: 'Orbitron', 'Rajdhani', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 2rem;
+    padding: 0 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    opacity: 0.6;
+    text-shadow: 0 0 5px var(--glow-cyan);
+}
+
+/* Ensure editor sections have relative positioning for the labels */
+[data-theme="cyberpunk"] .editor-section {
+    position: relative;
+}
+
+/* Adjust content to not be blocked by the label */
+[data-theme="cyberpunk"] .editor-section-content {
+    margin-top: 0;
+}
+
+/* Force input and preview panels to shrink and leave room for the gap */
+[data-theme="cyberpunk"] .editor-input,
+[data-theme="cyberpunk"] .editor-preview {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* Preview panel needs relative positioning and hidden overflow */
+[data-theme="cyberpunk"] .editor-preview {
+    position: relative;
+    overflow: hidden !important;
+}
+
+/* Preview content - absolute positioning to push scrollbar flush with right edge */
+[data-theme="cyberpunk"] .editor-preview .editor-section-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+/* The #write container holds the scrollbar - make it fill and scroll */
+[data-theme="cyberpunk"] .editor-preview #write {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    padding-right: 0;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+}
+
+/* Content inside #write needs right padding for readable text */
+[data-theme="cyberpunk"] .editor-preview #write .markdown-output {
+    padding-right: 1rem;
+}
+
+/* ============================================================================
+   INPUT PANEL - MATCHING HEIGHT WITH PREVIEW
+   Apply same absolute positioning technique for consistent heights
+   ============================================================================ */
+
+/* Input panel needs relative positioning and hidden overflow */
+[data-theme="cyberpunk"] .editor-input {
+    position: relative;
+    overflow: hidden !important;
+}
+
+/* Input content - absolute positioning to match preview panel */
+[data-theme="cyberpunk"] .editor-input .editor-section-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+/* The #write-input container holds the scrollbar - make it fill and scroll */
+[data-theme="cyberpunk"] .editor-input #write-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Textarea fills the container with proper padding for text */
+[data-theme="cyberpunk"] .editor-input .markdown-textarea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    resize: none;
+}

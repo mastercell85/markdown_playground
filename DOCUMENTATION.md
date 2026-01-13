@@ -100,15 +100,36 @@ Website playground/
 - Document persistence across sessions
 
 ### Layout Options
-- **Split View**: Editor and preview side-by-side (equal height panels)
+- **Split View**: Editor and preview side-by-side with equal height panels
 - **Editor Only**: Full-width editor
 - **Preview Only**: Full-width preview
-- Resizable divider between panes (located at top of center gap)
+- Resizable divider between panes (horizontal bar at top of center gap, 32px height)
+- 80px center gap separates input and preview panels with subtle border styling
 - Input and preview panels always match in height across all themes
+
+**Equal Height Panel Implementation:**
+The editor container uses Flexbox with `align-items: stretch` to ensure input and preview panels always match in height:
+
+- **Base Layout**: `.editor-container` uses `display: flex` with `align-items: stretch`
+- **Panel Structure**: Input, gap, and preview sections all stretch to full container height
+- **CSS Pseudo-elements**: INPUT and PREVIEW label bars are created with `::before` elements
+  - Full-width (100%) horizontal bars at top of each panel
+  - Semi-transparent background: `rgba(0, 0, 0, 0.3)`
+  - Contain centered text labels with padding
+  - Positioned using absolute positioning relative to `.editor-section`
+- **Center Gap**: Fixed 80px width column between panels
+  - Dark semi-transparent background: `rgba(0, 0, 0, 0.6)`
+  - Subtle borders on left and right: `rgba(255, 255, 255, 0.1)`
+  - Contains 32px horizontal divider bar at top with resize grip
+  - Flexbox column layout for vertical organization
+- **Theme Consistency**: All themes (Default, Cyberpunk, LCARS) use the same gap and label styling
+- **LCARS Theme**: `.lcars-frame` elements are hidden in default theme using `display: none !important`
 
 **Resize Behavior:**
 - Only the left (input) pane gets an explicit width during resize
 - Right (preview) pane uses `flex: 1` to fill remaining space
+- Divider positioned at top of center gap (32px height, full-width horizontal bar)
+- Resize grip provides visual feedback with opacity changes on hover
 - This prevents right edge shifting during resize operations
 - Theme-specific scrollbar positioning ensures scrollbars are flush with panel edges
 

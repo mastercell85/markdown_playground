@@ -963,6 +963,26 @@ body {
     color: rgba(255, 255, 255, 0.8);
 }
 
+/* Centering animation feedback */
+.editor-divider.centering {
+    animation: centeringPulse 0.3s ease-in-out;
+}
+
+.editor-divider.centering .divider-grip {
+    color: rgba(255, 255, 255, 1);
+}
+
+@keyframes centeringPulse {
+    0%, 100% {
+        background: var(--divider-bg);
+        box-shadow: none;
+    }
+    50% {
+        background: var(--divider-hover-bg);
+        box-shadow: 0 0 10px rgba(100, 150, 255, 0.5);
+    }
+}
+
 /* Editor Gap - center column between input and preview */
 .editor-gap {
     width: 80px;

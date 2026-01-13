@@ -235,10 +235,12 @@ class FindManagerTests {
             fm2.matches[0].start
         );
 
+        // Calculate correct position: 'test testing fastest protest test'
+        // Positions: 0-3 (test), 5-11 (testing), 13-19 (fastest), 21-27 (protest), 29-32 (test)
         this.assert(
-            fm2.matches[1].start === 31,
-            'With whole word: Second match at position 31',
-            31,
+            fm2.matches[1].start === 29,
+            'With whole word: Second match at position 29',
+            29,
             fm2.matches[1].start
         );
 
@@ -398,8 +400,10 @@ class FindManagerTests {
         );
 
         // Navigate to next match
+        // First call visits current match (due to currentMatchVisited flag)
         findManager.findNext();
-        findManager.updateMatchCounter();
+        // Second call advances to next match
+        findManager.findNext();
 
         this.assert(
             matchCounter.textContent === '2 of 5',
@@ -639,7 +643,7 @@ class FindManagerTests {
         this.testInvalidRegex();
         this.testOverlappingMatches();
 
-        this.printSummary();
+        return this.printSummary();
     }
 
     /**

@@ -524,8 +524,8 @@ class FindManager {
         this.currentMatchIndex = -1;
         this.updateMatchCounter();
 
-        // Show confirmation
-        alert(`Replaced ${count} occurrence(s).`);
+        // Log confirmation (removed alert to not block automated tests)
+        console.log(`FindManager: Replaced ${count} occurrence(s).`);
     }
 
     /**

@@ -9,6 +9,7 @@
     // Module-level variables
     let themeLoader = null;
     let scrollSync = null;
+    let findManager = null;
 
     // Initialize when DOM is ready
     function init() {
@@ -30,6 +31,9 @@
 
         // Initialize resizable divider
         initializeResizableDivider();
+
+        // Initialize find manager
+        initializeFindManager();
     }
 
     /**
@@ -381,26 +385,11 @@
      * Handle Find action
      */
     function handleFind() {
-        const inputElement = document.getElementById('markdown-input');
-        if (!inputElement) return;
-
-        // Focus the textarea
-        inputElement.focus();
-
-        // Prompt user for search text
-        const searchText = prompt('Find:');
-        if (!searchText) return;
-
-        const content = inputElement.value;
-        const index = content.indexOf(searchText);
-
-        if (index !== -1) {
-            // Select the found text
-            inputElement.setSelectionRange(index, index + searchText.length);
-            inputElement.focus();
-        } else {
-            alert(`"${searchText}" not found.`);
+        if (!findManager) {
+            initializeFindManager();
         }
+
+        findManager.open();
     }
 
     /**
@@ -1576,6 +1565,25 @@
         // Expose to global scope
         window.MarkdownEditor = window.MarkdownEditor || {};
         window.MarkdownEditor.resizablePane = resizablePane;
+    }
+
+    /**
+     * Initialize find manager
+     */
+    function initializeFindManager() {
+        if (findManager) return;
+
+        findManager = new FindManager({
+            textareaSelector: '#markdown-input',
+            dialogSelector: '#find-replace-dialog'
+        });
+
+        findManager.init();
+
+        // Expose globally for debugging
+        window.MarkdownEditor.findManager = findManager;
+
+        console.log('FindManager: Initialized');
     }
 
     // Initialize when DOM is loaded

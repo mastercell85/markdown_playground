@@ -671,16 +671,22 @@ This section tracks features planned for future implementation.
 
 ### Editor Enhancements
 
-**Enhanced Find Function**
+**Enhanced Find Function** ✓ IMPLEMENTED
+- Unified Find & Replace dialog with theme-aware styling
 - Find all occurrences of search term in document
 - Next/Previous navigation buttons to jump between matches
-- Highlight all matches with different color for current match
-- Auto-scroll to bring current match into view
-- Match counter (e.g., "3 of 15")
-- Case-sensitive toggle
-- Whole word match toggle
-- Regular expression support
+- Highlight and auto-scroll to current match
+- Match counter display (e.g., "3 of 15")
+- Case-sensitive toggle (Aa)
+- Whole word match toggle (Ab|)
+- Regular expression support (.*)
 - Replace and Replace All functionality
+- Draggable dialog positioned in upper-center viewport
+- Keyboard shortcuts: Ctrl+F to open, Escape to close, Enter for Next, Shift+Enter for Previous, F3/Shift+F3
+- Implemented in `js/shared/find-manager.js` with FindManager class
+- Theme-aware CSS in `css/markdown-editor-base.css`
+- Comprehensive unit test suite in `tests/find-manager.test.js` (15 tests)
+- Visual test runner at `tests/test-runner.html`
 
 **Double-Click Center Split** ✓ IMPLEMENTED
 - Double-click the divider grip to instantly center the split

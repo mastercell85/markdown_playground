@@ -574,6 +574,552 @@ Requires modern JavaScript (ES6+) and CSS Grid/Flexbox support.
 
 ---
 
+## Implementation Planning
+
+This section documents planned features and architectural decisions made during the design phase.
+
+### Phase 1: Settings/Preferences System - Planning Session
+
+**Status:** IN PROGRESS - Question 4 of 10
+**Session Date:** January 13, 2026
+
+This section contains detailed architectural decisions for implementing a centralized settings/preferences system. Planning uses a systematic Q&A approach to ensure all design decisions are documented before implementation.
+
+---
+
+#### Architecture Overview
+
+**Purpose:** Create a centralized, validated, persistent settings system that all modules can use for user preferences.
+
+**Core Requirements:**
+- Type-safe settings with runtime validation
+- Module-based defaults (co-located with feature code)
+- localStorage persistence with schema versioning
+- Clean API for reading/writing settings
+- Support for migrations between versions
+
+---
+
+#### ✅ Decision 1: Data Structure (Q1.1)
+
+**Chosen Approach:** Nested/Namespaced Structure (Option B)
+
+**Structure:**
+```javascript
+{
+  version: 1,
+  settings: {
+    editor: {
+      fontSize: 14,
+      lineHeight: 1.5,
+      theme: 'default',
+      wordWrap: true,
+      tabSize: 2
+    },
+    view: {
+      mode: 'split',
+      splitPosition: 50,
+      zoom: 100
+    },
+    scrollSync: {
+      enabled: true,
+      offset: 3
+    },
+    theme: {
+      current: 'default',
+      tabMenu: 'steel'
+    },
+    gapMenu: {
+      buttons: [...]
+    }
+  }
+}
+```
+
+**Rationale:**
+- Logical organization by module/feature
+- Prevents naming conflicts across modules
+- Easier to add new modules without restructuring
+- Clear ownership of settings (each module manages its namespace)
+- Better than flat structure (no key collision) or fully nested (not as maintainable)
+
+**Advantages:**
+- Each module has its own namespace (`editor.*`, `view.*`, etc.)
+- Easy to see which settings belong to which feature
+- Adding new modules doesn't require refactoring existing code
+- Settings objects can be passed directly to modules
+
+**Rejected Alternatives:**
+- Flat with Prefixes: Would create `editor-fontSize` keys (harder to group/iterate)
+- Completely Flat: No organization, prone to key collisions
+
+---
+
+#### ✅ Decision 2: Schema Versioning (Q1.2)
+
+**Chosen Approach:** Include schema versioning from Phase 1
+
+**Implementation:**
+```javascript
+{
+  version: 1,  // Schema version number
+  settings: { ... }
+}
+```
+
+**Migration Strategy:**
+```javascript
+migrate(oldVersion, newVersion) {
+  if (oldVersion === 1 && newVersion === 2) {
+    // Example: Restructure theme settings
+    this.settings.appearance = {
+      theme: this.settings.theme,
+      ...this.settings.editor
+    };
+    delete this.settings.theme;
+    delete this.settings.editor;
+    this.settings.version = 2;
+  }
+}
+```
+
+**Rationale:**
+- Adding versioning later is much harder than including it from the start
+- Enables safe schema evolution as app grows
+- Allows automatic migration of user settings when upgrading app
+- Prevents breaking changes from losing user preferences
+
+**Use Cases:**
+- Renaming settings keys
+- Moving settings to different namespaces
+- Changing data types (string → number, etc.)
+- Removing deprecated settings
+
+---
+
+#### ✅ Decision 3: Default Values & Validation (Q2.1)
+
+**Chosen Approach:** Module-Based Defaults (Option B)
+
+**Implementation Pattern:**
+Each module provides its own defaults and validation rules:
+
+```javascript
+class EditorManager {
+  /**
+   * Returns default settings for the editor
+   */
+  static getDefaultSettings() {
+    return {
+      fontSize: 14,
+      lineHeight: 1.5,
+      theme: 'default',
+      wordWrap: true,
+      tabSize: 2
+    };
+  }
+
+  /**
+   * Returns validation schema
+   */
+  static getSettingsSchema() {
+    return {
+      fontSize: {
+        type: 'number',
+        min: 8,
+        max: 72,
+        required: true
+      },
+      lineHeight: {
+        type: 'number',
+        min: 1.0,
+        max: 3.0,
+        required: true
+      },
+      theme: {
+        type: 'string',
+        enum: ['default', 'dark', 'cyberpunk', 'steel'],
+        required: true
+      },
+      wordWrap: {
+        type: 'boolean',
+        required: true
+      },
+      tabSize: {
+        type: 'number',
+        min: 2,
+        max: 8,
+        required: true
+      }
+    };
+  }
+
+  /**
+   * Validates loaded settings against schema
+   */
+  static validateSettings(loadedSettings) {
+    const schema = this.getSettingsSchema();
+    const defaults = this.getDefaultSettings();
+    const errors = [];
+    const sanitized = {};
+
+    for (const [key, rules] of Object.entries(schema)) {
+      const value = loadedSettings[key];
+
+      // Type validation
+      if (value !== undefined && typeof value !== rules.type) {
+        errors.push(`Invalid type for ${key}`);
+        sanitized[key] = defaults[key];
+        continue;
+      }
+
+      // Range validation for numbers
+      if (rules.type === 'number' && value !== undefined) {
+        if (rules.min !== undefined && value < rules.min) {
+          errors.push(`${key} below minimum`);
+          sanitized[key] = defaults[key];
+          continue;
+        }
+        if (rules.max !== undefined && value > rules.max) {
+          errors.push(`${key} above maximum`);
+          sanitized[key] = defaults[key];
+          continue;
+        }
+      }
+
+      // Enum validation
+      if (rules.enum && !rules.enum.includes(value)) {
+        errors.push(`Invalid value for ${key}`);
+        sanitized[key] = defaults[key];
+        continue;
+      }
+
+      // Passed validation
+      sanitized[key] = value;
+    }
+
+    return {
+      valid: errors.length === 0,
+      errors: errors,
+      sanitized: sanitized
+    };
+  }
+}
+```
+
+**SettingsManager Integration:**
+```javascript
+class SettingsManager {
+  constructor() {
+    this.modules = [
+      EditorManager,
+      ViewManager,
+      ThemeManager,
+      ScrollSyncManager
+    ];
+    this.settings = this.loadSettings();
+  }
+
+  loadSettings() {
+    // Get defaults from all modules
+    const allDefaults = {};
+    this.modules.forEach(module => {
+      const moduleName = this.getModuleName(module);
+      allDefaults[moduleName] = module.getDefaultSettings();
+    });
+
+    // Load from localStorage
+    let rawSettings = {};
+    try {
+      const stored = localStorage.getItem('markdownEditorSettings');
+      if (stored) {
+        rawSettings = JSON.parse(stored);
+      }
+    } catch (error) {
+      console.error('Failed to parse settings:', error);
+      return { version: 1, settings: allDefaults };
+    }
+
+    // Validate each module's settings
+    const validatedSettings = {};
+    this.modules.forEach(module => {
+      const moduleName = this.getModuleName(module);
+      const loadedModuleSettings = rawSettings.settings?.[moduleName] || {};
+
+      const validationResult = module.validateSettings(loadedModuleSettings);
+
+      if (!validationResult.valid) {
+        console.warn(`Validation errors for ${moduleName}:`, validationResult.errors);
+      }
+
+      validatedSettings[moduleName] = validationResult.sanitized;
+    });
+
+    return {
+      version: rawSettings.version || 1,
+      settings: validatedSettings
+    };
+  }
+}
+```
+
+**Rationale:**
+- **Co-location:** Defaults live with the code that uses them
+- **Modularity:** Each module is self-contained and manages its own settings
+- **Scalability:** Adding new modules doesn't require editing a central config
+- **Type Safety:** Each module validates and documents its own settings
+- **Testability:** Can test each module's defaults/validation independently
+
+**Advantages:**
+- No orphaned settings when features are removed
+- Defaults always in sync with module requirements
+- Validation happens automatically on load
+- Invalid settings replaced with safe defaults
+
+**Rejected Alternatives:**
+- Centralized Default Object: Would create maintenance burden, orphaned configs
+- Lazy/On-Demand Defaults: Would scatter defaults across codebase inconsistently
+
+---
+
+#### ✅ Decision 4: Settings Access API (Q3.1)
+
+**Chosen Approach:** Hybrid - Direct Read, Method Write (Option C)
+
+**Three-Tier Access Control:**
+
+| Role | Access Level | Usage | Reason |
+|------|-------------|-------|--------|
+| **Employee** (Application Code) | Read-only | `settings.editor.fontSize` | Need info frequently, can't break anything by reading |
+| **Supervisor** (`set()` method) | Validate & write | `set('editor.fontSize', 16)` | Enforces rules, validates changes |
+| **Owner** (SettingsManager internals) | Full structural control | `migrate()`, `importSettings()`, `resetToDefaults()` | Architectural operations |
+
+**Implementation:**
+```javascript
+class SettingsManager {
+  constructor() {
+    this.modules = [...];
+    this.settings = this.loadSettings(); // Owner loads & validates
+  }
+
+  // ===== EMPLOYEE ACCESS (Reading - Direct) =====
+  // Direct property access for reads
+  // Usage: const fontSize = settingsManager.settings.editor.fontSize
+
+  // ===== SUPERVISOR ACCESS (Writing - Validated) =====
+  /**
+   * Validates and updates a single setting
+   * @param {string} path - Dot-notation path (e.g., 'editor.fontSize')
+   * @param {*} value - New value to set
+   */
+  set(path, value) {
+    const [module, setting] = path.split('.');
+
+    // Get module manager
+    const Manager = this.modules.find(m =>
+      this.getModuleName(m) === module
+    );
+
+    if (!Manager) {
+      console.error(`Unknown module: ${module}`);
+      return false;
+    }
+
+    // Validate with module's schema
+    const validation = Manager.validateSetting(setting, value);
+
+    if (!validation.valid) {
+      console.error(`Validation failed: ${validation.error}`);
+      return false;
+    }
+
+    // Update setting
+    this.settings.settings[module][setting] = value;
+
+    // Auto-save (will be debounced - see Q4)
+    this.save();
+
+    // Notify listeners
+    this.notifyListeners(path, value);
+
+    return true;
+  }
+
+  // ===== OWNER ACCESS (Structural - Internal Only) =====
+  /**
+   * Schema migration for version upgrades
+   * OWNER DECISION: Restructuring entire settings system
+   */
+  migrate(oldVersion, newVersion) {
+    // Owner can directly manipulate structure
+    // Bypasses validation - architectural operation
+  }
+
+  /**
+   * Import entire settings object from file
+   * OWNER DECISION: Replace all settings at once
+   */
+  importSettings(importedData) {
+    // Validate entire structure
+    // Replace settings object
+    // Too complex for supervisor (would need 50+ set() calls)
+  }
+
+  /**
+   * Reset all settings to defaults
+   * OWNER DECISION: Nuclear option requiring owner authority
+   */
+  resetToDefaults() {
+    // Rebuild settings from module defaults
+    // Direct replacement of entire structure
+  }
+}
+```
+
+**Rationale (Company Hierarchy Analogy):**
+- **Reading = Checking employee handbook:** Everyone can view policies freely without permission
+- **Writing = Changing policy:** Must go through supervisor who validates the change
+- **Structural changes = Business restructuring:** Only owner can authorize (migrations, imports, resets)
+
+**Usage Examples:**
+```javascript
+// FREQUENT: Read settings (direct access, fast, clean)
+const fontSize = settingsManager.settings.editor.fontSize;
+const { fontSize, lineHeight, tabSize } = settingsManager.settings.editor;
+
+// INFREQUENT: Write settings (validated, safe)
+settingsManager.set('editor.fontSize', 16);  // Validates, saves, notifies
+settingsManager.set('theme.current', 'cyberpunk');
+
+// RARE: Structural operations (internal only)
+settingsManager.migrate(1, 2);  // Owner migrates schema
+settingsManager.resetToDefaults();  // Owner resets everything
+```
+
+**Advantages:**
+- Reads are clean and fast (99% of operations)
+- Writes are safe and validated (1% of operations)
+- Structural operations are controlled and internal
+- Best performance (no function calls for reads)
+- Best safety (validation on all writes)
+
+**Rejected Alternatives:**
+- Option A (Direct Access): No validation on writes, easy to corrupt settings
+- Option B (Getter/Setter Methods): Verbose for reads (`get('editor.fontSize')` everywhere)
+
+---
+
+#### 🔄 Current Question: Persistence & Save Strategy (Q4.1)
+
+**Status:** AWAITING DECISION
+
+**Options Under Consideration:**
+
+**Option A: Auto-Save on Every Change**
+```javascript
+set(path, value) {
+  this.settings.settings[module][setting] = value;
+  localStorage.setItem('markdownEditorSettings', JSON.stringify(this.settings));
+  this.notifyListeners(path, value);
+}
+```
+- **Pros:** Excellent data safety (instant save)
+- **Cons:** Many localStorage writes (expensive), could lag with rapid changes (slider dragging)
+
+**Option B: Debounced Auto-Save** ⭐ RECOMMENDED
+```javascript
+set(path, value) {
+  this.settings.settings[module][setting] = value;
+
+  // Schedule save after 500ms of no changes
+  clearTimeout(this.saveTimeout);
+  this.saveTimeout = setTimeout(() => {
+    localStorage.setItem('markdownEditorSettings', JSON.stringify(this.settings));
+  }, 500);
+
+  this.notifyListeners(path, value); // Immediate notification
+}
+```
+- **Pros:** Smooth performance, minimal localStorage writes, still saves automatically
+- **Cons:** Small 500ms delay (acceptable for settings)
+
+**Option C: Manual Save (with Auto-Save on Exit)**
+```javascript
+set(path, value) {
+  this.settings.settings[module][setting] = value;
+  this.dirty = true;
+  this.notifyListeners(path, value);
+  // User must call save() OR auto-save on window.beforeunload
+}
+```
+- **Pros:** Best performance, fewest writes
+- **Cons:** Risk of data loss if browser crashes before exit
+
+**Key Questions:**
+1. How important is immediate persistence vs. performance?
+2. Can users tolerate 500ms delay for settings to save?
+3. What if user closes browser quickly (no time for beforeunload)?
+
+**Next Steps:** User to decide on persistence strategy before continuing to Q5 (Change Notifications & Reactivity).
+
+---
+
+#### Remaining Planning Questions (Q5-Q10)
+
+**Q5: Change Notifications & Reactivity**
+- How do modules react when settings change?
+- Event-based listeners vs callbacks vs polling?
+- Global events vs module-specific subscriptions?
+
+**Q6: Cross-Tab Synchronization**
+- Should settings sync across multiple browser tabs?
+- Use `storage` event listener?
+- Handle conflicts when tabs have different settings?
+
+**Q7: Import/Export & Reset Functionality**
+- Export settings to JSON file for backup?
+- Import settings from file?
+- Reset individual modules vs. reset all?
+- Confirmation dialogs for destructive operations?
+
+**Q8: Initial Settings Priority**
+- Which settings to implement first (editor, view, theme, etc.)?
+- Minimal viable settings for Phase 1?
+- Which can be deferred to future phases?
+
+**Q9: API Design & Developer Experience**
+- Public API surface for SettingsManager?
+- Error handling strategy?
+- TypeScript type definitions (if using TS)?
+- JSDoc comments for IDE autocomplete?
+
+**Q10: Testing Strategy**
+- Unit tests for validation?
+- Integration tests for persistence?
+- Mock localStorage for testing?
+- Test migrations between schema versions?
+
+---
+
+#### Implementation Checklist (Phase 1)
+
+**After planning is complete:**
+
+- [ ] Create `js/shared/settings-manager.js`
+- [ ] Add `getDefaultSettings()` to existing managers (EditorManager, etc.)
+- [ ] Add `getSettingsSchema()` to existing managers
+- [ ] Add `validateSettings()` to existing managers
+- [ ] Implement SettingsManager class with chosen API
+- [ ] Add persistence logic (localStorage with debouncing)
+- [ ] Add migration system (version 1 → version 2 template)
+- [ ] Replace direct localStorage calls with SettingsManager
+- [ ] Add settings panel UI (if needed)
+- [ ] Write unit tests for validation
+- [ ] Write integration tests for persistence
+- [ ] Update DOCUMENTATION.md with usage examples
+
+---
+
 ## Planned Features & Enhancements
 
 This section tracks features planned for future implementation.

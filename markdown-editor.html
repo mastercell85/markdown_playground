@@ -55,8 +55,7 @@ lsDOCTYPE html>
 				<button id="copy-btn" class="panel-button">Copy</button>
 				<button id="paste-btn" class="panel-button">Paste</button>
 				<button id="select-all-btn" class="panel-button">Select All</button>
-				<button id="find-btn" class="panel-button">Find</button>
-				<button id="replace-btn" class="panel-button">Replace</button>
+				<button id="find-btn" class="panel-button">Find & Replace</button>
 			</div>
 		</div>
 
@@ -126,6 +125,15 @@ lsDOCTYPE html>
 							<div class="view-section-content">
 								<button id="toggle-line-numbers-btn" class="panel-button">Toggle Line Numbers</button>
 								<button id="toggle-word-wrap-btn" class="panel-button">Toggle Word Wrap</button>
+								<button id="toggle-scroll-sync-btn" class="panel-button sync-toggle-btn">
+									<span class="sync-icon">&#x1F517;</span>
+									<span class="sync-label">Sync Scroll: Off</span>
+								</button>
+								<div class="sync-offset-control" id="sync-offset-control" style="display: none;">
+									<label for="sync-offset-input">Sync Offset:</label>
+									<input type="number" id="sync-offset-input" value="3" min="-10" max="20" step="1">
+									<span class="sync-offset-hint">lines</span>
+								</div>
 							</div>
 						</div>
 
@@ -388,6 +396,30 @@ lsDOCTYPE html>
 					</div>
 				</div>
 
+				<!-- Regex Help Section -->
+				<div class="help-section">
+					<button class="help-section-header">
+						<span class="help-toggle">▶</span>
+						<span>Regular Expressions</span>
+					</button>
+					<div class="help-section-content">
+						<h4>Regex Documentation</h4>
+						<p>The Find & Replace dialog supports powerful regular expression patterns for advanced searching.</p>
+
+						<button class="panel-button" id="view-regex-docs-btn" style="width: 100%; margin-top: 10px;">
+							📖 View Regex Documentation
+						</button>
+
+						<p style="margin-top: 15px; font-size: 0.9em; color: var(--preview-text, #ccc);">
+							<strong>Quick Tips:</strong><br>
+							• Use <code>\d</code> to match digits<br>
+							• Use <code>\w</code> to match word characters<br>
+							• Use <code>.*</code> to match any characters<br>
+							• Click the <strong>?</strong> button in Find & Replace for full documentation
+						</p>
+					</div>
+				</div>
+
 				<!-- About Section -->
 				<div class="help-section">
 					<button class="help-section-header">
@@ -464,8 +496,19 @@ lsDOCTYPE html>
 				</div>
 			</section>
 
-			<!-- Resizable divider -->
-			<div class="editor-divider" id="editor-divider"></div>
+			<!-- Center gap with toolbar and resize handle -->
+			<div class="editor-gap" id="editor-gap">
+				<!-- Resize handle at top of gap -->
+				<div class="editor-divider" id="editor-divider" title="Drag to resize panels">
+					<span class="divider-grip">&#x2194;</span>
+				</div>
+				<!-- Toolbar area for buttons -->
+				<div class="gap-toolbar" id="gap-toolbar">
+					<button class="divider-sync-btn" id="divider-sync-btn" title="Toggle Scroll Sync">
+						<span class="sync-chain">&#x1F517;</span>
+					</button>
+				</div>
+			</div>
 
 			<!-- Preview section -->
 			<section class="editor-section editor-preview">
@@ -494,6 +537,48 @@ lsDOCTYPE html>
 				</div>
 			</section>
 		</div>
+
+		<!-- Find/Replace Dialog -->
+		<div class="find-replace-dialog" id="find-replace-dialog" style="display: none;">
+			<div class="find-replace-header">
+				<span class="find-replace-title">Find & Replace</span>
+				<button class="find-close-btn" id="find-close-btn" title="Close (Esc)" aria-label="Close find dialog">&times;</button>
+			</div>
+			<div class="find-replace-body">
+				<!-- Find input row -->
+				<div class="find-input-row">
+					<input type="text" id="find-input" class="find-input" placeholder="Find" aria-label="Find text">
+					<span class="find-match-counter" id="find-match-counter"></span>
+				</div>
+				<!-- Replace input row -->
+				<div class="replace-input-row">
+					<input type="text" id="replace-input" class="replace-input" placeholder="Replace" aria-label="Replace text">
+				</div>
+				<!-- Options row -->
+				<div class="find-options-row">
+					<label class="find-option">
+						<input type="checkbox" id="find-case-sensitive">
+						<span>Case sensitive (Aa)</span>
+					</label>
+					<label class="find-option">
+						<input type="checkbox" id="find-whole-word">
+						<span>Whole word (Ab|)</span>
+					</label>
+					<label class="find-option">
+						<input type="checkbox" id="find-regex">
+						<span>Regex (.*)</span>
+					</label>
+					<button class="find-regex-help-btn" id="find-regex-help-btn" title="View Regex Documentation">?</button>
+				</div>
+				<!-- Buttons row -->
+				<div class="find-buttons-row">
+					<button class="find-btn" id="find-previous-btn" title="Previous (Shift+Enter)">◀ Previous</button>
+					<button class="find-btn" id="find-next-btn" title="Next (Enter)">Next ▶</button>
+					<button class="find-btn" id="find-replace-btn" title="Replace">Replace</button>
+					<button class="find-btn" id="find-replace-all-btn" title="Replace All">Replace All</button>
+				</div>
+			</div>
+		</div>
 	</div>
 
 </div>
@@ -501,6 +586,8 @@ lsDOCTYPE html>
 <!-- Shared modules -->
 <script src="js/shared/panel-manager.js"></script>
 <script src="js/shared/resizable-pane.js"></script>
+<script src="js/shared/scroll-sync.js"></script>
+<script src="js/shared/find-manager.js"></script>
 
 <!-- Markdown modules -->
 <script src="js/markdown/rule-engine.js"></script>
@@ -514,6 +601,9 @@ lsDOCTYPE html>
 <script src="js/markdown/tab-controller.js"></script>
 <script src="js/markdown/typora-adapter.js"></script>
 <script src="js/markdown/theme-loader.js"></script>
+
+<!-- Embedded regex documentation (to avoid CORS issues) -->
+<script src="js/shared/regex-docs-content.js"></script>
 
 <!-- Main application script -->
 <script src="js/markdown-editor-main.js"></script>

@@ -23,6 +23,15 @@ class MarkdownParser {
     }
 
     /**
+     * Enable or disable line tracking for scroll sync
+     * When enabled, output HTML elements will have data-line attributes
+     * @param {boolean} enabled - Whether to add data-line attributes
+     */
+    setLineTracking(enabled) {
+        this.blockProcessor.setLineTracking(enabled);
+    }
+
+    /**
      * Parse markdown text to HTML
      * @param {string} markdown - Raw markdown text
      * @returns {string} - Rendered HTML

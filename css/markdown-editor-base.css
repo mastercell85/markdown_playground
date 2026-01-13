@@ -794,6 +794,7 @@ body {
 .editor-container {
     display: flex;
     flex-direction: row;
+    align-items: stretch; /* Ensure children stretch to full height */
     width: 100%;
     height: 100%;
     gap: 0;
@@ -808,12 +809,12 @@ body {
 }
 
 .editor-container[data-layout="editor"] .editor-preview,
-.editor-container[data-layout="editor"] .editor-divider {
+.editor-container[data-layout="editor"] .editor-gap {
     display: none;
 }
 
 .editor-container[data-layout="preview"] .editor-input,
-.editor-container[data-layout="preview"] .editor-divider {
+.editor-container[data-layout="preview"] .editor-gap {
     display: none;
 }
 
@@ -825,6 +826,57 @@ body {
     min-width: 200px;
     background: var(--editor-section-bg);
     overflow: hidden;
+    position: relative; /* For label positioning */
+}
+
+/* Input Area */
+.editor-input {
+    flex: 1 1 0;
+    min-width: 200px;
+}
+
+/* Default theme INPUT label */
+.editor-input::before {
+    content: "INPUT";
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Preview Area */
+.editor-preview {
+    flex: 1 1 0;
+    min-width: 200px;
+    background: var(--preview-bg);
+}
+
+/* Default theme PREVIEW label */
+.editor-preview::before {
+    content: "PREVIEW";
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Hide LCARS frame elements by default - themed CSS files can override */
+.lcars-frame {
+    display: none !important;
 }
 
 .editor-section-content {
@@ -874,13 +926,18 @@ body {
     color: #666;
 }
 
-/* Resizable divider */
+/* Resizable Divider - horizontal bar at top of gap */
 .editor-divider {
-    width: 4px;
+    width: 100%;
+    height: 32px;
     background: var(--divider-bg);
     cursor: col-resize;
     position: relative;
     transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .editor-divider:hover,
@@ -888,20 +945,126 @@ body {
     background: var(--divider-hover-bg);
 }
 
-.editor-divider::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: -2px;
-    right: -2px;
+/* Double-ended arrow for divider */
+.divider-grip {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.4);
+    transition: color 0.2s ease;
+    user-select: none;
+    letter-spacing: -2px;
 }
 
-/* Preview area */
-.editor-preview {
+.editor-divider:hover .divider-grip,
+.editor-divider.dragging .divider-grip {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Centering animation feedback */
+.editor-divider.centering {
+    animation: centeringPulse 0.3s ease-in-out;
+}
+
+.editor-divider.centering .divider-grip {
+    color: rgba(255, 255, 255, 1);
+}
+
+@keyframes centeringPulse {
+    0%, 100% {
+        background: var(--divider-bg);
+        box-shadow: none;
+    }
+    50% {
+        background: var(--divider-hover-bg);
+        box-shadow: 0 0 10px rgba(100, 150, 255, 0.5);
+    }
+}
+
+/* Editor Gap - center column between input and preview */
+.editor-gap {
+    width: 80px;
+    min-width: 80px;
+    flex: 0 0 80px; /* Don't grow or shrink, fixed at 80px */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 20;
+}
+
+/* Gap Toolbar - area for buttons below the divider */
+.gap-toolbar {
     flex: 1;
-    min-width: 200px;
-    background: var(--preview-bg);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 4px;
+    gap: 8px;
+}
+
+/* Divider Sync Button - in gap toolbar */
+.divider-sync-btn {
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(100, 100, 110, 0.6);
+    border-radius: 50%;
+    background: rgba(40, 40, 45, 0.95);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    padding: 0;
+    transition: all 0.2s ease;
+    opacity: 0.7;
+}
+
+.divider-sync-btn .sync-chain {
+    filter: grayscale(80%);
+    opacity: 0.7;
+    transition: all 0.2s ease;
+}
+
+.divider-sync-btn:hover {
+    opacity: 1;
+    background: rgba(60, 60, 65, 0.95);
+    border-color: rgba(150, 150, 160, 0.8);
+}
+
+.divider-sync-btn:hover .sync-chain {
+    filter: grayscale(40%);
+    opacity: 0.9;
+}
+
+/* Active/On state - bright blue glow */
+.divider-sync-btn.sync-active {
+    background: rgba(74, 158, 255, 0.2);
+    border-color: #4a9eff;
+    box-shadow: 0 0 8px rgba(74, 158, 255, 0.5);
+    opacity: 1;
+}
+
+.divider-sync-btn.sync-active .sync-chain {
+    filter: grayscale(0%) brightness(1.1);
+    opacity: 1;
+}
+
+.divider-sync-btn.sync-active:hover {
+    background: rgba(74, 158, 255, 0.35);
+    box-shadow: 0 0 12px rgba(74, 158, 255, 0.7);
+}
+
+.sync-chain {
+    font-size: 12px;
+    line-height: 1;
 }
 
 .markdown-output {
@@ -1098,6 +1261,227 @@ header[role="banner"] {
 
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.5);
+}
+
+/* ============================================================================
+   FIND/REPLACE DIALOG
+   ============================================================================ */
+
+.find-replace-dialog {
+    position: fixed !important;
+    /* Position will be set dynamically by JavaScript - centered horizontally, upper area */
+    width: 500px;
+    background: var(--tab-dropdown-bg, rgba(20, 20, 25, 0.98));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    z-index: 999999 !important; /* Force highest z-index - must be above all panels and menus */
+    font-family: var(--font-family-base);
+    animation: findDialogSlideIn 0.2s ease-out;
+    cursor: default;
+}
+
+@keyframes findDialogSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header */
+.find-replace-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px 8px 0 0;
+    cursor: move; /* Indicate draggable */
+    user-select: none; /* Prevent text selection while dragging */
+}
+
+.find-replace-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--preview-text, rgba(255, 255, 255, 0.9));
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.find-close-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.find-close-btn:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
+/* Body */
+.find-replace-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Input rows */
+.find-input-row,
+.replace-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.find-input,
+.replace-input {
+    flex: 1;
+    padding: 8px 12px;
+    background: var(--textarea-bg, rgba(0, 0, 0, 0.4));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: var(--textarea-text, rgba(255, 255, 255, 0.9));
+    font-size: 14px;
+    font-family: var(--font-family-mono);
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.find-input:focus,
+.replace-input:focus {
+    border-color: var(--md-link-color, rgba(100, 150, 255, 0.6));
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.find-input::placeholder,
+.replace-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.find-match-counter {
+    font-size: 12px;
+    color: var(--preview-text, rgba(255, 255, 255, 0.6));
+    min-width: 60px;
+    text-align: center;
+    font-family: var(--font-family-mono);
+}
+
+/* Options row */
+.find-options-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 4px 0;
+}
+
+.find-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--preview-text, rgba(255, 255, 255, 0.7));
+    user-select: none;
+}
+
+.find-option input[type="checkbox"] {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+.find-option:hover {
+    color: var(--md-link-hover, rgba(255, 255, 255, 0.9));
+}
+
+/* Buttons row */
+.find-buttons-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.find-btn {
+    flex: 1;
+    padding: 8px 12px;
+    background: rgba(60, 60, 70, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: var(--preview-text, rgba(255, 255, 255, 0.9));
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.find-btn:hover {
+    background: rgba(80, 80, 90, 0.9);
+    border-color: var(--md-link-color, rgba(255, 255, 255, 0.3));
+    color: var(--md-link-hover, rgba(255, 255, 255, 1));
+}
+
+.find-btn:active {
+    background: rgba(50, 50, 60, 0.9);
+}
+
+.find-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Regex help button */
+.find-regex-help-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(var(--md-link-color-rgb, 100, 150, 255), 0.2);
+    color: var(--md-link-color);
+    border: 1px solid var(--md-link-color);
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.find-regex-help-btn:hover {
+    background: var(--md-link-color);
+    color: var(--tab-dropdown-bg);
+    transform: scale(1.1);
+    box-shadow: 0 0 8px var(--md-link-color);
+}
+
+.find-regex-help-btn:active {
+    transform: scale(0.95);
+}
+
+/* Highlight styles for matches in textarea */
+.find-highlight {
+    background-color: rgba(255, 200, 0, 0.3);
+}
+
+.find-highlight-current {
+    background-color: rgba(255, 150, 0, 0.6);
 }
 
 /* ============================================================================

@@ -8,6 +8,8 @@
 
     // Module-level variables
     let themeLoader = null;
+    let scrollSync = null;
+    let findManager = null;
 
     // Initialize when DOM is ready
     function init() {
@@ -29,6 +31,9 @@
 
         // Initialize resizable divider
         initializeResizableDivider();
+
+        // Initialize find manager
+        initializeFindManager();
     }
 
     /**
@@ -128,6 +133,15 @@
             closeFileBtn.addEventListener('click', function(event) {
                 event.stopPropagation();
                 handleCloseFile();
+            });
+        }
+
+        // View Regex Documentation button (in Help menu)
+        const viewRegexDocsBtn = document.getElementById('view-regex-docs-btn');
+        if (viewRegexDocsBtn) {
+            viewRegexDocsBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                openRegexDocumentation();
             });
         }
 
@@ -380,26 +394,11 @@
      * Handle Find action
      */
     function handleFind() {
-        const inputElement = document.getElementById('markdown-input');
-        if (!inputElement) return;
-
-        // Focus the textarea
-        inputElement.focus();
-
-        // Prompt user for search text
-        const searchText = prompt('Find:');
-        if (!searchText) return;
-
-        const content = inputElement.value;
-        const index = content.indexOf(searchText);
-
-        if (index !== -1) {
-            // Select the found text
-            inputElement.setSelectionRange(index, index + searchText.length);
-            inputElement.focus();
-        } else {
-            alert(`"${searchText}" not found.`);
+        if (!findManager) {
+            initializeFindManager();
         }
+
+        findManager.open();
     }
 
     /**
@@ -578,6 +577,25 @@
             toggleWordWrapBtn.addEventListener('click', function(event) {
                 event.stopPropagation();
                 handleToggleWordWrap();
+            });
+        }
+
+        // Scroll Sync toggle buttons
+        const toggleScrollSyncBtn = document.getElementById('toggle-scroll-sync-btn');
+        const dividerSyncBtn = document.getElementById('divider-sync-btn');
+
+        if (toggleScrollSyncBtn) {
+            toggleScrollSyncBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                handleToggleScrollSync();
+            });
+        }
+
+        if (dividerSyncBtn) {
+            dividerSyncBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                event.preventDefault();
+                handleToggleScrollSync();
             });
         }
 
@@ -1097,6 +1115,106 @@
     }
 
     /**
+     * Handle toggle scroll sync
+     */
+    function handleToggleScrollSync() {
+        if (!scrollSync) {
+            initializeScrollSync();
+        }
+
+        const enabled = scrollSync.toggle();
+
+        // Update UI to reflect state
+        updateScrollSyncUI(enabled);
+
+        // Save preference to localStorage
+        localStorage.setItem('editor-scroll-sync', enabled ? 'true' : 'false');
+
+        console.log(`Scroll sync: ${enabled ? 'enabled' : 'disabled'}`);
+    }
+
+    /**
+     * Initialize scroll sync module
+     */
+    function initializeScrollSync() {
+        if (scrollSync) return;
+
+        const inputElement = document.querySelector('.editor-input .markdown-textarea');
+        const previewElement = document.querySelector('.editor-preview .markdown-output');
+
+        if (!inputElement || !previewElement) {
+            console.warn('ScrollSync: Could not find input or preview elements');
+            return;
+        }
+
+        scrollSync = new ScrollSync();
+        scrollSync.init(inputElement, previewElement);
+
+        // Expose scrollSync globally for debugging and UI controls
+        window.scrollSync = scrollSync;
+
+        // Setup offset control
+        setupSyncOffsetControl();
+
+        console.log('ScrollSync: Initialized');
+    }
+
+    /**
+     * Setup the sync offset control UI
+     */
+    function setupSyncOffsetControl() {
+        const offsetInput = document.getElementById('sync-offset-input');
+        const offsetControl = document.getElementById('sync-offset-control');
+
+        if (offsetInput && scrollSync) {
+            // Load saved offset from localStorage
+            const savedOffset = localStorage.getItem('editor-scroll-sync-offset');
+            if (savedOffset !== null) {
+                const offset = parseInt(savedOffset, 10);
+                offsetInput.value = offset;
+                scrollSync.setLineOffset(offset);
+            }
+
+            // Handle offset changes
+            offsetInput.addEventListener('change', function() {
+                const offset = parseInt(this.value, 10);
+                if (!isNaN(offset) && scrollSync) {
+                    scrollSync.setLineOffset(offset);
+                    localStorage.setItem('editor-scroll-sync-offset', offset.toString());
+                    console.log(`Scroll sync offset set to: ${offset} lines`);
+                }
+            });
+        }
+    }
+
+    /**
+     * Update scroll sync UI elements to reflect state
+     */
+    function updateScrollSyncUI(enabled) {
+        const toggleBtn = document.getElementById('toggle-scroll-sync-btn');
+        const dividerBtn = document.getElementById('divider-sync-btn');
+        const offsetControl = document.getElementById('sync-offset-control');
+
+        if (toggleBtn) {
+            const label = toggleBtn.querySelector('.sync-label');
+            if (label) {
+                label.textContent = enabled ? 'Sync Scroll: On' : 'Sync Scroll: Off';
+            }
+            toggleBtn.classList.toggle('sync-active', enabled);
+        }
+
+        if (dividerBtn) {
+            dividerBtn.classList.toggle('sync-active', enabled);
+            dividerBtn.title = enabled ? 'Scroll Sync: On (Click to disable)' : 'Scroll Sync: Off (Click to enable)';
+        }
+
+        // Show/hide offset control based on sync state
+        if (offsetControl) {
+            offsetControl.style.display = enabled ? 'flex' : 'none';
+        }
+    }
+
+    /**
      * Handle zoom change
      * @param {number} percent - Zoom percentage (90, 100, 110, 125, 150)
      */
@@ -1109,6 +1227,11 @@
         const newFontSize = (baseFontSize * percent) / 100;
 
         editorContainer.style.fontSize = `${newFontSize}px`;
+
+        // Invalidate scroll sync cache since line height changes with zoom
+        if (scrollSync) {
+            scrollSync.invalidateCache();
+        }
 
         // Save preference to localStorage
         localStorage.setItem('editor-zoom', percent.toString());
@@ -1147,6 +1270,25 @@
         const savedZoom = parseInt(localStorage.getItem('editor-zoom') || '100', 10);
         handleZoomChange(savedZoom);
 
+        // Restore scroll sync (default: off)
+        const savedScrollSync = localStorage.getItem('editor-scroll-sync') === 'true';
+        if (savedScrollSync) {
+            // Delay initialization to ensure DOM is ready
+            setTimeout(() => {
+                initializeScrollSync();
+                if (scrollSync) {
+                    scrollSync.enable();
+                    updateScrollSyncUI(true);
+                }
+            }, 100);
+        } else {
+            // Initialize but don't enable, just update UI
+            setTimeout(() => {
+                initializeScrollSync();
+                updateScrollSyncUI(false);
+            }, 100);
+        }
+
         console.log('View preferences restored');
     }
 
@@ -1160,6 +1302,31 @@
             window.MarkdownEditor.documentManager.switchDocument(newDoc.id);
             window.MarkdownEditor.tabController.renderTabs();
             console.log('New file created:', newDoc.name);
+        }
+    }
+
+    /**
+     * Open regex documentation as read-only tab
+     */
+    function openRegexDocumentation() {
+        // Use embedded content to avoid CORS issues with local files
+        if (!window.REGEX_DOCUMENTATION_CONTENT) {
+            console.error('Regex documentation content not found');
+            alert('Failed to load regex documentation. The documentation file may not be loaded properly.');
+            return;
+        }
+
+        if (window.MarkdownEditor && window.MarkdownEditor.documentManager) {
+            // Create read-only document
+            const regexDoc = window.MarkdownEditor.documentManager.createDocument({
+                name: 'Regex Documentation (Read-Only)',
+                content: window.REGEX_DOCUMENTATION_CONTENT,
+                metadata: { readOnly: true }
+            });
+            window.MarkdownEditor.documentManager.switchDocument(regexDoc.id);
+            window.MarkdownEditor.tabController.renderTabs();
+
+            console.log('Regex documentation loaded as read-only');
         }
     }
 
@@ -1302,6 +1469,9 @@
         const blockProcessor = new BlockProcessor();
         const parser = new MarkdownParser(ruleEngine, blockProcessor);
 
+        // Enable line tracking for scroll sync (adds data-line attributes to output)
+        parser.setLineTracking(true);
+
         // Create window manager for external preview
         const windowManager = new WindowManager({
             windowTitle: 'Markdown Preview',
@@ -1325,7 +1495,20 @@
             onDocumentSwitch: (doc) => {
                 // Load document content into editor
                 renderer.setMarkdown(doc.content);
-                console.log('Switched to document:', doc.name);
+
+                // Handle read-only status
+                const textarea = document.getElementById('markdown-input');
+                if (textarea) {
+                    if (doc.metadata && doc.metadata.readOnly) {
+                        textarea.readOnly = true;
+                        textarea.style.cursor = 'default';
+                        console.log('Document is read-only:', doc.name);
+                    } else {
+                        textarea.readOnly = false;
+                        textarea.style.cursor = '';
+                        console.log('Switched to document:', doc.name);
+                    }
+                }
             },
             onDocumentUpdate: (doc) => {
                 console.log('Document updated:', doc.name);
@@ -1430,6 +1613,30 @@
         window.MarkdownEditor = window.MarkdownEditor || {};
         window.MarkdownEditor.resizablePane = resizablePane;
     }
+
+    /**
+     * Initialize find manager
+     */
+    function initializeFindManager() {
+        if (findManager) return;
+
+        findManager = new FindManager({
+            textareaSelector: '#markdown-input',
+            dialogSelector: '#find-replace-dialog'
+        });
+
+        findManager.init();
+
+        // Expose globally for debugging
+        window.MarkdownEditor.findManager = findManager;
+
+        console.log('FindManager: Initialized');
+    }
+
+    // Listen for regex help event from FindManager
+    document.addEventListener('openRegexHelp', () => {
+        openRegexDocumentation();
+    });
 
     // Initialize when DOM is loaded
     if (document.readyState === 'loading') {

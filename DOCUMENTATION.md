@@ -703,6 +703,22 @@ This section tracks features planned for future implementation.
 - Implemented in `js/shared/resizable-pane.js` with `centerSplit()` method
 - CSS animations in `css/markdown-editor-base.css` with `.centering` class
 
+**Regex Documentation Viewer** ✓ IMPLEMENTED
+- Comprehensive regex reference guide embedded in the application
+- Dual access points:
+  - Blue "?" help button in Find & Replace dialog (next to regex checkbox)
+  - "View Regex Documentation" button in Help menu's Regular Expressions section
+- Opens as read-only tab that automatically switches to active view
+- Covers all regex syntax: character classes, quantifiers, anchors, groups, lookahead/lookbehind
+- Practical examples for emails, phone numbers, URLs, IP addresses, dates, hex colors
+- Common patterns for text manipulation and code searching
+- Tips, best practices, and quick reference card
+- Embedded content approach avoids CORS issues with local file loading
+- Documentation markdown source: `regex-documentation.md`
+- Embedded JavaScript content: `js/shared/regex-docs-content.js`
+- Handler implementation in `js/markdown-editor-main.js` with `openRegexDocumentation()` function
+- Event-based communication between FindManager and main editor
+
 **Sync Offset Documentation**
 - Add Scroll Sync section to Help panel explaining offset behavior
 - Document what positive/negative offset values mean
@@ -737,7 +753,35 @@ This section tracks features planned for future implementation.
 ### Future Considerations
 
 Features to evaluate and potentially add:
-- Table of contents auto-generation
+
+**Customizable Gap Menu System**
+- Scrollable button container in gap area when too many buttons to fit vertically
+- Easy-to-implement button system for adding custom actions to gap area
+- User-repositionable buttons via drag-and-drop
+- Buttons can be positioned anywhere on screen for minimal/focus mode
+- Save button positions to user preferences
+- Read-only mode toggle button for editor view
+- Repositionable gap adjuster button (currently fixed position)
+
+**Enhanced Table of Contents**
+- Auto-generation from document heading structure
+- Animated expand/collapse functionality
+- Clickable links to jump to sections
+- Visual indicators for current section while scrolling
+- Collapsible nested heading levels
+- Smooth scroll animation when clicking TOC items
+
+**View Positioning & Switching**
+- View positioning configuration for editor-only and preview-only modes
+  - Centered single-pane view option
+  - Left-aligned or right-aligned single-pane option
+- Convert INPUT/PREVIEW labels to clickable view switchers
+  - Click "INPUT" to switch to editor-only mode
+  - Click "PREVIEW" to switch to preview-only mode
+  - Visual active state indicators
+- Remember last view mode preference
+
+**Additional Features**
 - Word count / reading time indicators
 - Export to PDF with print-friendly formatting
 - Markdown templates (blog post, documentation, README, etc.)

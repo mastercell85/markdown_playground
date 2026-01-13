@@ -136,6 +136,12 @@ class FindManager {
             replaceAllBtn.addEventListener('click', () => this.replaceAll());
         }
 
+        // Regex help button
+        const regexHelpBtn = document.getElementById('find-regex-help-btn');
+        if (regexHelpBtn) {
+            regexHelpBtn.addEventListener('click', () => this.openRegexHelp());
+        }
+
         // Enter key in find input
         if (this.findInput) {
             this.findInput.addEventListener('keydown', (e) => {
@@ -554,6 +560,16 @@ class FindManager {
 
         // Log confirmation (removed alert to not block automated tests)
         console.log(`FindManager: Replaced ${count} occurrence(s).`);
+    }
+
+    /**
+     * Open regex documentation as read-only tab
+     */
+    openRegexHelp() {
+        // Dispatch custom event to main editor to load regex documentation
+        const event = new CustomEvent('openRegexHelp');
+        document.dispatchEvent(event);
+        console.log('FindManager: Opening regex documentation');
     }
 
     /**

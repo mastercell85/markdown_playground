@@ -679,13 +679,20 @@ This section tracks features planned for future implementation.
 - Match counter display (e.g., "3 of 15")
 - Case-sensitive toggle (Aa)
 - Whole word match toggle (Ab|)
+  - Works with both plain text and regex searches
+  - Applies word boundary checking to regex pattern matches
 - Regular expression support (.*)
+  - Full regex syntax support with configurable flags
+  - Regex patterns respect whole word option when enabled
 - Replace and Replace All functionality
 - Draggable dialog positioned in upper-center viewport
+- Live document update detection
+  - Search results automatically refresh when document content changes
+  - Only triggers when dialog is open and search term is present
 - Keyboard shortcuts: Ctrl+F to open, Escape to close, Enter for Next, Shift+Enter for Previous, F3/Shift+F3
 - Implemented in `js/shared/find-manager.js` with FindManager class
 - Theme-aware CSS in `css/markdown-editor-base.css`
-- Comprehensive unit test suite in `tests/find-manager.test.js` (15 tests)
+- Comprehensive unit test suite in `tests/find-manager.test.js` (15 tests, 29 assertions)
 - Visual test runner at `tests/test-runner.html`
 
 **Double-Click Center Split** ✓ IMPLEMENTED

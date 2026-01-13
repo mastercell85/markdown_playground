@@ -136,6 +136,15 @@
             });
         }
 
+        // View Regex Documentation button (in Help menu)
+        const viewRegexDocsBtn = document.getElementById('view-regex-docs-btn');
+        if (viewRegexDocsBtn) {
+            viewRegexDocsBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                openRegexDocumentation();
+            });
+        }
+
         // Close Folder button
         const closeFolderBtn = document.getElementById('close-folder-btn');
         if (closeFolderBtn) {
@@ -1297,6 +1306,31 @@
     }
 
     /**
+     * Open regex documentation as read-only tab
+     */
+    function openRegexDocumentation() {
+        // Use embedded content to avoid CORS issues with local files
+        if (!window.REGEX_DOCUMENTATION_CONTENT) {
+            console.error('Regex documentation content not found');
+            alert('Failed to load regex documentation. The documentation file may not be loaded properly.');
+            return;
+        }
+
+        if (window.MarkdownEditor && window.MarkdownEditor.documentManager) {
+            // Create read-only document
+            const regexDoc = window.MarkdownEditor.documentManager.createDocument({
+                name: 'Regex Documentation (Read-Only)',
+                content: window.REGEX_DOCUMENTATION_CONTENT,
+                metadata: { readOnly: true }
+            });
+            window.MarkdownEditor.documentManager.switchDocument(regexDoc.id);
+            window.MarkdownEditor.tabController.renderTabs();
+
+            console.log('Regex documentation loaded as read-only');
+        }
+    }
+
+    /**
      * Handle Open File action
      */
     function handleOpenFile() {
@@ -1461,7 +1495,20 @@
             onDocumentSwitch: (doc) => {
                 // Load document content into editor
                 renderer.setMarkdown(doc.content);
-                console.log('Switched to document:', doc.name);
+
+                // Handle read-only status
+                const textarea = document.getElementById('markdown-input');
+                if (textarea) {
+                    if (doc.metadata && doc.metadata.readOnly) {
+                        textarea.readOnly = true;
+                        textarea.style.cursor = 'default';
+                        console.log('Document is read-only:', doc.name);
+                    } else {
+                        textarea.readOnly = false;
+                        textarea.style.cursor = '';
+                        console.log('Switched to document:', doc.name);
+                    }
+                }
             },
             onDocumentUpdate: (doc) => {
                 console.log('Document updated:', doc.name);
@@ -1585,6 +1632,11 @@
 
         console.log('FindManager: Initialized');
     }
+
+    // Listen for regex help event from FindManager
+    document.addEventListener('openRegexHelp', () => {
+        openRegexDocumentation();
+    });
 
     // Initialize when DOM is loaded
     if (document.readyState === 'loading') {

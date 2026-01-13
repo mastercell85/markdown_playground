@@ -1385,6 +1385,7 @@ header[role="banner"] {
 /* Options row */
 .find-options-row {
     display: flex;
+    align-items: center;
     gap: 16px;
     padding: 4px 0;
 }
@@ -1442,6 +1443,36 @@ header[role="banner"] {
 .find-btn:disabled {
     opacity: 0.4;
     cursor: not-allowed;
+}
+
+/* Regex help button */
+.find-regex-help-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(var(--md-link-color-rgb, 100, 150, 255), 0.2);
+    color: var(--md-link-color);
+    border: 1px solid var(--md-link-color);
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.find-regex-help-btn:hover {
+    background: var(--md-link-color);
+    color: var(--tab-dropdown-bg);
+    transform: scale(1.1);
+    box-shadow: 0 0 8px var(--md-link-color);
+}
+
+.find-regex-help-btn:active {
+    transform: scale(0.95);
 }
 
 /* Highlight styles for matches in textarea */

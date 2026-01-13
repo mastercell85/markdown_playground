@@ -573,4 +573,167 @@ Requires modern JavaScript (ES6+) and CSS Grid/Flexbox support.
 
 ---
 
+## Planned Features & Enhancements
+
+This section tracks features planned for future implementation.
+
+### Markdown Extensions
+
+**Multi-Column Layout**
+- Support for 2, 3, or more column layouts within markdown documents
+- Multiple syntax options (custom shortcuts, HTML-style tags, BBCode-style, divider syntax)
+- Theme-aware styling to match current theme aesthetics
+- Use cases: Comparisons, side-by-side content, magazine-style layouts
+
+**Containers/Callouts**
+- Warning, info, note, success, error boxes
+- Multiple syntax variations: `::: type`, `!!! type`, `[callout:type]`
+- Custom icons and colors per callout type
+- Collapsible callout support
+
+**Footnotes**
+- Reference-style footnotes with automatic numbering
+- Syntax: `text[^1]` with `[^1]: definition` at bottom
+- Multiple shortcut variations for footnote references
+- Auto-linking between reference and definition
+
+**Definition Lists**
+- Term and definition pairs with proper semantic HTML
+- Multiple syntax options: standard markdown-it style, custom shortcuts
+- Styled appropriately for each theme
+
+**Emoji Shortcodes**
+- Convert `:emoji_name:` to actual emoji characters
+- Support for hundreds of common emoji
+- Alternative syntaxes: `emoji{heart}`, `::heart::`
+- Emoji picker/browser in Help panel
+
+**Superscript/Subscript**
+- Chemical formulas (H~2~O), mathematical notation (X^2^)
+- Multiple syntax variations: `~sub~`, `^super^`, `[sub]text[/sub]`, `sub{text}`
+- Proper baseline alignment in all themes
+
+**Mark/Highlight**
+- Highlight text with yellow or custom colors
+- Syntax variations: `==text==`, `[mark]text[/mark]`, `highlight{text}`
+- Theme-aware highlight colors
+
+**Insertions/Deletions**
+- Show added/removed text with strikethrough and underline
+- Syntax: `++inserted++`, `--deleted--`, `[ins]text[/ins]`, `[del]text[/del]`
+- Useful for tracking document changes
+
+**Spoilers**
+- Hide content until clicked (spoiler blur/black-out effect)
+- Syntax variations: `>! spoiler`, `[spoiler]text[/spoiler]`, `||hidden||`
+- Click to reveal functionality
+
+**Keyboard Keys**
+- Style keyboard shortcuts with key cap appearance
+- Syntax: `[[Ctrl]]+[[C]]`, `kbd{Ctrl+C}`, `<kbd>Ctrl</kbd>`
+- Platform-aware (Ctrl vs Cmd)
+
+**Math Equations (LaTeX)**
+- Inline and block mathematical expressions
+- Syntax: `$inline$`, `$$block$$`, `[math]expression[/math]`
+- Requires LaTeX rendering library (KaTeX or MathJax)
+
+**Diagrams (Mermaid-style)**
+- Flowcharts, sequence diagrams, Gantt charts
+- Syntax: Code blocks with `mermaid` language tag
+- Requires Mermaid.js integration
+
+**Accordions/Details**
+- Native HTML details/summary elements
+- Custom markdown syntax alternatives
+- Nested accordion support
+
+**Multi-line Blockquotes with Attribution**
+- Quote blocks with author attribution
+- Syntax: `> quote\n> -- Author Name`
+- Special styling for attribution line
+
+**Progress Bars**
+- Visual progress indicators
+- Syntax variations: `[progress=75]`, `progress{75}`, `[75%]`
+- Customizable colors and labels
+
+**Badges/Tags**
+- Inline status badges (success, warning, error, info)
+- Syntax: `[badge:type]text[/badge]`, `badge{type:text}`
+- Multiple color schemes per theme
+
+**Abbreviations**
+- Hover tooltips for abbreviations
+- Syntax: `*[HTML]: Hyper Text Markup Language`
+- Auto-expansion on hover
+
+### Editor Enhancements
+
+**Enhanced Find Function**
+- Find all occurrences of search term in document
+- Next/Previous navigation buttons to jump between matches
+- Highlight all matches with different color for current match
+- Auto-scroll to bring current match into view
+- Match counter (e.g., "3 of 15")
+- Case-sensitive toggle
+- Whole word match toggle
+- Regular expression support
+- Replace and Replace All functionality
+
+**Double-Click Center Split**
+- Double-click the divider grip to instantly center the split
+- Smooth animation to 50/50 layout
+- Visual feedback on double-click
+
+**Sync Offset Documentation**
+- Add Scroll Sync section to Help panel explaining offset behavior
+- Document what positive/negative offset values mean
+- Include visual examples or diagrams
+- Best practices for adjusting offset based on document structure
+
+**Inline Font Styling**
+- Change font family, size, color, and weight for specific text spans
+- Multiple syntax approaches to be planned:
+  - HTML-style attributes: `<span font="Arial" size="20px" color="#ff0000">text</span>`
+  - Custom shortcut syntax: `[font:Arial|size:20px|color:red]text[/font]`
+  - CSS-style syntax: `{font-family: Arial; font-size: 20px}text{/}`
+  - BBCode-style: `[font=Arial][size=20]text[/size][/font]`
+- Font picker UI in toolbar or View panel
+- Theme-aware default fonts
+- Preserve inline styles in exported HTML
+- Support for web-safe fonts + custom font loading
+- Font preview in Help panel
+
+**Features to brainstorm for inline styling:**
+- Font family selection (web-safe fonts, Google Fonts integration?)
+- Font size (absolute px, relative em/rem, percentage?)
+- Font weight (normal, bold, 100-900 numeric)
+- Font color (hex, rgb, named colors, theme variables?)
+- Background color for text spans
+- Letter spacing / line height adjustments?
+- Text shadow effects?
+- Gradient text effects for specific themes (Cyberpunk)?
+- Should inline styles override theme styles or blend with them?
+- Export behavior - preserve inline styles or strip them?
+
+### Future Considerations
+
+Features to evaluate and potentially add:
+- Table of contents auto-generation
+- Word count / reading time indicators
+- Export to PDF with print-friendly formatting
+- Markdown templates (blog post, documentation, README, etc.)
+- Autocomplete for markdown syntax
+- Live collaboration (multiple users editing)
+- Version history / document snapshots
+- Spell check integration
+- Grammar check integration
+- Image paste from clipboard
+- Drag-and-drop image upload
+- Custom CSS class injection for advanced styling
+- Plugin/extension system for community add-ons
+
+---
+
 *Last updated: January 2026*

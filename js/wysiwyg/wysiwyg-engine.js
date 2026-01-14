@@ -5,7 +5,7 @@
  * Behavior:
  * - Type mode: Shows markdown syntax as plain text while typing
  * - Render on Enter: Pressing Enter renders the current block
- * - Click to edit: Clicking rendered element returns it to markdown
+ * - Edit in place: Rendered elements stay rendered and can be edited directly
  */
 
 class WysiwygEngine {
@@ -130,23 +130,26 @@ class WysiwygEngine {
     }
 
     /**
-     * Handle click events - convert rendered blocks back to edit mode
+     * Handle click events - allow editing in rendered state
      */
     handleClick(event) {
-        const target = event.target;
-
-        // Check if clicked element is a rendered block
-        const renderedBlock = target.closest('[data-wysiwyg-rendered="true"]');
-        if (renderedBlock) {
-            event.preventDefault();
-            this.convertToEditMode(renderedBlock);
-        }
+        // Rendered blocks now stay rendered and are editable
+        // No need to convert back to markdown syntax on click
     }
 
     /**
      * Handle input events - track changes
      */
     handleInput(event) {
+        const target = event.target;
+
+        // Check if we're editing a rendered block
+        const renderedBlock = target.closest('[data-wysiwyg-rendered="true"]');
+        if (renderedBlock) {
+            // Update the stored markdown when rendered content changes
+            this.updateRenderedBlockMarkdown(renderedBlock);
+        }
+
         // Auto-save could be triggered here
         // For now, just ensure we maintain proper structure
         this.ensureProperStructure();
@@ -307,13 +310,103 @@ class WysiwygEngine {
         // Mark as rendered and store original markdown
         element.setAttribute('data-wysiwyg-rendered', 'true');
         element.setAttribute('data-wysiwyg-markdown', originalMarkdown);
-        element.contentEditable = 'false'; // Make it non-editable until clicked
+        element.contentEditable = 'true'; // Make it editable in rendered state
 
         return element;
     }
 
     /**
-     * Convert a rendered block back to edit mode
+     * Update the markdown stored in a rendered block based on its current content
+     */
+    updateRenderedBlockMarkdown(renderedBlock) {
+        const tagName = renderedBlock.tagName.toLowerCase();
+        let markdown = '';
+
+        switch (tagName) {
+            case 'h1':
+                markdown = '# ' + renderedBlock.textContent;
+                break;
+            case 'h2':
+                markdown = '## ' + renderedBlock.textContent;
+                break;
+            case 'h3':
+                markdown = '### ' + renderedBlock.textContent;
+                break;
+            case 'h4':
+                markdown = '#### ' + renderedBlock.textContent;
+                break;
+            case 'h5':
+                markdown = '##### ' + renderedBlock.textContent;
+                break;
+            case 'h6':
+                markdown = '###### ' + renderedBlock.textContent;
+                break;
+            case 'blockquote':
+                markdown = '> ' + renderedBlock.textContent;
+                break;
+            case 'hr':
+                markdown = '---';
+                break;
+            case 'ol':
+                // Ordered list - extract list items
+                const olItems = Array.from(renderedBlock.querySelectorAll('li'));
+                markdown = olItems.map((li, index) => `${index + 1}. ${li.textContent}`).join('\n');
+                break;
+            case 'ul':
+                // Unordered list - extract list items
+                const ulItems = Array.from(renderedBlock.querySelectorAll('li'));
+                markdown = ulItems.map(li => `- ${li.textContent}`).join('\n');
+                break;
+            case 'p':
+                // Paragraph - could have inline formatting
+                markdown = this.htmlToMarkdown(renderedBlock.innerHTML);
+                break;
+            default:
+                // Fallback to text content
+                markdown = renderedBlock.textContent;
+        }
+
+        // Update the stored markdown
+        renderedBlock.setAttribute('data-wysiwyg-markdown', markdown);
+    }
+
+    /**
+     * Convert HTML back to markdown (for inline formatting)
+     */
+    htmlToMarkdown(html) {
+        let result = html;
+
+        // Convert HTML tags back to markdown syntax
+        // Bold + Italic
+        result = result.replace(/<strong><em>(.+?)<\/em><\/strong>/g, '***$1***');
+        result = result.replace(/<em><strong>(.+?)<\/strong><\/em>/g, '***$1***');
+
+        // Bold
+        result = result.replace(/<strong>(.+?)<\/strong>/g, '**$1**');
+
+        // Italic
+        result = result.replace(/<em>(.+?)<\/em>/g, '*$1*');
+
+        // Strikethrough
+        result = result.replace(/<s>(.+?)<\/s>/g, '~~$1~~');
+
+        // Inline code
+        result = result.replace(/<code>(.+?)<\/code>/g, '`$1`');
+
+        // Links
+        result = result.replace(/<a href="(.+?)">(.+?)<\/a>/g, '[$2]($1)');
+
+        // Images
+        result = result.replace(/<img src="(.+?)" alt="(.+?)">/g, '![$2]($1)');
+
+        // Remove any remaining HTML tags
+        result = result.replace(/<[^>]+>/g, '');
+
+        return result;
+    }
+
+    /**
+     * Convert a rendered block back to edit mode (deprecated - keeping for backwards compatibility)
      */
     convertToEditMode(renderedBlock) {
         // Get original markdown
@@ -460,7 +553,7 @@ class WysiwygEngine {
 
                     ol.setAttribute('data-wysiwyg-rendered', 'true');
                     ol.setAttribute('data-wysiwyg-markdown', olMarkdown.join('\n'));
-                    ol.contentEditable = 'false';
+                    ol.contentEditable = 'true';
                     blocks.push(ol.outerHTML);
                     continue;
                 }
@@ -495,7 +588,7 @@ class WysiwygEngine {
 
                     ul.setAttribute('data-wysiwyg-rendered', 'true');
                     ul.setAttribute('data-wysiwyg-markdown', ulMarkdown.join('\n'));
-                    ul.contentEditable = 'false';
+                    ul.contentEditable = 'true';
                     blocks.push(ul.outerHTML);
                     continue;
                 }
@@ -507,7 +600,7 @@ class WysiwygEngine {
                     const element = wrapper.firstChild;
                     element.setAttribute('data-wysiwyg-rendered', 'true');
                     element.setAttribute('data-wysiwyg-markdown', line);
-                    element.contentEditable = 'false';
+                    element.contentEditable = 'true';
                     blocks.push(element.outerHTML);
                     i++;
                     continue;

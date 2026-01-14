@@ -1818,6 +1818,36 @@ header[role="banner"] {
     margin: 1em 0;
 }
 
+/* Markdown table styles */
+.wysiwyg-content table,
+.wysiwyg-content .markdown-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    border: 1px solid var(--md-table-border, rgba(255, 255, 255, 0.2));
+}
+
+.wysiwyg-content table th,
+.wysiwyg-content table td {
+    padding: 8px 12px;
+    border: 1px solid var(--md-table-border, rgba(255, 255, 255, 0.2));
+    text-align: left;
+}
+
+.wysiwyg-content table th {
+    background: var(--md-table-header-bg, rgba(255, 255, 255, 0.1));
+    font-weight: 600;
+    color: var(--md-heading-color);
+}
+
+.wysiwyg-content table tbody tr:nth-child(even) {
+    background: var(--md-table-alt-row-bg, rgba(255, 255, 255, 0.05));
+}
+
+.wysiwyg-content table tbody tr:hover {
+    background: var(--md-table-hover-bg, rgba(255, 255, 255, 0.08));
+}
+
 /* Edit mode - show markdown syntax as plain text */
 .wysiwyg-content[data-mode="edit"] {
     font-family: var(--font-family-mono);

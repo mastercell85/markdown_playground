@@ -183,13 +183,49 @@
                     const content = e.target.result;
                     const filename = file.name.replace(/\.(md|markdown|txt)$/i, '');
 
+                    console.log('[DEBUG] File > Open: Starting file load process');
+                    console.log('[DEBUG] MarkdownEditor exists:', !!window.MarkdownEditor);
+                    console.log('[DEBUG] documentManager exists:', !!window.MarkdownEditor?.documentManager);
+                    console.log('[DEBUG] wysiwygEngine exists:', !!window.MarkdownEditor?.wysiwygEngine);
+                    console.log('[DEBUG] Content length:', content.length);
+                    console.log('[DEBUG] Content preview:', content.substring(0, 100));
+
                     if (window.MarkdownEditor && window.MarkdownEditor.documentManager) {
                         const newDoc = window.MarkdownEditor.documentManager.createDocument({
                             name: filename,
                             content: content
                         });
+                        console.log('[DEBUG] Document created with ID:', newDoc.id);
+
                         window.MarkdownEditor.documentManager.switchDocument(newDoc.id);
+                        console.log('[DEBUG] switchDocument called');
+
                         window.MarkdownEditor.tabController.renderTabs();
+                        console.log('[DEBUG] renderTabs called');
+
+                        // Check editor state after renderTabs
+                        const editorElement = document.getElementById('wysiwyg-editor');
+                        console.log('[DEBUG] After renderTabs - editor innerHTML length:', editorElement?.innerHTML.length);
+
+                        // Explicitly render the document content in WYSIWYG mode
+                        console.log('[DEBUG] About to check wysiwygEngine condition');
+                        if (window.MarkdownEditor.wysiwygEngine) {
+                            console.log('[DEBUG] Calling setMarkdown with renderAll=true');
+                            window.MarkdownEditor.wysiwygEngine.setMarkdown(content, true);
+                            console.log('[DEBUG] setMarkdown call completed');
+
+                            // Check editor state after a brief delay to see if something modifies it
+                            setTimeout(() => {
+                                const editorEl = document.getElementById('wysiwyg-editor');
+                                console.log('[DEBUG] 100ms after setMarkdown - innerHTML length:', editorEl?.innerHTML.length);
+                                console.log('[DEBUG] 100ms after setMarkdown - First 200 chars:', editorEl?.innerHTML.substring(0, 200));
+                                console.log('[DEBUG] 100ms after setMarkdown - Display style:', window.getComputedStyle(editorEl).display);
+                                console.log('[DEBUG] 100ms after setMarkdown - Visibility:', window.getComputedStyle(editorEl).visibility);
+                            }, 100);
+                        } else {
+                            console.error('[DEBUG] wysiwygEngine is NOT available!');
+                        }
+
                         console.log('File opened:', filename);
                     }
 

@@ -1466,3 +1466,83 @@
     color: var(--lcars-grey);
     font-size: 13px;
 }
+
+/* ============================================================================
+   WYSIWYG UNIFIED EDITOR - Apply LCARS frame to contenteditable area
+   ============================================================================ */
+
+/* Make parent containers allow overflow and use black background */
+[data-theme="lcars"] body,
+[data-theme="lcars"] .editor-container {
+    background: black !important;
+    overflow: visible !important;
+}
+
+/* Outer section is the scrolling container - allow x overflow for decorations */
+[data-theme="lcars"] .editor-section.unified-editor {
+    background: black !important;
+    height: 100vh !important;
+    overflow-y: auto !important;
+    overflow-x: visible !important;
+}
+
+/* Content wrapper */
+[data-theme="lcars"] .editor-section.unified-editor .editor-section-content {
+    background: black !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+}
+
+/* #write wrapper */
+[data-theme="lcars"] .editor-section.unified-editor #write {
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+}
+
+/* wysiwyg-content gets the LCARS frame with box-shadow (same as split view) */
+[data-theme="lcars"] .wysiwyg-content {
+    position: relative !important;
+    min-height: calc(100vh - 10rem) !important;
+    width: 80vw !important;
+    max-width: 24cm !important;
+    margin: 6rem auto !important;
+    padding: 2rem !important;
+
+    border-radius: 2rem 0rem 0rem 0rem !important;
+    box-shadow:
+        -2rem -4rem 0 0 var(--lcars-purple),
+        0rem  -4rem 0 0 var(--lcars-purple),
+        -2rem 0rem 0 0 var(--lcars-purple) !important;
+
+    overflow: visible !important;
+    background: black !important;
+}
+
+/* Add the "TYPORA" label */
+[data-theme="lcars"] .wysiwyg-content:before {
+    content: "TYPORA" !important;
+
+    position: absolute !important;
+    bottom: 100% !important;
+    right: 5rem !important;
+
+    height: 4rem !important;
+
+    background-color: black !important;
+
+    box-shadow:
+        -2rem 0 0 var(--lcars-orange),
+        -2.5rem 0 0 black,
+        -8.5rem 0 0 var(--lcars-grey),
+        -9rem 0 0 black !important;
+
+    box-sizing: content-box !important;
+    padding: 0 1rem !important;
+
+    line-height: 5rem !important;
+    font-size: 5rem !important;
+    font-family: 'Teko', sans-serif !important;
+    color: var(--lcars-yellow) !important;
+}

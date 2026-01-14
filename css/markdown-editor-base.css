@@ -1779,3 +1779,174 @@ header[role="banner"] {
         height: 40px;
     }
 }
+
+/* ============================================================================
+   WYSIWYG UNIFIED VIEW - Phase 3
+   ============================================================================ */
+
+/* WYSIWYG Layout Mode */
+.editor-container[data-layout="wysiwyg"] {
+    display: flex;
+    flex-direction: row;
+}
+
+/* Unified editor section - takes remaining space */
+.unified-editor {
+    flex: 1;
+    min-width: 200px;
+    background: var(--editor-section-bg);
+}
+
+/* WYSIWYG contenteditable area */
+.wysiwyg-content {
+    min-height: 100%;
+    padding: 20px;
+    outline: none;
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    color: var(--textarea-text);
+    background: transparent;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+/* Contenteditable focus state */
+.wysiwyg-content:focus {
+    outline: none;
+}
+
+/* Source mode textarea (hidden by default) */
+.source-textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    padding: 20px;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+    color: var(--textarea-text);
+    background: var(--textarea-bg);
+}
+
+/* Gap in WYSIWYG mode - toolbar area (reusing existing gap styles) */
+.editor-container[data-layout="wysiwyg"] .editor-gap {
+    /* Gap uses existing styles from split view */
+    /* Divider is disabled in WYSIWYG mode (no resizing) */
+}
+
+.editor-container[data-layout="wysiwyg"] .editor-divider {
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Source toggle button - highlighted when active */
+#toolbar-source-toggle.active {
+    background: rgba(66, 153, 225, 0.3) !important;
+    border-color: rgba(66, 153, 225, 0.6) !important;
+}
+
+/* WYSIWYG markdown rendering styles */
+.wysiwyg-content h1,
+.wysiwyg-content h2,
+.wysiwyg-content h3,
+.wysiwyg-content h4,
+.wysiwyg-content h5,
+.wysiwyg-content h6 {
+    color: var(--md-heading-color);
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+}
+
+.wysiwyg-content h1 { font-size: 2em; }
+.wysiwyg-content h2 { font-size: 1.5em; }
+.wysiwyg-content h3 { font-size: 1.25em; }
+.wysiwyg-content h4 { font-size: 1.1em; }
+.wysiwyg-content h5 { font-size: 1em; }
+.wysiwyg-content h6 { font-size: 0.9em; }
+
+.wysiwyg-content p {
+    margin: 0.75em 0;
+}
+
+.wysiwyg-content strong {
+    font-weight: 600;
+}
+
+.wysiwyg-content em {
+    font-style: italic;
+}
+
+.wysiwyg-content code {
+    padding: 2px 6px;
+    background: var(--md-code-bg);
+    color: var(--md-code-text);
+    border-radius: 3px;
+    font-family: var(--font-family-mono);
+    font-size: 0.9em;
+}
+
+.wysiwyg-content pre {
+    padding: 16px;
+    background: var(--md-code-bg);
+    color: var(--md-code-text);
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 1em 0;
+}
+
+.wysiwyg-content pre code {
+    padding: 0;
+    background: none;
+    font-size: 1em;
+}
+
+.wysiwyg-content a {
+    color: var(--md-link-color);
+    text-decoration: none;
+}
+
+.wysiwyg-content a:hover {
+    color: var(--md-link-hover);
+    text-decoration: underline;
+}
+
+.wysiwyg-content blockquote {
+    margin: 1em 0;
+    padding-left: 1em;
+    border-left: 4px solid var(--md-blockquote-border);
+    color: var(--md-blockquote-text);
+    font-style: italic;
+}
+
+.wysiwyg-content ul,
+.wysiwyg-content ol {
+    margin: 0.75em 0;
+    padding-left: 2em;
+}
+
+.wysiwyg-content li {
+    margin: 0.25em 0;
+}
+
+.wysiwyg-content hr {
+    border: none;
+    border-top: 2px solid var(--md-hr-color);
+    margin: 2em 0;
+}
+
+.wysiwyg-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1em 0;
+}
+
+/* Edit mode - show markdown syntax as plain text */
+.wysiwyg-content[data-mode="edit"] {
+    font-family: var(--font-family-mono);
+}

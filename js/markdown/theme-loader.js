@@ -53,28 +53,43 @@ class ThemeLoader {
 
     /**
      * Initialize theme loader
+     * @param {SettingsManager} settingsManager - Optional settings manager instance
      */
-    init() {
-        // Load saved theme from localStorage
-        const savedTheme = localStorage.getItem('editor-current-theme');
-        if (savedTheme) {
-            try {
-                const themeData = JSON.parse(savedTheme);
-                console.log('Loading saved theme from localStorage:', themeData);
+    init(settingsManager = null) {
+        this.settingsManager = settingsManager;
 
-                // Try to find the theme by name in built-in or custom themes first
-                const allThemes = this.getAllThemes();
-                const matchingTheme = Object.values(allThemes).find(t => t.name === themeData.name);
+        // Load saved theme - prefer SettingsManager, fallback to legacy localStorage
+        let themeId = null;
 
-                if (matchingTheme) {
-                    console.log('Found matching theme in registry:', matchingTheme);
-                    this.loadTheme(matchingTheme);
-                } else {
-                    console.log('Theme not in registry, loading from saved data');
-                    this.loadTheme(themeData);
+        if (this.settingsManager) {
+            themeId = this.settingsManager.settings.theme.current;
+        }
+
+        // Fallback: migrate from legacy localStorage if needed
+        if (!themeId || themeId === 'default') {
+            const legacyTheme = localStorage.getItem('editor-current-theme');
+            if (legacyTheme) {
+                try {
+                    const themeData = JSON.parse(legacyTheme);
+                    themeId = themeData.themeId || themeData.name;
+                    console.log('Migrating theme from legacy localStorage:', themeId);
+                    // Clean up legacy storage after migration
+                    localStorage.removeItem('editor-current-theme');
+                } catch (error) {
+                    console.error('Failed to parse legacy theme:', error);
                 }
-            } catch (error) {
-                console.error('Failed to load saved theme:', error);
+            }
+        }
+
+        if (themeId) {
+            const allThemes = this.getAllThemes();
+            const theme = allThemes[themeId];
+
+            if (theme) {
+                console.log('Loading theme by ID:', themeId);
+                this.loadTheme(theme);
+            } else {
+                console.warn('Theme not found in registry:', themeId);
             }
         }
 
@@ -184,8 +199,13 @@ class ThemeLoader {
         // Update current theme
         this.currentTheme = theme;
 
-        // Save to localStorage
-        localStorage.setItem('editor-current-theme', JSON.stringify(theme));
+        // Save theme ID to SettingsManager (or fallback to localStorage)
+        if (this.settingsManager) {
+            this.settingsManager.set('theme.current', theme.themeId || theme.name);
+        } else {
+            // Legacy fallback
+            localStorage.setItem('editor-current-theme', JSON.stringify(theme));
+        }
 
         // Trigger callback
         if (this.onThemeChange) {

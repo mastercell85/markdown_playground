@@ -14,6 +14,10 @@ A feature-rich, modular markdown editor with live preview, multiple themes, and 
 6. [Theme System](#theme-system)
 7. [Shortcut Syntax](#shortcut-syntax)
 8. [Adding New Features](#adding-new-features)
+9. [Implementation Planning](#implementation-planning)
+   - [Phase 1: Settings System](#phase-1-settingspreferences-system---planning-session) ✅
+   - [Phase 2: Scroll Sync & WYSIWYG Infrastructure](#phase-2-scroll-sync-accuracy--wysiwyg-infrastructure---planning-session) 🔄
+10. [Planned Features & Enhancements](#planned-features--enhancements)
 
 ---
 
@@ -1898,6 +1902,401 @@ describe('Save/Cancel/Revert', () => {
 ### Phase 1 Planning: COMPLETE
 
 All 10 architectural decisions have been made. The Settings/Preferences System is ready for implementation.
+
+---
+
+### Phase 2: Scroll Sync Accuracy & WYSIWYG Infrastructure - Planning Session
+
+**Status:** 🔄 PLANNING IN PROGRESS
+**Session Date:** January 14, 2026
+
+This section documents infrastructure planning for improved scroll synchronization and WYSIWYG editing mode. These features share significant infrastructure requirements, so planning them together prevents duplicate work and ensures a cohesive architecture.
+
+---
+
+#### Why Plan These Together?
+
+Both Scroll Sync improvements and WYSIWYG mode need **accurate line-to-element mapping** - the ability to know exactly which rendered DOM element corresponds to which line (or range of lines) in the source markdown.
+
+**Current Scroll Sync Limitations:**
+- Uses `data-line` attributes added by BlockProcessor during parsing
+- Works well for block-level elements (headings, paragraphs, code blocks)
+- ~95% accuracy but struggles with:
+  - Elements spanning multiple source lines (multi-line paragraphs)
+  - Inline elements (emphasis, links) within block elements
+  - Dynamic content height differences between source and preview
+  - Nested structures (lists within lists, blockquotes)
+
+**WYSIWYG Requirements:**
+- Need to know which source line the cursor is on
+- Need to transform that position to the rendered DOM position
+- Need bidirectional mapping: source ↔ DOM
+- Must handle partial block editing (editing middle of paragraph)
+
+**Shared Infrastructure:**
+| Component | Scroll Sync Needs | WYSIWYG Needs |
+|-----------|-------------------|---------------|
+| Line-to-element mapping | Yes - find element for line | Yes - find element for cursor |
+| Element-to-line mapping | Yes - find line for scroll position | Yes - update source from DOM |
+| Character offset tracking | Partial - block boundaries | Yes - exact character positions |
+| Rendered height calculation | Yes - interpolate scroll positions | Yes - cursor positioning |
+| Block boundary detection | Yes - sync at block edges | Yes - detect when to render |
+
+---
+
+#### Architecture Overview: Line Mapping System
+
+**Purpose:** Create a bidirectional mapping between source markdown lines and rendered DOM elements, enabling accurate scroll sync and future WYSIWYG editing.
+
+**Core Components:**
+
+```
+LineMapper (New Module)
+├── SourceMap
+│   ├── lineToElement: Map<lineNumber, ElementInfo>
+│   ├── elementToLines: Map<elementId, LineRange>
+│   └── characterOffsets: Map<lineNumber, {start, end}>
+│
+├── DOMTracker
+│   ├── elementHeights: Map<elementId, number>
+│   ├── elementOffsets: Map<elementId, number>
+│   └── updateOnMutation: MutationObserver
+│
+└── Interpolator
+    ├── getElementForLine(line): Element
+    ├── getLineForElement(element): LineRange
+    ├── getScrollPositionForLine(line): number
+    └── getLineForScrollPosition(scrollTop): number
+```
+
+---
+
+#### Decision 1: Mapping Granularity
+
+**Question:** How fine-grained should the line-to-element mapping be?
+
+**Option A: Block-Level Only (Current Approach)**
+- Map entire blocks (paragraphs, headings, code blocks) to line ranges
+- Simple, fast, but ~95% accuracy
+- Can't handle mid-paragraph scrolling precisely
+
+**Option B: Block + Inline Elements**
+- Map blocks AND inline elements (links, emphasis, code spans)
+- More accurate scroll sync within long paragraphs
+- Significantly more complex parsing and DOM traversal
+
+**Option C: Character-Level Mapping**
+- Map every character position to DOM text nodes
+- Maximum accuracy (99%+)
+- High memory overhead, complex maintenance
+- Required for true WYSIWYG (cursor positioning)
+
+**Option D: Hybrid - Block Default, Character On-Demand**
+- Use block-level mapping for scroll sync (fast, low memory)
+- Calculate character-level mapping only when needed (WYSIWYG editing)
+- Best of both worlds: performance when scrolling, precision when editing
+
+---
+
+#### Decision 2: Source Map Generation Timing
+
+**Question:** When should the line mapping be generated?
+
+**Option A: During Parsing (Current)**
+- BlockProcessor adds `data-line` attributes during markdown→HTML conversion
+- Pros: Already implemented, no extra pass
+- Cons: Limited to what parser knows, can't track post-render changes
+
+**Option B: Post-Render DOM Analysis**
+- After HTML is rendered, traverse DOM to build complete map
+- Pros: Sees actual rendered structure, handles dynamic content
+- Cons: Extra processing step, may not match source accurately
+
+**Option C: Hybrid - Parser Seeds, Post-Render Enhances**
+- Parser adds `data-line` attributes (block boundaries)
+- Post-render pass adds measurements (heights, offsets)
+- Pros: Accurate source mapping + actual render measurements
+- Cons: More complex, two-phase process
+
+---
+
+#### Decision 3: Height Calculation Strategy
+
+**Question:** How should we handle height differences between source and rendered content?
+
+**Problem:** Source lines have uniform height (line-height), but rendered elements have variable heights:
+- A 3-line source paragraph might render as 5 lines of text (wrapping)
+- An image takes 1 source line but could be 500px tall
+- Code blocks with syntax highlighting may differ from source
+
+**Option A: Percentage-Based Interpolation (Current Fallback)**
+- Calculate scroll position as percentage of total height
+- Simple, works reasonably well for similar-length content
+- Breaks down with images, large code blocks, or varying density
+
+**Option B: Element-Height Weighted Mapping**
+- Track actual rendered height of each mapped element
+- Distribute scroll position proportionally based on element heights
+- More accurate for mixed content documents
+
+**Option C: Line-Height Normalized Mapping**
+- Normalize all heights to "equivalent source lines"
+- A 200px image = ~13 source lines at 15px line-height
+- Provides conceptually simple mapping
+- May feel "wrong" when scrolling over images
+
+**Option D: Content-Aware Adaptive Mapping**
+- Different strategies for different content types
+- Text: line-based interpolation
+- Images: jump to/from (sync at boundaries, not within)
+- Code: syntax-line based (sync by code line, not source line)
+- Most accurate but most complex
+
+---
+
+#### Decision 4: DOM Change Handling
+
+**Question:** How should the mapping respond to DOM changes?
+
+**Scenarios:**
+- User types in editor → source changes → re-render
+- Window resize → reflow → heights change
+- Theme switch → styles change → heights change
+- Dynamic content (collapsible sections, lazy images)
+
+**Option A: Full Rebuild on Any Change**
+- Any DOM mutation triggers complete map rebuild
+- Simple logic but potentially expensive
+- May cause scroll jumps during editing
+
+**Option B: Incremental Updates**
+- MutationObserver tracks specific changes
+- Only update affected portions of map
+- Complex but efficient
+- Risk of map drift/corruption over time
+
+**Option C: Lazy Rebuild with Dirty Flag**
+- Mark map as "dirty" on changes
+- Rebuild only when mapping is actually queried
+- Good for burst edits (typing rapidly)
+- Slight latency on first scroll after edit
+
+**Option D: Time-Debounced Rebuild**
+- Rebuild map after 100-300ms of no changes
+- Balances accuracy with performance
+- Similar to current auto-save debouncing
+- Natural fit with existing architecture
+
+---
+
+#### Decision 5: Scroll Sync Algorithm Improvements
+
+**Question:** What algorithm improvements should we implement?
+
+**Current Algorithm:**
+1. Calculate visible line from scroll position
+2. Apply offset adjustment
+3. Find element with matching `data-line`
+4. Scroll preview to that element
+
+**Proposed Improvements:**
+
+**Improvement A: Sub-Element Interpolation**
+- When scrolled partway through an element, interpolate proportionally
+- If paragraph spans lines 5-8 and we're at line 6.5, scroll to 37.5% through paragraph
+- Smoother scrolling, especially for long paragraphs
+
+**Improvement B: Velocity-Aware Sync**
+- Track scroll velocity (fast vs slow scrolling)
+- Fast scroll: sync at block boundaries only (less jitter)
+- Slow scroll: precise sub-element sync
+- Prevents "fighting" during rapid scroll
+
+**Improvement C: Directional Bias**
+- Remember last scroll direction
+- When syncing, bias toward revealing content in scroll direction
+- Prevents constant back-and-forth adjustments
+
+**Improvement D: Anchor Point Preservation**
+- When heights change, preserve current anchor point
+- Re-calculate positions relative to anchor, not absolute
+- Prevents jarring jumps on reflow
+
+---
+
+#### Decision 6: WYSIWYG Infrastructure Hooks
+
+**Question:** What hooks should Line Mapper provide for future WYSIWYG mode?
+
+**Essential Hooks:**
+
+```javascript
+// Get DOM position for source cursor
+getRenderedPositionForCursor(line, column) → {element, offset}
+
+// Get source position for DOM selection
+getSourcePositionForSelection(selection) → {line, column}
+
+// Get the block element containing a source position
+getContainingBlock(line) → {element, startLine, endLine}
+
+// Check if source position is in a "raw" zone (code block, etc.)
+isRawZone(line) → boolean
+
+// Get editable range for current block
+getEditableRange(line) → {startLine, endLine, startCol, endCol}
+```
+
+**Optional Hooks (Future):**
+
+```javascript
+// Track live edits without full re-parse
+trackEdit(line, column, text, type: 'insert'|'delete')
+
+// Get syntax context at position (for highlighting)
+getSyntaxContext(line, column) → 'heading'|'paragraph'|'code'|...
+
+// Get available transformations at position
+getAvailableTransforms(line) → ['bold', 'italic', ...]
+```
+
+---
+
+#### Decision 7: Integration Points
+
+**Question:** How should Line Mapper integrate with existing modules?
+
+**Integration Map:**
+
+| Module | Integration |
+|--------|-------------|
+| **BlockProcessor** | Emits line info during parsing, LineMapper consumes |
+| **ScrollSync** | Uses LineMapper instead of raw `data-line` queries |
+| **MarkdownRenderer** | Triggers LineMapper update after render |
+| **DocumentManager** | Notifies LineMapper of document switches |
+| **SettingsManager** | Stores sync accuracy preferences |
+| **Future WYSIWYG** | Primary consumer of bidirectional mapping |
+
+**Event Flow:**
+
+```
+User types → DocumentManager saves → MarkdownParser parses
+                                           ↓
+                                    BlockProcessor emits line data
+                                           ↓
+                                    MarkdownRenderer renders HTML
+                                           ↓
+                                    LineMapper.update() called
+                                           ↓
+                                    ScrollSync uses updated map
+```
+
+---
+
+#### Decision 8: Performance Budget
+
+**Question:** What are acceptable performance limits?
+
+**Targets:**
+
+| Operation | Target | Acceptable |
+|-----------|--------|------------|
+| Initial map build (1000 lines) | <50ms | <100ms |
+| Incremental update (single block) | <5ms | <10ms |
+| Scroll position query | <1ms | <2ms |
+| Full rebuild (triggered by resize) | <100ms | <200ms |
+| Memory overhead (1000 lines) | <500KB | <1MB |
+
+**Measurement Points:**
+- Add performance marks in dev mode
+- Log slow operations (>2x target)
+- Consider worker thread for initial build on large docs
+
+---
+
+#### Decision 9: API Design
+
+**Question:** What should the LineMapper public API look like?
+
+**Proposed API:**
+
+```javascript
+class LineMapper {
+  // Initialization
+  constructor(options: {
+    parser: MarkdownParser,
+    renderer: MarkdownRenderer,
+    previewContainer: HTMLElement,
+    rebuildDebounceMs: number
+  })
+
+  // Core mapping queries
+  getElementForLine(line: number): Element | null
+  getLinesForElement(element: Element): { start: number, end: number } | null
+  getScrollPositionForLine(line: number): number
+  getLineForScrollPosition(scrollTop: number): number
+
+  // Height/position info
+  getElementHeight(element: Element): number
+  getElementOffset(element: Element): number
+  getTotalMappedHeight(): number
+
+  // WYSIWYG hooks (Phase 2+)
+  getRenderedPositionForCursor(line: number, col: number): { element: Element, offset: number }
+  getSourcePositionForSelection(sel: Selection): { line: number, col: number }
+  isRawZone(line: number): boolean
+
+  // Lifecycle
+  update(): void           // Manual trigger
+  invalidate(): void       // Mark dirty
+  destroy(): void          // Cleanup
+
+  // Events
+  on('update', callback): void
+  on('error', callback): void
+}
+```
+
+---
+
+#### Implementation Phases
+
+**Phase 2a: LineMapper Foundation**
+- [ ] Create `js/shared/line-mapper.js` module
+- [ ] Implement basic line-to-element mapping using existing `data-line`
+- [ ] Add element height and offset tracking
+- [ ] Implement interpolation for scroll position queries
+- [ ] Add debounced rebuild on DOM changes
+
+**Phase 2b: Enhanced Scroll Sync**
+- [ ] Refactor ScrollSync to use LineMapper instead of direct queries
+- [ ] Implement sub-element interpolation
+- [ ] Add velocity-aware sync option
+- [ ] Add directional bias option
+- [ ] Test with various document types
+
+**Phase 2c: WYSIWYG Preparation**
+- [ ] Add character-level mapping capability (lazy/on-demand)
+- [ ] Implement cursor position translation hooks
+- [ ] Add raw zone detection (code blocks, frontmatter)
+- [ ] Add block boundary detection
+- [ ] Document API for WYSIWYG phase
+
+---
+
+#### Questions to Resolve Before Implementation
+
+1. **Mapping Granularity (Decision 1):** Block-level, inline, character-level, or hybrid?
+2. **Generation Timing (Decision 2):** Parser-time, post-render, or hybrid?
+3. **Height Calculation (Decision 3):** Percentage, weighted, normalized, or adaptive?
+4. **Change Handling (Decision 4):** Full rebuild, incremental, lazy, or debounced?
+5. **Algorithm Improvements (Decision 5):** Which improvements to prioritize?
+
+---
+
+### Phase 2 Planning: IN PROGRESS
+
+Awaiting decisions on core architectural questions before implementation.
 
 **Summary of Decisions:**
 

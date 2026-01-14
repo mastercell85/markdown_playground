@@ -31,7 +31,7 @@
                 updateThemeDisplay(theme);
             }
         });
-        themeLoader.init();
+        themeLoader.init(settingsManager);
 
         // Initialize panel management
         initializePanelManagement();
@@ -83,6 +83,9 @@
 
         // Setup View menu buttons
         setupViewMenuButtons();
+
+        // Setup Settings panel
+        setupSettingsPanel();
 
         // Restore user preferences
         restoreViewPreferences();
@@ -572,34 +575,8 @@
             });
         }
 
-        // Editor options
-        const toggleLineNumbersBtn = document.getElementById('toggle-line-numbers-btn');
-        const toggleWordWrapBtn = document.getElementById('toggle-word-wrap-btn');
-
-        if (toggleLineNumbersBtn) {
-            toggleLineNumbersBtn.addEventListener('click', function(event) {
-                event.stopPropagation();
-                handleToggleLineNumbers();
-            });
-        }
-
-        if (toggleWordWrapBtn) {
-            toggleWordWrapBtn.addEventListener('click', function(event) {
-                event.stopPropagation();
-                handleToggleWordWrap();
-            });
-        }
-
-        // Scroll Sync toggle buttons
-        const toggleScrollSyncBtn = document.getElementById('toggle-scroll-sync-btn');
+        // Scroll Sync toggle button on divider (Editor options moved to Settings panel)
         const dividerSyncBtn = document.getElementById('divider-sync-btn');
-
-        if (toggleScrollSyncBtn) {
-            toggleScrollSyncBtn.addEventListener('click', function(event) {
-                event.stopPropagation();
-                handleToggleScrollSync();
-            });
-        }
 
         if (dividerSyncBtn) {
             dividerSyncBtn.addEventListener('click', function(event) {
@@ -649,6 +626,563 @@
                 event.stopPropagation();
                 handleZoomChange(150);
             });
+        }
+    }
+
+    /**
+     * Setup Settings panel controls and handlers
+     */
+    function setupSettingsPanel() {
+        // Initialize collapsible sections
+        initializeSettingsSections();
+
+        // Get control elements
+        const fontSizeSlider = document.getElementById('settings-font-size');
+        const fontSizeValue = document.getElementById('settings-font-size-value');
+        const lineHeightSlider = document.getElementById('settings-line-height');
+        const lineHeightValue = document.getElementById('settings-line-height-value');
+        const tabSizeSelect = document.getElementById('settings-tab-size');
+        const fontFamilySelect = document.getElementById('settings-font-family');
+        const lineNumbersCheckbox = document.getElementById('settings-line-numbers');
+        const wordWrapCheckbox = document.getElementById('settings-word-wrap');
+        const scrollSyncCheckbox = document.getElementById('settings-scroll-sync');
+        const scrollOffsetSlider = document.getElementById('settings-scroll-offset');
+        const scrollOffsetValue = document.getElementById('settings-scroll-offset-value');
+        const exportBtn = document.getElementById('settings-export-btn');
+        const importBtn = document.getElementById('settings-import-btn');
+        const importInput = document.getElementById('settings-import-input');
+        const resetEditorBtn = document.getElementById('settings-reset-editor-btn');
+        const resetAllBtn = document.getElementById('settings-reset-all-btn');
+
+        // Initialize controls with current settings
+        if (settingsManager && settingsManager.settings) {
+            const settings = settingsManager.settings;
+
+            // Font Size
+            if (fontSizeSlider && fontSizeValue) {
+                fontSizeSlider.value = settings.editor.fontSize;
+                fontSizeValue.textContent = settings.editor.fontSize + 'px';
+            }
+
+            // Line Height
+            if (lineHeightSlider && lineHeightValue) {
+                lineHeightSlider.value = settings.editor.lineHeight;
+                lineHeightValue.textContent = settings.editor.lineHeight.toFixed(1);
+            }
+
+            // Tab Size
+            if (tabSizeSelect) {
+                tabSizeSelect.value = settings.editor.tabSize;
+            }
+
+            // Font Family
+            if (fontFamilySelect) {
+                fontFamilySelect.value = settings.editor.fontFamily;
+            }
+
+            // Line Numbers
+            if (lineNumbersCheckbox) {
+                lineNumbersCheckbox.checked = settings.editor.lineNumbers;
+            }
+
+            // Word Wrap
+            if (wordWrapCheckbox) {
+                wordWrapCheckbox.checked = settings.editor.wordWrap;
+            }
+
+            // Scroll Sync
+            if (scrollSyncCheckbox) {
+                scrollSyncCheckbox.checked = settings.editor.scrollSync.enabled;
+            }
+
+            // Scroll Offset
+            if (scrollOffsetSlider && scrollOffsetValue) {
+                scrollOffsetSlider.value = settings.editor.scrollSync.offset;
+                scrollOffsetValue.textContent = settings.editor.scrollSync.offset + ' lines';
+            }
+        }
+
+        // Font Size slider handler
+        if (fontSizeSlider) {
+            fontSizeSlider.addEventListener('input', function(event) {
+                const value = parseInt(event.target.value);
+                if (fontSizeValue) {
+                    fontSizeValue.textContent = value + 'px';
+                }
+                try {
+                    settingsManager.set('editor.fontSize', value);
+                    applyEditorFontSize(value);
+                } catch (error) {
+                    console.error('Settings error:', error.message);
+                }
+            });
+        }
+
+        // Line Height slider handler
+        if (lineHeightSlider) {
+            lineHeightSlider.addEventListener('input', function(event) {
+                const value = parseFloat(event.target.value);
+                if (lineHeightValue) {
+                    lineHeightValue.textContent = value.toFixed(1);
+                }
+                try {
+                    settingsManager.set('editor.lineHeight', value);
+                    applyEditorLineHeight(value);
+                } catch (error) {
+                    console.error('Settings error:', error.message);
+                }
+            });
+        }
+
+        // Tab Size select handler
+        if (tabSizeSelect) {
+            tabSizeSelect.addEventListener('change', function(event) {
+                const value = parseInt(event.target.value);
+                try {
+                    settingsManager.set('editor.tabSize', value);
+                    applyEditorTabSize(value);
+                } catch (error) {
+                    console.error('Settings error:', error.message);
+                }
+            });
+        }
+
+        // Font Family select handler
+        if (fontFamilySelect) {
+            fontFamilySelect.addEventListener('change', function(event) {
+                const value = event.target.value;
+                try {
+                    settingsManager.set('editor.fontFamily', value);
+                    applyEditorFontFamily(value);
+                } catch (error) {
+                    console.error('Settings error:', error.message);
+                }
+            });
+        }
+
+        // Line Numbers checkbox handler
+        if (lineNumbersCheckbox) {
+            lineNumbersCheckbox.addEventListener('change', function(event) {
+                const value = event.target.checked;
+                try {
+                    settingsManager.set('editor.lineNumbers', value);
+                    applyLineNumbers(value);
+                } catch (error) {
+                    console.error('Settings error:', error.message);
+                }
+            });
+        }
+
+        // Word Wrap checkbox handler
+        if (wordWrapCheckbox) {
+            wordWrapCheckbox.addEventListener('change', function(event) {
+                const value = event.target.checked;
+                try {
+                    settingsManager.set('editor.wordWrap', value);
+                    applyWordWrap(value);
+                } catch (error) {
+                    console.error('Settings error:', error.message);
+                }
+            });
+        }
+
+        // Scroll Sync checkbox handler
+        if (scrollSyncCheckbox) {
+            scrollSyncCheckbox.addEventListener('change', function(event) {
+                const value = event.target.checked;
+                try {
+                    settingsManager.set('editor.scrollSync.enabled', value);
+                    applyScrollSync(value);
+                } catch (error) {
+                    console.error('Settings error:', error.message);
+                }
+            });
+        }
+
+        // Scroll Offset slider handler
+        if (scrollOffsetSlider) {
+            scrollOffsetSlider.addEventListener('input', function(event) {
+                const value = parseInt(event.target.value);
+                if (scrollOffsetValue) {
+                    scrollOffsetValue.textContent = value + ' lines';
+                }
+                try {
+                    settingsManager.set('editor.scrollSync.offset', value);
+                    applyScrollOffset(value);
+                } catch (error) {
+                    console.error('Settings error:', error.message);
+                }
+            });
+        }
+
+        // Export button handler
+        if (exportBtn) {
+            exportBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                settingsManager.exportToFile();
+            });
+        }
+
+        // Import button handler
+        if (importBtn && importInput) {
+            importBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                importInput.click();
+            });
+
+            importInput.addEventListener('change', async function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const result = await settingsManager.importFromFile(file);
+                    if (result.success) {
+                        alert('Settings imported successfully!' + (result.warnings ? '\n\nWarnings:\n' + result.warnings.join('\n') : ''));
+                        // Refresh the settings panel UI
+                        refreshSettingsPanelUI();
+                    } else {
+                        alert('Failed to import settings:\n' + result.errors.join('\n'));
+                    }
+                }
+                // Reset input so same file can be imported again
+                event.target.value = '';
+            });
+        }
+
+        // Reset Editor button handler
+        if (resetEditorBtn) {
+            resetEditorBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                if (confirm('Reset all Editor settings to defaults? This cannot be undone.')) {
+                    try {
+                        settingsManager.resetModule('editor');
+                        refreshSettingsPanelUI();
+                        alert('Editor settings have been reset to defaults.');
+                    } catch (error) {
+                        console.error('Reset error:', error.message);
+                    }
+                }
+            });
+        }
+
+        // Reset All button handler
+        if (resetAllBtn) {
+            resetAllBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                if (confirm('Reset ALL settings to defaults? This cannot be undone.')) {
+                    settingsManager.resetAll();
+                    refreshSettingsPanelUI();
+                    alert('All settings have been reset to defaults.');
+                }
+            });
+        }
+    }
+
+    /**
+     * Initialize collapsible sections for Settings panel
+     */
+    function initializeSettingsSections() {
+        const sections = document.querySelectorAll('.settings-section');
+        const expandAllCheckbox = document.getElementById('settings-expand-all-sections');
+
+        sections.forEach(section => {
+            const header = section.querySelector('.settings-section-header');
+            if (header) {
+                header.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    section.classList.toggle('expanded');
+                    updateSettingsExpandAllCheckbox();
+                });
+            }
+        });
+
+        if (expandAllCheckbox) {
+            expandAllCheckbox.addEventListener('change', function(event) {
+                event.stopPropagation();
+                const expand = event.target.checked;
+                sections.forEach(section => {
+                    if (expand) {
+                        section.classList.add('expanded');
+                    } else {
+                        section.classList.remove('expanded');
+                    }
+                });
+            });
+        }
+    }
+
+    /**
+     * Update the Expand All checkbox based on current section states
+     */
+    function updateSettingsExpandAllCheckbox() {
+        const sections = document.querySelectorAll('.settings-section');
+        const expandAllCheckbox = document.getElementById('settings-expand-all-sections');
+        if (!expandAllCheckbox) return;
+
+        const expandedCount = document.querySelectorAll('.settings-section.expanded').length;
+        expandAllCheckbox.checked = expandedCount === sections.length;
+        expandAllCheckbox.indeterminate = expandedCount > 0 && expandedCount < sections.length;
+    }
+
+    /**
+     * Refresh the Settings panel UI with current settings values
+     */
+    function refreshSettingsPanelUI() {
+        if (!settingsManager || !settingsManager.settings) return;
+
+        const settings = settingsManager.settings;
+
+        // Font Size
+        const fontSizeSlider = document.getElementById('settings-font-size');
+        const fontSizeValue = document.getElementById('settings-font-size-value');
+        if (fontSizeSlider && fontSizeValue) {
+            fontSizeSlider.value = settings.editor.fontSize;
+            fontSizeValue.textContent = settings.editor.fontSize + 'px';
+            applyEditorFontSize(settings.editor.fontSize);
+        }
+
+        // Line Height
+        const lineHeightSlider = document.getElementById('settings-line-height');
+        const lineHeightValue = document.getElementById('settings-line-height-value');
+        if (lineHeightSlider && lineHeightValue) {
+            lineHeightSlider.value = settings.editor.lineHeight;
+            lineHeightValue.textContent = settings.editor.lineHeight.toFixed(1);
+            applyEditorLineHeight(settings.editor.lineHeight);
+        }
+
+        // Tab Size
+        const tabSizeSelect = document.getElementById('settings-tab-size');
+        if (tabSizeSelect) {
+            tabSizeSelect.value = settings.editor.tabSize;
+            applyEditorTabSize(settings.editor.tabSize);
+        }
+
+        // Font Family
+        const fontFamilySelect = document.getElementById('settings-font-family');
+        if (fontFamilySelect) {
+            fontFamilySelect.value = settings.editor.fontFamily;
+            applyEditorFontFamily(settings.editor.fontFamily);
+        }
+
+        // Line Numbers
+        const lineNumbersCheckbox = document.getElementById('settings-line-numbers');
+        if (lineNumbersCheckbox) {
+            lineNumbersCheckbox.checked = settings.editor.lineNumbers;
+            applyLineNumbers(settings.editor.lineNumbers);
+        }
+
+        // Word Wrap
+        const wordWrapCheckbox = document.getElementById('settings-word-wrap');
+        if (wordWrapCheckbox) {
+            wordWrapCheckbox.checked = settings.editor.wordWrap;
+            applyWordWrap(settings.editor.wordWrap);
+        }
+
+        // Scroll Sync
+        const scrollSyncCheckbox = document.getElementById('settings-scroll-sync');
+        if (scrollSyncCheckbox) {
+            scrollSyncCheckbox.checked = settings.editor.scrollSync.enabled;
+            applyScrollSync(settings.editor.scrollSync.enabled);
+        }
+
+        // Scroll Offset
+        const scrollOffsetSlider = document.getElementById('settings-scroll-offset');
+        const scrollOffsetValue = document.getElementById('settings-scroll-offset-value');
+        if (scrollOffsetSlider && scrollOffsetValue) {
+            scrollOffsetSlider.value = settings.editor.scrollSync.offset;
+            scrollOffsetValue.textContent = settings.editor.scrollSync.offset + ' lines';
+            applyScrollOffset(settings.editor.scrollSync.offset);
+        }
+    }
+
+    /**
+     * Apply font size to the editor textarea
+     */
+    function applyEditorFontSize(size) {
+        const textarea = document.getElementById('markdown-input');
+        if (textarea) {
+            textarea.style.fontSize = size + 'px';
+        }
+    }
+
+    /**
+     * Apply line height to the editor textarea
+     */
+    function applyEditorLineHeight(height) {
+        const textarea = document.getElementById('markdown-input');
+        if (textarea) {
+            textarea.style.lineHeight = height;
+        }
+    }
+
+    /**
+     * Apply tab size to the editor textarea
+     */
+    function applyEditorTabSize(size) {
+        const textarea = document.getElementById('markdown-input');
+        if (textarea) {
+            textarea.style.tabSize = size;
+            textarea.style.MozTabSize = size;
+        }
+    }
+
+    /**
+     * Apply font family to the editor textarea
+     */
+    function applyEditorFontFamily(family) {
+        const textarea = document.getElementById('markdown-input');
+        if (textarea) {
+            textarea.style.fontFamily = family;
+        }
+    }
+
+    /**
+     * Apply line numbers setting
+     */
+    function applyLineNumbers(enabled) {
+        const textarea = document.getElementById('markdown-input');
+        const gutter = document.getElementById('line-numbers-gutter');
+
+        if (!textarea || !gutter) return;
+
+        if (enabled) {
+            textarea.classList.add('show-line-numbers');
+            gutter.classList.add('visible');
+            updateLineNumbers();
+            setupLineNumberListeners();
+        } else {
+            textarea.classList.remove('show-line-numbers');
+            gutter.classList.remove('visible');
+            removeLineNumberListeners();
+        }
+
+        updateToggleLineNumbersButton(enabled);
+    }
+
+    // Store references to event listeners for cleanup
+    let lineNumberScrollHandler = null;
+    let lineNumberInputHandler = null;
+
+    /**
+     * Set up event listeners for line number synchronization
+     */
+    function setupLineNumberListeners() {
+        const textarea = document.getElementById('markdown-input');
+        if (!textarea) return;
+
+        // Remove any existing listeners first
+        removeLineNumberListeners();
+
+        // Create scroll handler to sync gutter scroll position
+        lineNumberScrollHandler = function() {
+            syncLineNumberScroll();
+        };
+
+        // Create input handler to update line count when content changes
+        lineNumberInputHandler = function() {
+            updateLineNumbers();
+        };
+
+        textarea.addEventListener('scroll', lineNumberScrollHandler);
+        textarea.addEventListener('input', lineNumberInputHandler);
+    }
+
+    /**
+     * Remove line number event listeners
+     */
+    function removeLineNumberListeners() {
+        const textarea = document.getElementById('markdown-input');
+        if (!textarea) return;
+
+        if (lineNumberScrollHandler) {
+            textarea.removeEventListener('scroll', lineNumberScrollHandler);
+            lineNumberScrollHandler = null;
+        }
+        if (lineNumberInputHandler) {
+            textarea.removeEventListener('input', lineNumberInputHandler);
+            lineNumberInputHandler = null;
+        }
+    }
+
+    /**
+     * Update line numbers based on textarea content
+     */
+    function updateLineNumbers() {
+        const textarea = document.getElementById('markdown-input');
+        const gutter = document.getElementById('line-numbers-gutter');
+
+        if (!textarea || !gutter) return;
+
+        const content = textarea.value;
+        const lineCount = content.split('\n').length;
+
+        // Get current line height from computed styles
+        const computedStyle = window.getComputedStyle(textarea);
+        const lineHeight = parseFloat(computedStyle.lineHeight) ||
+                          (parseFloat(computedStyle.fontSize) * 1.5);
+
+        // Build line numbers HTML
+        let html = '';
+        for (let i = 1; i <= lineCount; i++) {
+            html += `<span class="line-number" style="height: ${lineHeight}px; line-height: ${lineHeight}px;">${i}</span>`;
+        }
+
+        gutter.innerHTML = html;
+
+        // Sync scroll position
+        syncLineNumberScroll();
+    }
+
+    /**
+     * Sync line numbers gutter scroll with textarea scroll
+     */
+    function syncLineNumberScroll() {
+        const textarea = document.getElementById('markdown-input');
+        const gutter = document.getElementById('line-numbers-gutter');
+
+        if (!textarea || !gutter) return;
+
+        // Apply the same scroll offset to the gutter
+        gutter.scrollTop = textarea.scrollTop;
+    }
+
+    /**
+     * Update the Toggle Line Numbers button text in View panel
+     */
+    function updateToggleLineNumbersButton() {
+        // The View panel toggle button text doesn't change, but we could update visual state if needed
+    }
+
+    /**
+     * Apply word wrap setting
+     */
+    function applyWordWrap(enabled) {
+        const textarea = document.getElementById('markdown-input');
+        if (textarea) {
+            textarea.style.whiteSpace = enabled ? 'pre-wrap' : 'pre';
+            textarea.style.overflowWrap = enabled ? 'break-word' : 'normal';
+        }
+    }
+
+    /**
+     * Apply scroll sync setting
+     */
+    function applyScrollSync(enabled) {
+        if (scrollSync) {
+            if (enabled) {
+                scrollSync.enable();
+            } else {
+                scrollSync.disable();
+            }
+        }
+        // Update sync button visuals
+        updateScrollSyncUI(enabled);
+    }
+
+    /**
+     * Apply scroll offset setting
+     */
+    function applyScrollOffset(offset) {
+        if (scrollSync) {
+            scrollSync.setLineOffset(offset);
         }
     }
 
@@ -873,7 +1407,7 @@
         const existingModal = document.getElementById('tab-menu-selector-modal');
         if (existingModal) existingModal.remove();
 
-        const currentStyle = localStorage.getItem('tab-menu-style') || 'steel';
+        const currentStyle = settingsManager.settings.theme.tabMenu;
 
         // Create modal overlay
         const modal = document.createElement('div');
@@ -1039,8 +1573,8 @@
             tabMenuDisplay.textContent = `Current: ${style.name}`;
         }
 
-        // Save preference
-        localStorage.setItem('tab-menu-style', styleId);
+        // Save preference via SettingsManager
+        settingsManager.set('theme.tabMenu', styleId);
 
         console.log(`Tab menu style changed to: ${style.name}`);
     }
@@ -1084,48 +1618,14 @@
         // Update data-layout attribute
         editorContainer.setAttribute('data-layout', layout);
 
-        // Save preference to localStorage
-        localStorage.setItem('editor-layout', layout);
+        // Save preference to SettingsManager
+        settingsManager.set('editor.layout', layout);
 
         console.log(`Layout changed to: ${layout}`);
     }
 
     /**
-     * Handle toggle line numbers
-     */
-    function handleToggleLineNumbers() {
-        const inputElement = document.getElementById('markdown-input');
-        if (!inputElement) return;
-
-        // Toggle line numbers class on input element
-        const hasLineNumbers = inputElement.classList.toggle('show-line-numbers');
-
-        // Save preference to localStorage
-        localStorage.setItem('editor-line-numbers', hasLineNumbers ? 'true' : 'false');
-
-        console.log(`Line numbers: ${hasLineNumbers ? 'enabled' : 'disabled'}`);
-    }
-
-    /**
-     * Handle toggle word wrap
-     */
-    function handleToggleWordWrap() {
-        const inputElement = document.getElementById('markdown-input');
-        if (!inputElement) return;
-
-        // Toggle word wrap by changing CSS white-space property
-        const currentWrap = inputElement.style.whiteSpace === 'pre-wrap';
-
-        inputElement.style.whiteSpace = currentWrap ? 'pre' : 'pre-wrap';
-
-        // Save preference to localStorage
-        localStorage.setItem('editor-word-wrap', currentWrap ? 'false' : 'true');
-
-        console.log(`Word wrap: ${currentWrap ? 'disabled' : 'enabled'}`);
-    }
-
-    /**
-     * Handle toggle scroll sync
+     * Handle toggle scroll sync (used by divider sync button)
      */
     function handleToggleScrollSync() {
         if (!scrollSync) {
@@ -1137,8 +1637,8 @@
         // Update UI to reflect state
         updateScrollSyncUI(enabled);
 
-        // Save preference to localStorage
-        localStorage.setItem('editor-scroll-sync', enabled ? 'true' : 'false');
+        // Save preference to SettingsManager
+        settingsManager.set('editor.scrollSync.enabled', enabled);
 
         console.log(`Scroll sync: ${enabled ? 'enabled' : 'disabled'}`);
     }
@@ -1163,64 +1663,25 @@
         // Expose scrollSync globally for debugging and UI controls
         window.scrollSync = scrollSync;
 
-        // Setup offset control
-        setupSyncOffsetControl();
-
         console.log('ScrollSync: Initialized');
-    }
-
-    /**
-     * Setup the sync offset control UI
-     */
-    function setupSyncOffsetControl() {
-        const offsetInput = document.getElementById('sync-offset-input');
-        const offsetControl = document.getElementById('sync-offset-control');
-
-        if (offsetInput && scrollSync) {
-            // Load saved offset from localStorage
-            const savedOffset = localStorage.getItem('editor-scroll-sync-offset');
-            if (savedOffset !== null) {
-                const offset = parseInt(savedOffset, 10);
-                offsetInput.value = offset;
-                scrollSync.setLineOffset(offset);
-            }
-
-            // Handle offset changes
-            offsetInput.addEventListener('change', function() {
-                const offset = parseInt(this.value, 10);
-                if (!isNaN(offset) && scrollSync) {
-                    scrollSync.setLineOffset(offset);
-                    localStorage.setItem('editor-scroll-sync-offset', offset.toString());
-                    console.log(`Scroll sync offset set to: ${offset} lines`);
-                }
-            });
-        }
     }
 
     /**
      * Update scroll sync UI elements to reflect state
      */
     function updateScrollSyncUI(enabled) {
-        const toggleBtn = document.getElementById('toggle-scroll-sync-btn');
+        // Update divider sync button (Editor section controls moved to Settings panel)
         const dividerBtn = document.getElementById('divider-sync-btn');
-        const offsetControl = document.getElementById('sync-offset-control');
-
-        if (toggleBtn) {
-            const label = toggleBtn.querySelector('.sync-label');
-            if (label) {
-                label.textContent = enabled ? 'Sync Scroll: On' : 'Sync Scroll: Off';
-            }
-            toggleBtn.classList.toggle('sync-active', enabled);
-        }
 
         if (dividerBtn) {
             dividerBtn.classList.toggle('sync-active', enabled);
             dividerBtn.title = enabled ? 'Scroll Sync: On (Click to disable)' : 'Scroll Sync: Off (Click to enable)';
         }
 
-        // Show/hide offset control based on sync state
-        if (offsetControl) {
-            offsetControl.style.display = enabled ? 'flex' : 'none';
+        // Update Settings panel checkbox if it exists
+        const settingsCheckbox = document.getElementById('settings-scroll-sync');
+        if (settingsCheckbox) {
+            settingsCheckbox.checked = enabled;
         }
     }
 
@@ -1243,8 +1704,8 @@
             scrollSync.invalidateCache();
         }
 
-        // Save preference to localStorage
-        localStorage.setItem('editor-zoom', percent.toString());
+        // Save preference to SettingsManager
+        settingsManager.set('editor.zoom', percent);
 
         console.log(`Zoom changed to: ${percent}%`);
     }
@@ -1256,48 +1717,66 @@
         // Theme is restored by ThemeLoader.init()
 
         // Restore tab menu style (default: steel)
-        const savedTabMenuStyle = localStorage.getItem('tab-menu-style') || 'steel';
+        const savedTabMenuStyle = settingsManager.settings.theme.tabMenu;
         applyTabMenuStyle(savedTabMenuStyle);
 
         // Restore layout
-        const savedLayout = localStorage.getItem('editor-layout') || 'split';
+        const savedLayout = settingsManager.settings.editor.layout;
         handleLayoutChange(savedLayout);
 
-        // Restore line numbers
-        const savedLineNumbers = localStorage.getItem('editor-line-numbers') === 'true';
+        // Restore editor appearance settings
         const inputElement = document.getElementById('markdown-input');
-        if (inputElement && savedLineNumbers) {
-            inputElement.classList.add('show-line-numbers');
-        }
-
-        // Restore word wrap
-        const savedWordWrap = localStorage.getItem('editor-word-wrap') !== 'false'; // Default true
         if (inputElement) {
+            // Font Size
+            const savedFontSize = settingsManager.settings.editor.fontSize;
+            inputElement.style.fontSize = savedFontSize + 'px';
+
+            // Line Height
+            const savedLineHeight = settingsManager.settings.editor.lineHeight;
+            inputElement.style.lineHeight = savedLineHeight;
+
+            // Tab Size
+            const savedTabSize = settingsManager.settings.editor.tabSize;
+            inputElement.style.tabSize = savedTabSize;
+            inputElement.style.MozTabSize = savedTabSize;
+
+            // Font Family
+            const savedFontFamily = settingsManager.settings.editor.fontFamily;
+            inputElement.style.fontFamily = savedFontFamily;
+
+            // Line Numbers - use applyLineNumbers to set up gutter and listeners
+            const savedLineNumbers = settingsManager.settings.editor.lineNumbers;
+            applyLineNumbers(savedLineNumbers);
+
+            // Word Wrap
+            const savedWordWrap = settingsManager.settings.editor.wordWrap;
             inputElement.style.whiteSpace = savedWordWrap ? 'pre-wrap' : 'pre';
+            inputElement.style.overflowWrap = savedWordWrap ? 'break-word' : 'normal';
         }
 
         // Restore zoom
-        const savedZoom = parseInt(localStorage.getItem('editor-zoom') || '100', 10);
+        const savedZoom = settingsManager.settings.editor.zoom;
         handleZoomChange(savedZoom);
 
         // Restore scroll sync (default: off)
-        const savedScrollSync = localStorage.getItem('editor-scroll-sync') === 'true';
-        if (savedScrollSync) {
-            // Delay initialization to ensure DOM is ready
-            setTimeout(() => {
-                initializeScrollSync();
-                if (scrollSync) {
+        const savedScrollSync = settingsManager.settings.editor.scrollSync.enabled;
+        const savedScrollOffset = settingsManager.settings.editor.scrollSync.offset;
+
+        // Delay initialization to ensure DOM is ready
+        setTimeout(() => {
+            initializeScrollSync();
+            if (scrollSync) {
+                // Set the saved offset
+                scrollSync.setLineOffset(savedScrollOffset);
+
+                if (savedScrollSync) {
                     scrollSync.enable();
                     updateScrollSyncUI(true);
+                } else {
+                    updateScrollSyncUI(false);
                 }
-            }, 100);
-        } else {
-            // Initialize but don't enable, just update UI
-            setTimeout(() => {
-                initializeScrollSync();
-                updateScrollSyncUI(false);
-            }, 100);
-        }
+            }
+        }, 100);
 
         console.log('View preferences restored');
     }
@@ -1519,6 +1998,12 @@
                         console.log('Switched to document:', doc.name);
                     }
                 }
+
+                // Update line numbers if enabled (content has changed)
+                const gutter = document.getElementById('line-numbers-gutter');
+                if (gutter && gutter.classList.contains('visible')) {
+                    updateLineNumbers();
+                }
             },
             onDocumentUpdate: (doc) => {
                 console.log('Document updated:', doc.name);
@@ -1539,6 +2024,12 @@
             const activeDoc = documentManager.getActiveDocument();
             if (activeDoc) {
                 renderer.setMarkdown(activeDoc.content);
+
+                // Update line numbers if enabled after content is restored
+                const gutter = document.getElementById('line-numbers-gutter');
+                if (gutter && gutter.classList.contains('visible')) {
+                    updateLineNumbers();
+                }
             }
         }
 
@@ -1566,6 +2057,12 @@
             documentManager: documentManager,
             tabController: tabController
         };
+
+        // Update line numbers now that document content is loaded
+        const gutter = document.getElementById('line-numbers-gutter');
+        if (gutter && gutter.classList.contains('visible')) {
+            updateLineNumbers();
+        }
 
         console.log('Markdown editor initialized with live preview and document management');
     }

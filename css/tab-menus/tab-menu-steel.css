@@ -43,6 +43,9 @@
 
     /* Steel Menu - View panel expanded width */
     --steel-view-width: 500px;
+
+    /* Steel Menu - Settings panel expanded width */
+    --steel-settings-width: 520px;
 }
 
 /* ============================================================================
@@ -385,6 +388,123 @@
 
 .intro.tab-menu-steel .view-panel.panel-open::after {
     background-size: var(--steel-view-width) auto;
+}
+
+/* ============================================================================
+   STEEL MENU - SETTINGS PANEL (Wider Expansion for Two-Column Layout)
+   ============================================================================ */
+
+.intro.tab-menu-steel .settings-panel.panel-open {
+    width: var(--steel-settings-width, 520px);
+    background-size: var(--steel-settings-width, 520px) auto;
+    z-index: 10;
+    max-height: none;
+}
+
+/* Settings panel decorations expand with panel */
+.intro.tab-menu-steel .settings-panel.panel-open::before,
+.intro.tab-menu-steel .settings-panel.panel-open::after {
+    width: var(--steel-settings-width, 520px);
+}
+
+.intro.tab-menu-steel .settings-panel.panel-open::before {
+    background-size: auto auto, var(--steel-settings-width, 520px) auto;
+}
+
+.intro.tab-menu-steel .settings-panel.panel-open::after {
+    background-size: var(--steel-settings-width, 520px) auto;
+}
+
+/* Settings panel content padding - match View panel alignment */
+.intro.tab-menu-steel .settings-panel .panel-content {
+    padding: 10px 20px 20px 40px !important;
+}
+
+/* Settings panel header row with expand all toggle - sticky for scrolling */
+.intro.tab-menu-steel .settings-panel .panel-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    position: sticky;
+    top: -10px;
+    z-index: 100;
+    background: url(../../assets/layer-middle.svg) repeat-y center top;
+    background-size: var(--steel-settings-width, 520px) auto;
+    padding: 20px 0 10px 0;
+    margin-top: -20px;
+}
+
+.intro.tab-menu-steel .settings-panel .panel-header-row h3 {
+    margin: 0;
+    padding: 0;
+}
+
+/* Settings panel two-column layout */
+.intro.tab-menu-steel .settings-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.intro.tab-menu-steel .settings-col-left,
+.intro.tab-menu-steel .settings-col-right {
+    min-width: 0;
+}
+
+/* Settings section styling - match View panel alignment */
+.intro.tab-menu-steel .settings-section {
+    margin: 5px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.intro.tab-menu-steel .settings-section:last-child {
+    border-bottom: none;
+}
+
+.intro.tab-menu-steel .settings-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 0;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.intro.tab-menu-steel .settings-section-header:hover {
+    color: #4a9eff;
+}
+
+.intro.tab-menu-steel .settings-toggle {
+    display: inline-block;
+    width: 12px;
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.intro.tab-menu-steel .settings-section.expanded .settings-toggle {
+    transform: rotate(90deg);
+}
+
+.intro.tab-menu-steel .settings-section-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+    padding: 0;
+}
+
+.intro.tab-menu-steel .settings-section.expanded .settings-section-content {
+    max-height: 500px;
+    opacity: 1;
+    padding-bottom: 10px;
 }
 
 /* Help content padding - align content within the frame area */

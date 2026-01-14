@@ -231,48 +231,202 @@ class SettingsManager {
      * @throws {SettingsError} If validation fails
      */
     set(path, value, options = {}) {
-        // TODO: Implement in feature/settings-manager-validation branch
-        throw new SettingsError('set() not yet implemented', path, value, 'Pending implementation');
+        const { skipValidation = false, skipAutoSave = false } = options;
+
+        if (!path || typeof path !== 'string') {
+            throw new SettingsError('Invalid settings path', path, value, 'Path must be a non-empty string');
+        }
+
+        // Get schema for validation
+        const schema = this.getSchema(path);
+        if (!schema) {
+            throw new SettingsError(`Unknown setting: ${path}`, path, value, 'Setting not found in schema');
+        }
+
+        // Validate value against schema
+        if (!skipValidation) {
+            this.validateValue(value, schema, path);
+        }
+
+        // Update the setting value
+        this.setNestedValue(this.currentSettings, path, value);
+
+        // Notify listeners of the change
+        this.emit(`settings:${path}`, { path, value, timestamp: Date.now() });
+        this.emit('settings:changed', { path, value, timestamp: Date.now() });
+
+        // Schedule debounced save unless skipped
+        if (!skipAutoSave) {
+            this.scheduleSave();
+        }
+
+        return this;
+    }
+
+    /**
+     * Set a nested value in an object by dot-notation path
+     * @param {Object} obj - Object to modify
+     * @param {string} path - Dot-notation path
+     * @param {*} value - Value to set
+     */
+    setNestedValue(obj, path, value) {
+        const parts = path.split('.');
+        let current = obj;
+
+        for (let i = 0; i < parts.length - 1; i++) {
+            const part = parts[i];
+            if (current[part] === undefined || typeof current[part] !== 'object') {
+                current[part] = {};
+            }
+            current = current[part];
+        }
+
+        current[parts[parts.length - 1]] = value;
     }
 
     /**
      * Load settings from localStorage
+     * Merges stored settings with defaults to handle new settings added in updates
      * @returns {Object} Loaded settings
      */
     load() {
-        // TODO: Implement in feature/settings-manager-persistence branch
-        // For now, initialize with defaults
         const defaults = SettingsManager.getDefaultSettings();
-        this.lastSavedSettings = JSON.parse(JSON.stringify(defaults));
-        this.previousSettings = JSON.parse(JSON.stringify(defaults));
-        this.currentSettings = JSON.parse(JSON.stringify(defaults));
+        let loadedSettings = null;
+
+        try {
+            const stored = localStorage.getItem(SettingsManager.STORAGE_KEY);
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                // Merge with defaults to ensure all settings exist
+                loadedSettings = this.mergeWithDefaults(parsed.settings || parsed, defaults);
+            }
+        } catch (error) {
+            console.warn('Failed to load settings from localStorage:', error);
+        }
+
+        // Use loaded settings or defaults
+        const settings = loadedSettings || defaults;
+
+        // Initialize three-state system using structuredClone for deep copy
+        this.lastSavedSettings = structuredClone(settings);
+        this.previousSettings = structuredClone(settings);
+        this.currentSettings = structuredClone(settings);
+
         return this.currentSettings;
+    }
+
+    /**
+     * Merge loaded settings with defaults
+     * Ensures new settings added in updates get their default values
+     * @param {Object} loaded - Settings loaded from storage
+     * @param {Object} defaults - Default settings
+     * @returns {Object} Merged settings
+     */
+    mergeWithDefaults(loaded, defaults) {
+        const result = structuredClone(defaults);
+
+        for (const module of Object.keys(defaults)) {
+            if (loaded[module] && typeof loaded[module] === 'object') {
+                for (const key of Object.keys(defaults[module])) {
+                    if (loaded[module][key] !== undefined) {
+                        result[module][key] = loaded[module][key];
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     /**
      * Save current settings to localStorage
      * @returns {boolean} Success status
      */
-    save() {
-        // TODO: Implement in feature/settings-manager-state branch
-        return false;
+    saveToStorage() {
+        try {
+            const data = {
+                version: SettingsManager.SCHEMA_VERSION,
+                settings: this.currentSettings
+            };
+            localStorage.setItem(SettingsManager.STORAGE_KEY, JSON.stringify(data));
+            return true;
+        } catch (error) {
+            console.error('Failed to save settings to localStorage:', error);
+            return false;
+        }
     }
 
     /**
-     * Cancel pending changes and revert to last saved state
+     * Schedule a debounced save to localStorage
+     */
+    scheduleSave() {
+        if (this.saveDebounceTimer) {
+            clearTimeout(this.saveDebounceTimer);
+        }
+
+        this.saveDebounceTimer = setTimeout(() => {
+            this.saveToStorage();
+            this.lastSavedSettings = structuredClone(this.currentSettings);
+            this.saveDebounceTimer = null;
+        }, SettingsManager.DEBOUNCE_DELAY);
+    }
+
+    /**
+     * Explicit save - immediately persist and update snapshots
+     * @returns {boolean} Success status
+     */
+    save() {
+        // Clear any pending debounced save
+        if (this.saveDebounceTimer) {
+            clearTimeout(this.saveDebounceTimer);
+            this.saveDebounceTimer = null;
+        }
+
+        const success = this.saveToStorage();
+        if (success) {
+            this.lastSavedSettings = structuredClone(this.currentSettings);
+            this.previousSettings = structuredClone(this.currentSettings);
+        }
+        return success;
+    }
+
+    /**
+     * Cancel - revert to previousSettings (before edit session)
      * @returns {SettingsManager} this instance for chaining
      */
     cancel() {
-        // TODO: Implement in feature/settings-manager-state branch
+        // Clear any pending debounced save
+        if (this.saveDebounceTimer) {
+            clearTimeout(this.saveDebounceTimer);
+            this.saveDebounceTimer = null;
+        }
+
+        this.currentSettings = structuredClone(this.previousSettings);
+        this.saveToStorage();
+        this.lastSavedSettings = structuredClone(this.currentSettings);
+
+        // Notify all listeners of the revert
+        this.notifyAllListeners();
+
         return this;
     }
 
     /**
-     * Revert to previous settings (before last change)
+     * Revert - go back to lastSavedSettings (last disk state)
      * @returns {SettingsManager} this instance for chaining
      */
     revert() {
-        // TODO: Implement in feature/settings-manager-state branch
+        // Clear any pending debounced save
+        if (this.saveDebounceTimer) {
+            clearTimeout(this.saveDebounceTimer);
+            this.saveDebounceTimer = null;
+        }
+
+        this.currentSettings = structuredClone(this.lastSavedSettings);
+
+        // Notify all listeners of the revert
+        this.notifyAllListeners();
+
         return this;
     }
 
@@ -281,8 +435,32 @@ class SettingsManager {
      * @returns {boolean} True if there are unsaved changes
      */
     hasUnsavedChanges() {
-        // TODO: Implement in feature/settings-manager-state branch
-        return false;
+        return JSON.stringify(this.currentSettings) !== JSON.stringify(this.lastSavedSettings);
+    }
+
+    /**
+     * Notify all listeners of current settings (used after revert/cancel)
+     * Emits events for each setting that may have changed
+     */
+    notifyAllListeners() {
+        const timestamp = Date.now();
+
+        // Iterate through all modules and their settings
+        for (const [module, settings] of Object.entries(this.currentSettings)) {
+            if (typeof settings === 'object' && settings !== null) {
+                for (const [key, value] of Object.entries(settings)) {
+                    const path = `${module}.${key}`;
+                    this.emit(`settings:${path}`, { path, value, timestamp });
+                }
+            }
+        }
+
+        // Also emit generic changed event
+        this.emit('settings:changed', {
+            path: '*',
+            value: this.currentSettings,
+            timestamp
+        });
     }
 
     /**
@@ -394,17 +572,44 @@ class SettingsManager {
      * @returns {Function} Unsubscribe function
      */
     on(event, callback) {
-        // TODO: Implement in feature/settings-manager-events branch
-        return () => {};
+        if (!this.listeners.has(event)) {
+            this.listeners.set(event, new Set());
+        }
+        this.listeners.get(event).add(callback);
+
+        // Also add as DOM event listener for cross-module communication
+        const domHandler = (e) => callback(e.detail);
+        document.addEventListener(event, domHandler);
+
+        // Return unsubscribe function
+        return () => {
+            this.listeners.get(event)?.delete(callback);
+            document.removeEventListener(event, domHandler);
+        };
     }
 
     /**
      * Emit a settings event
+     * Notifies both internal listeners and dispatches DOM CustomEvent
      * @param {string} event - Event name
      * @param {Object} data - Event data
      */
     emit(event, data) {
-        // TODO: Implement in feature/settings-manager-events branch
+        // Notify internal listeners
+        const callbacks = this.listeners.get(event);
+        if (callbacks) {
+            callbacks.forEach(callback => {
+                try {
+                    callback(data);
+                } catch (error) {
+                    console.error(`Error in settings listener for ${event}:`, error);
+                }
+            });
+        }
+
+        // Dispatch DOM CustomEvent for cross-module communication
+        const customEvent = new CustomEvent(event, { detail: data });
+        document.dispatchEvent(customEvent);
     }
 
     /**
@@ -412,27 +617,131 @@ class SettingsManager {
      * @returns {string} JSON string of current settings
      */
     export() {
-        // TODO: Implement in feature/settings-manager-import-export branch
-        return '';
+        const exportData = {
+            version: SettingsManager.SCHEMA_VERSION,
+            exportDate: new Date().toISOString(),
+            settings: this.currentSettings
+        };
+        return JSON.stringify(exportData, null, 2);
+    }
+
+    /**
+     * Export settings and trigger download
+     */
+    exportToFile() {
+        const json = this.export();
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `markdown-editor-settings-${Date.now()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
     }
 
     /**
      * Import settings from JSON string
      * @param {string} json - JSON string of settings
-     * @returns {boolean} Success status
+     * @returns {Object} Result { success: boolean, errors?: string[], warnings?: string[] }
      */
     import(json) {
-        // TODO: Implement in feature/settings-manager-import-export branch
-        return false;
+        const errors = [];
+        const warnings = [];
+
+        try {
+            const imported = JSON.parse(json);
+
+            // Validate structure
+            if (!imported.settings || typeof imported.settings !== 'object') {
+                return { success: false, errors: ['Invalid settings file format: missing settings object'] };
+            }
+
+            const defaults = SettingsManager.getDefaultSettings();
+            const schema = SettingsManager.getSettingsSchema();
+
+            // Validate and sanitize each module's settings
+            for (const [moduleName, moduleSettings] of Object.entries(imported.settings)) {
+                if (!defaults[moduleName]) {
+                    warnings.push(`Unknown module '${moduleName}' will be ignored`);
+                    continue;
+                }
+
+                if (typeof moduleSettings !== 'object' || moduleSettings === null) {
+                    warnings.push(`Invalid settings for module '${moduleName}'`);
+                    continue;
+                }
+
+                for (const [key, value] of Object.entries(moduleSettings)) {
+                    const path = `${moduleName}.${key}`;
+                    const settingSchema = schema[moduleName]?.[key];
+
+                    if (!settingSchema) {
+                        warnings.push(`Unknown setting '${path}' will be ignored`);
+                        continue;
+                    }
+
+                    try {
+                        this.validateValue(value, settingSchema, path);
+                        this.setNestedValue(this.currentSettings, path, value);
+                    } catch (error) {
+                        warnings.push(`Invalid value for '${path}': ${error.message}`);
+                    }
+                }
+            }
+
+            // Save the imported settings
+            this.save();
+            this.notifyAllListeners();
+
+            return { success: true, warnings: warnings.length > 0 ? warnings : undefined };
+        } catch (error) {
+            return { success: false, errors: [`Parse error: ${error.message}`] };
+        }
+    }
+
+    /**
+     * Import settings from a File object
+     * @param {File} file - JSON file to import
+     * @returns {Promise<Object>} Result { success: boolean, errors?: string[], warnings?: string[] }
+     */
+    async importFromFile(file) {
+        try {
+            const text = await file.text();
+            return this.import(text);
+        } catch (error) {
+            return { success: false, errors: [`Failed to read file: ${error.message}`] };
+        }
     }
 
     /**
      * Reset a specific module to defaults
-     * @param {string} module - Module name (e.g., 'editor', 'view')
+     * @param {string} moduleName - Module name (e.g., 'editor', 'view')
      * @returns {SettingsManager} this instance for chaining
+     * @throws {SettingsError} If module is unknown
      */
-    resetModule(module) {
-        // TODO: Implement in feature/settings-manager-import-export branch
+    resetModule(moduleName) {
+        const defaults = SettingsManager.getDefaultSettings();
+
+        if (!defaults[moduleName]) {
+            throw new SettingsError(`Unknown module: ${moduleName}`, moduleName, undefined, 'Module not found');
+        }
+
+        this.currentSettings[moduleName] = structuredClone(defaults[moduleName]);
+        this.save();
+
+        // Notify listeners for each reset setting
+        const timestamp = Date.now();
+        for (const [key, value] of Object.entries(this.currentSettings[moduleName])) {
+            const path = `${moduleName}.${key}`;
+            this.emit(`settings:${path}`, { path, value, timestamp });
+        }
+
+        this.emit('settings:changed', {
+            path: `${moduleName}:reset`,
+            value: this.currentSettings[moduleName],
+            timestamp
+        });
+
         return this;
     }
 
@@ -441,7 +750,9 @@ class SettingsManager {
      * @returns {SettingsManager} this instance for chaining
      */
     resetAll() {
-        // TODO: Implement in feature/settings-manager-import-export branch
+        this.currentSettings = structuredClone(SettingsManager.getDefaultSettings());
+        this.save();
+        this.notifyAllListeners();
         return this;
     }
 
@@ -450,8 +761,148 @@ class SettingsManager {
      * @returns {boolean} True if migration was performed
      */
     migrateLegacy() {
-        // TODO: Implement in feature/settings-manager-migration branch
-        return false;
+        const migrations = [
+            { oldKey: 'tab-menu-style', newPath: 'theme.tabMenu', default: 'steel' },
+            { oldKey: 'current-theme', newPath: 'theme.current', default: 'default' },
+            { oldKey: 'editor-layout', newPath: 'view.mode', default: 'split' },
+            { oldKey: 'editor-zoom', newPath: 'view.zoom', default: 100, transform: parseInt },
+            { oldKey: 'editor-line-numbers', newPath: 'editor.lineNumbers', default: true, transform: v => v === 'true' },
+            { oldKey: 'editor-word-wrap', newPath: 'editor.wordWrap', default: true, transform: v => v === 'true' },
+            { oldKey: 'editor-scroll-sync', newPath: 'scrollSync.enabled', default: true, transform: v => v === 'true' },
+            { oldKey: 'editor-scroll-sync-offset', newPath: 'scrollSync.offset', default: 3, transform: parseInt }
+        ];
+
+        let migrated = false;
+
+        migrations.forEach(({ oldKey, newPath, transform }) => {
+            const oldValue = localStorage.getItem(oldKey);
+            if (oldValue !== null) {
+                try {
+                    const value = transform ? transform(oldValue) : oldValue;
+                    this.setNestedValue(this.currentSettings, newPath, value);
+                    localStorage.removeItem(oldKey); // Clean up old key
+                    migrated = true;
+                } catch (error) {
+                    console.warn(`Failed to migrate ${oldKey}:`, error);
+                }
+            }
+        });
+
+        if (migrated) {
+            this.save();
+        }
+
+        return migrated;
+    }
+
+    /**
+     * Initialize with migration check
+     * Call this instead of init() to automatically migrate legacy settings
+     * @returns {SettingsManager} this instance for chaining
+     */
+    initWithMigration() {
+        if (this.initialized) {
+            return this;
+        }
+
+        // Check if we have new settings format already
+        const hasNewSettings = localStorage.getItem(SettingsManager.STORAGE_KEY) !== null;
+
+        // Load settings (defaults or from storage)
+        this.load();
+
+        // If no new settings exist, try to migrate legacy keys
+        if (!hasNewSettings) {
+            this.migrateLegacy();
+        }
+
+        this.initialized = true;
+        return this;
+    }
+
+    // ========================================================================
+    // CONVENIENCE METHODS
+    // ========================================================================
+
+    /**
+     * Update multiple settings at once
+     * @param {Object} settings - Object with path:value pairs
+     * @returns {SettingsManager} this instance for chaining
+     * @throws {SettingsError} If any validation fails
+     */
+    setMultiple(settings) {
+        for (const [path, value] of Object.entries(settings)) {
+            this.set(path, value, { skipAutoSave: true });
+        }
+        this.scheduleSave();
+        return this;
+    }
+
+    /**
+     * Get all settings for a specific module
+     * @param {string} moduleName - Module name (e.g., 'editor', 'view')
+     * @returns {Object} Module settings object (copy)
+     * @throws {SettingsError} If module is unknown
+     */
+    getModule(moduleName) {
+        if (!this.currentSettings[moduleName]) {
+            throw new SettingsError(`Unknown module: ${moduleName}`, moduleName, undefined, 'Module not found');
+        }
+        return structuredClone(this.currentSettings[moduleName]);
+    }
+
+    /**
+     * Get default value for a setting
+     * @param {string} path - Dot-notation path
+     * @returns {*} Default value
+     * @throws {SettingsError} If path is invalid
+     */
+    getDefault(path) {
+        const parts = path.split('.');
+        let value = SettingsManager.getDefaultSettings();
+
+        for (const part of parts) {
+            if (value === null || value === undefined || typeof value !== 'object') {
+                throw new SettingsError(`Invalid settings path: ${path}`, path, undefined, 'Path not found');
+            }
+            value = value[part];
+        }
+
+        if (value === undefined) {
+            throw new SettingsError(`Default not found for: ${path}`, path, undefined, 'Setting does not exist');
+        }
+
+        return value;
+    }
+
+    /**
+     * Convenience wrapper for subscribing to a specific setting change
+     * @param {string} path - Setting path to watch (e.g., 'editor.fontSize')
+     * @param {Function} callback - Function to call on change: (value, detail) => {}
+     * @returns {Function} Unsubscribe function
+     */
+    onChange(path, callback) {
+        return this.on(`settings:${path}`, (detail) => {
+            callback(detail.value, detail);
+        });
+    }
+
+    /**
+     * Convenience wrapper for subscribing to any setting change
+     * @param {Function} callback - Function to call on any change: (detail) => {}
+     * @returns {Function} Unsubscribe function
+     */
+    onAnyChange(callback) {
+        return this.on('settings:changed', callback);
+    }
+
+    /**
+     * Get the settings object for direct read access
+     * Note: For writes, always use set() method
+     * @returns {Object} Current settings (reference, not copy)
+     */
+    get settings() {
+        return this.currentSettings;
     }
 }
 

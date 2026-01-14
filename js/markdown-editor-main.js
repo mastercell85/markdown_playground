@@ -10,10 +10,20 @@
     let themeLoader = null;
     let scrollSync = null;
     let findManager = null;
+    let settingsManager = null;
 
     // Initialize when DOM is ready
     function init() {
         console.log('Markdown Editor initialized');
+
+        // Initialize settings manager first (with legacy migration)
+        settingsManager = new SettingsManager();
+        settingsManager.initWithMigration();
+
+        // Expose to window for console testing
+        window.settingsManager = settingsManager;
+        window.SettingsError = SettingsError;
+        console.log('SettingsManager initialized:', settingsManager.settings);
 
         // Initialize theme loader
         themeLoader = new ThemeLoader({

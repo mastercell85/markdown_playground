@@ -2660,10 +2660,556 @@ If WYSIWYG implementation doesn't meet quality standards:
 #### Next Steps
 
 1. ✅ Complete planning and add to DOCUMENTATION.md
-2. ⏳ Start Phase 3a: Layout Restructuring
-3. ⏳ Build WYSIWYG engine prototype
-4. ⏳ Iterate based on testing feedback
-5. ⏳ Compare completed implementations and make final decision
+2. ✅ Phase 3a: Layout Restructuring - COMPLETED
+3. ✅ Phase 3b: WYSIWYG Core Engine - Basic rendering implemented
+4. ✅ Phase 3c: Source Mode Toggle - Implemented with persistence
+5. 🔄 Phase 3d: Integration & polish - IN PROGRESS (LCARS theme fixes)
+
+---
+
+### Phase 3 Implementation: WYSIWYG Unified View - Technical Log
+
+**Branch:** `IMPLEMENT-WYSIWYG-UNIFIED-VIEW`
+**Implementation Period:** January 14, 2026
+**Status:** 🔄 In Progress - Core features working, theme compatibility ongoing
+
+---
+
+#### ✅ Phase 3a: Layout Restructuring - COMPLETED
+
+**Goals:** Remove split-view structure and create unified contenteditable editor
+
+**Changes Made:**
+
+**1. HTML Structure** (`markdown-editor.html`)
+- Removed `.editor-input` and `.editor-preview` split-view containers
+- Created single `.editor-section.unified-editor` container
+- Added `#wysiwyg-editor` contenteditable div for WYSIWYG mode
+- Added `#source-editor` textarea (hidden by default) for source mode
+- Repurposed `.editor-gap` as toolbar area (no longer draggable divider)
+- Added toolbar buttons: Source Toggle, Bold, Italic, Heading, Link, Image, Code
+
+**HTML Pattern:**
+```html
+<div class="editor-container" data-layout="wysiwyg">
+    <section class="editor-section unified-editor">
+        <div class="editor-section-content">
+            <div id="write" class="typora-write">
+                <!-- WYSIWYG contenteditable area -->
+                <div id="wysiwyg-editor" class="wysiwyg-content" contenteditable="true"></div>
+                <!-- Hidden source mode textarea -->
+                <textarea id="source-editor" class="source-textarea" style="display: none;"></textarea>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toolbar (non-draggable) -->
+    <div class="editor-gap" id="editor-gap">
+        <div class="gap-toolbar" id="gap-toolbar">
+            <button id="toolbar-source-toggle">Source Mode</button>
+            <button id="toolbar-bold">Bold</button>
+            <!-- ... other buttons -->
+        </div>
+    </div>
+</div>
+```
+
+**2. CSS Updates** (`css/markdown-editor-base.css`)
+- Added `.unified-editor` styles for full-width single pane
+- Added `.wysiwyg-content` styles for contenteditable div
+- Added `.source-textarea` styles for source mode textarea
+- Updated `.editor-gap` to be non-draggable toolbar
+- Removed split-view specific styling
+
+**Key CSS:**
+```css
+.unified-editor {
+    flex: 1;
+    min-width: 200px;
+    background: var(--editor-section-bg);
+}
+
+.wysiwyg-content {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    padding: 20px;
+    outline: none;
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    color: var(--textarea-text);
+    background: transparent;
+    overflow: auto;
+}
+```
+
+**Success Criteria Met:**
+- ✅ Single contenteditable div displays full-width
+- ✅ Document tabs remain functional
+- ✅ Toolbar positioned correctly
+- ✅ No visual artifacts from removed split view
+- ✅ Base layout works (theme compatibility in progress)
+
+---
+
+#### ✅ Phase 3b: WYSIWYG Core Engine - COMPLETED (Basic)
+
+**Goals:** Implement core WYSIWYG editing with render-on-Enter behavior
+
+**Implementation:** `js/wysiwyg/wysiwyg-engine.js`
+
+**Architecture:**
+```javascript
+class WysiwygEngine {
+    constructor(editorElement, lineMapper, markdownParser) {
+        this.editorElement = editorElement;         // #wysiwyg-editor div
+        this.lineMapper = lineMapper;               // From Phase 2a
+        this.markdownParser = markdownParser;       // Existing parser
+        this.shortcutProcessor = new ShortcutProcessor();
+
+        this.currentBlock = null;
+        this.editMode = false;  // true = markdown visible, false = rendered
+        this.sourceMode = false; // true = textarea, false = WYSIWYG
+    }
+}
+```
+
+**Key Features Implemented:**
+
+**1. Render Markdown to HTML**
+```javascript
+renderMarkdown(text) {
+    // Process shortcut syntax first (b{}, i{}, bi{}, etc.)
+    let processedText = this.shortcutProcessor.process(text);
+
+    // Detect and render markdown patterns:
+    // - Headers (# through ######)
+    // - Blockquotes (> text)
+    // - Horizontal rules (---, ***)
+    // - Lists (ordered, unordered, task lists)
+    // - Inline formatting (bold, italic, links, images, code)
+
+    // Returns HTML string or null if no markdown detected
+}
+```
+
+**2. Inline Formatting**
+Supports:
+- Bold: `**text**`, `__text__`
+- Italic: `*text*`, `_text_`
+- Bold+Italic: `***text***`
+- Strikethrough: `~~text~~`
+- Inline code: `` `code` ``
+- Links: `[text](url)`
+- Images: `![alt](url)`
+
+**3. Set Markdown Content**
+```javascript
+setMarkdown(markdown, renderAll = false) {
+    // Split markdown into lines
+    // For each line:
+    //   - If renderAll=true, try to render markdown
+    //   - Group consecutive list items into single <ul> or <ol>
+    //   - Store original markdown in data-wysiwyg-markdown attribute
+    //   - Mark rendered elements with data-wysiwyg-rendered="true"
+    //   - Set contentEditable="false" on rendered elements
+    //   - Otherwise, create editable <p> element
+}
+```
+
+**4. Get Markdown from Editor**
+```javascript
+getMarkdown() {
+    // Extract all blocks from contenteditable
+    // For rendered blocks: read data-wysiwyg-markdown attribute
+    // For editable blocks: read textContent
+    // Join with newlines to reconstruct markdown
+}
+```
+
+**Rendering Strategy:**
+- **While typing:** Content stays as editable plain text `<p>` elements
+- **On load:** If `renderAll=true`, immediately render markdown to HTML
+- **Rendered elements:** Marked with `contentEditable="false"` and data attributes
+- **Click to edit:** Not yet implemented (Phase 3d feature)
+
+**Event Handling:**
+```javascript
+init() {
+    this.editorElement.addEventListener('keydown', this.handleKeyDown);
+    this.editorElement.addEventListener('click', this.handleClick);
+    this.editorElement.addEventListener('input', this.handleInput);
+}
+
+handleKeyDown(event) {
+    // Handle Escape key to exit rendered block editing
+    // Future: Handle Enter key to render current block
+}
+```
+
+**Success Criteria Met:**
+- ✅ Can load markdown and render it to HTML on initialization
+- ✅ Rendered elements display correctly with proper styling
+- ✅ Can extract markdown from mixed rendered/editable content
+- ✅ Inline formatting works (bold, italic, links, etc.)
+- ✅ Lists group correctly (consecutive items in one <ul>/<ol>)
+- ⏳ Click-to-edit not yet implemented (deferred to Phase 3d)
+- ⏳ Enter-to-render not yet implemented (deferred to Phase 3d)
+
+---
+
+#### ✅ Phase 3c: Source Mode Toggle - COMPLETED
+
+**Goals:** Allow toggling between WYSIWYG and raw markdown source
+
+**Implementation:** Integrated into `WysiwygEngine` class
+
+**Source Mode Methods:**
+```javascript
+toggleSourceMode() {
+    if (this.sourceMode) {
+        this.switchToWysiwyg();
+    } else {
+        this.switchToSource();
+    }
+    return this.sourceMode;
+}
+
+switchToSource() {
+    // Get markdown from WYSIWYG editor
+    const markdown = this.getMarkdown();
+
+    // Hide WYSIWYG, show textarea
+    this.editorElement.style.display = 'none';
+    this.sourceTextarea.style.display = 'block';
+
+    // Load markdown into textarea
+    this.sourceTextarea.value = markdown;
+    this.sourceTextarea.focus();
+
+    this.sourceMode = true;
+}
+
+switchToWysiwyg() {
+    // Get markdown from textarea
+    const markdown = this.sourceTextarea.value;
+
+    // Hide textarea, show WYSIWYG
+    this.sourceTextarea.style.display = 'none';
+    this.editorElement.style.display = 'block';
+
+    // Load markdown into WYSIWYG with rendering enabled
+    this.setMarkdown(markdown, true);
+
+    // Place cursor at end of content
+    this.editorElement.focus();
+
+    this.sourceMode = false;
+}
+```
+
+**Integration** (`js/markdown-editor-main.js`):
+
+**1. Setup Source Mode Toggle:**
+```javascript
+function setupSourceModeToggle(wysiwygEngine, documentManager) {
+    const toggleButton = document.getElementById('toolbar-source-toggle');
+    const sourceTextarea = document.getElementById('source-editor');
+
+    // Restore source mode state from settings
+    const savedSourceMode = settingsManager.get('editor.sourceMode');
+    if (savedSourceMode) {
+        wysiwygEngine.toggleSourceMode();
+        toggleButton.classList.add('active');
+    }
+
+    // Handle toolbar button click
+    toggleButton.addEventListener('click', () => {
+        wysiwygEngine.toggleSourceMode();
+
+        // Update button state and save to settings
+        if (wysiwygEngine.isSourceMode()) {
+            toggleButton.classList.add('active');
+            settingsManager.set('editor.sourceMode', true);
+        } else {
+            toggleButton.classList.remove('active');
+            settingsManager.set('editor.sourceMode', false);
+        }
+    });
+
+    // Handle source textarea input (for auto-save)
+    if (sourceTextarea) {
+        sourceTextarea.addEventListener('input', () => {
+            if (wysiwygEngine.isSourceMode()) {
+                const markdown = sourceTextarea.value;
+                documentManager.updateActiveContent(markdown);
+            }
+        });
+    }
+
+    // Keyboard shortcut: Ctrl+/
+    document.addEventListener('keydown', (event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key === '/') {
+            event.preventDefault();
+            toggleButton.click();
+        }
+    });
+}
+```
+
+**2. Settings Schema:** Added to `SettingsManager`
+```javascript
+settings.editor.sourceMode = false; // Boolean, persisted to localStorage
+```
+
+**Success Criteria Met:**
+- ✅ Toggle button switches between WYSIWYG and source modes
+- ✅ Content syncs correctly between modes
+- ✅ Keyboard shortcut (Ctrl+/) works
+- ✅ Source mode state persists across sessions
+- ✅ Auto-save works in both modes
+- ✅ Button visual state (active/inactive) updates correctly
+
+---
+
+#### 🔄 Phase 3d: Integration & Polish - IN PROGRESS
+
+**Goals:** Theme compatibility, toolbar button functionality, find/replace support
+
+**Status:**
+
+**✅ Completed:**
+1. **Document Manager Integration:**
+   - Multi-document support working
+   - Auto-save on contenteditable input
+   - Document switching loads content with rendering enabled
+   - Tab controller fully functional
+
+2. **Settings Integration:**
+   - Source mode preference persists
+   - All existing settings work (font size, line height, etc.)
+
+3. **WYSIWYG Initialization:**
+   - Editor loads with documents from localStorage
+   - Creates initial document if storage is empty
+   - Tabs display correctly
+   - Focus management works
+
+**🔄 In Progress:**
+
+**1. LCARS Theme Decorations** - PARTIALLY FIXED
+
+**Problem:** Purple L-shaped LCARS frame decorations being clipped or not displaying correctly in WYSIWYG unified editor mode.
+
+**Root Cause:** CSS overflow constraint - browsers automatically convert `overflow-x: visible` to `overflow-x: auto` when `overflow-y: auto` is set on the same element, causing decorations (pseudo-elements, box-shadows) to be clipped.
+
+**Solution Pattern (from working split-view code):**
+```css
+/* Parent element - does NOT scroll */
+[data-theme="lcars"] .editor-section.unified-editor {
+    position: relative;
+    background: #000 !important;
+    overflow: hidden !important; /* Parent doesn't scroll */
+}
+
+/* Decorations on parent - stay fixed */
+[data-theme="lcars"] .editor-section.unified-editor::before {
+    /* Left purple bar */
+    content: "";
+    position: absolute;
+    top: 3rem;
+    left: 0.5rem;
+    width: 1.5rem;
+    bottom: 0;
+    background-color: var(--lcars-purple);
+    z-index: 5;
+    pointer-events: none;
+}
+
+[data-theme="lcars"] .editor-section.unified-editor::after {
+    /* Top purple bar with rounded corner */
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0.5rem;
+    right: 1rem;
+    height: 3rem;
+    background-color: var(--lcars-purple);
+    z-index: 5;
+    pointer-events: none;
+    border-radius: 1.5rem 0 0 0;
+}
+
+/* Child element - DOES scroll */
+[data-theme="lcars"] .editor-section.unified-editor .editor-section-content {
+    position: absolute;
+    top: 3.5rem;
+    left: 2rem;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto !important; /* Child handles all scrolling */
+    overflow-x: hidden;
+    background: #000;
+    z-index: 1;
+}
+```
+
+**Key Architecture:**
+- **Non-scrolling parent** (`overflow: hidden`) contains fixed decorations via `::before` and `::after` pseudo-elements
+- **Scrolling child** (`position: absolute`, `overflow-y: auto`) handles content scrolling
+- Decorations stay fixed because they're on the non-scrolling parent layer
+
+**Attempts That Failed:**
+
+| Attempt | Code | Result | Reason |
+|---------|------|--------|--------|
+| **1. Set overflow-x: visible** | `overflow-y: auto; overflow-x: visible` | ❌ Still clipped | Browser converts `overflow-x: visible` to `auto` when `overflow-y: auto` |
+| **2. Add padding to scrolling container** | `padding-left: 4rem` | ❌ Didn't work | Doesn't prevent clipping of absolute/pseudo-elements outside bounds |
+| **3. Add pseudo-element on scrolling container** | `::before` on element with `overflow-y: auto` | ❌ Duplicated decoration | Pseudo-element clipped by scrolling container's overflow |
+| **4. Multiple box-shadows on content** | `box-shadow: -2rem 0 0 purple, ...` | ❌ Clipped at edge | Box-shadows clipped by `overflow-y: auto` container |
+| **5. Transparent background on child** | `background: transparent` on `.editor-section-content` | ❌ Didn't help | Issue was z-index and overflow, not background |
+| **6. Increase z-index alone** | `z-index: 10` on `::after` | ❌ Didn't help | Stacking context doesn't fix overflow clipping |
+| **7. Add max-width constraint** | `max-width: calc(100% - 1rem)` | ❌ Wrong - moved left side | Constrained width from both sides, not just right |
+
+**Working Solution:**
+```css
+/* Right edge pulled back to prevent overflow past viewport */
+right: 1rem;  /* Instead of right: 0.5rem or right: 0 */
+```
+
+**Current Status:**
+- ✅ Left purple bar displays correctly (full height)
+- 🔄 Top purple bar partially visible but may extend past right edge of viewport
+- ⏳ Need user verification to confirm if adjustment is sufficient
+
+**Lessons Learned:**
+1. **CSS overflow is one-dimensional** - Cannot mix `overflow-y: auto` with `overflow-x: visible` on the same element
+2. **Separate scrolling from decorations** - Use parent for fixed decorations, child for scrolling
+3. **Absolute positioning for scrolling child** - Allows it to scroll independently while parent stays fixed
+4. **Box-shadows and pseudo-elements are clipped by overflow** - Don't put decorations on elements that scroll
+5. **Z-index alone doesn't fix overflow clipping** - Must address the overflow constraint architecturally
+
+**Next Steps for LCARS:**
+1. User verification of current state (left bar good, top bar visibility?)
+2. Fine-tune `right` offset on top bar if needed
+3. Test across different viewport sizes
+4. Verify decorations don't interfere with scrolling
+5. Commit as fully working solution once verified
+
+---
+
+**⏳ Pending:**
+
+**2. Cyberpunk Theme Compatibility**
+- Theme CSS needs similar overflow architecture fix
+- Apply same pattern as LCARS (parent for decorations, child for scrolling)
+- Test neon effects and animations
+
+**3. Toolbar Button Functionality**
+- Bold button (Ctrl+B): Insert `**selection**` or toggle bold
+- Italic button (Ctrl+I): Insert `*selection*` or toggle italic
+- Heading button: Cycle through H1-H6 or insert `# `
+- Link button (Ctrl+K): Insert `[text](url)` with prompt
+- Image button: Insert `![alt](url)` with prompt
+- Code button: Insert `` `code` `` or code block
+
+**4. Find/Replace for WYSIWYG**
+- Update FindManager to work with contenteditable
+- Handle search across rendered and editable content
+- Maintain find/replace dialog functionality
+- Keyboard shortcuts (Ctrl+F, Ctrl+H)
+
+---
+
+#### Testing Completed
+
+**Manual Testing:**
+- ✅ Document creation and switching
+- ✅ Auto-save in WYSIWYG mode
+- ✅ Auto-save in source mode
+- ✅ Source mode toggle with Ctrl+/
+- ✅ Source mode state persistence
+- ✅ Markdown rendering on load (renderAll=true)
+- ✅ Inline formatting (bold, italic, links, images, code)
+- ✅ List grouping (consecutive items)
+- ✅ Content extraction (getMarkdown())
+- ✅ Theme switching preserves functionality
+- 🔄 LCARS theme decorations (partial - top bar needs verification)
+
+**Browser Testing:**
+- ✅ Chrome: All features working
+- ⏳ Firefox: Pending test
+- ⏳ Edge: Pending test
+
+---
+
+#### Known Issues & Technical Debt
+
+**1. Click-to-Edit Not Implemented**
+- **Issue:** Rendered blocks cannot be clicked to return to markdown edit mode
+- **Workaround:** Use source mode toggle (Ctrl+/) to edit
+- **Priority:** Low (source mode provides full editing capability)
+
+**2. Enter-to-Render Not Implemented**
+- **Issue:** Pressing Enter doesn't render the current block
+- **Current Behavior:** Content renders only on document load
+- **Workaround:** Switch to source mode, then back to WYSIWYG to trigger rendering
+- **Priority:** Medium (would improve UX)
+
+**3. Undo/Redo Behavior**
+- **Issue:** Browser's built-in undo stack may not work as expected with rendered blocks
+- **Current State:** Not extensively tested
+- **Priority:** Low (most users won't encounter issues)
+
+**4. Paste Handling**
+- **Issue:** Pasting HTML content may not convert to markdown properly
+- **Current Behavior:** Untested
+- **Workaround:** Paste in source mode
+- **Priority:** Medium (important for copying from web)
+
+**5. Theme Compatibility**
+- **LCARS:** 🔄 In progress (top bar positioning needs verification)
+- **Cyberpunk:** ⏳ Pending (needs overflow architecture fix)
+- **Custom CSS:** ⏳ Untested
+
+---
+
+#### Comparison: Split View vs WYSIWYG (Current State)
+
+| Aspect | Split View | WYSIWYG Unified | Winner |
+|--------|-----------|-----------------|--------|
+| **Sync Accuracy** | Good with element matching | N/A - single view | WYSIWYG |
+| **User Experience** | Traditional editor + preview | Modern unified editing | Subjective |
+| **Mobile Support** | Poor (two panes cramped) | Good (single pane) | WYSIWYG |
+| **Power Users** | Can see both source & rendered | Must toggle source mode | Split View |
+| **Implementation** | Complex scroll sync | ContentEditable challenges | Similar |
+| **Performance** | Two render passes | Single render on load | WYSIWYG |
+| **Debugging** | Easy (see source mapping) | Must use source mode | Split View |
+| **Theme Support** | Working for most themes | In progress (overflow issues) | Split View (currently) |
+| **Feature Complete** | ✅ Yes | 🔄 Core done, polish needed | Split View |
+
+**Recommendation:** Continue WYSIWYG implementation to completion before final comparison.
+
+---
+
+#### Files Modified in Phase 3
+
+**HTML:**
+- `markdown-editor.html` - Layout restructuring, toolbar buttons
+
+**CSS:**
+- `css/markdown-editor-base.css` - Unified editor base styles
+- `themes/lcars-theme-v2.css` - WYSIWYG LCARS decorations (in progress)
+
+**JavaScript:**
+- `js/wysiwyg/wysiwyg-engine.js` - Core WYSIWYG engine (NEW)
+- `js/markdown-editor-main.js` - Integration, source mode toggle, initialization
+- `js/shared/settings-manager.js` - Added editor.sourceMode setting
+
+**Git Branches:**
+- `IMPLEMENT-WYSIWYG-UNIFIED-VIEW` - Active development branch
+- Commits: Layout restructuring, WYSIWYG engine, source toggle, LCARS partial fix
 
 ---
 

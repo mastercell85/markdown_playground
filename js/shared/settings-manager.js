@@ -65,6 +65,7 @@ class SettingsManager {
                 wordWrap: true,
                 layout: 'split',
                 zoom: 100,
+                sourceMode: false, // false = WYSIWYG (rendered), true = source (raw markdown)
                 scrollSync: {
                     enabled: false,
                     offset: 0
@@ -127,6 +128,10 @@ class SettingsManager {
                     max: 200,
                     step: 10,
                     description: 'Zoom level percentage'
+                },
+                sourceMode: {
+                    type: 'boolean',
+                    description: 'Source mode state (false = WYSIWYG rendered, true = raw markdown)'
                 },
                 scrollSync: {
                     enabled: {

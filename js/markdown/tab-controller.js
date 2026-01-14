@@ -41,16 +41,24 @@ class TabController {
      * Render all tabs
      */
     renderTabs() {
+        console.log('TabController.renderTabs() called');
         // Clear existing tabs
         this.tabsContainer.innerHTML = '';
 
         const documents = this.documentManager.getAllDocuments();
         const activeId = this.documentManager.activeDocumentId;
 
+        console.log('TabController: Found', documents.length, 'documents');
+        console.log('TabController: Active ID:', activeId);
+        console.log('TabController: Documents:', documents.map(d => ({ id: d.id, name: d.name })));
+
         documents.forEach(doc => {
+            console.log('TabController: Creating tab for', doc.name);
             const tabElement = this.createTabElement(doc, doc.id === activeId);
             this.tabsContainer.appendChild(tabElement);
         });
+
+        console.log('TabController: Finished rendering', documents.length, 'tabs');
     }
 
     /**

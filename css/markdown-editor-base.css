@@ -676,6 +676,229 @@ body {
 }
 
 /* ============================================================================
+   SETTINGS PANEL STYLES
+   ============================================================================ */
+
+/* Settings panel - wider for controls */
+.settings-panel .panel-content {
+    min-width: 400px;
+    max-width: 500px;
+}
+
+/* Settings sections - same pattern as view sections */
+.settings-section {
+    margin: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.settings-section:last-child {
+    border-bottom: none;
+}
+
+.settings-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.settings-section-header:hover {
+    color: #4a9eff;
+}
+
+.settings-toggle {
+    display: inline-block;
+    width: 12px;
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.settings-section.expanded .settings-toggle {
+    transform: rotate(90deg);
+}
+
+.settings-section-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+    padding: 0;
+}
+
+.settings-section.expanded .settings-section-content {
+    max-height: 500px;
+    opacity: 1;
+    padding-bottom: 15px;
+}
+
+/* Settings row - label + control */
+.settings-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.settings-row > label {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Settings control container */
+.settings-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Range slider styling */
+.settings-control input[type="range"] {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.settings-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #4a9eff;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.settings-control input[type="range"]::-webkit-slider-thumb:hover {
+    background: #6bb5ff;
+}
+
+.settings-control input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #4a9eff;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s ease;
+}
+
+.settings-control input[type="range"]::-moz-range-thumb:hover {
+    background: #6bb5ff;
+}
+
+/* Value display next to sliders */
+.settings-value {
+    min-width: 60px;
+    text-align: right;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: var(--font-mono, monospace);
+}
+
+/* Select dropdown styling */
+.settings-control select {
+    flex: 1;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: var(--font-family);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.settings-control select:hover,
+.settings-control select:focus {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.settings-control select option {
+    background: #1a1a1a;
+    color: #fff;
+}
+
+/* Checkbox styling */
+.settings-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.settings-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #4a9eff;
+    cursor: pointer;
+}
+
+.settings-checkbox span {
+    transition: color 0.2s ease;
+}
+
+.settings-checkbox:hover span {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Buttons row for import/export/reset */
+.settings-buttons-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.settings-buttons-row .panel-button {
+    flex: 1;
+    min-width: 120px;
+    margin: 0;
+}
+
+/* Hint text */
+.settings-hint {
+    margin-top: 10px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.4;
+}
+
+/* Danger button styling */
+.settings-danger {
+    background: rgba(255, 80, 80, 0.15);
+    border-color: rgba(255, 80, 80, 0.4);
+}
+
+.settings-danger:hover:not(:disabled) {
+    background: rgba(255, 80, 80, 0.25);
+    border-color: rgba(255, 80, 80, 0.6);
+}
+
+/* Warning hint text */
+.settings-warning {
+    color: rgba(255, 180, 100, 0.8);
+}
+
+/* ============================================================================
    DOCUMENT TABS BAR
    ============================================================================ */
 
@@ -1231,17 +1454,52 @@ header[role="banner"] {
     display: none !important;
 }
 
-/* Line numbers for textarea */
+/* ============================================================================
+   LINE NUMBERS GUTTER
+   ============================================================================ */
+
+/* Container wrapper needs relative positioning for the gutter */
+.typora-write {
+    position: relative;
+}
+
+/* Line numbers gutter - overlay beside textarea */
+.line-numbers-gutter {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-x: hidden;
+    overflow-y: hidden; /* Scrolling is controlled by JS to sync with textarea */
+    pointer-events: none;
+    z-index: 5;
+    padding-top: 20px; /* Match textarea padding */
+    box-sizing: border-box;
+    display: none; /* Hidden by default */
+}
+
+/* Show line numbers when enabled */
+.line-numbers-gutter.visible {
+    display: block;
+}
+
+/* Individual line number */
+.line-number {
+    display: block;
+    text-align: right;
+    padding-right: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-base);
+    user-select: none;
+}
+
+/* Textarea adjustment when line numbers visible */
 .markdown-textarea.show-line-numbers {
-    padding-left: 50px;
-    background-image: linear-gradient(
-        to right,
-        rgba(128, 128, 128, 0.1) 0,
-        rgba(128, 128, 128, 0.1) 45px,
-        transparent 45px,
-        transparent 100%
-    );
-    background-attachment: local;
+    padding-left: 60px;
 }
 
 /* Scrollbar styling */

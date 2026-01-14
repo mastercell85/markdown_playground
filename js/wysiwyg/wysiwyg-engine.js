@@ -311,6 +311,12 @@ class WysiwygEngine {
             return null; // For now, don't render incomplete code blocks
         }
 
+        // Table row detection (| cell | cell |)
+        if (this.isTableRow(processedText)) {
+            // Return special marker for table handling
+            return '<table-row>' + processedText + '</table-row>';
+        }
+
         // Unordered list (- item or * item)
         const ulMatch = processedText.match(/^[-*]\s+(.+)$/);
         if (ulMatch) {
@@ -345,6 +351,32 @@ class WysiwygEngine {
 
         // No special markdown detected
         return null;
+    }
+
+    /**
+     * Check if a line is a markdown table row
+     */
+    isTableRow(text) {
+        // Must start and end with |
+        // Must have at least 2 cells (one |)
+        return /^\|.+\|$/.test(text.trim());
+    }
+
+    /**
+     * Check if a line is a table separator row (|---|---|)
+     */
+    isTableSeparator(text) {
+        return /^\|[\s:-]+\|$/.test(text.trim()) && text.includes('-');
+    }
+
+    /**
+     * Parse a table row into cells
+     */
+    parseTableRow(text) {
+        // Remove leading/trailing pipes and split by |
+        const trimmed = text.trim().replace(/^\||\|$/g, '');
+        const cells = trimmed.split('|').map(cell => cell.trim());
+        return cells;
     }
 
     /**
@@ -591,13 +623,22 @@ class WysiwygEngine {
      * @param {boolean} renderAll - If true, render all markdown blocks immediately
      */
     setMarkdown(markdown, renderAll = false) {
+        console.log('[DEBUG] setMarkdown called with renderAll:', renderAll);
+        console.log('[DEBUG] Markdown length:', markdown?.length);
+        console.log('[DEBUG] Editor element:', this.editorElement);
+
         if (!markdown || markdown.trim() === '') {
+            console.log('[DEBUG] Empty markdown, setting empty paragraph');
             this.editorElement.innerHTML = '<p><br></p>';
             return;
         }
 
+        // Normalize line endings (convert \r\n and \r to \n) before splitting
+        const normalizedMarkdown = markdown.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
         // Split into lines and create paragraphs
-        const lines = markdown.split('\n');
+        const lines = normalizedMarkdown.split('\n');
+        console.log('[DEBUG] Split into', lines.length, 'lines');
         const blocks = [];
 
         let i = 0;
@@ -684,6 +725,82 @@ class WysiwygEngine {
                     continue;
                 }
 
+                // Group consecutive table rows into a table
+                if (rendered && rendered.startsWith('<table-row>')) {
+                    const tableRows = [];
+                    const tableMarkdown = [];
+                    let hasHeader = false;
+                    let headerRowIndex = -1;
+
+                    // Collect all consecutive table rows
+                    while (i < lines.length) {
+                        const currentLine = lines[i];
+                        const currentRendered = this.renderMarkdown(currentLine);
+
+                        if (currentRendered && currentRendered.startsWith('<table-row>')) {
+                            // Extract the raw markdown from the marker
+                            const rawRow = currentRendered.replace('<table-row>', '').replace('</table-row>', '');
+
+                            // Check if this is a separator row
+                            if (this.isTableSeparator(rawRow)) {
+                                hasHeader = true;
+                                headerRowIndex = tableRows.length - 1; // Previous row is the header
+                            } else {
+                                tableRows.push(rawRow);
+                            }
+
+                            tableMarkdown.push(currentLine);
+                            i++;
+                        } else {
+                            break;
+                        }
+                    }
+
+                    // Build the HTML table
+                    const table = document.createElement('table');
+                    table.className = 'markdown-table';
+
+                    // Add header if present
+                    if (hasHeader && headerRowIndex >= 0) {
+                        const thead = document.createElement('thead');
+                        const headerRow = document.createElement('tr');
+                        const headerCells = this.parseTableRow(tableRows[headerRowIndex]);
+
+                        headerCells.forEach(cellContent => {
+                            const th = document.createElement('th');
+                            th.innerHTML = this.renderInlineFormatting(cellContent);
+                            headerRow.appendChild(th);
+                        });
+
+                        thead.appendChild(headerRow);
+                        table.appendChild(thead);
+                    }
+
+                    // Add body rows
+                    const tbody = document.createElement('tbody');
+                    const bodyStartIndex = hasHeader ? headerRowIndex + 1 : 0;
+
+                    for (let j = bodyStartIndex; j < tableRows.length; j++) {
+                        const row = document.createElement('tr');
+                        const cells = this.parseTableRow(tableRows[j]);
+
+                        cells.forEach(cellContent => {
+                            const td = document.createElement('td');
+                            td.innerHTML = this.renderInlineFormatting(cellContent);
+                            row.appendChild(td);
+                        });
+
+                        tbody.appendChild(row);
+                    }
+
+                    table.appendChild(tbody);
+                    table.setAttribute('data-wysiwyg-rendered', 'true');
+                    table.setAttribute('data-wysiwyg-markdown', tableMarkdown.join('\n'));
+                    table.contentEditable = 'true';
+                    blocks.push(table.outerHTML);
+                    continue;
+                }
+
                 if (rendered) {
                     // Return a rendered block with the original markdown stored
                     const wrapper = document.createElement('div');
@@ -696,13 +813,28 @@ class WysiwygEngine {
                     i++;
                     continue;
                 }
+
+                // If renderAll is true but no pattern matched, create plain paragraph
+                blocks.push(`<p>${line}</p>`);
+                i++;
+                continue;
             }
 
+            // renderAll is false - escape HTML for plain text editing
             blocks.push(`<p>${this.escapeHtml(line)}</p>`);
             i++;
         }
 
-        this.editorElement.innerHTML = blocks.join('');
+        const htmlToSet = blocks.join('');
+        console.log('[DEBUG] About to set innerHTML with', htmlToSet.length, 'characters');
+        console.log('[DEBUG] First 200 chars of HTML:', htmlToSet.substring(0, 200));
+
+        this.editorElement.innerHTML = htmlToSet;
+
+        console.log('[DEBUG] setMarkdown completed. Set', blocks.length, 'blocks');
+        console.log('[DEBUG] Editor innerHTML length AFTER setting:', this.editorElement.innerHTML.length);
+        console.log('[DEBUG] Editor element ID:', this.editorElement.id);
+        console.log('[DEBUG] Editor element is in DOM:', document.body.contains(this.editorElement));
     }
 
     /**

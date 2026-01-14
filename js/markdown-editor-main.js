@@ -12,6 +12,7 @@
     let findManager = null;
     let settingsManager = null;
     let lineMapper = null;
+    let wysiwygEngine = null;
 
     // Initialize when DOM is ready
     function init() {
@@ -1946,6 +1947,16 @@
      * Initialize markdown editor components
      */
     function initializeMarkdownEditor() {
+        // Check layout mode
+        const editorContainer = document.querySelector('.editor-container');
+        const layoutMode = editorContainer?.dataset?.layout || 'split';
+
+        if (layoutMode === 'wysiwyg') {
+            initializeWysiwygEditor();
+            return;
+        }
+
+        // Split view mode initialization
         const inputElement = document.getElementById('markdown-input');
         const outputElement = document.getElementById('markdown-preview');
 
@@ -2098,6 +2109,93 @@
         }
 
         console.log('Markdown editor initialized with live preview and document management');
+    }
+
+    /**
+     * Initialize WYSIWYG editor (unified view mode)
+     */
+    function initializeWysiwygEditor() {
+        const wysiwygElement = document.getElementById('wysiwyg-editor');
+
+        if (!wysiwygElement) {
+            console.warn('WYSIWYG editor element not found');
+            return;
+        }
+
+        // Create parser components (needed for markdown rendering)
+        const ruleEngine = new RuleEngine();
+        const blockProcessor = new BlockProcessor();
+        const parser = new MarkdownParser(ruleEngine, blockProcessor);
+
+        // Initialize LineMapper (can be used for future features)
+        lineMapper = new LineMapper({
+            previewContainer: wysiwygElement,
+            rebuildDebounceMs: 200,
+            debug: false
+        });
+        lineMapper.init();
+
+        // Create WYSIWYG engine
+        wysiwygEngine = new WysiwygEngine(wysiwygElement, lineMapper, parser);
+
+        // Create document manager for WYSIWYG mode
+        const documentManager = new DocumentManager({
+            autoSave: true,
+            autoSaveDelay: 1000,
+            onDocumentSwitch: (doc) => {
+                // Load document content into WYSIWYG editor
+                wysiwygEngine.setMarkdown(doc.content);
+                console.log('Switched to document:', doc.name);
+            },
+            onDocumentUpdate: (doc) => {
+                console.log('Document updated:', doc.name);
+            }
+        });
+
+        // Initialize tab controller FIRST so it can render tabs
+        const tabController = new TabController({
+            documentManager: documentManager,
+            tabsContainer: document.getElementById('document-tabs'),
+            newTabButton: document.getElementById('new-document-btn')
+        });
+
+        tabController.init();
+
+        // Setup auto-save: save content when input changes
+        wysiwygElement.addEventListener('input', () => {
+            const markdown = wysiwygEngine.getMarkdown();
+            documentManager.updateActiveContent(markdown);
+        });
+
+        // Try to load documents from storage, or create initial document
+        if (!documentManager.loadFromStorage()) {
+            const initialDoc = documentManager.createDocument();
+            documentManager.switchDocument(initialDoc.id);
+            // Focus the editor after creating initial document
+            setTimeout(() => {
+                wysiwygElement.focus();
+            }, 100);
+        } else {
+            // Restore active document
+            const activeDoc = documentManager.getActiveDocument();
+            if (activeDoc) {
+                wysiwygEngine.setMarkdown(activeDoc.content);
+            }
+        }
+
+        // Render tabs after documents are loaded
+        tabController.renderTabs();
+
+        // Expose to global scope
+        window.MarkdownEditor = {
+            parser: parser,
+            wysiwygEngine: wysiwygEngine,
+            documentManager: documentManager,
+            tabController: tabController,
+            lineMapper: lineMapper
+        };
+
+        console.log('WYSIWYG editor initialized');
     }
 
     /**

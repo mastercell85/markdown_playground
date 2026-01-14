@@ -600,77 +600,64 @@ lsDOCTYPE html>
 	</div>
 
 	<div class="main supporting" id="zen-supporting" role="main">
-		<!-- Split-screen markdown editor -->
-		<div class="editor-container" data-layout="split">
-			<!-- Input section -->
-			<section class="editor-section editor-input">
-				<!-- LCARS Frame Elements -->
-				<div class="lcars-frame">
-					<div class="lcars-sidebar"></div>
-					<div class="lcars-topbar"></div>
-					<div class="lcars-corner"></div>
-					<div class="lcars-header-blocks">
-						<div class="lcars-block-grey"></div>
-						<div class="lcars-block-orange"></div>
-						<div class="lcars-title">INPUT</div>
-						<div class="lcars-block-pink"></div>
-					</div>
-				</div>
+		<!-- WYSIWYG Unified Editor -->
+		<div class="editor-container" data-layout="wysiwyg">
+			<!-- Single unified contenteditable pane -->
+			<section class="editor-section unified-editor">
 				<div class="editor-section-content">
-					<!-- Typora wrapper for input -->
-					<div id="write-input" class="typora-write">
-						<!-- Line numbers gutter - synced with textarea scroll -->
-						<div id="line-numbers-gutter" class="line-numbers-gutter" aria-hidden="true"></div>
+					<!-- Typora wrapper for unified editing -->
+					<div id="write" class="typora-write">
+						<!-- WYSIWYG contenteditable area -->
+						<div
+							id="wysiwyg-editor"
+							class="wysiwyg-content"
+							contenteditable="true"
+							spellcheck="true"
+							aria-label="WYSIWYG markdown editor"
+						></div>
+						<!-- Hidden source mode textarea -->
 						<textarea
-							id="markdown-input"
-							class="markdown-textarea"
-							placeholder="Start typing your markdown here..."
-							aria-label="Markdown input"
+							id="source-editor"
+							class="source-textarea"
+							style="display: none;"
+							placeholder="Raw markdown source..."
+							aria-label="Markdown source editor"
 						></textarea>
 					</div>
 				</div>
 			</section>
 
-			<!-- Center gap with toolbar and resize handle -->
+			<!-- Center gap with toolbar (same structure as split view) -->
 			<div class="editor-gap" id="editor-gap">
-				<!-- Resize handle at top of gap -->
-				<div class="editor-divider" id="editor-divider" title="Drag to resize panels">
-					<span class="divider-grip">&#x2194;</span>
+				<!-- Resize handle at top of gap (disabled in WYSIWYG mode) -->
+				<div class="editor-divider" id="editor-divider" title="Toolbar">
+					<span class="divider-grip">&#x2261;</span>
 				</div>
 				<!-- Toolbar area for buttons -->
 				<div class="gap-toolbar" id="gap-toolbar">
-					<button class="divider-sync-btn" id="divider-sync-btn" title="Toggle Scroll Sync">
-						<span class="sync-chain">&#x1F517;</span>
+					<button class="divider-sync-btn" id="toolbar-source-toggle" title="Toggle Source Mode (Ctrl+/)">
+						<span class="sync-icon">&#x1F4DD;</span>
+					</button>
+					<button class="divider-sync-btn" id="toolbar-bold" title="Bold (Ctrl+B)">
+						<span class="sync-icon"><strong>B</strong></span>
+					</button>
+					<button class="divider-sync-btn" id="toolbar-italic" title="Italic (Ctrl+I)">
+						<span class="sync-icon"><em>I</em></span>
+					</button>
+					<button class="divider-sync-btn" id="toolbar-heading" title="Heading">
+						<span class="sync-icon">H</span>
+					</button>
+					<button class="divider-sync-btn" id="toolbar-link" title="Link (Ctrl+K)">
+						<span class="sync-icon">&#x1F517;</span>
+					</button>
+					<button class="divider-sync-btn" id="toolbar-image" title="Image">
+						<span class="sync-icon">&#x1F5BC;</span>
+					</button>
+					<button class="divider-sync-btn" id="toolbar-code" title="Code">
+						<span class="sync-icon">&lt;/&gt;</span>
 					</button>
 				</div>
 			</div>
-
-			<!-- Preview section -->
-			<section class="editor-section editor-preview">
-				<!-- LCARS Frame Elements -->
-				<div class="lcars-frame">
-					<div class="lcars-sidebar"></div>
-					<div class="lcars-topbar"></div>
-					<div class="lcars-corner"></div>
-					<div class="lcars-header-blocks">
-						<div class="lcars-block-grey"></div>
-						<div class="lcars-block-orange"></div>
-						<div class="lcars-title">PREVIEW</div>
-						<div class="lcars-block-pink"></div>
-					</div>
-				</div>
-				<div class="editor-section-content">
-					<!-- Typora wrapper for preview -->
-					<div id="write" class="typora-write">
-						<div
-							id="markdown-preview"
-							class="markdown-output"
-							aria-label="Rendered markdown preview"
-							aria-live="polite"
-						></div>
-					</div>
-				</div>
-			</section>
 		</div>
 
 		<!-- Find/Replace Dialog -->
@@ -745,6 +732,9 @@ lsDOCTYPE html>
 
 <!-- Line Mapper (Scroll Sync & WYSIWYG Infrastructure) -->
 <script src="js/shared/line-mapper.js"></script>
+
+<!-- WYSIWYG Engine -->
+<script src="js/wysiwyg/wysiwyg-engine.js"></script>
 
 <!-- Main application script -->
 <script src="js/markdown-editor-main.js"></script>

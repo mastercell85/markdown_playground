@@ -580,7 +580,7 @@ This section documents planned features and architectural decisions made during 
 
 ### Phase 1: Settings/Preferences System - Planning Session
 
-**Status:** IN PROGRESS - Question 4 of 10
+**Status:** ✅ PLANNING COMPLETE - Ready for Implementation
 **Session Date:** January 13, 2026
 
 This section contains detailed architectural decisions for implementing a centralized settings/preferences system. Planning uses a systematic Q&A approach to ensure all design decisions are documented before implementation.
@@ -1009,95 +1009,911 @@ settingsManager.resetToDefaults();  // Owner resets everything
 
 ---
 
-#### 🔄 Current Question: Persistence & Save Strategy (Q4.1)
+#### ✅ Decision 4: Persistence & Save Strategy (Q4.1)
 
-**Status:** AWAITING DECISION
+**Chosen Approach:** Hybrid - Debounced Auto-Save + Save/Cancel/Revert Buttons (Option D)
 
-**Options Under Consideration:**
-
-**Option A: Auto-Save on Every Change**
+**Three-State System:**
 ```javascript
-set(path, value) {
-  this.settings.settings[module][setting] = value;
-  localStorage.setItem('markdownEditorSettings', JSON.stringify(this.settings));
-  this.notifyListeners(path, value);
+{
+  lastSavedSettings: { ... },   // What's actually in localStorage
+  previousSettings: { ... },     // Snapshot before current edit session
+  currentSettings: { ... }       // Live working copy (what user sees)
 }
 ```
-- **Pros:** Excellent data safety (instant save)
-- **Cons:** Many localStorage writes (expensive), could lag with rapid changes (slider dragging)
 
-**Option B: Debounced Auto-Save** ⭐ RECOMMENDED
+**Implementation:**
 ```javascript
-set(path, value) {
-  this.settings.settings[module][setting] = value;
+class SettingsManager {
+  constructor() {
+    this.lastSavedSettings = this.loadFromStorage();
+    this.previousSettings = structuredClone(this.lastSavedSettings);
+    this.currentSettings = structuredClone(this.lastSavedSettings);
+    this.saveTimeout = null;
+    this.DEBOUNCE_DELAY = 500; // ms
+  }
 
-  // Schedule save after 500ms of no changes
-  clearTimeout(this.saveTimeout);
-  this.saveTimeout = setTimeout(() => {
-    localStorage.setItem('markdownEditorSettings', JSON.stringify(this.settings));
-  }, 500);
+  /**
+   * Update a setting (immediate in-memory, debounced to disk)
+   */
+  set(path, value) {
+    // Update in-memory immediately
+    this.setNestedValue(this.currentSettings, path, value);
 
-  this.notifyListeners(path, value); // Immediate notification
+    // Notify listeners immediately (UI updates instantly)
+    this.notifyListeners(path, value);
+
+    // Schedule debounced save
+    clearTimeout(this.saveTimeout);
+    this.saveTimeout = setTimeout(() => {
+      this.saveToStorage();
+      this.lastSavedSettings = structuredClone(this.currentSettings);
+    }, this.DEBOUNCE_DELAY);
+  }
+
+  /**
+   * Explicit save - immediately persist and update snapshots
+   */
+  save() {
+    clearTimeout(this.saveTimeout);
+    this.saveToStorage();
+    this.lastSavedSettings = structuredClone(this.currentSettings);
+    this.previousSettings = structuredClone(this.currentSettings);
+  }
+
+  /**
+   * Cancel - revert to previousSettings (before edit session)
+   */
+  cancel() {
+    clearTimeout(this.saveTimeout);
+    this.currentSettings = structuredClone(this.previousSettings);
+    this.saveToStorage();
+    this.lastSavedSettings = structuredClone(this.currentSettings);
+    this.notifyAllListeners(); // Update UI to reverted state
+  }
+
+  /**
+   * Revert - go back to lastSavedSettings (last disk state)
+   */
+  revert() {
+    clearTimeout(this.saveTimeout);
+    this.currentSettings = structuredClone(this.lastSavedSettings);
+    this.notifyAllListeners(); // Update UI to saved state
+  }
+
+  /**
+   * Check if there are unsaved changes
+   */
+  hasUnsavedChanges() {
+    return JSON.stringify(this.currentSettings) !==
+           JSON.stringify(this.lastSavedSettings);
+  }
 }
 ```
-- **Pros:** Smooth performance, minimal localStorage writes, still saves automatically
-- **Cons:** Small 500ms delay (acceptable for settings)
 
-**Option C: Manual Save (with Auto-Save on Exit)**
-```javascript
-set(path, value) {
-  this.settings.settings[module][setting] = value;
-  this.dirty = true;
-  this.notifyListeners(path, value);
-  // User must call save() OR auto-save on window.beforeunload
-}
-```
-- **Pros:** Best performance, fewest writes
-- **Cons:** Risk of data loss if browser crashes before exit
+**UI Behavior:**
+- **Save button**: Commits current changes, updates both snapshots
+- **Cancel button**: Reverts to `previousSettings` (session start state)
+- **Revert button**: Reverts to `lastSavedSettings` (last disk state)
+- **Auto-save fallback**: If user navigates away without Save/Cancel, debounce ensures changes persist
 
-**Key Questions:**
-1. How important is immediate persistence vs. performance?
-2. Can users tolerate 500ms delay for settings to save?
-3. What if user closes browser quickly (no time for beforeunload)?
+**Rationale:**
+- Combines best of both worlds: safety of auto-save + control of explicit save
+- Three states allow flexible undo scenarios
+- Debounced writes prevent performance issues with rapid changes (sliders)
+- Explicit buttons give users confidence and control
+- Auto-save fallback prevents accidental data loss
 
-**Next Steps:** User to decide on persistence strategy before continuing to Q5 (Change Notifications & Reactivity).
+**Advantages:**
+- Users who want quick changes get auto-save behavior
+- Users who want deliberate control get Save/Cancel buttons
+- "Revert" allows undoing recent changes even after auto-save
+- Minimal localStorage writes (debounced)
+- No data loss on browser crash (500ms max delay)
 
 ---
 
-#### Remaining Planning Questions (Q5-Q10)
+#### ✅ Decision 5: Change Notifications & Reactivity (Q5.1)
 
-**Q5: Change Notifications & Reactivity**
-- How do modules react when settings change?
-- Event-based listeners vs callbacks vs polling?
-- Global events vs module-specific subscriptions?
+**Chosen Approach:** Event-Based System with Categories (Option B)
 
-**Q6: Cross-Tab Synchronization**
-- Should settings sync across multiple browser tabs?
-- Use `storage` event listener?
-- Handle conflicts when tabs have different settings?
+**Event Categories:**
+| Category | Purpose | Example Events |
+|----------|---------|----------------|
+| `settings:*` | Settings panel changes | `settings:editor.fontSize`, `settings:theme.current` |
+| `docstyle:*` | Inline document style commands | `docstyle:font`, `docstyle:size`, `docstyle:color` |
+| `autocomplete:*` | Autocomplete selections | `autocomplete:font`, `autocomplete:emoji` |
+| `editor:*` | Editor state changes | `editor:content`, `editor:selection` |
 
-**Q7: Import/Export & Reset Functionality**
-- Export settings to JSON file for backup?
-- Import settings from file?
-- Reset individual modules vs. reset all?
-- Confirmation dialogs for destructive operations?
+**Implementation:**
+```javascript
+class SettingsManager {
+  constructor() {
+    // ...existing code...
+  }
 
-**Q8: Initial Settings Priority**
-- Which settings to implement first (editor, view, theme, etc.)?
-- Minimal viable settings for Phase 1?
-- Which can be deferred to future phases?
+  /**
+   * Dispatch a settings change event
+   */
+  notifyListeners(path, value) {
+    const event = new CustomEvent(`settings:${path}`, {
+      detail: { path, value, timestamp: Date.now() }
+    });
+    document.dispatchEvent(event);
 
-**Q9: API Design & Developer Experience**
-- Public API surface for SettingsManager?
-- Error handling strategy?
-- TypeScript type definitions (if using TS)?
-- JSDoc comments for IDE autocomplete?
+    // Also dispatch generic event for modules that listen to all changes
+    const genericEvent = new CustomEvent('settings:changed', {
+      detail: { path, value, timestamp: Date.now() }
+    });
+    document.dispatchEvent(genericEvent);
+  }
+}
 
-**Q10: Testing Strategy**
-- Unit tests for validation?
-- Integration tests for persistence?
-- Mock localStorage for testing?
-- Test migrations between schema versions?
+// Module subscription example
+class EditorManager {
+  init() {
+    // Listen to specific setting
+    document.addEventListener('settings:editor.fontSize', (e) => {
+      this.applyFontSize(e.detail.value);
+    });
+
+    // Listen to all editor settings
+    document.addEventListener('settings:changed', (e) => {
+      if (e.detail.path.startsWith('editor.')) {
+        this.handleSettingChange(e.detail);
+      }
+    });
+  }
+}
+```
+
+**Inline Document Style Commands (Future Feature):**
+```markdown
+<!-- User types in editor: -->
+font=Arial
+size=20px
+color=#ff0000
+
+<!-- With autocomplete dropdown showing bundled fonts: -->
+font=STIX Two Text
+font=STIX Two Math
+font=XITS Text
+font=XITS Math
+```
+
+**Multi-Syntax Support (Future):**
+```markdown
+<!-- All equivalent: -->
+font=Arial
+font:Arial
+font(Arial)
+[font:Arial]
+```
+
+**Rationale:**
+- Standard browser event system (no custom pub/sub library)
+- Categories prevent event collision between different subsystems
+- Loose coupling - modules don't need references to each other
+- Easy to add new listeners without modifying SettingsManager
+- Supports future inline styling feature with same event architecture
+
+**Bundled Fonts (for autocomplete):**
+- STIX Two Math (mathematical symbols)
+- STIX Two Text (matching text font)
+- XITS Math (alternative math font)
+- XITS Text (alternative text font)
+- Additional bundled fonts to be researched
+
+---
+
+#### ✅ Decision 6: Settings UI Location (Q6.1)
+
+**Chosen Approach:** Settings Panel + View Tab for Quick Access (Option D Modified)
+
+**Structure:**
+| Location | Contains | Rationale |
+|----------|----------|-----------|
+| **Settings Panel** | All functional settings | Editor defaults, persistence, parser options, keybindings, etc. |
+| **View Tab** | Theme selector, Tab Menu Style | Quick access for frequently-changed visual settings |
+
+**Why This Split:**
+- **Theme changes are frequent** - users switch themes often to match mood/environment
+- **Tab menu style changes are less frequent** but still accessible - no need to bury in settings
+- **Settings panel for functional options** - things you set once and forget (font size, line height, etc.)
+- **View tab already exists** with theme/tab menu controls - no additional work needed
+
+**Access Methods:**
+1. **Settings Panel**: Via menu icon or File → Preferences
+2. **View Tab**: Click View tab label to access theme/tab menu style selectors
+
+**Settings Panel Organization:**
+```
+Settings Panel
+├── Editor Settings
+│   ├── Font Size
+│   ├── Line Height
+│   ├── Tab Size
+│   └── Word Wrap Default
+├── Parser Settings
+│   ├── Line Tracking
+│   └── Shortcut Processing
+├── Persistence Settings
+│   ├── Auto-save Delay
+│   └── Document Backup
+├── Scroll Sync Settings
+│   ├── Default Enabled
+│   └── Default Offset
+└── Advanced
+    ├── Reset to Defaults
+    ├── Export Settings
+    └── Import Settings
+```
+
+**Rationale:**
+- Clean separation: View tab = appearance, Settings panel = behavior
+- No duplication of controls
+- Theme/tab menu stay easily accessible for quick switching
+- Full settings accessible for power users who want fine-tuned control
+
+---
+
+#### ✅ Decision 7: Import/Export & Reset Functionality (Q7.1)
+
+**Chosen Approach:** Full Import/Export + Granular Reset (Option B)
+
+**Features:**
+| Feature | Description |
+|---------|-------------|
+| **Export Settings** | Download settings as JSON file for backup |
+| **Import Settings** | Load settings from JSON file with validation |
+| **Reset Module** | Reset specific module to defaults (e.g., editor only) |
+| **Reset All** | Reset all settings to defaults |
+
+**Implementation:**
+```javascript
+class SettingsManager {
+  /**
+   * Export settings to downloadable JSON file
+   */
+  exportSettings() {
+    const exportData = {
+      version: this.currentSettings.version,
+      exportDate: new Date().toISOString(),
+      settings: this.currentSettings.settings
+    };
+
+    const blob = new Blob(
+      [JSON.stringify(exportData, null, 2)],
+      { type: 'application/json' }
+    );
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `markdown-editor-settings-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  /**
+   * Import settings from JSON file
+   * @param {File} file - JSON file to import
+   * @returns {Object} - { success: boolean, errors?: string[] }
+   */
+  async importSettings(file) {
+    try {
+      const text = await file.text();
+      const imported = JSON.parse(text);
+
+      // Validate structure
+      if (!imported.settings || typeof imported.settings !== 'object') {
+        return { success: false, errors: ['Invalid settings file format'] };
+      }
+
+      // Validate each module's settings
+      const errors = [];
+      const validatedSettings = {};
+
+      this.modules.forEach(module => {
+        const moduleName = this.getModuleName(module);
+        const moduleSettings = imported.settings[moduleName] || {};
+        const validation = module.validateSettings(moduleSettings);
+
+        if (!validation.valid) {
+          errors.push(...validation.errors.map(e => `${moduleName}: ${e}`));
+        }
+        validatedSettings[moduleName] = validation.sanitized;
+      });
+
+      if (errors.length > 0) {
+        // Warn but allow import with sanitized values
+        console.warn('Import validation warnings:', errors);
+      }
+
+      // Apply imported settings
+      this.currentSettings.settings = validatedSettings;
+      this.save();
+      this.notifyAllListeners();
+
+      return { success: true, warnings: errors };
+    } catch (error) {
+      return { success: false, errors: [`Parse error: ${error.message}`] };
+    }
+  }
+
+  /**
+   * Reset specific module to defaults
+   * @param {string} moduleName - Module to reset (e.g., 'editor')
+   */
+  resetModule(moduleName) {
+    const Manager = this.modules.find(m =>
+      this.getModuleName(m) === moduleName
+    );
+
+    if (!Manager) {
+      console.error(`Unknown module: ${moduleName}`);
+      return false;
+    }
+
+    this.currentSettings.settings[moduleName] = Manager.getDefaultSettings();
+    this.save();
+    this.notifyListeners(`${moduleName}:reset`, null);
+    return true;
+  }
+
+  /**
+   * Reset all settings to defaults
+   */
+  resetAll() {
+    this.modules.forEach(module => {
+      const name = this.getModuleName(module);
+      this.currentSettings.settings[name] = module.getDefaultSettings();
+    });
+    this.save();
+    this.notifyAllListeners();
+  }
+}
+```
+
+**UI Confirmation Dialogs:**
+```javascript
+// Reset module confirmation
+function confirmResetModule(moduleName) {
+  if (confirm(`Reset ${moduleName} settings to defaults? This cannot be undone.`)) {
+    settingsManager.resetModule(moduleName);
+  }
+}
+
+// Reset all confirmation
+function confirmResetAll() {
+  if (confirm('Reset ALL settings to defaults? This cannot be undone.')) {
+    settingsManager.resetAll();
+  }
+}
+
+// Import confirmation (after validation)
+function confirmImport(warnings) {
+  if (warnings.length > 0) {
+    return confirm(
+      `Import completed with ${warnings.length} warning(s):\n\n` +
+      warnings.join('\n') +
+      '\n\nContinue with import?'
+    );
+  }
+  return true;
+}
+```
+
+**File Picker UI:**
+```html
+<!-- Hidden file input for import -->
+<input type="file" id="settings-import" accept=".json" style="display: none;">
+
+<!-- Export/Import buttons in Settings Panel -->
+<button onclick="settingsManager.exportSettings()">Export Settings</button>
+<button onclick="document.getElementById('settings-import').click()">Import Settings</button>
+```
+
+**Rationale:**
+- Full backup/restore capability for power users
+- Granular reset allows fixing one broken area without losing all preferences
+- Validation prevents importing malformed or incompatible settings
+- Warnings (not errors) allow partial imports with sanitized values
+- Confirmation dialogs prevent accidental data loss
+
+---
+
+#### ✅ Decision 8: Initial Settings Priority (Q8.1)
+
+**Chosen Approach:** Migrate Existing + Core Editor Settings (Option B)
+
+**Phase 1 Scope:**
+
+**Part 1: Migrate Existing localStorage Keys**
+| Old Key | New Path | Type |
+|---------|----------|------|
+| `tab-menu-style` | `theme.tabMenu` | string |
+| `current-theme` | `theme.current` | string |
+| `editor-layout` | `view.mode` | string |
+| `editor-zoom` | `view.zoom` | number |
+| `editor-line-numbers` | `editor.lineNumbers` | boolean |
+| `editor-word-wrap` | `editor.wordWrap` | boolean |
+| `editor-scroll-sync` | `scrollSync.enabled` | boolean |
+| `editor-scroll-sync-offset` | `scrollSync.offset` | number |
+
+**Part 2: Add New Editor Settings**
+| Setting | Path | Default | Range/Options |
+|---------|------|---------|---------------|
+| Font Size | `editor.fontSize` | 14 | 8-72 |
+| Line Height | `editor.lineHeight` | 1.5 | 1.0-3.0 |
+| Tab Size | `editor.tabSize` | 2 | 2-8 |
+| Font Family | `editor.fontFamily` | 'monospace' | string |
+
+**Complete Phase 1 Settings Structure:**
+```javascript
+{
+  version: 1,
+  settings: {
+    editor: {
+      fontSize: 14,
+      lineHeight: 1.5,
+      tabSize: 2,
+      fontFamily: 'monospace',
+      lineNumbers: true,
+      wordWrap: true
+    },
+    view: {
+      mode: 'split',        // 'split' | 'editor' | 'preview'
+      zoom: 100             // 90-150
+    },
+    scrollSync: {
+      enabled: true,
+      offset: 3
+    },
+    theme: {
+      current: 'default',
+      tabMenu: 'steel'
+    }
+  }
+}
+```
+
+**Migration Strategy:**
+```javascript
+/**
+ * One-time migration from old localStorage keys to new SettingsManager
+ */
+migrateFromLegacyStorage() {
+  const migrations = [
+    { oldKey: 'tab-menu-style', newPath: 'theme.tabMenu', default: 'steel' },
+    { oldKey: 'current-theme', newPath: 'theme.current', default: 'default' },
+    { oldKey: 'editor-layout', newPath: 'view.mode', default: 'split' },
+    { oldKey: 'editor-zoom', newPath: 'view.zoom', default: 100, transform: parseInt },
+    { oldKey: 'editor-line-numbers', newPath: 'editor.lineNumbers', default: true, transform: v => v === 'true' },
+    { oldKey: 'editor-word-wrap', newPath: 'editor.wordWrap', default: true, transform: v => v === 'true' },
+    { oldKey: 'editor-scroll-sync', newPath: 'editor.scrollSync.enabled', default: true, transform: v => v === 'true' },
+    { oldKey: 'editor-scroll-sync-offset', newPath: 'scrollSync.offset', default: 3, transform: parseInt }
+  ];
+
+  migrations.forEach(({ oldKey, newPath, default: defaultVal, transform }) => {
+    const oldValue = localStorage.getItem(oldKey);
+    if (oldValue !== null) {
+      const value = transform ? transform(oldValue) : oldValue;
+      this.setNestedValue(this.currentSettings, newPath, value);
+      localStorage.removeItem(oldKey); // Clean up old key
+    }
+  });
+
+  this.save();
+}
+```
+
+**Deferred to Future Phases:**
+- Parser settings (line tracking, shortcut toggles)
+- Persistence settings (auto-save delay customization)
+- Keybindings customization
+- Inline font styling settings
+- WYSIWYG mode settings
+
+**Rationale:**
+- Migrating existing settings proves the architecture works
+- New editor settings (font size, line height) provide immediate user value
+- Scope is achievable without being overwhelming
+- Foundation ready for future expansion
+
+---
+
+#### ✅ Decision 9: API Design & Developer Experience (Q9.1)
+
+**Chosen Approach:** Extended API with Convenience Methods + Error Throwing (Option B)
+
+**Core API:**
+```javascript
+// Reading (direct access)
+settingsManager.settings.editor.fontSize
+
+// Writing (validated)
+settingsManager.set('editor.fontSize', 16)
+
+// State management
+settingsManager.save()
+settingsManager.cancel()
+settingsManager.revert()
+
+// Reset operations
+settingsManager.resetAll()
+settingsManager.resetModule('editor')
+
+// Import/Export
+settingsManager.exportSettings()
+settingsManager.importSettings(file)
+```
+
+**Convenience Methods:**
+```javascript
+/**
+ * Update multiple settings at once
+ * @param {Object} settings - Object with path:value pairs
+ */
+setMultiple(settings) {
+  Object.entries(settings).forEach(([path, value]) => {
+    this.set(path, value);
+  });
+}
+
+/**
+ * Get all settings for a specific module
+ * @param {string} moduleName - Module name (e.g., 'editor')
+ * @returns {Object} - Module settings object
+ */
+getModule(moduleName) {
+  return this.settings.settings[moduleName];
+}
+
+/**
+ * Check if there are unsaved changes
+ * @returns {boolean}
+ */
+hasUnsavedChanges() {
+  return JSON.stringify(this.currentSettings) !==
+         JSON.stringify(this.lastSavedSettings);
+}
+
+/**
+ * Get default value for a setting
+ * @param {string} path - Dot-notation path
+ * @returns {*} - Default value
+ */
+getDefault(path) {
+  const [moduleName, setting] = path.split('.');
+  const Manager = this.modules.find(m => this.getModuleName(m) === moduleName);
+  return Manager?.getDefaultSettings()[setting];
+}
+
+/**
+ * Subscribe to setting changes (convenience wrapper for addEventListener)
+ * @param {string} path - Setting path to watch
+ * @param {Function} callback - Function to call on change
+ */
+onChange(path, callback) {
+  const handler = (e) => callback(e.detail.value, e.detail);
+  document.addEventListener(`settings:${path}`, handler);
+  return handler; // Return for cleanup
+}
+
+/**
+ * Unsubscribe from setting changes
+ * @param {string} path - Setting path
+ * @param {Function} handler - Handler returned from onChange
+ */
+offChange(path, handler) {
+  document.removeEventListener(`settings:${path}`, handler);
+}
+```
+
+**Error Handling Strategy: Throw Errors**
+```javascript
+/**
+ * Custom error class for settings-related errors
+ */
+class SettingsError extends Error {
+  constructor(message, path = null) {
+    super(message);
+    this.name = 'SettingsError';
+    this.path = path;
+  }
+}
+
+/**
+ * Set a setting value with validation
+ * @throws {SettingsError} If path is invalid or validation fails
+ */
+set(path, value) {
+  const [moduleName, setting] = path.split('.');
+
+  // Validate module exists
+  const Manager = this.modules.find(m => this.getModuleName(m) === moduleName);
+  if (!Manager) {
+    throw new SettingsError(`Unknown module: '${moduleName}'`, path);
+  }
+
+  // Validate setting exists in module
+  const schema = Manager.getSettingsSchema();
+  if (!schema[setting]) {
+    throw new SettingsError(`Unknown setting: '${setting}' in module '${moduleName}'`, path);
+  }
+
+  // Validate value against schema
+  const rules = schema[setting];
+  if (typeof value !== rules.type) {
+    throw new SettingsError(
+      `Type mismatch for '${path}': expected ${rules.type}, got ${typeof value}`,
+      path
+    );
+  }
+
+  if (rules.type === 'number') {
+    if (rules.min !== undefined && value < rules.min) {
+      throw new SettingsError(`Value ${value} below minimum ${rules.min} for '${path}'`, path);
+    }
+    if (rules.max !== undefined && value > rules.max) {
+      throw new SettingsError(`Value ${value} above maximum ${rules.max} for '${path}'`, path);
+    }
+  }
+
+  if (rules.enum && !rules.enum.includes(value)) {
+    throw new SettingsError(
+      `Invalid value '${value}' for '${path}'. Expected one of: ${rules.enum.join(', ')}`,
+      path
+    );
+  }
+
+  // All validation passed - update setting
+  this.setNestedValue(this.currentSettings, path, value);
+  this.notifyListeners(path, value);
+  this.scheduleSave();
+
+  return true;
+}
+```
+
+**Usage in UI Code (with try/catch):**
+```javascript
+// Settings panel slider handler
+fontSizeSlider.addEventListener('input', (e) => {
+  try {
+    settingsManager.set('editor.fontSize', parseInt(e.target.value));
+  } catch (error) {
+    if (error instanceof SettingsError) {
+      console.error('Settings error:', error.message);
+      // Optionally show user-friendly message
+    } else {
+      throw error; // Re-throw unexpected errors
+    }
+  }
+});
+```
+
+**JSDoc Comments for IDE Autocomplete:**
+All public methods include JSDoc comments with:
+- `@param` - Parameter types and descriptions
+- `@returns` - Return type and description
+- `@throws` - Error conditions
+- `@example` - Usage examples
+
+**Rationale:**
+- Extended API reduces boilerplate in calling code
+- `onChange()`/`offChange()` are cleaner than raw addEventListener
+- Error throwing catches bugs during development
+- JSDoc enables IDE autocomplete and inline documentation
+- Custom `SettingsError` class allows specific error handling
+
+---
+
+#### ✅ Decision 10: Testing Strategy (Q10.1)
+
+**Chosen Approach:** Unit Tests for Core Logic + Manual Testing (Option B)
+
+**Testing Approach:**
+| Type | Coverage | Tools |
+|------|----------|-------|
+| **Unit Tests** | Validation, persistence, migration | Existing test runner |
+| **Manual Testing** | UI interactions, edge cases, bug hunting | Developer testing |
+
+**Unit Test Categories:**
+
+**1. Validation Tests**
+```javascript
+describe('Settings Validation', () => {
+  test('rejects invalid type - string instead of number', () => {
+    expect(() => settingsManager.set('editor.fontSize', 'large'))
+      .toThrow(SettingsError);
+  });
+
+  test('rejects number below minimum', () => {
+    expect(() => settingsManager.set('editor.fontSize', 5))
+      .toThrow(/below minimum/);
+  });
+
+  test('rejects number above maximum', () => {
+    expect(() => settingsManager.set('editor.fontSize', 100))
+      .toThrow(/above maximum/);
+  });
+
+  test('rejects invalid enum value', () => {
+    expect(() => settingsManager.set('view.mode', 'invalid'))
+      .toThrow(/Expected one of/);
+  });
+
+  test('accepts valid number within range', () => {
+    expect(settingsManager.set('editor.fontSize', 16)).toBe(true);
+    expect(settingsManager.settings.editor.fontSize).toBe(16);
+  });
+
+  test('accepts valid enum value', () => {
+    expect(settingsManager.set('view.mode', 'preview')).toBe(true);
+  });
+});
+```
+
+**2. Persistence Tests**
+```javascript
+describe('Settings Persistence', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  test('saves settings to localStorage', () => {
+    settingsManager.set('editor.fontSize', 18);
+    settingsManager.save();
+
+    const stored = JSON.parse(localStorage.getItem('markdownEditorSettings'));
+    expect(stored.settings.editor.fontSize).toBe(18);
+  });
+
+  test('loads settings from localStorage on init', () => {
+    localStorage.setItem('markdownEditorSettings', JSON.stringify({
+      version: 1,
+      settings: { editor: { fontSize: 20 } }
+    }));
+
+    const manager = new SettingsManager();
+    expect(manager.settings.editor.fontSize).toBe(20);
+  });
+
+  test('uses defaults when localStorage is empty', () => {
+    const manager = new SettingsManager();
+    expect(manager.settings.editor.fontSize).toBe(14); // default
+  });
+
+  test('debounces rapid changes', async () => {
+    const saveSpy = jest.spyOn(settingsManager, 'saveToStorage');
+
+    settingsManager.set('editor.fontSize', 16);
+    settingsManager.set('editor.fontSize', 17);
+    settingsManager.set('editor.fontSize', 18);
+
+    // Should not have saved yet (debounce delay)
+    expect(saveSpy).not.toHaveBeenCalled();
+
+    // Wait for debounce
+    await new Promise(r => setTimeout(r, 600));
+    expect(saveSpy).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+**3. Migration Tests**
+```javascript
+describe('Settings Migration', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  test('migrates legacy editor-zoom key', () => {
+    localStorage.setItem('editor-zoom', '125');
+
+    const manager = new SettingsManager();
+
+    expect(manager.settings.view.zoom).toBe(125);
+    expect(localStorage.getItem('editor-zoom')).toBeNull(); // cleaned up
+  });
+
+  test('migrates legacy boolean stored as string', () => {
+    localStorage.setItem('editor-line-numbers', 'false');
+
+    const manager = new SettingsManager();
+
+    expect(manager.settings.editor.lineNumbers).toBe(false);
+  });
+
+  test('handles missing legacy keys gracefully', () => {
+    // No legacy keys set
+    const manager = new SettingsManager();
+
+    // Should use defaults
+    expect(manager.settings.editor.fontSize).toBe(14);
+    expect(manager.settings.view.zoom).toBe(100);
+  });
+});
+```
+
+**4. State Management Tests**
+```javascript
+describe('Save/Cancel/Revert', () => {
+  test('save() commits changes to both snapshots', () => {
+    settingsManager.set('editor.fontSize', 20);
+    settingsManager.save();
+
+    expect(settingsManager.hasUnsavedChanges()).toBe(false);
+  });
+
+  test('cancel() reverts to session start state', () => {
+    const original = settingsManager.settings.editor.fontSize;
+    settingsManager.set('editor.fontSize', 99);
+    settingsManager.cancel();
+
+    expect(settingsManager.settings.editor.fontSize).toBe(original);
+  });
+
+  test('revert() goes back to last saved state', () => {
+    settingsManager.set('editor.fontSize', 20);
+    settingsManager.save();
+    settingsManager.set('editor.fontSize', 30);
+    settingsManager.revert();
+
+    expect(settingsManager.settings.editor.fontSize).toBe(20);
+  });
+
+  test('hasUnsavedChanges() detects modifications', () => {
+    settingsManager.save(); // Start clean
+    expect(settingsManager.hasUnsavedChanges()).toBe(false);
+
+    settingsManager.set('editor.fontSize', 99);
+    expect(settingsManager.hasUnsavedChanges()).toBe(true);
+  });
+});
+```
+
+**Test File Location:** `tests/settings-manager.test.js`
+
+**Manual Testing Checklist:**
+- [ ] Change settings via UI controls
+- [ ] Verify changes persist after page reload
+- [ ] Test Save/Cancel/Revert buttons
+- [ ] Import/Export settings files
+- [ ] Reset individual modules
+- [ ] Reset all settings
+- [ ] Edge cases: rapid slider dragging, invalid inputs
+- [ ] Cross-browser testing (Chrome, Firefox, Edge)
+
+**Rationale:**
+- Unit tests catch validation/persistence bugs automatically
+- Manual testing catches UI/UX issues and edge cases
+- Reuses existing test runner infrastructure
+- Reasonable effort-to-value ratio for project size
+- Skip E2E automation (overkill for this project)
+
+---
+
+### Phase 1 Planning: COMPLETE
+
+All 10 architectural decisions have been made. The Settings/Preferences System is ready for implementation.
+
+**Summary of Decisions:**
+
+| Question | Decision |
+|----------|----------|
+| Q1: Data Structure | Nested/Namespaced structure |
+| Q2: Schema Versioning | Include from Phase 1 |
+| Q3: Defaults & Validation | Module-based defaults |
+| Q4: Settings Access API | Hybrid (direct read, method write) |
+| Q5: Persistence Strategy | Debounced auto-save + Save/Cancel/Revert |
+| Q6: Change Notifications | Event-based with categories |
+| Q7: Settings UI Location | Settings Panel + View tab for themes |
+| Q8: Import/Export & Reset | Full import/export + granular reset |
+| Q9: Initial Settings Priority | Migrate existing + core editor settings |
+| Q10: API Design | Extended API + error throwing |
+| Q11: Testing Strategy | Unit tests + manual testing |
 
 ---
 

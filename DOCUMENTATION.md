@@ -1972,13 +1972,13 @@ All 10 architectural decisions have been made. The Settings/Preferences System i
 | 17 | `getDefault()` | ✅ Pass (returns 14) |
 | 18 | Persistence across reload | ✅ Pass (returned 18) |
 
-**Known Issue - Double Event Firing:**
+**Resolved Issue - Double Event Firing (Fixed January 13, 2026):**
 
-The `on()` method currently adds both an internal listener to `this.listeners` AND a DOM event listener. When `emit()` is called, it fires both mechanisms, causing callbacks registered via `onChange()` to execute twice.
+The `on()` method was adding both an internal listener to `this.listeners` AND a DOM event listener. When `emit()` was called, it fired both mechanisms, causing callbacks registered via `onChange()` to execute twice.
 
-**Root Cause:** The `on()` method subscribes to both notification systems, but only one should be used.
+**Root Cause:** The `on()` method subscribed to both notification systems, but only one should be used.
 
-**Fix Required:** Remove the DOM event listener subscription from `on()` method, keeping only the internal listeners array. This will be addressed in a separate branch.
+**Fix Applied:** Removed the DOM event listener subscription from `on()` method, keeping only the internal listeners array. DOM CustomEvents are still dispatched by `emit()` for external modules that use `document.addEventListener()` directly.
 
 ---
 

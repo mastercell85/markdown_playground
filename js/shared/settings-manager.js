@@ -577,14 +577,11 @@ class SettingsManager {
         }
         this.listeners.get(event).add(callback);
 
-        // Also add as DOM event listener for cross-module communication
-        const domHandler = (e) => callback(e.detail);
-        document.addEventListener(event, domHandler);
-
         // Return unsubscribe function
+        // Note: DOM events are dispatched by emit() for external modules that use
+        // document.addEventListener() directly. Internal subscribers use this.listeners only.
         return () => {
             this.listeners.get(event)?.delete(callback);
-            document.removeEventListener(event, domHandler);
         };
     }
 

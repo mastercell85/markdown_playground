@@ -1124,6 +1124,40 @@ set(path, value) {
 
 This section tracks features planned for future implementation.
 
+### WYSIWYG Editing Mode (Typora-Style)
+
+**Priority: High (Post-Phase 1 Settings)**
+
+**What it is:**
+A true "What You See Is What You Get" editing experience where you type directly in the rendered preview, similar to Typora. When you type `# Header` and press Enter, the `#` syntax disappears and you see a rendered heading with your cursor positioned correctly below it.
+
+**Why we're waiting:**
+This is a significant architectural feature that requires:
+1. **ContentEditable or custom rendering engine** - Not a simple textarea overlay
+2. **Block-level state management** - Tracking which block (paragraph, heading, list item) the cursor is in
+3. **Inline syntax detection and transformation** - Detecting completed markdown patterns and rendering them
+4. **Cursor position mapping** - Translating between source text positions and rendered DOM positions
+5. **Settings System** - To configure WYSIWYG behavior preferences
+
+**Previous attempt (removed):**
+A "Live Preview" overlay approach was attempted but removed because it only provided a transparent textarea over the preview - the cursor stayed in raw markdown position, not the rendered position. This was misleading and didn't provide the true Typora experience.
+
+**Implementation approach (when ready):**
+1. Research existing WYSIWYG markdown editors (Typora, MarkText, Zettlr)
+2. Consider using ContentEditable with custom input handling
+3. Build on our existing block processor to track block boundaries
+4. Create a cursor position mapping system between source and rendered DOM
+5. Handle special cases: code blocks (don't render), tables, nested lists
+
+**Key behavioral requirements:**
+- Cursor must be in the **logical rendered position**, not raw markdown position
+- Typing `# ` shows the `#` until Enter, then renders as heading
+- Block syntax (headings, lists, code fences) transforms on Enter
+- Inline syntax (**bold**, *italic*) can transform immediately or on specific triggers
+- Must support undo/redo with correct cursor restoration
+
+---
+
 ### Markdown Extensions
 
 **Multi-Column Layout**

@@ -25,8 +25,7 @@ class PanelManager {
             panel.element = document.querySelector(panel.selector);
         });
 
-        // Setup event listeners
-        this.setupMouseEnterListeners();
+        // Setup event listeners (click-based, not hover)
         this.setupTabClickListeners();
         this.setupClickOutsideListener();
 
@@ -34,20 +33,7 @@ class PanelManager {
     }
 
     /**
-     * Setup mouseenter listeners for panels
-     */
-    setupMouseEnterListeners() {
-        this.panels.forEach(panel => {
-            if (panel.element) {
-                panel.element.addEventListener('mouseenter', () => {
-                    this.openPanel(panel);
-                });
-            }
-        });
-    }
-
-    /**
-     * Setup click listeners for tab labels
+     * Setup click listeners for tab labels (click to toggle panels)
      */
     setupTabClickListeners() {
         this.panels.forEach(panel => {
@@ -56,7 +42,7 @@ class PanelManager {
                 if (tabLabel) {
                     tabLabel.addEventListener('click', (event) => {
                         event.stopPropagation();
-                        this.openPanel(panel);
+                        this.togglePanel(panel);
                     });
                 }
 
@@ -69,6 +55,24 @@ class PanelManager {
                 }
             }
         });
+    }
+
+    /**
+     * Toggle a panel open/closed
+     * @param {Object} panel - Panel configuration object
+     */
+    togglePanel(panel) {
+        if (!panel.element) return;
+
+        const isCurrentlyOpen = panel.element.classList.contains(panel.class);
+
+        if (isCurrentlyOpen) {
+            // Close this panel
+            this.closePanel(panel);
+        } else {
+            // Close any other open panel first, then open this one
+            this.openPanel(panel);
+        }
     }
 
     /**

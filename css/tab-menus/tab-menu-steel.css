@@ -204,11 +204,10 @@
 }
 
 /* ============================================================================
-   STEEL MENU - EXPANDED STATE (Hover/Open)
+   STEEL MENU - EXPANDED STATE (Click-to-Open)
    ============================================================================ */
 
-.intro.tab-menu-steel .editor-panel.panel-open,
-.intro.tab-menu-steel .editor-panel:hover {
+.intro.tab-menu-steel .editor-panel.panel-open {
     height: auto;
     max-height: 80vh;
     overflow: visible;
@@ -333,8 +332,7 @@
    STEEL MENU - HELP PANEL (Wider Expansion)
    ============================================================================ */
 
-.intro.tab-menu-steel .help-panel.panel-open,
-.intro.tab-menu-steel .help-panel:hover {
+.intro.tab-menu-steel .help-panel.panel-open {
     width: var(--steel-help-width);
     background-size: var(--steel-help-width) auto;
     z-index: 10;
@@ -351,20 +349,16 @@
 
 /* Help panel decorations expand and shift with panel */
 .intro.tab-menu-steel .help-panel.panel-open::before,
-.intro.tab-menu-steel .help-panel:hover::before,
-.intro.tab-menu-steel .help-panel.panel-open::after,
-.intro.tab-menu-steel .help-panel:hover::after {
+.intro.tab-menu-steel .help-panel.panel-open::after {
     width: var(--steel-help-width);
     /* Decorations inherit transform from parent, no additional shift needed */
 }
 
-.intro.tab-menu-steel .help-panel.panel-open::before,
-.intro.tab-menu-steel .help-panel:hover::before {
+.intro.tab-menu-steel .help-panel.panel-open::before {
     background-size: auto auto, var(--steel-help-width) auto;
 }
 
-.intro.tab-menu-steel .help-panel.panel-open::after,
-.intro.tab-menu-steel .help-panel:hover::after {
+.intro.tab-menu-steel .help-panel.panel-open::after {
     background-size: var(--steel-help-width) auto;
 }
 
@@ -372,8 +366,7 @@
    STEEL MENU - VIEW PANEL (Wider Expansion for Two-Column Layout)
    ============================================================================ */
 
-.intro.tab-menu-steel .view-panel.panel-open,
-.intro.tab-menu-steel .view-panel:hover {
+.intro.tab-menu-steel .view-panel.panel-open {
     width: var(--steel-view-width);
     background-size: var(--steel-view-width) auto;
     z-index: 10;
@@ -382,19 +375,15 @@
 
 /* View panel decorations expand with panel */
 .intro.tab-menu-steel .view-panel.panel-open::before,
-.intro.tab-menu-steel .view-panel:hover::before,
-.intro.tab-menu-steel .view-panel.panel-open::after,
-.intro.tab-menu-steel .view-panel:hover::after {
+.intro.tab-menu-steel .view-panel.panel-open::after {
     width: var(--steel-view-width);
 }
 
-.intro.tab-menu-steel .view-panel.panel-open::before,
-.intro.tab-menu-steel .view-panel:hover::before {
+.intro.tab-menu-steel .view-panel.panel-open::before {
     background-size: auto auto, var(--steel-view-width) auto;
 }
 
-.intro.tab-menu-steel .view-panel.panel-open::after,
-.intro.tab-menu-steel .view-panel:hover::after {
+.intro.tab-menu-steel .view-panel.panel-open::after {
     background-size: var(--steel-view-width) auto;
 }
 
@@ -753,15 +742,13 @@
    ============================================================================ */
 
 @media (max-width: 1399px) {
-    .intro.tab-menu-steel .help-panel.panel-open,
-    .intro.tab-menu-steel .help-panel:hover {
+    .intro.tab-menu-steel .help-panel.panel-open {
         /* Shift panel left to stay on screen */
         transform: translateX(calc(-1 * (var(--steel-help-width) - var(--steel-panel-width)) - 60px));
     }
 
     /* Constrain panel content height on smaller screens */
-    .intro.tab-menu-steel .editor-panel.panel-open,
-    .intro.tab-menu-steel .editor-panel:hover {
+    .intro.tab-menu-steel .editor-panel.panel-open {
         max-height: 60vh;
     }
 
@@ -820,8 +807,7 @@
         font-size: calc(12px * 0.75);
     }
 
-    .intro.tab-menu-steel .editor-panel.panel-open,
-    .intro.tab-menu-steel .editor-panel:hover {
+    .intro.tab-menu-steel .editor-panel.panel-open {
         max-height: calc(80vh * 0.75);
     }
 }
@@ -867,8 +853,7 @@
         font-size: calc(12px * 0.55);
     }
 
-    .intro.tab-menu-steel .editor-panel.panel-open,
-    .intro.tab-menu-steel .editor-panel:hover {
+    .intro.tab-menu-steel .editor-panel.panel-open {
         max-height: calc(80vh * 0.55);
     }
 }
@@ -891,8 +876,7 @@
     }
 
     /* Shift Help panel left when expanded on smaller screens */
-    .intro.tab-menu-steel .help-panel.panel-open,
-    .intro.tab-menu-steel .help-panel:hover {
+    .intro.tab-menu-steel .help-panel.panel-open {
         transform: translateX(-200px) translateY(40px);
     }
 

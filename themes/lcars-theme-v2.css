@@ -1468,81 +1468,88 @@
 }
 
 /* ============================================================================
-   WYSIWYG UNIFIED EDITOR - Apply LCARS frame to contenteditable area
+   WYSIWYG UNIFIED EDITOR - Fixed frame with scrolling content
    ============================================================================ */
 
-/* Make parent containers allow overflow and use black background */
-[data-theme="lcars"] body,
-[data-theme="lcars"] .editor-container {
-    background: black !important;
-    overflow: visible !important;
-}
-
-/* Outer section is the scrolling container - allow x overflow for decorations */
+/* The unified editor section gets the fixed LCARS frame decorations */
 [data-theme="lcars"] .editor-section.unified-editor {
-    background: black !important;
-    height: 100vh !important;
-    overflow-y: auto !important;
-    overflow-x: visible !important;
+    position: relative;
+    background: #000 !important;
+    overflow: hidden !important; /* Parent doesn't scroll */
 }
 
-/* Content wrapper */
+/* Left sidebar - fixed position */
+[data-theme="lcars"] .editor-section.unified-editor::before {
+    content: "";
+    position: absolute;
+    top: 3rem;
+    left: 0.5rem;
+    width: 1.5rem;
+    bottom: 0;
+    background-color: var(--lcars-purple);
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* Top bar - fixed position */
+[data-theme="lcars"] .editor-section.unified-editor::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0.5rem;
+    right: 0.5rem;
+    height: 3rem;
+    background-color: var(--lcars-purple);
+    z-index: 5;
+    pointer-events: none;
+    border-radius: 1.5rem 0 0 0;
+}
+
+/* Content wrapper - this scrolls */
 [data-theme="lcars"] .editor-section.unified-editor .editor-section-content {
-    background: black !important;
+    position: absolute;
+    top: 3.5rem;
+    left: 2rem;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    background: #000;
+    z-index: 1;
     padding: 0 !important;
     margin: 0 !important;
-    overflow: visible !important;
 }
 
-/* #write wrapper */
+/* #write container */
 [data-theme="lcars"] .editor-section.unified-editor #write {
+    position: relative;
+    margin: 0 !important;
+    padding: 1rem !important;
+    min-height: 100%;
+    height: auto;
+    overflow: visible !important;
+}
+
+/* WYSIWYG content area */
+[data-theme="lcars"] .editor-section.unified-editor .wysiwyg-content {
+    background: transparent !important;
+    color: var(--lcars-yellow) !important;
+    font-family: 'Teko', sans-serif !important;
     padding: 0 !important;
     margin: 0 !important;
     overflow: visible !important;
 }
 
-/* wysiwyg-content gets the LCARS frame with box-shadow (same as split view) */
-[data-theme="lcars"] .wysiwyg-content {
-    position: relative !important;
-    min-height: calc(100vh - 10rem) !important;
-    width: 80vw !important;
-    max-width: 24cm !important;
-    margin: 6rem auto !important;
-    padding: 2rem !important;
-
-    border-radius: 2rem 0rem 0rem 0rem !important;
-    box-shadow:
-        -2rem -4rem 0 0 var(--lcars-purple),
-        0rem  -4rem 0 0 var(--lcars-purple),
-        -2rem 0rem 0 0 var(--lcars-purple) !important;
-
-    overflow: visible !important;
-    background: black !important;
-}
-
-/* Add the "TYPORA" label */
-[data-theme="lcars"] .wysiwyg-content:before {
-    content: "TYPORA" !important;
-
-    position: absolute !important;
-    bottom: 100% !important;
-    right: 5rem !important;
-
-    height: 4rem !important;
-
-    background-color: black !important;
-
-    box-shadow:
-        -2rem 0 0 var(--lcars-orange),
-        -2.5rem 0 0 black,
-        -8.5rem 0 0 var(--lcars-grey),
-        -9rem 0 0 black !important;
-
-    box-sizing: content-box !important;
-    padding: 0 1rem !important;
-
-    line-height: 5rem !important;
-    font-size: 5rem !important;
-    font-family: 'Teko', sans-serif !important;
+/* Source textarea when in source mode */
+[data-theme="lcars"] .editor-section.unified-editor .source-textarea {
+    background: transparent !important;
     color: var(--lcars-yellow) !important;
+    font-family: 'Share Tech Mono', monospace !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 1rem !important;
+    margin: 0 !important;
+    border: none !important;
+    resize: none !important;
+    box-sizing: border-box !important;
 }

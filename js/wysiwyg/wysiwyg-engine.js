@@ -138,7 +138,7 @@ class WysiwygEngine {
     }
 
     /**
-     * Handle input events - track changes
+     * Handle input events - track changes and auto-render
      */
     handleInput(event) {
         const target = event.target;
@@ -148,11 +148,102 @@ class WysiwygEngine {
         if (renderedBlock) {
             // Update the stored markdown when rendered content changes
             this.updateRenderedBlockMarkdown(renderedBlock);
+        } else {
+            // Check if we should auto-render the current block
+            this.tryAutoRender();
         }
 
         // Auto-save could be triggered here
         // For now, just ensure we maintain proper structure
         this.ensureProperStructure();
+    }
+
+    /**
+     * Try to automatically render the current block if it contains valid markdown
+     */
+    tryAutoRender() {
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return;
+
+        const range = selection.getRangeAt(0);
+        const currentNode = range.startContainer;
+        const block = this.getCurrentBlock(currentNode);
+
+        if (!block) return;
+
+        // Don't auto-render if block is already rendered
+        if (block.hasAttribute('data-wysiwyg-rendered')) return;
+
+        // Get the text content
+        const text = block.textContent.trim();
+        if (!text) return;
+
+        // Check if the text matches a renderable markdown pattern
+        const rendered = this.renderMarkdown(text);
+        if (!rendered) return;
+
+        // Save cursor position within the block
+        const cursorOffset = this.getCursorOffsetInBlock(block);
+
+        // Replace the block with rendered version
+        const newBlock = this.createRenderedBlock(rendered, text);
+        block.parentNode.replaceChild(newBlock, block);
+
+        // Restore cursor position at the end of the rendered block
+        this.setCursorAtEnd(newBlock);
+    }
+
+    /**
+     * Get the cursor offset within a block (in characters)
+     */
+    getCursorOffsetInBlock(block) {
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return 0;
+
+        const range = selection.getRangeAt(0);
+        const preRange = range.cloneRange();
+        preRange.selectNodeContents(block);
+        preRange.setEnd(range.endContainer, range.endOffset);
+
+        return preRange.toString().length;
+    }
+
+    /**
+     * Set cursor at the end of an element
+     */
+    setCursorAtEnd(element) {
+        const range = document.createRange();
+        const selection = window.getSelection();
+
+        // Find the last text node or use the element itself
+        const lastNode = this.getLastTextNode(element) || element;
+
+        if (lastNode.nodeType === Node.TEXT_NODE) {
+            range.setStart(lastNode, lastNode.length);
+        } else {
+            range.setStart(lastNode, lastNode.childNodes.length);
+        }
+
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
+    /**
+     * Get the last text node in an element
+     */
+    getLastTextNode(element) {
+        if (element.nodeType === Node.TEXT_NODE) {
+            return element;
+        }
+
+        const children = element.childNodes;
+        for (let i = children.length - 1; i >= 0; i--) {
+            const result = this.getLastTextNode(children[i]);
+            if (result) return result;
+        }
+
+        return null;
     }
 
     /**

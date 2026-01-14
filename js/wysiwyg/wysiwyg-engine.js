@@ -22,6 +22,9 @@ class WysiwygEngine {
         this.sourceMode = false; // true = raw markdown textarea, false = WYSIWYG
         this.sourceTextarea = null;
 
+        // Initialize shortcut processor for custom markdown syntax
+        this.shortcutProcessor = new ShortcutProcessor();
+
         // Bind methods
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleClick = this.handleClick.bind(this);
@@ -175,10 +178,20 @@ class WysiwygEngine {
     renderMarkdown(text) {
         if (!text || text.trim() === '') return null;
 
+        // First, process any shortcut syntax to convert to standard markdown
+        // Note: Need to handle bi{} before b{} to avoid pattern collision
+        let processedText = text;
+
+        // Manually process bi{text} first to avoid collision with b{text}
+        processedText = processedText.replace(/bi\{(.+?)\}/g, '***$1***');
+
+        // Then process the rest of the shortcuts
+        processedText = this.shortcutProcessor.process(processedText);
+
         // Detect markdown patterns and render
 
         // Headers (# through ######)
-        const headerMatch = text.match(/^(#{1,6})\s+(.+)$/);
+        const headerMatch = processedText.match(/^(#{1,6})\s+(.+)$/);
         if (headerMatch) {
             const level = headerMatch[1].length;
             const content = headerMatch[2];
@@ -186,50 +199,53 @@ class WysiwygEngine {
         }
 
         // Blockquote (> text)
-        const quoteMatch = text.match(/^>\s*(.+)$/);
+        const quoteMatch = processedText.match(/^>\s*(.+)$/);
         if (quoteMatch) {
             const content = quoteMatch[1];
             return `<blockquote>${this.escapeHtml(content)}</blockquote>`;
         }
 
         // Horizontal rule (--- or ***)
-        if (text.match(/^(-{3,}|\*{3,}|_{3,})$/)) {
+        if (processedText.match(/^(-{3,}|\*{3,}|_{3,})$/)) {
             return '<hr>';
         }
 
         // Code block (```lang or just ```)
-        const codeMatch = text.match(/^```(\w+)?$/);
+        const codeMatch = processedText.match(/^```(\w+)?$/);
         if (codeMatch) {
             // Start of code block - needs special handling
             return null; // For now, don't render incomplete code blocks
         }
 
         // Unordered list (- item or * item)
-        const ulMatch = text.match(/^[-*]\s+(.+)$/);
+        const ulMatch = processedText.match(/^[-*]\s+(.+)$/);
         if (ulMatch) {
             const content = ulMatch[1];
-            return `<ul><li>${this.escapeHtml(content)}</li></ul>`;
+            const formattedContent = this.renderInlineFormatting(content);
+            return `<ul><li>${formattedContent}</li></ul>`;
         }
 
         // Ordered list (1. item)
-        const olMatch = text.match(/^\d+\.\s+(.+)$/);
+        const olMatch = processedText.match(/^\d+\.\s+(.+)$/);
         if (olMatch) {
             const content = olMatch[1];
-            return `<ol><li>${this.escapeHtml(content)}</li></ol>`;
+            const formattedContent = this.renderInlineFormatting(content);
+            return `<ol><li>${formattedContent}</li></ol>`;
         }
 
         // Task list (- [ ] or - [x])
-        const taskMatch = text.match(/^-\s+\[([ x])\]\s+(.+)$/i);
+        const taskMatch = processedText.match(/^-\s+\[([ x])\]\s+(.+)$/i);
         if (taskMatch) {
             const checked = taskMatch[1].toLowerCase() === 'x';
             const content = taskMatch[2];
+            const formattedContent = this.renderInlineFormatting(content);
             const checkbox = checked ? '☑' : '☐';
-            return `<p>${checkbox} ${this.escapeHtml(content)}</p>`;
+            return `<p>${checkbox} ${formattedContent}</p>`;
         }
 
         // Regular paragraph with inline formatting
-        const formatted = this.renderInlineFormatting(text);
-        if (formatted !== text) {
+        const formatted = this.renderInlineFormatting(processedText);
+        if (formatted !== processedText) {
             return `<p>${formatted}</p>`;
         }
 
@@ -241,7 +257,27 @@ class WysiwygEngine {
      * Render inline markdown formatting (bold, italic, code, links)
      */
     renderInlineFormatting(text) {
-        let result = this.escapeHtml(text);
+        // Process images and links BEFORE escaping HTML to preserve special characters
+        let result = text;
+
+        // Images (![alt](url)) - process first before escaping
+        result = result.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
+
+        // Links ([text](url))
+        result = result.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+
+        // Now escape HTML for the rest of the text (but preserve our HTML tags)
+        // Split by HTML tags, escape only non-tag parts
+        const parts = result.split(/(<img[^>]*>|<a[^>]*>.*?<\/a>)/g);
+        result = parts.map(part => {
+            if (part.startsWith('<img') || part.startsWith('<a')) {
+                return part; // Keep HTML tags as-is
+            }
+            return this.escapeHtml(part);
+        }).join('');
+
+        // Bold + Italic (***text***)
+        result = result.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
 
         // Bold (**text** or __text__)
         result = result.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
@@ -251,14 +287,11 @@ class WysiwygEngine {
         result = result.replace(/\*(.+?)\*/g, '<em>$1</em>');
         result = result.replace(/_(.+?)_/g, '<em>$1</em>');
 
+        // Strikethrough (~~text~~)
+        result = result.replace(/~~(.+?)~~/g, '<s>$1</s>');
+
         // Inline code (`code`)
         result = result.replace(/`(.+?)`/g, '<code>$1</code>');
-
-        // Links ([text](url))
-        result = result.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
-
-        // Images (![alt](url))
-        result = result.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
 
         return result;
     }
@@ -371,8 +404,9 @@ class WysiwygEngine {
 
     /**
      * Set document content from markdown
+     * @param {boolean} renderAll - If true, render all markdown blocks immediately
      */
-    setMarkdown(markdown) {
+    setMarkdown(markdown, renderAll = false) {
         if (!markdown || markdown.trim() === '') {
             this.editorElement.innerHTML = '<p><br></p>';
             return;
@@ -380,12 +414,109 @@ class WysiwygEngine {
 
         // Split into lines and create paragraphs
         const lines = markdown.split('\n');
-        const blocks = lines.map(line => {
+        const blocks = [];
+
+        let i = 0;
+        while (i < lines.length) {
+            const line = lines[i];
+
             if (line.trim() === '') {
-                return '<p><br></p>';
+                blocks.push('<p><br></p>');
+                i++;
+                continue;
             }
-            return `<p>${this.escapeHtml(line)}</p>`;
-        });
+
+            // If renderAll is true, try to render the markdown
+            if (renderAll) {
+                const rendered = this.renderMarkdown(line);
+
+                // Group consecutive ordered list items
+                if (rendered && rendered.startsWith('<ol>')) {
+                    const olItems = [];
+                    const olMarkdown = [];
+
+                    while (i < lines.length) {
+                        const currentLine = lines[i];
+                        const currentRendered = this.renderMarkdown(currentLine);
+
+                        if (currentRendered && currentRendered.startsWith('<ol>')) {
+                            const liMatch = currentRendered.match(/<li>(.+?)<\/li>/);
+                            if (liMatch) {
+                                olItems.push(liMatch[1]);
+                                olMarkdown.push(currentLine);
+                            }
+                            i++;
+                        } else {
+                            break;
+                        }
+                    }
+
+                    const ol = document.createElement('ol');
+                    olItems.forEach(itemContent => {
+                        const li = document.createElement('li');
+                        li.innerHTML = itemContent;
+                        ol.appendChild(li);
+                    });
+
+                    ol.setAttribute('data-wysiwyg-rendered', 'true');
+                    ol.setAttribute('data-wysiwyg-markdown', olMarkdown.join('\n'));
+                    ol.contentEditable = 'false';
+                    blocks.push(ol.outerHTML);
+                    continue;
+                }
+
+                // Group consecutive unordered list items
+                if (rendered && rendered.startsWith('<ul>')) {
+                    const ulItems = [];
+                    const ulMarkdown = [];
+
+                    while (i < lines.length) {
+                        const currentLine = lines[i];
+                        const currentRendered = this.renderMarkdown(currentLine);
+
+                        if (currentRendered && currentRendered.startsWith('<ul>')) {
+                            const liMatch = currentRendered.match(/<li>(.+?)<\/li>/);
+                            if (liMatch) {
+                                ulItems.push(liMatch[1]);
+                                ulMarkdown.push(currentLine);
+                            }
+                            i++;
+                        } else {
+                            break;
+                        }
+                    }
+
+                    const ul = document.createElement('ul');
+                    ulItems.forEach(itemContent => {
+                        const li = document.createElement('li');
+                        li.innerHTML = itemContent;
+                        ul.appendChild(li);
+                    });
+
+                    ul.setAttribute('data-wysiwyg-rendered', 'true');
+                    ul.setAttribute('data-wysiwyg-markdown', ulMarkdown.join('\n'));
+                    ul.contentEditable = 'false';
+                    blocks.push(ul.outerHTML);
+                    continue;
+                }
+
+                if (rendered) {
+                    // Return a rendered block with the original markdown stored
+                    const wrapper = document.createElement('div');
+                    wrapper.innerHTML = rendered;
+                    const element = wrapper.firstChild;
+                    element.setAttribute('data-wysiwyg-rendered', 'true');
+                    element.setAttribute('data-wysiwyg-markdown', line);
+                    element.contentEditable = 'false';
+                    blocks.push(element.outerHTML);
+                    i++;
+                    continue;
+                }
+            }
+
+            blocks.push(`<p>${this.escapeHtml(line)}</p>`);
+            i++;
+        }
 
         this.editorElement.innerHTML = blocks.join('');
     }
@@ -450,8 +581,19 @@ class WysiwygEngine {
         this.sourceTextarea.style.display = 'none';
         this.editorElement.style.display = 'block';
 
-        // Load markdown into WYSIWYG editor
-        this.setMarkdown(markdown);
+        // Load markdown into WYSIWYG editor with rendering enabled
+        this.setMarkdown(markdown, true);
+
+        // Place cursor at the end of the content
+        const lastChild = this.editorElement.lastElementChild;
+        if (lastChild) {
+            const range = document.createRange();
+            const selection = window.getSelection();
+            range.setStart(lastChild, Math.min(1, lastChild.childNodes.length));
+            range.collapse(true);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
 
         // Focus the WYSIWYG editor
         this.editorElement.focus();

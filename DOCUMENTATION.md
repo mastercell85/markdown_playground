@@ -16,7 +16,7 @@ A feature-rich, modular markdown editor with live preview, multiple themes, and 
 8. [Adding New Features](#adding-new-features)
 9. [Implementation Planning](#implementation-planning)
    - [Phase 1: Settings System](#phase-1-settingspreferences-system---planning-session) ✅
-   - [Phase 2: Scroll Sync & WYSIWYG Infrastructure](#phase-2-scroll-sync-accuracy--wysiwyg-infrastructure---planning-session) 🔄
+   - [Phase 2: Scroll Sync & WYSIWYG Infrastructure](#phase-2-scroll-sync-accuracy--wysiwyg-infrastructure---planning-session) ✅
 10. [Planned Features & Enhancements](#planned-features--enhancements)
 
 ---
@@ -1907,8 +1907,9 @@ All 10 architectural decisions have been made. The Settings/Preferences System i
 
 ### Phase 2: Scroll Sync Accuracy & WYSIWYG Infrastructure - Planning Session
 
-**Status:** 🔄 PLANNING IN PROGRESS
+**Status:** ✅ PLANNING COMPLETE
 **Session Date:** January 14, 2026
+**Decisions Finalized:** January 14, 2026
 
 This section documents infrastructure planning for improved scroll synchronization and WYSIWYG editing mode. These features share significant infrastructure requirements, so planning them together prevents duplicate work and ensures a cohesive architecture.
 
@@ -1991,10 +1992,12 @@ LineMapper (New Module)
 - High memory overhead, complex maintenance
 - Required for true WYSIWYG (cursor positioning)
 
-**Option D: Hybrid - Block Default, Character On-Demand**
+**Option D: Hybrid - Block Default, Character On-Demand** ✅ **SELECTED**
 - Use block-level mapping for scroll sync (fast, low memory)
 - Calculate character-level mapping only when needed (WYSIWYG editing)
 - Best of both worlds: performance when scrolling, precision when editing
+
+**Decision Rationale:** This hybrid approach provides optimal performance for the common case (scroll sync) while maintaining the capability for precise character-level mapping when WYSIWYG editing is implemented. Block-level mapping with `data-line-start` and `data-line-end` attributes handles multi-line elements naturally, and character-level calculations are deferred until actually needed.
 
 ---
 
@@ -2012,11 +2015,13 @@ LineMapper (New Module)
 - Pros: Sees actual rendered structure, handles dynamic content
 - Cons: Extra processing step, may not match source accurately
 
-**Option C: Hybrid - Parser Seeds, Post-Render Enhances**
+**Option C: Hybrid - Parser Seeds, Post-Render Enhances** ✅ **SELECTED**
 - Parser adds `data-line` attributes (block boundaries)
 - Post-render pass adds measurements (heights, offsets)
 - Pros: Accurate source mapping + actual render measurements
 - Cons: More complex, two-phase process
+
+**Decision Rationale:** This two-phase approach leverages the existing BlockProcessor infrastructure (which already adds `data-line` attributes) while adding post-render measurement for accurate height and offset tracking. The parser has the most accurate knowledge of source line positions, while post-render measurement captures the actual DOM dimensions after CSS styling and reflow.
 
 ---
 
@@ -2034,7 +2039,7 @@ LineMapper (New Module)
 - Simple, works reasonably well for similar-length content
 - Breaks down with images, large code blocks, or varying density
 
-**Option B: Element-Height Weighted Mapping**
+**Option B: Element-Height Weighted Mapping** ✅ **SELECTED**
 - Track actual rendered height of each mapped element
 - Distribute scroll position proportionally based on element heights
 - More accurate for mixed content documents
@@ -2051,6 +2056,8 @@ LineMapper (New Module)
 - Images: jump to/from (sync at boundaries, not within)
 - Code: syntax-line based (sync by code line, not source line)
 - Most accurate but most complex
+
+**Decision Rationale (Option B selected):** Element-height weighted mapping provides significantly better accuracy than percentage-based interpolation without the complexity of content-aware adaptive strategies. By tracking actual rendered heights, the system can distribute scroll positions proportionally—a 500px tall image gets proportionally more scroll "space" than a 50px paragraph. This approach works well for mixed content documents while remaining straightforward to implement and maintain.
 
 ---
 
@@ -2081,11 +2088,13 @@ LineMapper (New Module)
 - Good for burst edits (typing rapidly)
 - Slight latency on first scroll after edit
 
-**Option D: Time-Debounced Rebuild**
+**Option D: Time-Debounced Rebuild** ✅ **SELECTED**
 - Rebuild map after 100-300ms of no changes
 - Balances accuracy with performance
 - Similar to current auto-save debouncing
 - Natural fit with existing architecture
+
+**Decision Rationale:** Time-debounced rebuild (150-300ms) aligns with the existing architecture patterns used throughout the application (e.g., auto-save debouncing). This approach prevents expensive rebuilds during rapid typing while ensuring the map stays current. The slight latency after the last change is imperceptible to users and avoids the complexity of incremental updates or the overhead of full rebuilds on every change.
 
 ---
 
@@ -2101,32 +2110,38 @@ LineMapper (New Module)
 
 **Proposed Improvements:**
 
-**Improvement A: Sub-Element Interpolation**
+**Improvement A: Sub-Element Interpolation** ✅ **SELECTED FOR PHASE 2**
 - When scrolled partway through an element, interpolate proportionally
 - If paragraph spans lines 5-8 and we're at line 6.5, scroll to 37.5% through paragraph
 - Smoother scrolling, especially for long paragraphs
 
-**Improvement B: Velocity-Aware Sync**
+**Improvement B: Velocity-Aware Sync** 📋 **DEFERRED TO FUTURE ENHANCEMENTS**
 - Track scroll velocity (fast vs slow scrolling)
 - Fast scroll: sync at block boundaries only (less jitter)
 - Slow scroll: precise sub-element sync
 - Prevents "fighting" during rapid scroll
 
-**Improvement C: Directional Bias**
+**Improvement C: Directional Bias** 📋 **DEFERRED TO FUTURE ENHANCEMENTS**
 - Remember last scroll direction
 - When syncing, bias toward revealing content in scroll direction
 - Prevents constant back-and-forth adjustments
 
-**Improvement D: Anchor Point Preservation**
+**Improvement D: Anchor Point Preservation** 📋 **DEFERRED TO FUTURE ENHANCEMENTS**
 - When heights change, preserve current anchor point
 - Re-calculate positions relative to anchor, not absolute
 - Prevents jarring jumps on reflow
+
+**Decision Rationale:** Sub-element interpolation (Option A) provides the most significant accuracy improvement and is essential for smooth scrolling within multi-line blocks. Options B, C, and D are valuable refinements that may be implemented in future phases if additional scroll sync accuracy is needed. They have been moved to the "Future Enhancements" section for consideration after Phase 2 implementation is complete and real-world testing can inform their priority.
 
 ---
 
 #### Decision 6: WYSIWYG Infrastructure Hooks
 
 **Question:** What hooks should Line Mapper provide for future WYSIWYG mode?
+
+**Decision:** ✅ **INCLUDE ESSENTIAL HOOKS NOW**
+
+Include the essential WYSIWYG hooks in the initial LineMapper implementation. This ensures the infrastructure is ready for WYSIWYG mode without requiring a later refactor.
 
 **Essential Hooks:**
 
@@ -2160,11 +2175,17 @@ getSyntaxContext(line, column) → 'heading'|'paragraph'|'code'|...
 getAvailableTransforms(line) → ['bold', 'italic', ...]
 ```
 
+**Decision Rationale:** Including essential WYSIWYG hooks from the start prevents a costly refactor later. The hooks are designed to be lightweight—they only calculate character-level mappings when actually called (on-demand), not continuously. Optional hooks are documented for future WYSIWYG implementation but will not be included in Phase 2.
+
 ---
 
 #### Decision 7: Integration Points
 
 **Question:** How should Line Mapper integrate with existing modules?
+
+**Decision:** ✅ **APPROVED AS PROPOSED**
+
+The integration approach follows existing patterns and provides clear separation of concerns.
 
 **Integration Map:**
 
@@ -2191,11 +2212,34 @@ User types → DocumentManager saves → MarkdownParser parses
                                     ScrollSync uses updated map
 ```
 
+**Decision Rationale:** This event flow follows the existing application architecture patterns. Each module has a clear responsibility:
+- **BlockProcessor** seeds line data during parsing (already does this)
+- **MarkdownRenderer** triggers LineMapper update after render
+- **DocumentManager** notifies LineMapper of document switches (triggers `invalidate()`)
+- **ScrollSync** becomes a consumer of LineMapper rather than directly querying DOM
+- **SettingsManager** stores user preferences for sync behavior
+
 ---
 
 #### Decision 8: Performance Budget
 
 **Question:** What are acceptable performance limits?
+
+**Decision:** ✅ **APPROVED WITH SINGLE-MAP MEMORY STRATEGY**
+
+The performance targets are appropriate for the application scope. A critical clarification was made regarding memory management:
+
+**Memory Strategy: Single Active Map Only**
+- Only ONE source map exists at any time (for the currently active document)
+- When documents are switched, `invalidate()` is called, clearing the existing map
+- A fresh map is built for the new document on first scroll/query
+- **No per-document caching** — prevents memory accumulation over time
+- Small latency (~5-20ms) on first scroll after document switch is acceptable
+
+This approach ensures:
+- Zero memory leaks from accumulated document mappings
+- Predictable memory usage regardless of session length
+- Clean state on each document switch
 
 **Targets:**
 
@@ -2212,13 +2256,25 @@ User types → DocumentManager saves → MarkdownParser parses
 - Log slow operations (>2x target)
 - Consider worker thread for initial build on large docs
 
+**Decision Rationale:** These performance targets are reasonable for the application scope. The single-map memory strategy prevents memory leaks that could occur if maps were cached per-document. The slight latency on document switch (while the new map builds) is acceptable and aligns with existing render latency when switching documents.
+
 ---
 
 #### Decision 9: API Design
 
 **Question:** What should the LineMapper public API look like?
 
-**Proposed API:**
+**Decision:** ✅ **APPROVED AS PROPOSED**
+
+The API is organized into clear categories for ease of use:
+
+1. **Core Mapping Queries** - The essential methods for scroll sync
+2. **Height/Position Info** - Supporting data for calculations
+3. **WYSIWYG Hooks** - Future cursor positioning (on-demand calculation)
+4. **Lifecycle Methods** - Manual control when needed
+5. **Events** - For external modules to react to map changes
+
+**Approved API:**
 
 ```javascript
 class LineMapper {
@@ -2257,62 +2313,112 @@ class LineMapper {
 }
 ```
 
+**API Design Rationale:** This API provides a clean, minimal surface area while supporting all Phase 2 requirements:
+- **Core queries** are what ScrollSync needs day-to-day
+- **Height/position methods** support weighted interpolation calculations
+- **WYSIWYG hooks** are included but calculate on-demand (not continuously)
+- **Lifecycle methods** allow DocumentManager to control map state on document switches
+- **Events** let external modules react to map updates without polling
+
 ---
 
 #### Implementation Phases
 
-**Phase 2a: LineMapper Foundation**
+**Phase 2a: LineMapper Foundation** (Core Infrastructure)
 - [ ] Create `js/shared/line-mapper.js` module
-- [ ] Implement basic line-to-element mapping using existing `data-line`
-- [ ] Add element height and offset tracking
-- [ ] Implement interpolation for scroll position queries
-- [ ] Add debounced rebuild on DOM changes
+- [ ] Implement block-level line-to-element mapping using existing `data-line` attributes
+- [ ] Extend BlockProcessor to emit `data-line-start` and `data-line-end` for multi-line blocks
+- [ ] Add element height and offset tracking (post-render measurement)
+- [ ] Implement element-height weighted interpolation for scroll position queries
+- [ ] Add time-debounced rebuild (150-300ms) on DOM changes
+- [ ] Implement `invalidate()` for document switches (single-map memory strategy)
+- [ ] Add performance marks in dev mode for measurement
 
-**Phase 2b: Enhanced Scroll Sync**
-- [ ] Refactor ScrollSync to use LineMapper instead of direct queries
-- [ ] Implement sub-element interpolation
-- [ ] Add velocity-aware sync option
-- [ ] Add directional bias option
-- [ ] Test with various document types
+**Phase 2b: Enhanced Scroll Sync** (Algorithm Improvements)
+- [ ] Refactor ScrollSync to use LineMapper instead of direct DOM `data-line` queries
+- [ ] Implement sub-element interpolation (scroll proportionally within multi-line elements)
+- [ ] Update scroll position calculations to use weighted heights instead of line counts
+- [ ] Add integration with DocumentManager for document switch notifications
+- [ ] Test with various document types (text-heavy, image-heavy, code-heavy, mixed)
+- [ ] Verify performance targets are met (query <1ms, rebuild <100ms)
 
-**Phase 2c: WYSIWYG Preparation**
-- [ ] Add character-level mapping capability (lazy/on-demand)
-- [ ] Implement cursor position translation hooks
-- [ ] Add raw zone detection (code blocks, frontmatter)
-- [ ] Add block boundary detection
-- [ ] Document API for WYSIWYG phase
-
----
-
-#### Questions to Resolve Before Implementation
-
-1. **Mapping Granularity (Decision 1):** Block-level, inline, character-level, or hybrid?
-2. **Generation Timing (Decision 2):** Parser-time, post-render, or hybrid?
-3. **Height Calculation (Decision 3):** Percentage, weighted, normalized, or adaptive?
-4. **Change Handling (Decision 4):** Full rebuild, incremental, lazy, or debounced?
-5. **Algorithm Improvements (Decision 5):** Which improvements to prioritize?
+**Phase 2c: WYSIWYG Preparation** (Essential Hooks Only)
+- [ ] Add lazy character-level mapping capability (calculate only when queried)
+- [ ] Implement `getRenderedPositionForCursor(line, column)` hook
+- [ ] Implement `getSourcePositionForSelection(selection)` hook
+- [ ] Implement `getContainingBlock(line)` hook
+- [ ] Implement `isRawZone(line)` hook for code blocks and frontmatter
+- [ ] Implement `getEditableRange(line)` hook
+- [ ] Add `on('update')` and `on('error')` events
+- [ ] Document API for future WYSIWYG implementation phase
 
 ---
 
-### Phase 2 Planning: IN PROGRESS
+#### Questions Resolved ✅
 
-Awaiting decisions on core architectural questions before implementation.
+All architectural questions have been resolved. See individual Decision sections above for full rationale.
 
-**Summary of Decisions:**
+| Question | Resolution |
+|----------|------------|
+| 1. Mapping Granularity | ✅ Hybrid (block default, character on-demand) |
+| 2. Generation Timing | ✅ Hybrid (parser seeds, post-render enhances) |
+| 3. Height Calculation | ✅ Element-height weighted mapping |
+| 4. Change Handling | ✅ Time-debounced rebuild (150-300ms) |
+| 5. Algorithm Improvements | ✅ Sub-element interpolation (others deferred) |
+| 6. WYSIWYG Hooks | ✅ Include essential hooks now |
+| 7. Integration Points | ✅ Approved as proposed |
+| 8. Performance Budget | ✅ Approved with single-map memory strategy |
+| 9. API Design | ✅ Approved as proposed |
 
-| Question | Decision |
-|----------|----------|
-| Q1: Data Structure | Nested/Namespaced structure |
-| Q2: Schema Versioning | Include from Phase 1 |
-| Q3: Defaults & Validation | Module-based defaults |
-| Q4: Settings Access API | Hybrid (direct read, method write) |
-| Q5: Persistence Strategy | Debounced auto-save + Save/Cancel/Revert |
-| Q6: Change Notifications | Event-based with categories |
-| Q7: Settings UI Location | Settings Panel + View tab for themes |
-| Q8: Import/Export & Reset | Full import/export + granular reset |
-| Q9: Initial Settings Priority | Migrate existing + core editor settings |
-| Q10: API Design | Extended API + error throwing |
-| Q11: Testing Strategy | Unit tests + manual testing |
+---
+
+### Phase 2 Planning: COMPLETE ✅
+
+All 9 architectural decisions have been finalized. The Scroll Sync Accuracy & WYSIWYG Infrastructure is ready for implementation.
+
+**Summary of Phase 2 Decisions:**
+
+| # | Decision Area | Choice | Key Details |
+|---|---------------|--------|-------------|
+| 1 | Mapping Granularity | **Hybrid** | Block-level for scroll sync, character-level on-demand for WYSIWYG |
+| 2 | Source Map Timing | **Hybrid** | Parser seeds `data-line` attributes, post-render adds measurements |
+| 3 | Height Calculation | **Weighted** | Track actual rendered heights, distribute scroll proportionally |
+| 4 | DOM Change Handling | **Debounced** | Rebuild map after 150-300ms of no changes |
+| 5 | Scroll Improvements | **Sub-element Interpolation** | Scroll proportionally within multi-line blocks |
+| 6 | WYSIWYG Hooks | **Include Essential** | Add hooks now to prevent later refactor |
+| 7 | Integration Points | **Approved** | Follows existing event flow patterns |
+| 8 | Performance Budget | **Approved** | Single-map memory strategy (no per-document caching) |
+| 9 | API Design | **Approved** | Clean categories: core queries, WYSIWYG hooks, lifecycle |
+
+**Key Architectural Clarifications:**
+
+1. **Memory Strategy:** Single active map only—cleared on document switch via `invalidate()`. No per-document caching prevents memory accumulation over session lifetime.
+
+2. **Deferred Improvements:** Scroll sync improvements B (Velocity-Aware), C (Directional Bias), and D (Anchor Preservation) have been moved to Future Enhancements for potential implementation if additional accuracy is needed after Phase 2.
+
+3. **WYSIWYG Hooks:** Essential hooks are included but calculate character-level mappings on-demand only—they do not continuously track character positions.
+
+---
+
+#### Future Enhancements (Deferred from Phase 2)
+
+These scroll sync improvements may be implemented in future phases if additional accuracy is required after Phase 2 testing:
+
+**Velocity-Aware Sync**
+- Track scroll velocity (fast vs slow scrolling)
+- Fast scroll: sync at block boundaries only (reduces jitter)
+- Slow scroll: precise sub-element sync
+- Prevents "fighting" during rapid scrolling
+
+**Directional Bias**
+- Remember last scroll direction
+- Bias toward revealing content in scroll direction
+- Reduces constant back-and-forth adjustments
+
+**Anchor Point Preservation**
+- When heights change (resize, theme switch), preserve current anchor point
+- Re-calculate positions relative to anchor, not absolute
+- Prevents jarring jumps on reflow
 
 ---
 

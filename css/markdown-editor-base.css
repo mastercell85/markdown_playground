@@ -1026,21 +1026,6 @@ body {
     background: var(--editor-bg);
 }
 
-/* Layout modes */
-.editor-container[data-layout="split"] {
-    flex-direction: row;
-}
-
-.editor-container[data-layout="editor"] .editor-preview,
-.editor-container[data-layout="editor"] .editor-gap {
-    display: none;
-}
-
-.editor-container[data-layout="preview"] .editor-input,
-.editor-container[data-layout="preview"] .editor-gap {
-    display: none;
-}
-
 /* Editor sections (input and preview) */
 .editor-section {
     display: flex;
@@ -1049,52 +1034,6 @@ body {
     min-width: 200px;
     background: var(--editor-section-bg);
     overflow: hidden;
-    position: relative; /* For label positioning */
-}
-
-/* Input Area */
-.editor-input {
-    flex: 1 1 0;
-    min-width: 200px;
-}
-
-/* Default theme INPUT label */
-.editor-input::before {
-    content: "INPUT";
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 0.25rem 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.5);
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 10;
-    pointer-events: none;
-}
-
-/* Preview Area */
-.editor-preview {
-    flex: 1 1 0;
-    min-width: 200px;
-    background: var(--preview-bg);
-}
-
-/* Default theme PREVIEW label */
-.editor-preview::before {
-    content: "PREVIEW";
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 0.25rem 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.5);
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 10;
-    pointer-events: none;
 }
 
 /* Hide LCARS frame elements by default - themed CSS files can override */
@@ -1109,44 +1048,6 @@ body {
     display: flex;
     flex-direction: column;
     height: 100%;
-}
-
-.editor-input .editor-section-content {
-    padding: 0;
-}
-
-/* Textarea for markdown input - fills entire area */
-.markdown-textarea {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 20px;
-    background: var(--textarea-bg);
-    color: var(--textarea-text);
-    border: none;
-    font-family: var(--font-family-mono);
-    font-size: var(--font-size-base);
-    line-height: 1.6;
-    resize: none;
-    outline: none;
-    overflow: auto;
-    box-sizing: border-box;
-}
-
-/* Ensure parent containers don't add extra padding */
-.editor-input .editor-section-content {
-    padding: 0;
-}
-
-.typora-write {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-.markdown-textarea::placeholder {
-    color: #666;
 }
 
 /* Resizable Divider - horizontal bar at top of gap */
@@ -1463,46 +1364,6 @@ header[role="banner"] {
     position: relative;
 }
 
-/* Line numbers gutter - overlay beside textarea */
-.line-numbers-gutter {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50px;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    overflow-x: hidden;
-    overflow-y: hidden; /* Scrolling is controlled by JS to sync with textarea */
-    pointer-events: none;
-    z-index: 5;
-    padding-top: 20px; /* Match textarea padding */
-    box-sizing: border-box;
-    display: none; /* Hidden by default */
-}
-
-/* Show line numbers when enabled */
-.line-numbers-gutter.visible {
-    display: block;
-}
-
-/* Individual line number */
-.line-number {
-    display: block;
-    text-align: right;
-    padding-right: 12px;
-    color: rgba(255, 255, 255, 0.4);
-    font-family: var(--font-family-mono);
-    font-size: var(--font-size-base);
-    user-select: none;
-}
-
-/* Textarea adjustment when line numbers visible */
-.markdown-textarea.show-line-numbers {
-    padding-left: 60px;
-}
-
-/* Scrollbar styling */
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;

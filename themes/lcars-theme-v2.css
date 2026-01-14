@@ -1466,3 +1466,90 @@
     color: var(--lcars-grey);
     font-size: 13px;
 }
+
+/* ============================================================================
+   WYSIWYG UNIFIED EDITOR - Fixed frame with scrolling content
+   ============================================================================ */
+
+/* The unified editor section gets the fixed LCARS frame decorations */
+[data-theme="lcars"] .editor-section.unified-editor {
+    position: relative;
+    background: #000 !important;
+    overflow: hidden !important; /* Parent doesn't scroll */
+}
+
+/* Left sidebar - fixed position */
+[data-theme="lcars"] .editor-section.unified-editor::before {
+    content: "";
+    position: absolute;
+    top: 3rem;
+    left: 0.5rem;
+    width: 1.5rem;
+    bottom: 0;
+    background-color: var(--lcars-purple);
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* Top bar - fixed position */
+[data-theme="lcars"] .editor-section.unified-editor::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0.5rem;
+    right: 1rem;
+    height: 3rem;
+    background-color: var(--lcars-purple);
+    z-index: 5;
+    pointer-events: none;
+    border-radius: 1.5rem 0 0 0;
+}
+
+/* Content wrapper - this scrolls */
+[data-theme="lcars"] .editor-section.unified-editor .editor-section-content {
+    position: absolute;
+    top: 3.5rem;
+    left: 2rem;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    background: #000;
+    z-index: 1;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* #write container */
+[data-theme="lcars"] .editor-section.unified-editor #write {
+    position: relative;
+    margin: 0 !important;
+    padding: 1rem !important;
+    min-height: 100%;
+    height: auto;
+    overflow: visible !important;
+}
+
+/* WYSIWYG content area */
+[data-theme="lcars"] .editor-section.unified-editor .wysiwyg-content {
+    background: transparent !important;
+    color: var(--lcars-yellow) !important;
+    font-family: 'Teko', sans-serif !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+}
+
+/* Source textarea when in source mode */
+[data-theme="lcars"] .editor-section.unified-editor .source-textarea {
+    background: transparent !important;
+    color: var(--lcars-yellow) !important;
+    font-family: 'Share Tech Mono', monospace !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 1rem !important;
+    margin: 0 !important;
+    border: none !important;
+    resize: none !important;
+    box-sizing: border-box !important;
+}

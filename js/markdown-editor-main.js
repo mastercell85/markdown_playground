@@ -1690,8 +1690,8 @@
             autoSave: true,
             autoSaveDelay: 1000,
             onDocumentSwitch: (doc) => {
-                // Load document content into WYSIWYG editor
-                wysiwygEngine.setMarkdown(doc.content);
+                // Load document content into WYSIWYG editor with rendering enabled by default
+                wysiwygEngine.setMarkdown(doc.content, true);
                 console.log('Switched to document:', doc.name);
             },
             onDocumentUpdate: (doc) => {
@@ -1718,7 +1718,8 @@
             const activeDoc = documentManager.getActiveDocument();
             console.log('WYSIWYG: Active document:', activeDoc ? activeDoc.name : 'null');
             if (activeDoc) {
-                wysiwygEngine.setMarkdown(activeDoc.content);
+                // Load with rendering enabled by default
+                wysiwygEngine.setMarkdown(activeDoc.content, true);
             }
         }
 
@@ -1740,6 +1741,9 @@
             wysiwygElement.focus();
         }, 100);
 
+        // Setup source mode toggle button and keyboard shortcut
+        setupSourceModeToggle(wysiwygEngine, documentManager);
+
         // Expose to global scope
         window.MarkdownEditor = {
             parser: parser,
@@ -1750,6 +1754,63 @@
         };
 
         console.log('WYSIWYG editor initialized');
+    }
+
+    /**
+     * Setup source mode toggle functionality
+     */
+    function setupSourceModeToggle(wysiwygEngine, documentManager) {
+        const toggleButton = document.getElementById('toolbar-source-toggle');
+        const sourceTextarea = document.getElementById('source-editor');
+
+        if (!toggleButton) {
+            console.warn('Source toggle button not found');
+            return;
+        }
+
+        // Restore source mode state from settings
+        const savedSourceMode = settingsManager.get('editor.sourceMode');
+        if (savedSourceMode) {
+            // Switch to source mode
+            wysiwygEngine.toggleSourceMode();
+            toggleButton.classList.add('active');
+            console.log('Restored source mode from settings');
+        }
+
+        // Handle toolbar button click
+        toggleButton.addEventListener('click', () => {
+            wysiwygEngine.toggleSourceMode();
+
+            // Update active button state and save to settings
+            if (wysiwygEngine.isSourceMode()) {
+                toggleButton.classList.add('active');
+                settingsManager.set('editor.sourceMode', true);
+            } else {
+                toggleButton.classList.remove('active');
+                settingsManager.set('editor.sourceMode', false);
+            }
+        });
+
+        // Handle source textarea input (for auto-save)
+        if (sourceTextarea) {
+            sourceTextarea.addEventListener('input', () => {
+                if (wysiwygEngine.isSourceMode()) {
+                    const markdown = sourceTextarea.value;
+                    documentManager.updateActiveContent(markdown);
+                }
+            });
+        }
+
+        // Handle Ctrl+/ keyboard shortcut
+        document.addEventListener('keydown', (event) => {
+            // Ctrl+/ or Cmd+/ to toggle source mode
+            if ((event.ctrlKey || event.metaKey) && event.key === '/') {
+                event.preventDefault();
+                toggleButton.click(); // Trigger the button click to keep logic in one place
+            }
+        });
+
+        console.log('Source mode toggle initialized');
     }
 
     /**

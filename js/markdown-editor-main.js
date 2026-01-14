@@ -8,7 +8,6 @@
 
     // Module-level variables
     let themeLoader = null;
-    let scrollSync = null;
     let findManager = null;
     let settingsManager = null;
     let lineMapper = null;
@@ -38,14 +37,8 @@
         // Initialize panel management
         initializePanelManagement();
 
-        // Initialize markdown editor
-        initializeMarkdownEditor();
-
-        // Initialize resizable divider
-        initializeResizableDivider();
-
-        // Initialize find manager
-        initializeFindManager();
+        // Initialize WYSIWYG markdown editor
+        initializeWysiwygEditor();
     }
 
     /**
@@ -578,15 +571,6 @@
         }
 
         // Scroll Sync toggle button on divider (Editor options moved to Settings panel)
-        const dividerSyncBtn = document.getElementById('divider-sync-btn');
-
-        if (dividerSyncBtn) {
-            dividerSyncBtn.addEventListener('click', function(event) {
-                event.stopPropagation();
-                event.preventDefault();
-                handleToggleScrollSync();
-            });
-        }
 
         // Zoom buttons
         const zoom90Btn = document.getElementById('zoom-90-btn');
@@ -647,9 +631,6 @@
         const fontFamilySelect = document.getElementById('settings-font-family');
         const lineNumbersCheckbox = document.getElementById('settings-line-numbers');
         const wordWrapCheckbox = document.getElementById('settings-word-wrap');
-        const scrollSyncCheckbox = document.getElementById('settings-scroll-sync');
-        const scrollOffsetSlider = document.getElementById('settings-scroll-offset');
-        const scrollOffsetValue = document.getElementById('settings-scroll-offset-value');
         const exportBtn = document.getElementById('settings-export-btn');
         const importBtn = document.getElementById('settings-import-btn');
         const importInput = document.getElementById('settings-import-input');
@@ -692,16 +673,6 @@
                 wordWrapCheckbox.checked = settings.editor.wordWrap;
             }
 
-            // Scroll Sync
-            if (scrollSyncCheckbox) {
-                scrollSyncCheckbox.checked = settings.editor.scrollSync.enabled;
-            }
-
-            // Scroll Offset
-            if (scrollOffsetSlider && scrollOffsetValue) {
-                scrollOffsetSlider.value = settings.editor.scrollSync.offset;
-                scrollOffsetValue.textContent = settings.editor.scrollSync.offset + ' lines';
-            }
         }
 
         // Font Size slider handler
@@ -788,34 +759,6 @@
             });
         }
 
-        // Scroll Sync checkbox handler
-        if (scrollSyncCheckbox) {
-            scrollSyncCheckbox.addEventListener('change', function(event) {
-                const value = event.target.checked;
-                try {
-                    settingsManager.set('editor.scrollSync.enabled', value);
-                    applyScrollSync(value);
-                } catch (error) {
-                    console.error('Settings error:', error.message);
-                }
-            });
-        }
-
-        // Scroll Offset slider handler
-        if (scrollOffsetSlider) {
-            scrollOffsetSlider.addEventListener('input', function(event) {
-                const value = parseInt(event.target.value);
-                if (scrollOffsetValue) {
-                    scrollOffsetValue.textContent = value + ' lines';
-                }
-                try {
-                    settingsManager.set('editor.scrollSync.offset', value);
-                    applyScrollOffset(value);
-                } catch (error) {
-                    console.error('Settings error:', error.message);
-                }
-            });
-        }
 
         // Export button handler
         if (exportBtn) {
@@ -978,21 +921,6 @@
             applyWordWrap(settings.editor.wordWrap);
         }
 
-        // Scroll Sync
-        const scrollSyncCheckbox = document.getElementById('settings-scroll-sync');
-        if (scrollSyncCheckbox) {
-            scrollSyncCheckbox.checked = settings.editor.scrollSync.enabled;
-            applyScrollSync(settings.editor.scrollSync.enabled);
-        }
-
-        // Scroll Offset
-        const scrollOffsetSlider = document.getElementById('settings-scroll-offset');
-        const scrollOffsetValue = document.getElementById('settings-scroll-offset-value');
-        if (scrollOffsetSlider && scrollOffsetValue) {
-            scrollOffsetSlider.value = settings.editor.scrollSync.offset;
-            scrollOffsetValue.textContent = settings.editor.scrollSync.offset + ' lines';
-            applyScrollOffset(settings.editor.scrollSync.offset);
-        }
     }
 
     /**
@@ -1036,126 +964,6 @@
         }
     }
 
-    /**
-     * Apply line numbers setting
-     */
-    function applyLineNumbers(enabled) {
-        const textarea = document.getElementById('markdown-input');
-        const gutter = document.getElementById('line-numbers-gutter');
-
-        if (!textarea || !gutter) return;
-
-        if (enabled) {
-            textarea.classList.add('show-line-numbers');
-            gutter.classList.add('visible');
-            updateLineNumbers();
-            setupLineNumberListeners();
-        } else {
-            textarea.classList.remove('show-line-numbers');
-            gutter.classList.remove('visible');
-            removeLineNumberListeners();
-        }
-
-        updateToggleLineNumbersButton(enabled);
-    }
-
-    // Store references to event listeners for cleanup
-    let lineNumberScrollHandler = null;
-    let lineNumberInputHandler = null;
-
-    /**
-     * Set up event listeners for line number synchronization
-     */
-    function setupLineNumberListeners() {
-        const textarea = document.getElementById('markdown-input');
-        if (!textarea) return;
-
-        // Remove any existing listeners first
-        removeLineNumberListeners();
-
-        // Create scroll handler to sync gutter scroll position
-        lineNumberScrollHandler = function() {
-            syncLineNumberScroll();
-        };
-
-        // Create input handler to update line count when content changes
-        lineNumberInputHandler = function() {
-            updateLineNumbers();
-        };
-
-        textarea.addEventListener('scroll', lineNumberScrollHandler);
-        textarea.addEventListener('input', lineNumberInputHandler);
-    }
-
-    /**
-     * Remove line number event listeners
-     */
-    function removeLineNumberListeners() {
-        const textarea = document.getElementById('markdown-input');
-        if (!textarea) return;
-
-        if (lineNumberScrollHandler) {
-            textarea.removeEventListener('scroll', lineNumberScrollHandler);
-            lineNumberScrollHandler = null;
-        }
-        if (lineNumberInputHandler) {
-            textarea.removeEventListener('input', lineNumberInputHandler);
-            lineNumberInputHandler = null;
-        }
-    }
-
-    /**
-     * Update line numbers based on textarea content
-     */
-    function updateLineNumbers() {
-        const textarea = document.getElementById('markdown-input');
-        const gutter = document.getElementById('line-numbers-gutter');
-
-        if (!textarea || !gutter) return;
-
-        const content = textarea.value;
-        const lineCount = content.split('\n').length;
-
-        // Get current line height from computed styles
-        const computedStyle = window.getComputedStyle(textarea);
-        const lineHeight = parseFloat(computedStyle.lineHeight) ||
-                          (parseFloat(computedStyle.fontSize) * 1.5);
-
-        // Build line numbers HTML
-        let html = '';
-        for (let i = 1; i <= lineCount; i++) {
-            html += `<span class="line-number" style="height: ${lineHeight}px; line-height: ${lineHeight}px;">${i}</span>`;
-        }
-
-        gutter.innerHTML = html;
-
-        // Sync scroll position
-        syncLineNumberScroll();
-    }
-
-    /**
-     * Sync line numbers gutter scroll with textarea scroll
-     */
-    function syncLineNumberScroll() {
-        const textarea = document.getElementById('markdown-input');
-        const gutter = document.getElementById('line-numbers-gutter');
-
-        if (!textarea || !gutter) return;
-
-        // Apply the same scroll offset to the gutter
-        gutter.scrollTop = textarea.scrollTop;
-    }
-
-    /**
-     * Update the Toggle Line Numbers button text in View panel
-     */
-    function updateToggleLineNumbersButton() {
-        // The View panel toggle button text doesn't change, but we could update visual state if needed
-    }
-
-    /**
-     * Apply word wrap setting
-     */
     function applyWordWrap(enabled) {
         const textarea = document.getElementById('markdown-input');
         if (textarea) {
@@ -1167,26 +975,6 @@
     /**
      * Apply scroll sync setting
      */
-    function applyScrollSync(enabled) {
-        if (scrollSync) {
-            if (enabled) {
-                scrollSync.enable();
-            } else {
-                scrollSync.disable();
-            }
-        }
-        // Update sync button visuals
-        updateScrollSyncUI(enabled);
-    }
-
-    /**
-     * Apply scroll offset setting
-     */
-    function applyScrollOffset(offset) {
-        if (scrollSync) {
-            scrollSync.setLineOffset(offset);
-        }
-    }
 
     /**
      * Show theme selector modal
@@ -1629,63 +1417,6 @@
     /**
      * Handle toggle scroll sync (used by divider sync button)
      */
-    function handleToggleScrollSync() {
-        if (!scrollSync) {
-            initializeScrollSync();
-        }
-
-        const enabled = scrollSync.toggle();
-
-        // Update UI to reflect state
-        updateScrollSyncUI(enabled);
-
-        // Save preference to SettingsManager
-        settingsManager.set('editor.scrollSync.enabled', enabled);
-
-        console.log(`Scroll sync: ${enabled ? 'enabled' : 'disabled'}`);
-    }
-
-    /**
-     * Initialize scroll sync module
-     */
-    function initializeScrollSync() {
-        if (scrollSync) return;
-
-        const inputElement = document.querySelector('.editor-input .markdown-textarea');
-        const previewElement = document.querySelector('.editor-preview .markdown-output');
-
-        if (!inputElement || !previewElement) {
-            console.warn('ScrollSync: Could not find input or preview elements');
-            return;
-        }
-
-        scrollSync = new ScrollSync();
-        scrollSync.init(inputElement, previewElement);
-
-        // Expose scrollSync globally for debugging and UI controls
-        window.scrollSync = scrollSync;
-
-        console.log('ScrollSync: Initialized');
-    }
-
-    /**
-     * Update scroll sync UI elements to reflect state
-     */
-    function updateScrollSyncUI(enabled) {
-        // Update divider sync button (Editor section controls moved to Settings panel)
-        const dividerBtn = document.getElementById('divider-sync-btn');
-
-        if (dividerBtn) {
-            dividerBtn.classList.toggle('sync-active', enabled);
-            dividerBtn.title = enabled ? 'Scroll Sync: On (Click to disable)' : 'Scroll Sync: Off (Click to enable)';
-        }
-
-        // Update Settings panel checkbox if it exists
-        const settingsCheckbox = document.getElementById('settings-scroll-sync');
-        if (settingsCheckbox) {
-            settingsCheckbox.checked = enabled;
-        }
-    }
 
     /**
      * Handle zoom change
@@ -1700,11 +1431,6 @@
         const newFontSize = (baseFontSize * percent) / 100;
 
         editorContainer.style.fontSize = `${newFontSize}px`;
-
-        // Invalidate scroll sync cache since line height changes with zoom
-        if (scrollSync) {
-            scrollSync.invalidateCache();
-        }
 
         // Save preference to SettingsManager
         settingsManager.set('editor.zoom', percent);
@@ -1722,9 +1448,16 @@
         const savedTabMenuStyle = settingsManager.settings.theme.tabMenu;
         applyTabMenuStyle(savedTabMenuStyle);
 
-        // Restore layout
-        const savedLayout = settingsManager.settings.editor.layout;
-        handleLayoutChange(savedLayout);
+        // Restore layout - but only if not already set in HTML
+        const editorContainer = document.querySelector('.editor-container');
+        const currentLayout = editorContainer?.getAttribute('data-layout');
+        if (!currentLayout) {
+            // No layout specified in HTML, use saved preference
+            const savedLayout = settingsManager.settings.editor.layout;
+            handleLayoutChange(savedLayout);
+        } else {
+            console.log(`Layout already set to: ${currentLayout} (from HTML)`);
+        }
 
         // Restore editor appearance settings
         const inputElement = document.getElementById('markdown-input');
@@ -1760,25 +1493,6 @@
         const savedZoom = settingsManager.settings.editor.zoom;
         handleZoomChange(savedZoom);
 
-        // Restore scroll sync (default: off)
-        const savedScrollSync = settingsManager.settings.editor.scrollSync.enabled;
-        const savedScrollOffset = settingsManager.settings.editor.scrollSync.offset;
-
-        // Delay initialization to ensure DOM is ready
-        setTimeout(() => {
-            initializeScrollSync();
-            if (scrollSync) {
-                // Set the saved offset
-                scrollSync.setLineOffset(savedScrollOffset);
-
-                if (savedScrollSync) {
-                    scrollSync.enable();
-                    updateScrollSyncUI(true);
-                } else {
-                    updateScrollSyncUI(false);
-                }
-            }
-        }, 100);
 
         console.log('View preferences restored');
     }
@@ -1943,173 +1657,6 @@
         window.location.href = 'index.html';
     }
 
-    /**
-     * Initialize markdown editor components
-     */
-    function initializeMarkdownEditor() {
-        // Check layout mode
-        const editorContainer = document.querySelector('.editor-container');
-        const layoutMode = editorContainer?.dataset?.layout || 'split';
-
-        if (layoutMode === 'wysiwyg') {
-            initializeWysiwygEditor();
-            return;
-        }
-
-        // Split view mode initialization
-        const inputElement = document.getElementById('markdown-input');
-        const outputElement = document.getElementById('markdown-preview');
-
-        if (!inputElement || !outputElement) {
-            console.warn('Markdown editor elements not found');
-            return;
-        }
-
-        // Create parser components
-        const ruleEngine = new RuleEngine();
-        const blockProcessor = new BlockProcessor();
-        const parser = new MarkdownParser(ruleEngine, blockProcessor);
-
-        // Enable line tracking for scroll sync (adds data-line attributes to output)
-        parser.setLineTracking(true);
-
-        // Create window manager for external preview
-        const windowManager = new WindowManager({
-            windowTitle: 'Markdown Preview',
-            windowWidth: 800,
-            windowHeight: 600,
-            previewElementId: 'markdown-preview'
-        });
-
-        // Create renderer first
-        const renderer = new MarkdownRenderer({
-            parser: parser,
-            inputElement: inputElement,
-            outputElement: outputElement,
-            windowManager: windowManager
-        });
-
-        // Create document manager with renderer callbacks
-        const documentManager = new DocumentManager({
-            autoSave: true,
-            autoSaveDelay: 1000,
-            onDocumentSwitch: (doc) => {
-                // Load document content into editor
-                renderer.setMarkdown(doc.content);
-
-                // Handle read-only status
-                const textarea = document.getElementById('markdown-input');
-                if (textarea) {
-                    if (doc.metadata && doc.metadata.readOnly) {
-                        textarea.readOnly = true;
-                        textarea.style.cursor = 'default';
-                        console.log('Document is read-only:', doc.name);
-                    } else {
-                        textarea.readOnly = false;
-                        textarea.style.cursor = '';
-                        console.log('Switched to document:', doc.name);
-                    }
-                }
-
-                // Update line numbers if enabled (content has changed)
-                const gutter = document.getElementById('line-numbers-gutter');
-                if (gutter && gutter.classList.contains('visible')) {
-                    updateLineNumbers();
-                }
-
-                // Invalidate LineMapper on document switch (single-map memory strategy)
-                if (lineMapper) {
-                    lineMapper.invalidate();
-                }
-            },
-            onDocumentUpdate: (doc) => {
-                console.log('Document updated:', doc.name);
-            }
-        });
-
-        // Update renderer callback to sync with document manager
-        renderer.onRender = ({ markdown }) => {
-            documentManager.updateActiveContent(markdown);
-        };
-
-        // Try to load documents from storage, or create initial document
-        if (!documentManager.loadFromStorage()) {
-            const initialDoc = documentManager.createDocument();
-            documentManager.switchDocument(initialDoc.id);
-        } else {
-            // Restore active document
-            const activeDoc = documentManager.getActiveDocument();
-            if (activeDoc) {
-                renderer.setMarkdown(activeDoc.content);
-
-                // Update line numbers if enabled after content is restored
-                const gutter = document.getElementById('line-numbers-gutter');
-                if (gutter && gutter.classList.contains('visible')) {
-                    updateLineNumbers();
-                }
-            }
-        }
-
-        renderer.init();
-
-        // Initialize LineMapper for scroll sync accuracy
-        lineMapper = new LineMapper({
-            previewContainer: outputElement,
-            rebuildDebounceMs: 200,
-            debug: false // Set to true for performance logging
-        });
-        lineMapper.init();
-
-        // Expose lineMapper to window for debugging
-        window.lineMapper = lineMapper;
-
-        // Hook LineMapper into renderer - rebuild map after each render
-        const originalOnRender = renderer.onRender;
-        renderer.onRender = ({ markdown }) => {
-            // Call original handler
-            if (originalOnRender) {
-                originalOnRender({ markdown });
-            } else {
-                documentManager.updateActiveContent(markdown);
-            }
-            // Trigger LineMapper update after render
-            if (lineMapper) {
-                lineMapper.update();
-            }
-        };
-
-        // Initialize tab controller
-        const tabController = new TabController({
-            documentManager: documentManager,
-            tabsContainer: document.getElementById('document-tabs'),
-            newTabButton: document.getElementById('new-document-btn')
-        });
-
-        tabController.init();
-
-        // Setup View panel controls
-        setupViewControls(windowManager, renderer);
-
-        // Expose to global scope for potential external access
-        window.MarkdownEditor = {
-            parser: parser,
-            renderer: renderer,
-            windowManager: windowManager,
-            ruleEngine: ruleEngine,
-            blockProcessor: blockProcessor,
-            documentManager: documentManager,
-            tabController: tabController,
-            lineMapper: lineMapper
-        };
-
-        // Update line numbers now that document content is loaded
-        const gutter = document.getElementById('line-numbers-gutter');
-        if (gutter && gutter.classList.contains('visible')) {
-            updateLineNumbers();
-        }
-
-        console.log('Markdown editor initialized with live preview and document management');
-    }
 
     /**
      * Initialize WYSIWYG editor (unified view mode)
@@ -2143,23 +1690,14 @@
             autoSave: true,
             autoSaveDelay: 1000,
             onDocumentSwitch: (doc) => {
-                // Load document content into WYSIWYG editor
-                wysiwygEngine.setMarkdown(doc.content);
+                // Load document content into WYSIWYG editor with rendering enabled by default
+                wysiwygEngine.setMarkdown(doc.content, true);
                 console.log('Switched to document:', doc.name);
             },
             onDocumentUpdate: (doc) => {
                 console.log('Document updated:', doc.name);
             }
         });
-
-        // Initialize tab controller FIRST so it can render tabs
-        const tabController = new TabController({
-            documentManager: documentManager,
-            tabsContainer: document.getElementById('document-tabs'),
-            newTabButton: document.getElementById('new-document-btn')
-        });
-
-        tabController.init();
 
         // Setup auto-save: save content when input changes
         wysiwygElement.addEventListener('input', () => {
@@ -2169,22 +1707,42 @@
 
         // Try to load documents from storage, or create initial document
         if (!documentManager.loadFromStorage()) {
+            console.log('WYSIWYG: No documents in storage, creating initial document');
             const initialDoc = documentManager.createDocument();
+            console.log('WYSIWYG: Created document:', initialDoc.id, initialDoc.name);
             documentManager.switchDocument(initialDoc.id);
-            // Focus the editor after creating initial document
-            setTimeout(() => {
-                wysiwygElement.focus();
-            }, 100);
+            console.log('WYSIWYG: Switched to initial document');
         } else {
+            console.log('WYSIWYG: Loaded documents from storage');
             // Restore active document
             const activeDoc = documentManager.getActiveDocument();
+            console.log('WYSIWYG: Active document:', activeDoc ? activeDoc.name : 'null');
             if (activeDoc) {
-                wysiwygEngine.setMarkdown(activeDoc.content);
+                // Load with rendering enabled by default
+                wysiwygEngine.setMarkdown(activeDoc.content, true);
             }
         }
 
-        // Render tabs after documents are loaded
-        tabController.renderTabs();
+        console.log('WYSIWYG: All documents:', documentManager.getAllDocuments().map(d => d.name));
+
+        // Initialize tab controller AFTER documents are loaded (same as split view)
+        const tabController = new TabController({
+            documentManager: documentManager,
+            tabsContainer: document.getElementById('document-tabs'),
+            newTabButton: document.getElementById('new-document-btn')
+        });
+
+        console.log('WYSIWYG: Initializing TabController');
+        tabController.init();
+        console.log('WYSIWYG: TabController initialized');
+
+        // Focus the editor after initialization
+        setTimeout(() => {
+            wysiwygElement.focus();
+        }, 100);
+
+        // Setup source mode toggle button and keyboard shortcut
+        setupSourceModeToggle(wysiwygEngine, documentManager);
 
         // Expose to global scope
         window.MarkdownEditor = {
@@ -2199,77 +1757,65 @@
     }
 
     /**
+     * Setup source mode toggle functionality
+     */
+    function setupSourceModeToggle(wysiwygEngine, documentManager) {
+        const toggleButton = document.getElementById('toolbar-source-toggle');
+        const sourceTextarea = document.getElementById('source-editor');
+
+        if (!toggleButton) {
+            console.warn('Source toggle button not found');
+            return;
+        }
+
+        // Restore source mode state from settings
+        const savedSourceMode = settingsManager.get('editor.sourceMode');
+        if (savedSourceMode) {
+            // Switch to source mode
+            wysiwygEngine.toggleSourceMode();
+            toggleButton.classList.add('active');
+            console.log('Restored source mode from settings');
+        }
+
+        // Handle toolbar button click
+        toggleButton.addEventListener('click', () => {
+            wysiwygEngine.toggleSourceMode();
+
+            // Update active button state and save to settings
+            if (wysiwygEngine.isSourceMode()) {
+                toggleButton.classList.add('active');
+                settingsManager.set('editor.sourceMode', true);
+            } else {
+                toggleButton.classList.remove('active');
+                settingsManager.set('editor.sourceMode', false);
+            }
+        });
+
+        // Handle source textarea input (for auto-save)
+        if (sourceTextarea) {
+            sourceTextarea.addEventListener('input', () => {
+                if (wysiwygEngine.isSourceMode()) {
+                    const markdown = sourceTextarea.value;
+                    documentManager.updateActiveContent(markdown);
+                }
+            });
+        }
+
+        // Handle Ctrl+/ keyboard shortcut
+        document.addEventListener('keydown', (event) => {
+            // Ctrl+/ or Cmd+/ to toggle source mode
+            if ((event.ctrlKey || event.metaKey) && event.key === '/') {
+                event.preventDefault();
+                toggleButton.click(); // Trigger the button click to keep logic in one place
+            }
+        });
+
+        console.log('Source mode toggle initialized');
+    }
+
+    /**
      * Setup View panel controls for external window
      */
-    function setupViewControls(windowManager, renderer) {
-        const openBtn = document.getElementById('open-external-preview');
-        const closeBtn = document.getElementById('close-external-preview');
-
-        if (openBtn) {
-            openBtn.addEventListener('click', (event) => {
-                event.stopPropagation();
-                windowManager.open();
-                renderer.render(); // Update external window with current content
-                openBtn.disabled = true;
-                if (closeBtn) closeBtn.disabled = false;
-            });
-        }
-
-        if (closeBtn) {
-            closeBtn.addEventListener('click', (event) => {
-                event.stopPropagation();
-                windowManager.close();
-                closeBtn.disabled = true;
-                if (openBtn) openBtn.disabled = false;
-            });
-        }
-
-        // Check if external window closes manually
-        setInterval(() => {
-            if (!windowManager.isOpen()) {
-                if (openBtn) openBtn.disabled = false;
-                if (closeBtn) closeBtn.disabled = true;
-            }
-        }, 500);
-    }
-
-    /**
-     * Initialize resizable divider between editor and preview
-     */
-    function initializeResizableDivider() {
-        const resizablePane = new ResizablePane({
-            dividerSelector: '#editor-divider',
-            leftPaneSelector: '.editor-input',
-            rightPaneSelector: '.editor-preview',
-            containerSelector: '.editor-container',
-            minPaneWidth: 200
-        });
-
-        resizablePane.init();
-
-        // Expose to global scope
-        window.MarkdownEditor = window.MarkdownEditor || {};
-        window.MarkdownEditor.resizablePane = resizablePane;
-    }
-
-    /**
-     * Initialize find manager
-     */
-    function initializeFindManager() {
-        if (findManager) return;
-
-        findManager = new FindManager({
-            textareaSelector: '#markdown-input',
-            dialogSelector: '#find-replace-dialog'
-        });
-
-        findManager.init();
-
-        // Expose globally for debugging
-        window.MarkdownEditor.findManager = findManager;
-
-        console.log('FindManager: Initialized');
-    }
 
     // Listen for regex help event from FindManager
     document.addEventListener('openRegexHelp', () => {

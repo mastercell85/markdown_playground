@@ -1740,6 +1740,9 @@
             wysiwygElement.focus();
         }, 100);
 
+        // Setup source mode toggle button and keyboard shortcut
+        setupSourceModeToggle(wysiwygEngine, documentManager);
+
         // Expose to global scope
         window.MarkdownEditor = {
             parser: parser,
@@ -1750,6 +1753,52 @@
         };
 
         console.log('WYSIWYG editor initialized');
+    }
+
+    /**
+     * Setup source mode toggle functionality
+     */
+    function setupSourceModeToggle(wysiwygEngine, documentManager) {
+        const toggleButton = document.getElementById('toolbar-source-toggle');
+        const sourceTextarea = document.getElementById('source-editor');
+
+        if (!toggleButton) {
+            console.warn('Source toggle button not found');
+            return;
+        }
+
+        // Handle toolbar button click
+        toggleButton.addEventListener('click', () => {
+            wysiwygEngine.toggleSourceMode();
+
+            // Update active button state
+            if (wysiwygEngine.isSourceMode()) {
+                toggleButton.classList.add('active');
+            } else {
+                toggleButton.classList.remove('active');
+            }
+        });
+
+        // Handle source textarea input (for auto-save)
+        if (sourceTextarea) {
+            sourceTextarea.addEventListener('input', () => {
+                if (wysiwygEngine.isSourceMode()) {
+                    const markdown = sourceTextarea.value;
+                    documentManager.updateActiveContent(markdown);
+                }
+            });
+        }
+
+        // Handle Ctrl+/ keyboard shortcut
+        document.addEventListener('keydown', (event) => {
+            // Ctrl+/ or Cmd+/ to toggle source mode
+            if ((event.ctrlKey || event.metaKey) && event.key === '/') {
+                event.preventDefault();
+                toggleButton.click(); // Trigger the button click to keep logic in one place
+            }
+        });
+
+        console.log('Source mode toggle initialized');
     }
 
     /**

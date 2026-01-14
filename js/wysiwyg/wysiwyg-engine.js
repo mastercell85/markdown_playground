@@ -18,6 +18,10 @@ class WysiwygEngine {
         this.currentBlock = null;
         this.editMode = false; // true = showing markdown, false = showing rendered
 
+        // Source mode state
+        this.sourceMode = false; // true = raw markdown textarea, false = WYSIWYG
+        this.sourceTextarea = null;
+
         // Bind methods
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleClick = this.handleClick.bind(this);
@@ -384,6 +388,83 @@ class WysiwygEngine {
         });
 
         this.editorElement.innerHTML = blocks.join('');
+    }
+
+    /**
+     * Toggle between WYSIWYG and source mode
+     */
+    toggleSourceMode() {
+        if (this.sourceMode) {
+            this.switchToWysiwyg();
+        } else {
+            this.switchToSource();
+        }
+        return this.sourceMode;
+    }
+
+    /**
+     * Switch to source mode (raw markdown textarea)
+     */
+    switchToSource() {
+        if (this.sourceMode) return;
+
+        // Find the source textarea
+        this.sourceTextarea = document.getElementById('source-editor');
+        if (!this.sourceTextarea) {
+            console.warn('Source editor textarea not found');
+            return;
+        }
+
+        // Get current markdown from WYSIWYG editor
+        const markdown = this.getMarkdown();
+
+        // Hide WYSIWYG editor, show source textarea
+        this.editorElement.style.display = 'none';
+        this.sourceTextarea.style.display = 'block';
+
+        // Load markdown into source textarea
+        this.sourceTextarea.value = markdown;
+
+        // Focus the textarea
+        this.sourceTextarea.focus();
+
+        this.sourceMode = true;
+        console.log('Switched to source mode');
+    }
+
+    /**
+     * Switch to WYSIWYG mode (rendered editing)
+     */
+    switchToWysiwyg() {
+        if (!this.sourceMode) return;
+
+        if (!this.sourceTextarea) {
+            console.warn('Source textarea not initialized');
+            return;
+        }
+
+        // Get markdown from source textarea
+        const markdown = this.sourceTextarea.value;
+
+        // Hide source textarea, show WYSIWYG editor
+        this.sourceTextarea.style.display = 'none';
+        this.editorElement.style.display = 'block';
+
+        // Load markdown into WYSIWYG editor
+        this.setMarkdown(markdown);
+
+        // Focus the WYSIWYG editor
+        this.editorElement.focus();
+
+        this.sourceMode = false;
+        console.log('Switched to WYSIWYG mode');
+    }
+
+    /**
+     * Check if currently in source mode
+     */
+    isSourceMode() {
+        return this.sourceMode;
     }
 
     /**

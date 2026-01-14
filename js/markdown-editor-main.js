@@ -1690,8 +1690,8 @@
             autoSave: true,
             autoSaveDelay: 1000,
             onDocumentSwitch: (doc) => {
-                // Load document content into WYSIWYG editor
-                wysiwygEngine.setMarkdown(doc.content);
+                // Load document content into WYSIWYG editor with rendering enabled by default
+                wysiwygEngine.setMarkdown(doc.content, true);
                 console.log('Switched to document:', doc.name);
             },
             onDocumentUpdate: (doc) => {
@@ -1718,7 +1718,8 @@
             const activeDoc = documentManager.getActiveDocument();
             console.log('WYSIWYG: Active document:', activeDoc ? activeDoc.name : 'null');
             if (activeDoc) {
-                wysiwygEngine.setMarkdown(activeDoc.content);
+                // Load with rendering enabled by default
+                wysiwygEngine.setMarkdown(activeDoc.content, true);
             }
         }
 
@@ -1767,15 +1768,26 @@
             return;
         }
 
+        // Restore source mode state from settings
+        const savedSourceMode = settingsManager.get('editor.sourceMode');
+        if (savedSourceMode) {
+            // Switch to source mode
+            wysiwygEngine.toggleSourceMode();
+            toggleButton.classList.add('active');
+            console.log('Restored source mode from settings');
+        }
+
         // Handle toolbar button click
         toggleButton.addEventListener('click', () => {
             wysiwygEngine.toggleSourceMode();
 
-            // Update active button state
+            // Update active button state and save to settings
             if (wysiwygEngine.isSourceMode()) {
                 toggleButton.classList.add('active');
+                settingsManager.set('editor.sourceMode', true);
             } else {
                 toggleButton.classList.remove('active');
+                settingsManager.set('editor.sourceMode', false);
             }
         });
 

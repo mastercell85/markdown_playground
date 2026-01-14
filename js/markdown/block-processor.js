@@ -60,7 +60,7 @@ class BlockProcessor {
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
             const trimmed = line.trim();
-            const lineNum = i; // 0-based line number
+            const lineNum = i + 1; // 1-based line number to match editor line numbers
 
             // Code block handling
             if (this.isCodeBlock(trimmed)) {

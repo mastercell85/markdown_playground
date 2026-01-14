@@ -89,9 +89,17 @@ class ShortcutProcessor {
 
     /**
      * Create text formatting shortcuts (bold, italic, strikethrough)
+     * NOTE: Order matters! More specific patterns (bi{}) must come before
+     * less specific ones (b{}, i{}) to prevent partial matching.
      */
     createTextFormattingShortcuts() {
         return [
+            // Bold + Italic (MUST be before bold and italic to prevent partial matching)
+            { pattern: /<bi>(.+?)<\/bi>/g, replacement: '***$1***', name: 'bold-italic-html' },
+            { pattern: /\[bi\](.+?)\[\/bi\]/g, replacement: '***$1***', name: 'bold-italic-bbcode' },
+            { pattern: /:bi:(.+?):bi:/g, replacement: '***$1***', name: 'bold-italic-colon' },
+            { pattern: /bi\{(.+?)\}/g, replacement: '***$1***', name: 'bold-italic-brace' },
+
             // Bold
             { pattern: /<b>(.+?)<\/b>/g, replacement: '**$1**', name: 'bold-html' },
             { pattern: /\[b\](.+?)\[\/b\]/g, replacement: '**$1**', name: 'bold-bbcode' },
@@ -111,13 +119,7 @@ class ShortcutProcessor {
             { pattern: /\[s\](.+?)\[\/s\]/g, replacement: '~~$1~~', name: 'strike-bbcode' },
             { pattern: /:strike:(.+?):strike:/g, replacement: '~~$1~~', name: 'strike-colon-full' },
             { pattern: /:s:(.+?):s:/g, replacement: '~~$1~~', name: 'strike-colon-short' },
-            { pattern: /s\{(.+?)\}/g, replacement: '~~$1~~', name: 'strike-brace' },
-
-            // Bold + Italic
-            { pattern: /<bi>(.+?)<\/bi>/g, replacement: '***$1***', name: 'bold-italic-html' },
-            { pattern: /\[bi\](.+?)\[\/bi\]/g, replacement: '***$1***', name: 'bold-italic-bbcode' },
-            { pattern: /:bi:(.+?):bi:/g, replacement: '***$1***', name: 'bold-italic-colon' },
-            { pattern: /bi\{(.+?)\}/g, replacement: '***$1***', name: 'bold-italic-brace' }
+            { pattern: /s\{(.+?)\}/g, replacement: '~~$1~~', name: 'strike-brace' }
         ];
     }
 

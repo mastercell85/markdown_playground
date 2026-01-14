@@ -1658,13 +1658,17 @@
             return;
         }
 
-        scrollSync = new ScrollSync();
+        // Create ScrollSync with LineMapper for accurate mapping
+        scrollSync = new ScrollSync({
+            lineMapper: lineMapper,
+            showSyncLineHighlight: true // Debug: show which line sync is reading from
+        });
         scrollSync.init(inputElement, previewElement);
 
         // Expose scrollSync globally for debugging and UI controls
         window.scrollSync = scrollSync;
 
-        console.log('ScrollSync: Initialized');
+        console.log('ScrollSync: Initialized with LineMapper integration');
     }
 
     /**

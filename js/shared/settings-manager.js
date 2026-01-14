@@ -62,7 +62,7 @@ class SettingsManager {
                 tabSize: 2,
                 fontFamily: "'Consolas', monospace",
                 lineNumbers: false,
-                wordWrap: true,
+                wordWrap: false,
                 layout: 'split',
                 zoom: 100,
                 scrollSync: {

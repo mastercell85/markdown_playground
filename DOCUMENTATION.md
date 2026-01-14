@@ -2350,13 +2350,42 @@ lineMapper.getScrollPositionForLine(10)
 // 480.77 (pixels - element-height weighted)
 ```
 
-**Phase 2b: Enhanced Scroll Sync** (Algorithm Improvements)
-- [ ] Refactor ScrollSync to use LineMapper instead of direct DOM `data-line` queries
-- [ ] Implement sub-element interpolation (scroll proportionally within multi-line elements)
-- [ ] Update scroll position calculations to use weighted heights instead of line counts
-- [ ] Add integration with DocumentManager for document switch notifications
-- [ ] Test with various document types (text-heavy, image-heavy, code-heavy, mixed)
-- [ ] Verify performance targets are met (query <1ms, rebuild <100ms)
+**Phase 2b: Enhanced Scroll Sync - Element Index Matching** ✅ **COMPLETE - January 14, 2026**
+
+**Status:** Experimental implementation complete. This approach may not be the final solution - see notes below.
+
+**Implementation Approach:**
+- [x] Changed block-processor to use 1-based line numbering (matching editor line numbers)
+- [x] Implemented element index matching: finds Nth element in preview for Nth line in input
+- [x] Disabled word wrap by default (required for accurate line calculation)
+- [x] Added debug highlighting to visualize which lines are being synced
+- [x] Simplified scroll calculation to `scrollTop / lineHeight` (works with word wrap disabled)
+- [x] Added 60px viewport padding to prevent elements from being cut off at top
+- [x] Removed complex text width calculations (no longer needed without word wrap)
+
+**Implementation Details:**
+- ScrollSync v3.0.0 with element-matching approach
+- `_syncPreviewToInputWithElementMatching()` method replaces weighted interpolation
+- Finds element where `data-line <= visibleLineNumber`, then scrolls to that element's position
+- Interpolates between elements for smooth scrolling (with 0.8 interpolation factor)
+- Debug mode: `showSyncLineHighlight: true` adds blue highlights to show sync positions
+- Test utilities saved in `tests/scroll-sync-debug-utils.js` for future troubleshooting
+
+**Known Limitations:**
+- **Requires word wrap disabled** - Word wrap causes visual line count mismatch with actual line count
+- **Still has issues with large images/blocks** - Preview can get ahead/behind in image-heavy sections
+- **Interpolation needs tuning** - 0.8 factor may need adjustment for different content types
+
+**Next Steps (Potential Alternative Approach):**
+An alternative branch will explore **WYSIWYG/unified view** (Typora-style) to eliminate the sync problem entirely by removing the split view. This will allow direct comparison of:
+- **Split view with sync** (current branch) - Two panes that need to stay aligned
+- **Unified WYSIWYG view** (future branch) - Single pane with in-place editing
+
+After both approaches are implemented, a decision will be made on which to keep based on:
+- User experience quality
+- Implementation complexity
+- Performance characteristics
+- Ease of maintenance
 
 **Phase 2c: WYSIWYG Preparation** (Essential Hooks Only) ✅ **API COMPLETE - January 14, 2026**
 

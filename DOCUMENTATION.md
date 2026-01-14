@@ -2324,15 +2324,31 @@ class LineMapper {
 
 #### Implementation Phases
 
-**Phase 2a: LineMapper Foundation** (Core Infrastructure)
-- [ ] Create `js/shared/line-mapper.js` module
-- [ ] Implement block-level line-to-element mapping using existing `data-line` attributes
-- [ ] Extend BlockProcessor to emit `data-line-start` and `data-line-end` for multi-line blocks
-- [ ] Add element height and offset tracking (post-render measurement)
-- [ ] Implement element-height weighted interpolation for scroll position queries
-- [ ] Add time-debounced rebuild (150-300ms) on DOM changes
-- [ ] Implement `invalidate()` for document switches (single-map memory strategy)
-- [ ] Add performance marks in dev mode for measurement
+**Phase 2a: LineMapper Foundation** (Core Infrastructure) ✅ **COMPLETE - January 14, 2026**
+- [x] Create `js/shared/line-mapper.js` module
+- [x] Implement block-level line-to-element mapping using existing `data-line` attributes
+- [x] Add element height and offset tracking (post-render measurement)
+- [x] Implement element-height weighted interpolation for scroll position queries
+- [x] Add time-debounced rebuild (200ms) on DOM changes
+- [x] Implement `invalidate()` for document switches (single-map memory strategy)
+- [x] Add performance marks in debug mode for measurement
+- [x] Integrate with markdown-editor-main.js (auto-update after render)
+- [x] Hook into DocumentManager for document switch invalidation
+- [x] Expose as `window.lineMapper` and `MarkdownEditor.lineMapper` for debugging
+- [ ] Extend BlockProcessor to emit `data-line-start` and `data-line-end` for multi-line blocks (deferred - current `data-line` works well)
+
+**Phase 2a Testing Results (January 14, 2026):**
+```javascript
+lineMapper.getDebugInfo()
+// {isDirty: false, isBuilding: false, totalLines: 212,
+//  totalHeight: 9087.87, elementCount: 126, ...}
+
+lineMapper.getElementForLine(5)
+// <p data-line="5">This document tests all shortcut syntaxes...</p>
+
+lineMapper.getScrollPositionForLine(10)
+// 480.77 (pixels - element-height weighted)
+```
 
 **Phase 2b: Enhanced Scroll Sync** (Algorithm Improvements)
 - [ ] Refactor ScrollSync to use LineMapper instead of direct DOM `data-line` queries
@@ -2342,14 +2358,16 @@ class LineMapper {
 - [ ] Test with various document types (text-heavy, image-heavy, code-heavy, mixed)
 - [ ] Verify performance targets are met (query <1ms, rebuild <100ms)
 
-**Phase 2c: WYSIWYG Preparation** (Essential Hooks Only)
-- [ ] Add lazy character-level mapping capability (calculate only when queried)
-- [ ] Implement `getRenderedPositionForCursor(line, column)` hook
-- [ ] Implement `getSourcePositionForSelection(selection)` hook
-- [ ] Implement `getContainingBlock(line)` hook
-- [ ] Implement `isRawZone(line)` hook for code blocks and frontmatter
-- [ ] Implement `getEditableRange(line)` hook
-- [ ] Add `on('update')` and `on('error')` events
+**Phase 2c: WYSIWYG Preparation** (Essential Hooks Only) ✅ **API COMPLETE - January 14, 2026**
+
+Essential hooks implemented in LineMapper (calculate on-demand, not continuously):
+- [x] Implement `getRenderedPositionForCursor(line, column)` hook
+- [x] Implement `getSourcePositionForSelection(selection)` hook
+- [x] Implement `getContainingBlock(line)` hook
+- [x] Implement `isRawZone(line)` hook for code blocks and frontmatter
+- [x] Implement `getEditableRange(line)` hook
+- [x] Add `on('update')` and `on('error')` events
+- [ ] Add lazy character-level mapping capability (enhance existing hooks when needed)
 - [ ] Document API for future WYSIWYG implementation phase
 
 ---

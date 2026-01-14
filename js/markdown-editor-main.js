@@ -11,6 +11,7 @@
     let scrollSync = null;
     let findManager = null;
     let settingsManager = null;
+    let lineMapper = null;
 
     // Initialize when DOM is ready
     function init() {
@@ -2004,6 +2005,11 @@
                 if (gutter && gutter.classList.contains('visible')) {
                     updateLineNumbers();
                 }
+
+                // Invalidate LineMapper on document switch (single-map memory strategy)
+                if (lineMapper) {
+                    lineMapper.invalidate();
+                }
             },
             onDocumentUpdate: (doc) => {
                 console.log('Document updated:', doc.name);
@@ -2035,6 +2041,32 @@
 
         renderer.init();
 
+        // Initialize LineMapper for scroll sync accuracy
+        lineMapper = new LineMapper({
+            previewContainer: outputElement,
+            rebuildDebounceMs: 200,
+            debug: false // Set to true for performance logging
+        });
+        lineMapper.init();
+
+        // Expose lineMapper to window for debugging
+        window.lineMapper = lineMapper;
+
+        // Hook LineMapper into renderer - rebuild map after each render
+        const originalOnRender = renderer.onRender;
+        renderer.onRender = ({ markdown }) => {
+            // Call original handler
+            if (originalOnRender) {
+                originalOnRender({ markdown });
+            } else {
+                documentManager.updateActiveContent(markdown);
+            }
+            // Trigger LineMapper update after render
+            if (lineMapper) {
+                lineMapper.update();
+            }
+        };
+
         // Initialize tab controller
         const tabController = new TabController({
             documentManager: documentManager,
@@ -2055,7 +2087,8 @@
             ruleEngine: ruleEngine,
             blockProcessor: blockProcessor,
             documentManager: documentManager,
-            tabController: tabController
+            tabController: tabController,
+            lineMapper: lineMapper
         };
 
         // Update line numbers now that document content is loaded

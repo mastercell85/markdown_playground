@@ -520,7 +520,7 @@ body {
 }
 
 /* ============================================================================
-   EDITOR CONTAINER (Split View)
+   EDITOR CONTAINER (WYSIWYG Unified View)
    ============================================================================ */
 
 .main.supporting {
@@ -545,22 +545,7 @@ body {
     background: var(--editor-bg);
 }
 
-/* Layout modes */
-.editor-container[data-layout="split"] {
-    flex-direction: row;
-}
-
-.editor-container[data-layout="editor"] .editor-preview,
-.editor-container[data-layout="editor"] .editor-divider {
-    display: none;
-}
-
-.editor-container[data-layout="preview"] .editor-input,
-.editor-container[data-layout="preview"] .editor-divider {
-    display: none;
-}
-
-/* Editor sections (input and preview) */
+/* Editor sections */
 .editor-section {
     display: flex;
     flex-direction: column;
@@ -579,84 +564,11 @@ body {
     height: 100%;
 }
 
-.editor-input .editor-section-content {
-    padding: 0;
-}
-
-/* Textarea for markdown input - fills entire area */
-.markdown-textarea {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 20px;
-    background: var(--textarea-bg);
-    color: var(--textarea-text);
-    border: none;
-    font-family: var(--font-family-mono);
-    font-size: var(--font-size-base);
-    line-height: 1.6;
-    resize: none;
-    outline: none;
-    overflow: auto;
-    box-sizing: border-box;
-}
-
-/* Ensure parent containers don't add extra padding */
-.editor-input .editor-section-content {
-    padding: 0;
-}
-
 .typora-write {
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
-}
-
-.markdown-textarea::placeholder {
-    color: #666;
-}
-
-/* Resizable divider */
-.editor-divider {
-    width: 4px;
-    background: var(--divider-bg);
-    cursor: col-resize;
-    position: relative;
-    transition: background 0.2s ease;
-}
-
-.editor-divider:hover,
-.editor-divider.dragging {
-    background: var(--divider-hover-bg);
-}
-
-.editor-divider::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: -2px;
-    right: -2px;
-}
-
-/* Preview area */
-.editor-preview {
-    flex: 1;
-    min-width: 200px;
-    background: var(--preview-bg);
-}
-
-.markdown-output {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    color: var(--preview-text);
-    font-family: var(--font-family);
-    font-size: var(--font-size-base);
-    line-height: 1.6;
-    overflow: auto;
 }
 
 /* ============================================================================

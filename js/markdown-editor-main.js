@@ -8,9 +8,10 @@
 
     // Module-level variables
     let themeLoader = null;
-    let scrollSync = null;
     let findManager = null;
     let settingsManager = null;
+    let lineMapper = null;
+    let wysiwygEngine = null;
 
     // Initialize when DOM is ready
     function init() {
@@ -31,19 +32,13 @@
                 updateThemeDisplay(theme);
             }
         });
-        themeLoader.init();
+        themeLoader.init(settingsManager);
 
         // Initialize panel management
         initializePanelManagement();
 
-        // Initialize markdown editor
-        initializeMarkdownEditor();
-
-        // Initialize resizable divider
-        initializeResizableDivider();
-
-        // Initialize find manager
-        initializeFindManager();
+        // Initialize WYSIWYG markdown editor
+        initializeWysiwygEditor();
     }
 
     /**
@@ -83,6 +78,9 @@
 
         // Setup View menu buttons
         setupViewMenuButtons();
+
+        // Setup Settings panel
+        setupSettingsPanel();
 
         // Restore user preferences
         restoreViewPreferences();
@@ -572,42 +570,7 @@
             });
         }
 
-        // Editor options
-        const toggleLineNumbersBtn = document.getElementById('toggle-line-numbers-btn');
-        const toggleWordWrapBtn = document.getElementById('toggle-word-wrap-btn');
-
-        if (toggleLineNumbersBtn) {
-            toggleLineNumbersBtn.addEventListener('click', function(event) {
-                event.stopPropagation();
-                handleToggleLineNumbers();
-            });
-        }
-
-        if (toggleWordWrapBtn) {
-            toggleWordWrapBtn.addEventListener('click', function(event) {
-                event.stopPropagation();
-                handleToggleWordWrap();
-            });
-        }
-
-        // Scroll Sync toggle buttons
-        const toggleScrollSyncBtn = document.getElementById('toggle-scroll-sync-btn');
-        const dividerSyncBtn = document.getElementById('divider-sync-btn');
-
-        if (toggleScrollSyncBtn) {
-            toggleScrollSyncBtn.addEventListener('click', function(event) {
-                event.stopPropagation();
-                handleToggleScrollSync();
-            });
-        }
-
-        if (dividerSyncBtn) {
-            dividerSyncBtn.addEventListener('click', function(event) {
-                event.stopPropagation();
-                event.preventDefault();
-                handleToggleScrollSync();
-            });
-        }
+        // Scroll Sync toggle button on divider (Editor options moved to Settings panel)
 
         // Zoom buttons
         const zoom90Btn = document.getElementById('zoom-90-btn');
@@ -651,6 +614,367 @@
             });
         }
     }
+
+    /**
+     * Setup Settings panel controls and handlers
+     */
+    function setupSettingsPanel() {
+        // Initialize collapsible sections
+        initializeSettingsSections();
+
+        // Get control elements
+        const fontSizeSlider = document.getElementById('settings-font-size');
+        const fontSizeValue = document.getElementById('settings-font-size-value');
+        const lineHeightSlider = document.getElementById('settings-line-height');
+        const lineHeightValue = document.getElementById('settings-line-height-value');
+        const tabSizeSelect = document.getElementById('settings-tab-size');
+        const fontFamilySelect = document.getElementById('settings-font-family');
+        const lineNumbersCheckbox = document.getElementById('settings-line-numbers');
+        const wordWrapCheckbox = document.getElementById('settings-word-wrap');
+        const exportBtn = document.getElementById('settings-export-btn');
+        const importBtn = document.getElementById('settings-import-btn');
+        const importInput = document.getElementById('settings-import-input');
+        const resetEditorBtn = document.getElementById('settings-reset-editor-btn');
+        const resetAllBtn = document.getElementById('settings-reset-all-btn');
+
+        // Initialize controls with current settings
+        if (settingsManager && settingsManager.settings) {
+            const settings = settingsManager.settings;
+
+            // Font Size
+            if (fontSizeSlider && fontSizeValue) {
+                fontSizeSlider.value = settings.editor.fontSize;
+                fontSizeValue.textContent = settings.editor.fontSize + 'px';
+            }
+
+            // Line Height
+            if (lineHeightSlider && lineHeightValue) {
+                lineHeightSlider.value = settings.editor.lineHeight;
+                lineHeightValue.textContent = settings.editor.lineHeight.toFixed(1);
+            }
+
+            // Tab Size
+            if (tabSizeSelect) {
+                tabSizeSelect.value = settings.editor.tabSize;
+            }
+
+            // Font Family
+            if (fontFamilySelect) {
+                fontFamilySelect.value = settings.editor.fontFamily;
+            }
+
+            // Line Numbers
+            if (lineNumbersCheckbox) {
+                lineNumbersCheckbox.checked = settings.editor.lineNumbers;
+            }
+
+            // Word Wrap
+            if (wordWrapCheckbox) {
+                wordWrapCheckbox.checked = settings.editor.wordWrap;
+            }
+
+        }
+
+        // Font Size slider handler
+        if (fontSizeSlider) {
+            fontSizeSlider.addEventListener('input', function(event) {
+                const value = parseInt(event.target.value);
+                if (fontSizeValue) {
+                    fontSizeValue.textContent = value + 'px';
+                }
+                try {
+                    settingsManager.set('editor.fontSize', value);
+                    applyEditorFontSize(value);
+                } catch (error) {
+                    console.error('Settings error:', error.message);
+                }
+            });
+        }
+
+        // Line Height slider handler
+        if (lineHeightSlider) {
+            lineHeightSlider.addEventListener('input', function(event) {
+                const value = parseFloat(event.target.value);
+                if (lineHeightValue) {
+                    lineHeightValue.textContent = value.toFixed(1);
+                }
+                try {
+                    settingsManager.set('editor.lineHeight', value);
+                    applyEditorLineHeight(value);
+                } catch (error) {
+                    console.error('Settings error:', error.message);
+                }
+            });
+        }
+
+        // Tab Size select handler
+        if (tabSizeSelect) {
+            tabSizeSelect.addEventListener('change', function(event) {
+                const value = parseInt(event.target.value);
+                try {
+                    settingsManager.set('editor.tabSize', value);
+                    applyEditorTabSize(value);
+                } catch (error) {
+                    console.error('Settings error:', error.message);
+                }
+            });
+        }
+
+        // Font Family select handler
+        if (fontFamilySelect) {
+            fontFamilySelect.addEventListener('change', function(event) {
+                const value = event.target.value;
+                try {
+                    settingsManager.set('editor.fontFamily', value);
+                    applyEditorFontFamily(value);
+                } catch (error) {
+                    console.error('Settings error:', error.message);
+                }
+            });
+        }
+
+        // Line Numbers checkbox handler
+        if (lineNumbersCheckbox) {
+            lineNumbersCheckbox.addEventListener('change', function(event) {
+                const value = event.target.checked;
+                try {
+                    settingsManager.set('editor.lineNumbers', value);
+                    applyLineNumbers(value);
+                } catch (error) {
+                    console.error('Settings error:', error.message);
+                }
+            });
+        }
+
+        // Word Wrap checkbox handler
+        if (wordWrapCheckbox) {
+            wordWrapCheckbox.addEventListener('change', function(event) {
+                const value = event.target.checked;
+                try {
+                    settingsManager.set('editor.wordWrap', value);
+                    applyWordWrap(value);
+                } catch (error) {
+                    console.error('Settings error:', error.message);
+                }
+            });
+        }
+
+
+        // Export button handler
+        if (exportBtn) {
+            exportBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                settingsManager.exportToFile();
+            });
+        }
+
+        // Import button handler
+        if (importBtn && importInput) {
+            importBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                importInput.click();
+            });
+
+            importInput.addEventListener('change', async function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const result = await settingsManager.importFromFile(file);
+                    if (result.success) {
+                        alert('Settings imported successfully!' + (result.warnings ? '\n\nWarnings:\n' + result.warnings.join('\n') : ''));
+                        // Refresh the settings panel UI
+                        refreshSettingsPanelUI();
+                    } else {
+                        alert('Failed to import settings:\n' + result.errors.join('\n'));
+                    }
+                }
+                // Reset input so same file can be imported again
+                event.target.value = '';
+            });
+        }
+
+        // Reset Editor button handler
+        if (resetEditorBtn) {
+            resetEditorBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                if (confirm('Reset all Editor settings to defaults? This cannot be undone.')) {
+                    try {
+                        settingsManager.resetModule('editor');
+                        refreshSettingsPanelUI();
+                        alert('Editor settings have been reset to defaults.');
+                    } catch (error) {
+                        console.error('Reset error:', error.message);
+                    }
+                }
+            });
+        }
+
+        // Reset All button handler
+        if (resetAllBtn) {
+            resetAllBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                if (confirm('Reset ALL settings to defaults? This cannot be undone.')) {
+                    settingsManager.resetAll();
+                    refreshSettingsPanelUI();
+                    alert('All settings have been reset to defaults.');
+                }
+            });
+        }
+    }
+
+    /**
+     * Initialize collapsible sections for Settings panel
+     */
+    function initializeSettingsSections() {
+        const sections = document.querySelectorAll('.settings-section');
+        const expandAllCheckbox = document.getElementById('settings-expand-all-sections');
+
+        sections.forEach(section => {
+            const header = section.querySelector('.settings-section-header');
+            if (header) {
+                header.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    section.classList.toggle('expanded');
+                    updateSettingsExpandAllCheckbox();
+                });
+            }
+        });
+
+        if (expandAllCheckbox) {
+            expandAllCheckbox.addEventListener('change', function(event) {
+                event.stopPropagation();
+                const expand = event.target.checked;
+                sections.forEach(section => {
+                    if (expand) {
+                        section.classList.add('expanded');
+                    } else {
+                        section.classList.remove('expanded');
+                    }
+                });
+            });
+        }
+    }
+
+    /**
+     * Update the Expand All checkbox based on current section states
+     */
+    function updateSettingsExpandAllCheckbox() {
+        const sections = document.querySelectorAll('.settings-section');
+        const expandAllCheckbox = document.getElementById('settings-expand-all-sections');
+        if (!expandAllCheckbox) return;
+
+        const expandedCount = document.querySelectorAll('.settings-section.expanded').length;
+        expandAllCheckbox.checked = expandedCount === sections.length;
+        expandAllCheckbox.indeterminate = expandedCount > 0 && expandedCount < sections.length;
+    }
+
+    /**
+     * Refresh the Settings panel UI with current settings values
+     */
+    function refreshSettingsPanelUI() {
+        if (!settingsManager || !settingsManager.settings) return;
+
+        const settings = settingsManager.settings;
+
+        // Font Size
+        const fontSizeSlider = document.getElementById('settings-font-size');
+        const fontSizeValue = document.getElementById('settings-font-size-value');
+        if (fontSizeSlider && fontSizeValue) {
+            fontSizeSlider.value = settings.editor.fontSize;
+            fontSizeValue.textContent = settings.editor.fontSize + 'px';
+            applyEditorFontSize(settings.editor.fontSize);
+        }
+
+        // Line Height
+        const lineHeightSlider = document.getElementById('settings-line-height');
+        const lineHeightValue = document.getElementById('settings-line-height-value');
+        if (lineHeightSlider && lineHeightValue) {
+            lineHeightSlider.value = settings.editor.lineHeight;
+            lineHeightValue.textContent = settings.editor.lineHeight.toFixed(1);
+            applyEditorLineHeight(settings.editor.lineHeight);
+        }
+
+        // Tab Size
+        const tabSizeSelect = document.getElementById('settings-tab-size');
+        if (tabSizeSelect) {
+            tabSizeSelect.value = settings.editor.tabSize;
+            applyEditorTabSize(settings.editor.tabSize);
+        }
+
+        // Font Family
+        const fontFamilySelect = document.getElementById('settings-font-family');
+        if (fontFamilySelect) {
+            fontFamilySelect.value = settings.editor.fontFamily;
+            applyEditorFontFamily(settings.editor.fontFamily);
+        }
+
+        // Line Numbers
+        const lineNumbersCheckbox = document.getElementById('settings-line-numbers');
+        if (lineNumbersCheckbox) {
+            lineNumbersCheckbox.checked = settings.editor.lineNumbers;
+            applyLineNumbers(settings.editor.lineNumbers);
+        }
+
+        // Word Wrap
+        const wordWrapCheckbox = document.getElementById('settings-word-wrap');
+        if (wordWrapCheckbox) {
+            wordWrapCheckbox.checked = settings.editor.wordWrap;
+            applyWordWrap(settings.editor.wordWrap);
+        }
+
+    }
+
+    /**
+     * Apply font size to the editor textarea
+     */
+    function applyEditorFontSize(size) {
+        const textarea = document.getElementById('markdown-input');
+        if (textarea) {
+            textarea.style.fontSize = size + 'px';
+        }
+    }
+
+    /**
+     * Apply line height to the editor textarea
+     */
+    function applyEditorLineHeight(height) {
+        const textarea = document.getElementById('markdown-input');
+        if (textarea) {
+            textarea.style.lineHeight = height;
+        }
+    }
+
+    /**
+     * Apply tab size to the editor textarea
+     */
+    function applyEditorTabSize(size) {
+        const textarea = document.getElementById('markdown-input');
+        if (textarea) {
+            textarea.style.tabSize = size;
+            textarea.style.MozTabSize = size;
+        }
+    }
+
+    /**
+     * Apply font family to the editor textarea
+     */
+    function applyEditorFontFamily(family) {
+        const textarea = document.getElementById('markdown-input');
+        if (textarea) {
+            textarea.style.fontFamily = family;
+        }
+    }
+
+    function applyWordWrap(enabled) {
+        const textarea = document.getElementById('markdown-input');
+        if (textarea) {
+            textarea.style.whiteSpace = enabled ? 'pre-wrap' : 'pre';
+            textarea.style.overflowWrap = enabled ? 'break-word' : 'normal';
+        }
+    }
+
+    /**
+     * Apply scroll sync setting
+     */
 
     /**
      * Show theme selector modal
@@ -873,7 +1197,7 @@
         const existingModal = document.getElementById('tab-menu-selector-modal');
         if (existingModal) existingModal.remove();
 
-        const currentStyle = localStorage.getItem('tab-menu-style') || 'steel';
+        const currentStyle = settingsManager.settings.theme.tabMenu;
 
         // Create modal overlay
         const modal = document.createElement('div');
@@ -1039,8 +1363,8 @@
             tabMenuDisplay.textContent = `Current: ${style.name}`;
         }
 
-        // Save preference
-        localStorage.setItem('tab-menu-style', styleId);
+        // Save preference via SettingsManager
+        settingsManager.set('theme.tabMenu', styleId);
 
         console.log(`Tab menu style changed to: ${style.name}`);
     }
@@ -1084,145 +1408,15 @@
         // Update data-layout attribute
         editorContainer.setAttribute('data-layout', layout);
 
-        // Save preference to localStorage
-        localStorage.setItem('editor-layout', layout);
+        // Save preference to SettingsManager
+        settingsManager.set('editor.layout', layout);
 
         console.log(`Layout changed to: ${layout}`);
     }
 
     /**
-     * Handle toggle line numbers
+     * Handle toggle scroll sync (used by divider sync button)
      */
-    function handleToggleLineNumbers() {
-        const inputElement = document.getElementById('markdown-input');
-        if (!inputElement) return;
-
-        // Toggle line numbers class on input element
-        const hasLineNumbers = inputElement.classList.toggle('show-line-numbers');
-
-        // Save preference to localStorage
-        localStorage.setItem('editor-line-numbers', hasLineNumbers ? 'true' : 'false');
-
-        console.log(`Line numbers: ${hasLineNumbers ? 'enabled' : 'disabled'}`);
-    }
-
-    /**
-     * Handle toggle word wrap
-     */
-    function handleToggleWordWrap() {
-        const inputElement = document.getElementById('markdown-input');
-        if (!inputElement) return;
-
-        // Toggle word wrap by changing CSS white-space property
-        const currentWrap = inputElement.style.whiteSpace === 'pre-wrap';
-
-        inputElement.style.whiteSpace = currentWrap ? 'pre' : 'pre-wrap';
-
-        // Save preference to localStorage
-        localStorage.setItem('editor-word-wrap', currentWrap ? 'false' : 'true');
-
-        console.log(`Word wrap: ${currentWrap ? 'disabled' : 'enabled'}`);
-    }
-
-    /**
-     * Handle toggle scroll sync
-     */
-    function handleToggleScrollSync() {
-        if (!scrollSync) {
-            initializeScrollSync();
-        }
-
-        const enabled = scrollSync.toggle();
-
-        // Update UI to reflect state
-        updateScrollSyncUI(enabled);
-
-        // Save preference to localStorage
-        localStorage.setItem('editor-scroll-sync', enabled ? 'true' : 'false');
-
-        console.log(`Scroll sync: ${enabled ? 'enabled' : 'disabled'}`);
-    }
-
-    /**
-     * Initialize scroll sync module
-     */
-    function initializeScrollSync() {
-        if (scrollSync) return;
-
-        const inputElement = document.querySelector('.editor-input .markdown-textarea');
-        const previewElement = document.querySelector('.editor-preview .markdown-output');
-
-        if (!inputElement || !previewElement) {
-            console.warn('ScrollSync: Could not find input or preview elements');
-            return;
-        }
-
-        scrollSync = new ScrollSync();
-        scrollSync.init(inputElement, previewElement);
-
-        // Expose scrollSync globally for debugging and UI controls
-        window.scrollSync = scrollSync;
-
-        // Setup offset control
-        setupSyncOffsetControl();
-
-        console.log('ScrollSync: Initialized');
-    }
-
-    /**
-     * Setup the sync offset control UI
-     */
-    function setupSyncOffsetControl() {
-        const offsetInput = document.getElementById('sync-offset-input');
-        const offsetControl = document.getElementById('sync-offset-control');
-
-        if (offsetInput && scrollSync) {
-            // Load saved offset from localStorage
-            const savedOffset = localStorage.getItem('editor-scroll-sync-offset');
-            if (savedOffset !== null) {
-                const offset = parseInt(savedOffset, 10);
-                offsetInput.value = offset;
-                scrollSync.setLineOffset(offset);
-            }
-
-            // Handle offset changes
-            offsetInput.addEventListener('change', function() {
-                const offset = parseInt(this.value, 10);
-                if (!isNaN(offset) && scrollSync) {
-                    scrollSync.setLineOffset(offset);
-                    localStorage.setItem('editor-scroll-sync-offset', offset.toString());
-                    console.log(`Scroll sync offset set to: ${offset} lines`);
-                }
-            });
-        }
-    }
-
-    /**
-     * Update scroll sync UI elements to reflect state
-     */
-    function updateScrollSyncUI(enabled) {
-        const toggleBtn = document.getElementById('toggle-scroll-sync-btn');
-        const dividerBtn = document.getElementById('divider-sync-btn');
-        const offsetControl = document.getElementById('sync-offset-control');
-
-        if (toggleBtn) {
-            const label = toggleBtn.querySelector('.sync-label');
-            if (label) {
-                label.textContent = enabled ? 'Sync Scroll: On' : 'Sync Scroll: Off';
-            }
-            toggleBtn.classList.toggle('sync-active', enabled);
-        }
-
-        if (dividerBtn) {
-            dividerBtn.classList.toggle('sync-active', enabled);
-            dividerBtn.title = enabled ? 'Scroll Sync: On (Click to disable)' : 'Scroll Sync: Off (Click to enable)';
-        }
-
-        // Show/hide offset control based on sync state
-        if (offsetControl) {
-            offsetControl.style.display = enabled ? 'flex' : 'none';
-        }
-    }
 
     /**
      * Handle zoom change
@@ -1238,13 +1432,8 @@
 
         editorContainer.style.fontSize = `${newFontSize}px`;
 
-        // Invalidate scroll sync cache since line height changes with zoom
-        if (scrollSync) {
-            scrollSync.invalidateCache();
-        }
-
-        // Save preference to localStorage
-        localStorage.setItem('editor-zoom', percent.toString());
+        // Save preference to SettingsManager
+        settingsManager.set('editor.zoom', percent);
 
         console.log(`Zoom changed to: ${percent}%`);
     }
@@ -1256,48 +1445,54 @@
         // Theme is restored by ThemeLoader.init()
 
         // Restore tab menu style (default: steel)
-        const savedTabMenuStyle = localStorage.getItem('tab-menu-style') || 'steel';
+        const savedTabMenuStyle = settingsManager.settings.theme.tabMenu;
         applyTabMenuStyle(savedTabMenuStyle);
 
-        // Restore layout
-        const savedLayout = localStorage.getItem('editor-layout') || 'split';
-        handleLayoutChange(savedLayout);
-
-        // Restore line numbers
-        const savedLineNumbers = localStorage.getItem('editor-line-numbers') === 'true';
-        const inputElement = document.getElementById('markdown-input');
-        if (inputElement && savedLineNumbers) {
-            inputElement.classList.add('show-line-numbers');
+        // Restore layout - but only if not already set in HTML
+        const editorContainer = document.querySelector('.editor-container');
+        const currentLayout = editorContainer?.getAttribute('data-layout');
+        if (!currentLayout) {
+            // No layout specified in HTML, use saved preference
+            const savedLayout = settingsManager.settings.editor.layout;
+            handleLayoutChange(savedLayout);
+        } else {
+            console.log(`Layout already set to: ${currentLayout} (from HTML)`);
         }
 
-        // Restore word wrap
-        const savedWordWrap = localStorage.getItem('editor-word-wrap') !== 'false'; // Default true
+        // Restore editor appearance settings
+        const inputElement = document.getElementById('markdown-input');
         if (inputElement) {
+            // Font Size
+            const savedFontSize = settingsManager.settings.editor.fontSize;
+            inputElement.style.fontSize = savedFontSize + 'px';
+
+            // Line Height
+            const savedLineHeight = settingsManager.settings.editor.lineHeight;
+            inputElement.style.lineHeight = savedLineHeight;
+
+            // Tab Size
+            const savedTabSize = settingsManager.settings.editor.tabSize;
+            inputElement.style.tabSize = savedTabSize;
+            inputElement.style.MozTabSize = savedTabSize;
+
+            // Font Family
+            const savedFontFamily = settingsManager.settings.editor.fontFamily;
+            inputElement.style.fontFamily = savedFontFamily;
+
+            // Line Numbers - use applyLineNumbers to set up gutter and listeners
+            const savedLineNumbers = settingsManager.settings.editor.lineNumbers;
+            applyLineNumbers(savedLineNumbers);
+
+            // Word Wrap
+            const savedWordWrap = settingsManager.settings.editor.wordWrap;
             inputElement.style.whiteSpace = savedWordWrap ? 'pre-wrap' : 'pre';
+            inputElement.style.overflowWrap = savedWordWrap ? 'break-word' : 'normal';
         }
 
         // Restore zoom
-        const savedZoom = parseInt(localStorage.getItem('editor-zoom') || '100', 10);
+        const savedZoom = settingsManager.settings.editor.zoom;
         handleZoomChange(savedZoom);
 
-        // Restore scroll sync (default: off)
-        const savedScrollSync = localStorage.getItem('editor-scroll-sync') === 'true';
-        if (savedScrollSync) {
-            // Delay initialization to ensure DOM is ready
-            setTimeout(() => {
-                initializeScrollSync();
-                if (scrollSync) {
-                    scrollSync.enable();
-                    updateScrollSyncUI(true);
-                }
-            }, 100);
-        } else {
-            // Initialize but don't enable, just update UI
-            setTimeout(() => {
-                initializeScrollSync();
-                updateScrollSyncUI(false);
-            }, 100);
-        }
 
         console.log('View preferences restored');
     }
@@ -1462,186 +1657,165 @@
         window.location.href = 'index.html';
     }
 
-    /**
-     * Initialize markdown editor components
-     */
-    function initializeMarkdownEditor() {
-        const inputElement = document.getElementById('markdown-input');
-        const outputElement = document.getElementById('markdown-preview');
 
-        if (!inputElement || !outputElement) {
-            console.warn('Markdown editor elements not found');
+    /**
+     * Initialize WYSIWYG editor (unified view mode)
+     */
+    function initializeWysiwygEditor() {
+        const wysiwygElement = document.getElementById('wysiwyg-editor');
+
+        if (!wysiwygElement) {
+            console.warn('WYSIWYG editor element not found');
             return;
         }
 
-        // Create parser components
+        // Create parser components (needed for markdown rendering)
         const ruleEngine = new RuleEngine();
         const blockProcessor = new BlockProcessor();
         const parser = new MarkdownParser(ruleEngine, blockProcessor);
 
-        // Enable line tracking for scroll sync (adds data-line attributes to output)
-        parser.setLineTracking(true);
-
-        // Create window manager for external preview
-        const windowManager = new WindowManager({
-            windowTitle: 'Markdown Preview',
-            windowWidth: 800,
-            windowHeight: 600,
-            previewElementId: 'markdown-preview'
+        // Initialize LineMapper (can be used for future features)
+        lineMapper = new LineMapper({
+            previewContainer: wysiwygElement,
+            rebuildDebounceMs: 200,
+            debug: false
         });
+        lineMapper.init();
 
-        // Create renderer first
-        const renderer = new MarkdownRenderer({
-            parser: parser,
-            inputElement: inputElement,
-            outputElement: outputElement,
-            windowManager: windowManager
-        });
+        // Create WYSIWYG engine
+        wysiwygEngine = new WysiwygEngine(wysiwygElement, lineMapper, parser);
 
-        // Create document manager with renderer callbacks
+        // Create document manager for WYSIWYG mode
         const documentManager = new DocumentManager({
             autoSave: true,
             autoSaveDelay: 1000,
             onDocumentSwitch: (doc) => {
-                // Load document content into editor
-                renderer.setMarkdown(doc.content);
-
-                // Handle read-only status
-                const textarea = document.getElementById('markdown-input');
-                if (textarea) {
-                    if (doc.metadata && doc.metadata.readOnly) {
-                        textarea.readOnly = true;
-                        textarea.style.cursor = 'default';
-                        console.log('Document is read-only:', doc.name);
-                    } else {
-                        textarea.readOnly = false;
-                        textarea.style.cursor = '';
-                        console.log('Switched to document:', doc.name);
-                    }
-                }
+                // Load document content into WYSIWYG editor with rendering enabled by default
+                wysiwygEngine.setMarkdown(doc.content, true);
+                console.log('Switched to document:', doc.name);
             },
             onDocumentUpdate: (doc) => {
                 console.log('Document updated:', doc.name);
             }
         });
 
-        // Update renderer callback to sync with document manager
-        renderer.onRender = ({ markdown }) => {
+        // Setup auto-save: save content when input changes
+        wysiwygElement.addEventListener('input', () => {
+            const markdown = wysiwygEngine.getMarkdown();
             documentManager.updateActiveContent(markdown);
-        };
+        });
 
         // Try to load documents from storage, or create initial document
         if (!documentManager.loadFromStorage()) {
+            console.log('WYSIWYG: No documents in storage, creating initial document');
             const initialDoc = documentManager.createDocument();
+            console.log('WYSIWYG: Created document:', initialDoc.id, initialDoc.name);
             documentManager.switchDocument(initialDoc.id);
+            console.log('WYSIWYG: Switched to initial document');
         } else {
+            console.log('WYSIWYG: Loaded documents from storage');
             // Restore active document
             const activeDoc = documentManager.getActiveDocument();
+            console.log('WYSIWYG: Active document:', activeDoc ? activeDoc.name : 'null');
             if (activeDoc) {
-                renderer.setMarkdown(activeDoc.content);
+                // Load with rendering enabled by default
+                wysiwygEngine.setMarkdown(activeDoc.content, true);
             }
         }
 
-        renderer.init();
+        console.log('WYSIWYG: All documents:', documentManager.getAllDocuments().map(d => d.name));
 
-        // Initialize tab controller
+        // Initialize tab controller AFTER documents are loaded (same as split view)
         const tabController = new TabController({
             documentManager: documentManager,
             tabsContainer: document.getElementById('document-tabs'),
             newTabButton: document.getElementById('new-document-btn')
         });
 
+        console.log('WYSIWYG: Initializing TabController');
         tabController.init();
+        console.log('WYSIWYG: TabController initialized');
 
-        // Setup View panel controls
-        setupViewControls(windowManager, renderer);
+        // Focus the editor after initialization
+        setTimeout(() => {
+            wysiwygElement.focus();
+        }, 100);
 
-        // Expose to global scope for potential external access
+        // Setup source mode toggle button and keyboard shortcut
+        setupSourceModeToggle(wysiwygEngine, documentManager);
+
+        // Expose to global scope
         window.MarkdownEditor = {
             parser: parser,
-            renderer: renderer,
-            windowManager: windowManager,
-            ruleEngine: ruleEngine,
-            blockProcessor: blockProcessor,
+            wysiwygEngine: wysiwygEngine,
             documentManager: documentManager,
-            tabController: tabController
+            tabController: tabController,
+            lineMapper: lineMapper
         };
 
-        console.log('Markdown editor initialized with live preview and document management');
+        console.log('WYSIWYG editor initialized');
+    }
+
+    /**
+     * Setup source mode toggle functionality
+     */
+    function setupSourceModeToggle(wysiwygEngine, documentManager) {
+        const toggleButton = document.getElementById('toolbar-source-toggle');
+        const sourceTextarea = document.getElementById('source-editor');
+
+        if (!toggleButton) {
+            console.warn('Source toggle button not found');
+            return;
+        }
+
+        // Restore source mode state from settings
+        const savedSourceMode = settingsManager.get('editor.sourceMode');
+        if (savedSourceMode) {
+            // Switch to source mode
+            wysiwygEngine.toggleSourceMode();
+            toggleButton.classList.add('active');
+            console.log('Restored source mode from settings');
+        }
+
+        // Handle toolbar button click
+        toggleButton.addEventListener('click', () => {
+            wysiwygEngine.toggleSourceMode();
+
+            // Update active button state and save to settings
+            if (wysiwygEngine.isSourceMode()) {
+                toggleButton.classList.add('active');
+                settingsManager.set('editor.sourceMode', true);
+            } else {
+                toggleButton.classList.remove('active');
+                settingsManager.set('editor.sourceMode', false);
+            }
+        });
+
+        // Handle source textarea input (for auto-save)
+        if (sourceTextarea) {
+            sourceTextarea.addEventListener('input', () => {
+                if (wysiwygEngine.isSourceMode()) {
+                    const markdown = sourceTextarea.value;
+                    documentManager.updateActiveContent(markdown);
+                }
+            });
+        }
+
+        // Handle Ctrl+/ keyboard shortcut
+        document.addEventListener('keydown', (event) => {
+            // Ctrl+/ or Cmd+/ to toggle source mode
+            if ((event.ctrlKey || event.metaKey) && event.key === '/') {
+                event.preventDefault();
+                toggleButton.click(); // Trigger the button click to keep logic in one place
+            }
+        });
+
+        console.log('Source mode toggle initialized');
     }
 
     /**
      * Setup View panel controls for external window
      */
-    function setupViewControls(windowManager, renderer) {
-        const openBtn = document.getElementById('open-external-preview');
-        const closeBtn = document.getElementById('close-external-preview');
-
-        if (openBtn) {
-            openBtn.addEventListener('click', (event) => {
-                event.stopPropagation();
-                windowManager.open();
-                renderer.render(); // Update external window with current content
-                openBtn.disabled = true;
-                if (closeBtn) closeBtn.disabled = false;
-            });
-        }
-
-        if (closeBtn) {
-            closeBtn.addEventListener('click', (event) => {
-                event.stopPropagation();
-                windowManager.close();
-                closeBtn.disabled = true;
-                if (openBtn) openBtn.disabled = false;
-            });
-        }
-
-        // Check if external window closes manually
-        setInterval(() => {
-            if (!windowManager.isOpen()) {
-                if (openBtn) openBtn.disabled = false;
-                if (closeBtn) closeBtn.disabled = true;
-            }
-        }, 500);
-    }
-
-    /**
-     * Initialize resizable divider between editor and preview
-     */
-    function initializeResizableDivider() {
-        const resizablePane = new ResizablePane({
-            dividerSelector: '#editor-divider',
-            leftPaneSelector: '.editor-input',
-            rightPaneSelector: '.editor-preview',
-            containerSelector: '.editor-container',
-            minPaneWidth: 200
-        });
-
-        resizablePane.init();
-
-        // Expose to global scope
-        window.MarkdownEditor = window.MarkdownEditor || {};
-        window.MarkdownEditor.resizablePane = resizablePane;
-    }
-
-    /**
-     * Initialize find manager
-     */
-    function initializeFindManager() {
-        if (findManager) return;
-
-        findManager = new FindManager({
-            textareaSelector: '#markdown-input',
-            dialogSelector: '#find-replace-dialog'
-        });
-
-        findManager.init();
-
-        // Expose globally for debugging
-        window.MarkdownEditor.findManager = findManager;
-
-        console.log('FindManager: Initialized');
-    }
 
     // Listen for regex help event from FindManager
     document.addEventListener('openRegexHelp', () => {

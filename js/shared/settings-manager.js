@@ -60,17 +60,16 @@ class SettingsManager {
                 fontSize: 14,
                 lineHeight: 1.5,
                 tabSize: 2,
-                fontFamily: 'monospace',
-                lineNumbers: true,
-                wordWrap: true
-            },
-            view: {
-                mode: 'split',
-                zoom: 100
-            },
-            scrollSync: {
-                enabled: true,
-                offset: 3
+                fontFamily: "'Consolas', monospace",
+                lineNumbers: false,
+                wordWrap: true,
+                layout: 'split',
+                zoom: 100,
+                sourceMode: false, // false = WYSIWYG (rendered), true = source (raw markdown)
+                scrollSync: {
+                    enabled: false,
+                    offset: 0
+                }
             },
             theme: {
                 current: 'default',
@@ -108,7 +107,6 @@ class SettingsManager {
                 },
                 fontFamily: {
                     type: 'string',
-                    values: ['monospace', 'Consolas', 'Monaco', 'Courier New'],
                     description: 'Editor font family'
                 },
                 lineNumbers: {
@@ -118,13 +116,11 @@ class SettingsManager {
                 wordWrap: {
                     type: 'boolean',
                     description: 'Enable word wrap'
-                }
-            },
-            view: {
-                mode: {
+                },
+                layout: {
                     type: 'string',
                     values: ['edit', 'split', 'preview'],
-                    description: 'View mode'
+                    description: 'Editor layout mode'
                 },
                 zoom: {
                     type: 'number',
@@ -132,25 +128,28 @@ class SettingsManager {
                     max: 200,
                     step: 10,
                     description: 'Zoom level percentage'
-                }
-            },
-            scrollSync: {
-                enabled: {
-                    type: 'boolean',
-                    description: 'Enable scroll synchronization'
                 },
-                offset: {
-                    type: 'number',
-                    min: 0,
-                    max: 10,
-                    description: 'Scroll sync offset in lines'
+                sourceMode: {
+                    type: 'boolean',
+                    description: 'Source mode state (false = WYSIWYG rendered, true = raw markdown)'
+                },
+                scrollSync: {
+                    enabled: {
+                        type: 'boolean',
+                        description: 'Enable scroll synchronization'
+                    },
+                    offset: {
+                        type: 'number',
+                        min: -10,
+                        max: 10,
+                        description: 'Scroll sync offset in lines'
+                    }
                 }
             },
             theme: {
                 current: {
                     type: 'string',
-                    values: ['default', 'dark', 'light', 'sepia'],
-                    description: 'Current theme'
+                    description: 'Current theme ID'
                 },
                 tabMenu: {
                     type: 'string',

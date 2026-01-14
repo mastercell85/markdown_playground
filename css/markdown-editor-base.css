@@ -676,6 +676,229 @@ body {
 }
 
 /* ============================================================================
+   SETTINGS PANEL STYLES
+   ============================================================================ */
+
+/* Settings panel - wider for controls */
+.settings-panel .panel-content {
+    min-width: 400px;
+    max-width: 500px;
+}
+
+/* Settings sections - same pattern as view sections */
+.settings-section {
+    margin: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.settings-section:last-child {
+    border-bottom: none;
+}
+
+.settings-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.settings-section-header:hover {
+    color: #4a9eff;
+}
+
+.settings-toggle {
+    display: inline-block;
+    width: 12px;
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.settings-section.expanded .settings-toggle {
+    transform: rotate(90deg);
+}
+
+.settings-section-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+    padding: 0;
+}
+
+.settings-section.expanded .settings-section-content {
+    max-height: 500px;
+    opacity: 1;
+    padding-bottom: 15px;
+}
+
+/* Settings row - label + control */
+.settings-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.settings-row > label {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Settings control container */
+.settings-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Range slider styling */
+.settings-control input[type="range"] {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.settings-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #4a9eff;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.settings-control input[type="range"]::-webkit-slider-thumb:hover {
+    background: #6bb5ff;
+}
+
+.settings-control input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #4a9eff;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s ease;
+}
+
+.settings-control input[type="range"]::-moz-range-thumb:hover {
+    background: #6bb5ff;
+}
+
+/* Value display next to sliders */
+.settings-value {
+    min-width: 60px;
+    text-align: right;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: var(--font-mono, monospace);
+}
+
+/* Select dropdown styling */
+.settings-control select {
+    flex: 1;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: var(--font-family);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.settings-control select:hover,
+.settings-control select:focus {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.settings-control select option {
+    background: #1a1a1a;
+    color: #fff;
+}
+
+/* Checkbox styling */
+.settings-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.settings-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #4a9eff;
+    cursor: pointer;
+}
+
+.settings-checkbox span {
+    transition: color 0.2s ease;
+}
+
+.settings-checkbox:hover span {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Buttons row for import/export/reset */
+.settings-buttons-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.settings-buttons-row .panel-button {
+    flex: 1;
+    min-width: 120px;
+    margin: 0;
+}
+
+/* Hint text */
+.settings-hint {
+    margin-top: 10px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.4;
+}
+
+/* Danger button styling */
+.settings-danger {
+    background: rgba(255, 80, 80, 0.15);
+    border-color: rgba(255, 80, 80, 0.4);
+}
+
+.settings-danger:hover:not(:disabled) {
+    background: rgba(255, 80, 80, 0.25);
+    border-color: rgba(255, 80, 80, 0.6);
+}
+
+/* Warning hint text */
+.settings-warning {
+    color: rgba(255, 180, 100, 0.8);
+}
+
+/* ============================================================================
    DOCUMENT TABS BAR
    ============================================================================ */
 
@@ -803,21 +1026,6 @@ body {
     background: var(--editor-bg);
 }
 
-/* Layout modes */
-.editor-container[data-layout="split"] {
-    flex-direction: row;
-}
-
-.editor-container[data-layout="editor"] .editor-preview,
-.editor-container[data-layout="editor"] .editor-gap {
-    display: none;
-}
-
-.editor-container[data-layout="preview"] .editor-input,
-.editor-container[data-layout="preview"] .editor-gap {
-    display: none;
-}
-
 /* Editor sections (input and preview) */
 .editor-section {
     display: flex;
@@ -826,52 +1034,6 @@ body {
     min-width: 200px;
     background: var(--editor-section-bg);
     overflow: hidden;
-    position: relative; /* For label positioning */
-}
-
-/* Input Area */
-.editor-input {
-    flex: 1 1 0;
-    min-width: 200px;
-}
-
-/* Default theme INPUT label */
-.editor-input::before {
-    content: "INPUT";
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 0.25rem 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.5);
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 10;
-    pointer-events: none;
-}
-
-/* Preview Area */
-.editor-preview {
-    flex: 1 1 0;
-    min-width: 200px;
-    background: var(--preview-bg);
-}
-
-/* Default theme PREVIEW label */
-.editor-preview::before {
-    content: "PREVIEW";
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 0.25rem 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.5);
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 10;
-    pointer-events: none;
 }
 
 /* Hide LCARS frame elements by default - themed CSS files can override */
@@ -886,44 +1048,6 @@ body {
     display: flex;
     flex-direction: column;
     height: 100%;
-}
-
-.editor-input .editor-section-content {
-    padding: 0;
-}
-
-/* Textarea for markdown input - fills entire area */
-.markdown-textarea {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 20px;
-    background: var(--textarea-bg);
-    color: var(--textarea-text);
-    border: none;
-    font-family: var(--font-family-mono);
-    font-size: var(--font-size-base);
-    line-height: 1.6;
-    resize: none;
-    outline: none;
-    overflow: auto;
-    box-sizing: border-box;
-}
-
-/* Ensure parent containers don't add extra padding */
-.editor-input .editor-section-content {
-    padding: 0;
-}
-
-.typora-write {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-.markdown-textarea::placeholder {
-    color: #666;
 }
 
 /* Resizable Divider - horizontal bar at top of gap */
@@ -1231,20 +1355,20 @@ header[role="banner"] {
     display: none !important;
 }
 
-/* Line numbers for textarea */
-.markdown-textarea.show-line-numbers {
-    padding-left: 50px;
-    background-image: linear-gradient(
-        to right,
-        rgba(128, 128, 128, 0.1) 0,
-        rgba(128, 128, 128, 0.1) 45px,
-        transparent 45px,
-        transparent 100%
-    );
-    background-attachment: local;
+/* ============================================================================
+   LINE NUMBERS GUTTER
+   ============================================================================ */
+
+/* Container wrapper needs relative positioning for the gutter */
+.typora-write {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* Important for flex child overflow */
+    height: 100%;
 }
 
-/* Scrollbar styling */
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -1520,4 +1644,181 @@ header[role="banner"] {
         padding: 0 15px;
         height: 40px;
     }
+}
+
+/* ============================================================================
+   WYSIWYG UNIFIED VIEW - Phase 3
+   ============================================================================ */
+
+/* WYSIWYG Layout Mode */
+.editor-container[data-layout="wysiwyg"] {
+    display: flex;
+    flex-direction: row;
+}
+
+/* Unified editor section - takes remaining space */
+.unified-editor {
+    flex: 1;
+    min-width: 200px;
+    background: var(--editor-section-bg);
+}
+
+/* WYSIWYG contenteditable area */
+.wysiwyg-content {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    padding: 20px;
+    outline: none;
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    color: var(--textarea-text);
+    background: transparent;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    overflow: auto;
+}
+
+/* Contenteditable focus state */
+.wysiwyg-content:focus {
+    outline: none;
+}
+
+/* Source mode textarea (hidden by default) */
+.source-textarea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+    color: var(--textarea-text);
+    background: var(--editor-section-bg);
+    box-sizing: border-box;
+}
+
+/* Gap in WYSIWYG mode - toolbar area (reusing existing gap styles) */
+.editor-container[data-layout="wysiwyg"] .editor-gap {
+    /* Gap uses existing styles from split view */
+    /* Divider is disabled in WYSIWYG mode (no resizing) */
+}
+
+.editor-container[data-layout="wysiwyg"] .editor-divider {
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Source toggle button - highlighted when active */
+#toolbar-source-toggle.active {
+    background: rgba(66, 153, 225, 0.3) !important;
+    border-color: rgba(66, 153, 225, 0.6) !important;
+}
+
+/* WYSIWYG markdown rendering styles */
+.wysiwyg-content h1,
+.wysiwyg-content h2,
+.wysiwyg-content h3,
+.wysiwyg-content h4,
+.wysiwyg-content h5,
+.wysiwyg-content h6 {
+    color: var(--md-heading-color);
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+}
+
+.wysiwyg-content h1 { font-size: 2em; }
+.wysiwyg-content h2 { font-size: 1.5em; }
+.wysiwyg-content h3 { font-size: 1.25em; }
+.wysiwyg-content h4 { font-size: 1.1em; }
+.wysiwyg-content h5 { font-size: 1em; }
+.wysiwyg-content h6 { font-size: 0.9em; }
+
+.wysiwyg-content p {
+    margin: 0.75em 0;
+}
+
+.wysiwyg-content strong {
+    font-weight: 600;
+}
+
+.wysiwyg-content em {
+    font-style: italic;
+}
+
+.wysiwyg-content code {
+    padding: 2px 6px;
+    background: var(--md-code-bg);
+    color: var(--md-code-text);
+    border-radius: 3px;
+    font-family: var(--font-family-mono);
+    font-size: 0.9em;
+}
+
+.wysiwyg-content pre {
+    padding: 16px;
+    background: var(--md-code-bg);
+    color: var(--md-code-text);
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 1em 0;
+}
+
+.wysiwyg-content pre code {
+    padding: 0;
+    background: none;
+    font-size: 1em;
+}
+
+.wysiwyg-content a {
+    color: var(--md-link-color);
+    text-decoration: none;
+}
+
+.wysiwyg-content a:hover {
+    color: var(--md-link-hover);
+    text-decoration: underline;
+}
+
+.wysiwyg-content blockquote {
+    margin: 1em 0;
+    padding-left: 1em;
+    border-left: 4px solid var(--md-blockquote-border);
+    color: var(--md-blockquote-text);
+    font-style: italic;
+}
+
+.wysiwyg-content ul,
+.wysiwyg-content ol {
+    margin: 0.75em 0;
+    padding-left: 2em;
+}
+
+.wysiwyg-content li {
+    margin: 0.25em 0;
+}
+
+.wysiwyg-content hr {
+    border: none;
+    border-top: 2px solid var(--md-hr-color);
+    margin: 2em 0;
+}
+
+.wysiwyg-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1em 0;
+}
+
+/* Edit mode - show markdown syntax as plain text */
+.wysiwyg-content[data-mode="edit"] {
+    font-family: var(--font-family-mono);
 }

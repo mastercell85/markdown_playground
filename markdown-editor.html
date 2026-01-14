@@ -100,43 +100,10 @@ lsDOCTYPE html>
 							</div>
 						</div>
 
-						<!-- Layout Section -->
-						<div class="view-section">
-							<button class="view-section-header">
-								<span class="view-toggle">▶</span>
-								<span>Layout</span>
-							</button>
-							<div class="view-section-content">
-								<button id="layout-split-btn" class="panel-button">Split View</button>
-								<button id="layout-editor-btn" class="panel-button">Editor Only</button>
-								<button id="layout-preview-btn" class="panel-button">Preview Only</button>
-							</div>
-						</div>
 					</div>
 
 					<!-- Right Column -->
 					<div class="view-col-right">
-						<!-- Editor Section -->
-						<div class="view-section">
-							<button class="view-section-header">
-								<span class="view-toggle">▶</span>
-								<span>Editor</span>
-							</button>
-							<div class="view-section-content">
-								<button id="toggle-line-numbers-btn" class="panel-button">Toggle Line Numbers</button>
-								<button id="toggle-word-wrap-btn" class="panel-button">Toggle Word Wrap</button>
-								<button id="toggle-scroll-sync-btn" class="panel-button sync-toggle-btn">
-									<span class="sync-icon">&#x1F517;</span>
-									<span class="sync-label">Sync Scroll: Off</span>
-								</button>
-								<div class="sync-offset-control" id="sync-offset-control" style="display: none;">
-									<label for="sync-offset-input">Sync Offset:</label>
-									<input type="number" id="sync-offset-input" value="3" min="-10" max="20" step="1">
-									<span class="sync-offset-hint">lines</span>
-								</div>
-							</div>
-						</div>
-
 						<!-- Zoom Section -->
 						<div class="view-section">
 							<button class="view-section-header">
@@ -172,8 +139,134 @@ lsDOCTYPE html>
 		<div class="editor-panel settings-panel" id="settings-panel" role="article">
 			<div class="panel-tab-label">Settings</div>
 			<div class="panel-content">
-				<h3>Settings</h3>
-				<p>Settings coming soon...</p>
+				<div class="panel-header-row">
+					<h3>Settings</h3>
+					<label class="expand-all-toggle">
+						<input type="checkbox" id="settings-expand-all-sections">
+						<span>Expand/Collapse All</span>
+					</label>
+				</div>
+
+				<div class="settings-two-col">
+					<!-- Left Column -->
+					<div class="settings-col-left">
+						<!-- Editor Settings Section -->
+						<div class="settings-section">
+							<button class="settings-section-header">
+								<span class="settings-toggle">▶</span>
+								<span>Editor</span>
+							</button>
+							<div class="settings-section-content">
+								<!-- Font Size -->
+								<div class="settings-row">
+									<label for="settings-font-size">Font Size</label>
+									<div class="settings-control">
+										<input type="range" id="settings-font-size" min="8" max="72" value="14">
+										<span class="settings-value" id="settings-font-size-value">14px</span>
+									</div>
+								</div>
+
+								<!-- Line Height -->
+								<div class="settings-row">
+									<label for="settings-line-height">Line Height</label>
+									<div class="settings-control">
+										<input type="range" id="settings-line-height" min="1.0" max="3.0" step="0.1" value="1.5">
+										<span class="settings-value" id="settings-line-height-value">1.5</span>
+									</div>
+								</div>
+
+								<!-- Tab Size -->
+								<div class="settings-row">
+									<label for="settings-tab-size">Tab Size</label>
+									<div class="settings-control">
+										<select id="settings-tab-size">
+											<option value="1">1 space</option>
+											<option value="2" selected>2 spaces</option>
+											<option value="4">4 spaces</option>
+											<option value="8">8 spaces</option>
+										</select>
+									</div>
+								</div>
+
+								<!-- Font Family -->
+								<div class="settings-row">
+									<label for="settings-font-family">Font Family</label>
+									<div class="settings-control">
+										<select id="settings-font-family">
+											<option value="'Consolas', monospace">Consolas</option>
+											<option value="'Monaco', monospace">Monaco</option>
+											<option value="'Courier New', monospace">Courier New</option>
+											<option value="'Fira Code', monospace">Fira Code</option>
+											<option value="'Source Code Pro', monospace">Source Code Pro</option>
+											<option value="monospace">System Monospace</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					<!-- Right Column -->
+					<div class="settings-col-right">
+						<!-- Editor Options Section -->
+						<div class="settings-section">
+							<button class="settings-section-header">
+								<span class="settings-toggle">▶</span>
+								<span>Options</span>
+							</button>
+							<div class="settings-section-content">
+								<!-- Line Numbers -->
+								<div class="settings-row">
+									<label for="settings-line-numbers">Line Numbers</label>
+									<div class="settings-control">
+										<label class="settings-checkbox">
+											<input type="checkbox" id="settings-line-numbers">
+											<span>Show in editor</span>
+										</label>
+									</div>
+								</div>
+
+								<!-- Word Wrap -->
+								<div class="settings-row">
+									<label for="settings-word-wrap">Word Wrap</label>
+									<div class="settings-control">
+										<label class="settings-checkbox">
+											<input type="checkbox" id="settings-word-wrap" checked>
+											<span>Wrap long lines</span>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Backup & Restore Section -->
+						<div class="settings-section">
+							<button class="settings-section-header">
+								<span class="settings-toggle">▶</span>
+								<span>Backup & Restore</span>
+							</button>
+							<div class="settings-section-content">
+								<button id="settings-export-btn" class="panel-button">Export Settings</button>
+								<button id="settings-import-btn" class="panel-button">Import Settings</button>
+								<input type="file" id="settings-import-input" accept=".json" style="display: none;">
+							</div>
+						</div>
+
+						<!-- Reset Section -->
+						<div class="settings-section">
+							<button class="settings-section-header">
+								<span class="settings-toggle">▶</span>
+								<span>Reset</span>
+							</button>
+							<div class="settings-section-content">
+								<button id="settings-reset-editor-btn" class="panel-button settings-danger">Reset Editor</button>
+								<button id="settings-reset-all-btn" class="panel-button settings-danger">Reset All</button>
+								<p class="settings-hint settings-warning">Cannot be undone</p>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -467,75 +560,64 @@ lsDOCTYPE html>
 	</div>
 
 	<div class="main supporting" id="zen-supporting" role="main">
-		<!-- Split-screen markdown editor -->
-		<div class="editor-container" data-layout="split">
-			<!-- Input section -->
-			<section class="editor-section editor-input">
-				<!-- LCARS Frame Elements -->
-				<div class="lcars-frame">
-					<div class="lcars-sidebar"></div>
-					<div class="lcars-topbar"></div>
-					<div class="lcars-corner"></div>
-					<div class="lcars-header-blocks">
-						<div class="lcars-block-grey"></div>
-						<div class="lcars-block-orange"></div>
-						<div class="lcars-title">INPUT</div>
-						<div class="lcars-block-pink"></div>
-					</div>
-				</div>
+		<!-- WYSIWYG Unified Editor -->
+		<div class="editor-container" data-layout="wysiwyg">
+			<!-- Single unified contenteditable pane -->
+			<section class="editor-section unified-editor">
 				<div class="editor-section-content">
-					<!-- Typora wrapper for input -->
-					<div id="write-input" class="typora-write">
+					<!-- Typora wrapper for unified editing -->
+					<div id="write" class="typora-write">
+						<!-- WYSIWYG contenteditable area -->
+						<div
+							id="wysiwyg-editor"
+							class="wysiwyg-content"
+							contenteditable="true"
+							spellcheck="true"
+							aria-label="WYSIWYG markdown editor"
+						></div>
+						<!-- Hidden source mode textarea -->
 						<textarea
-							id="markdown-input"
-							class="markdown-textarea"
-							placeholder="Start typing your markdown here..."
-							aria-label="Markdown input"
+							id="source-editor"
+							class="source-textarea"
+							style="display: none;"
+							placeholder="Raw markdown source..."
+							aria-label="Markdown source editor"
 						></textarea>
 					</div>
 				</div>
 			</section>
 
-			<!-- Center gap with toolbar and resize handle -->
+			<!-- Center gap with toolbar (same structure as split view) -->
 			<div class="editor-gap" id="editor-gap">
-				<!-- Resize handle at top of gap -->
-				<div class="editor-divider" id="editor-divider" title="Drag to resize panels">
-					<span class="divider-grip">&#x2194;</span>
+				<!-- Resize handle at top of gap (disabled in WYSIWYG mode) -->
+				<div class="editor-divider" id="editor-divider" title="Toolbar">
+					<span class="divider-grip">&#x2261;</span>
 				</div>
 				<!-- Toolbar area for buttons -->
 				<div class="gap-toolbar" id="gap-toolbar">
-					<button class="divider-sync-btn" id="divider-sync-btn" title="Toggle Scroll Sync">
-						<span class="sync-chain">&#x1F517;</span>
+					<button class="divider-sync-btn" id="toolbar-source-toggle" title="Toggle Source Mode (Ctrl+/)">
+						<span class="sync-icon">&#x1F4DD;</span>
+					</button>
+					<button class="divider-sync-btn" id="toolbar-bold" title="Bold (Ctrl+B)">
+						<span class="sync-icon"><strong>B</strong></span>
+					</button>
+					<button class="divider-sync-btn" id="toolbar-italic" title="Italic (Ctrl+I)">
+						<span class="sync-icon"><em>I</em></span>
+					</button>
+					<button class="divider-sync-btn" id="toolbar-heading" title="Heading">
+						<span class="sync-icon">H</span>
+					</button>
+					<button class="divider-sync-btn" id="toolbar-link" title="Link (Ctrl+K)">
+						<span class="sync-icon">&#x1F517;</span>
+					</button>
+					<button class="divider-sync-btn" id="toolbar-image" title="Image">
+						<span class="sync-icon">&#x1F5BC;</span>
+					</button>
+					<button class="divider-sync-btn" id="toolbar-code" title="Code">
+						<span class="sync-icon">&lt;/&gt;</span>
 					</button>
 				</div>
 			</div>
-
-			<!-- Preview section -->
-			<section class="editor-section editor-preview">
-				<!-- LCARS Frame Elements -->
-				<div class="lcars-frame">
-					<div class="lcars-sidebar"></div>
-					<div class="lcars-topbar"></div>
-					<div class="lcars-corner"></div>
-					<div class="lcars-header-blocks">
-						<div class="lcars-block-grey"></div>
-						<div class="lcars-block-orange"></div>
-						<div class="lcars-title">PREVIEW</div>
-						<div class="lcars-block-pink"></div>
-					</div>
-				</div>
-				<div class="editor-section-content">
-					<!-- Typora wrapper for preview -->
-					<div id="write" class="typora-write">
-						<div
-							id="markdown-preview"
-							class="markdown-output"
-							aria-label="Rendered markdown preview"
-							aria-live="polite"
-						></div>
-					</div>
-				</div>
-			</section>
 		</div>
 
 		<!-- Find/Replace Dialog -->
@@ -607,6 +689,12 @@ lsDOCTYPE html>
 
 <!-- Settings Manager -->
 <script src="js/shared/settings-manager.js"></script>
+
+<!-- Line Mapper (Scroll Sync & WYSIWYG Infrastructure) -->
+<script src="js/shared/line-mapper.js"></script>
+
+<!-- WYSIWYG Engine -->
+<script src="js/wysiwyg/wysiwyg-engine.js"></script>
 
 <!-- Main application script -->
 <script src="js/markdown-editor-main.js"></script>

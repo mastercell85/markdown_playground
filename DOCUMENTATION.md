@@ -14,6 +14,10 @@ A feature-rich, modular markdown editor with live preview, multiple themes, and 
 6. [Theme System](#theme-system)
 7. [Shortcut Syntax](#shortcut-syntax)
 8. [Adding New Features](#adding-new-features)
+9. [Implementation Planning](#implementation-planning)
+   - [Phase 1: Settings System](#phase-1-settingspreferences-system---planning-session) ✅
+   - [Phase 2: Scroll Sync & WYSIWYG Infrastructure](#phase-2-scroll-sync-accuracy--wysiwyg-infrastructure---planning-session) ✅
+10. [Planned Features & Enhancements](#planned-features--enhancements)
 
 ---
 
@@ -1899,21 +1903,835 @@ describe('Save/Cancel/Revert', () => {
 
 All 10 architectural decisions have been made. The Settings/Preferences System is ready for implementation.
 
-**Summary of Decisions:**
+---
 
-| Question | Decision |
-|----------|----------|
-| Q1: Data Structure | Nested/Namespaced structure |
-| Q2: Schema Versioning | Include from Phase 1 |
-| Q3: Defaults & Validation | Module-based defaults |
-| Q4: Settings Access API | Hybrid (direct read, method write) |
-| Q5: Persistence Strategy | Debounced auto-save + Save/Cancel/Revert |
-| Q6: Change Notifications | Event-based with categories |
-| Q7: Settings UI Location | Settings Panel + View tab for themes |
-| Q8: Import/Export & Reset | Full import/export + granular reset |
-| Q9: Initial Settings Priority | Migrate existing + core editor settings |
-| Q10: API Design | Extended API + error throwing |
-| Q11: Testing Strategy | Unit tests + manual testing |
+### Phase 2: Scroll Sync Accuracy & WYSIWYG Infrastructure - Planning Session
+
+**Status:** ✅ PLANNING COMPLETE
+**Session Date:** January 14, 2026
+**Decisions Finalized:** January 14, 2026
+
+This section documents infrastructure planning for improved scroll synchronization and WYSIWYG editing mode. These features share significant infrastructure requirements, so planning them together prevents duplicate work and ensures a cohesive architecture.
+
+---
+
+#### Why Plan These Together?
+
+Both Scroll Sync improvements and WYSIWYG mode need **accurate line-to-element mapping** - the ability to know exactly which rendered DOM element corresponds to which line (or range of lines) in the source markdown.
+
+**Current Scroll Sync Limitations:**
+- Uses `data-line` attributes added by BlockProcessor during parsing
+- Works well for block-level elements (headings, paragraphs, code blocks)
+- ~95% accuracy but struggles with:
+  - Elements spanning multiple source lines (multi-line paragraphs)
+  - Inline elements (emphasis, links) within block elements
+  - Dynamic content height differences between source and preview
+  - Nested structures (lists within lists, blockquotes)
+
+**WYSIWYG Requirements:**
+- Need to know which source line the cursor is on
+- Need to transform that position to the rendered DOM position
+- Need bidirectional mapping: source ↔ DOM
+- Must handle partial block editing (editing middle of paragraph)
+
+**Shared Infrastructure:**
+| Component | Scroll Sync Needs | WYSIWYG Needs |
+|-----------|-------------------|---------------|
+| Line-to-element mapping | Yes - find element for line | Yes - find element for cursor |
+| Element-to-line mapping | Yes - find line for scroll position | Yes - update source from DOM |
+| Character offset tracking | Partial - block boundaries | Yes - exact character positions |
+| Rendered height calculation | Yes - interpolate scroll positions | Yes - cursor positioning |
+| Block boundary detection | Yes - sync at block edges | Yes - detect when to render |
+
+---
+
+#### Architecture Overview: Line Mapping System
+
+**Purpose:** Create a bidirectional mapping between source markdown lines and rendered DOM elements, enabling accurate scroll sync and future WYSIWYG editing.
+
+**Core Components:**
+
+```
+LineMapper (New Module)
+├── SourceMap
+│   ├── lineToElement: Map<lineNumber, ElementInfo>
+│   ├── elementToLines: Map<elementId, LineRange>
+│   └── characterOffsets: Map<lineNumber, {start, end}>
+│
+├── DOMTracker
+│   ├── elementHeights: Map<elementId, number>
+│   ├── elementOffsets: Map<elementId, number>
+│   └── updateOnMutation: MutationObserver
+│
+└── Interpolator
+    ├── getElementForLine(line): Element
+    ├── getLineForElement(element): LineRange
+    ├── getScrollPositionForLine(line): number
+    └── getLineForScrollPosition(scrollTop): number
+```
+
+---
+
+#### Decision 1: Mapping Granularity
+
+**Question:** How fine-grained should the line-to-element mapping be?
+
+**Option A: Block-Level Only (Current Approach)**
+- Map entire blocks (paragraphs, headings, code blocks) to line ranges
+- Simple, fast, but ~95% accuracy
+- Can't handle mid-paragraph scrolling precisely
+
+**Option B: Block + Inline Elements**
+- Map blocks AND inline elements (links, emphasis, code spans)
+- More accurate scroll sync within long paragraphs
+- Significantly more complex parsing and DOM traversal
+
+**Option C: Character-Level Mapping**
+- Map every character position to DOM text nodes
+- Maximum accuracy (99%+)
+- High memory overhead, complex maintenance
+- Required for true WYSIWYG (cursor positioning)
+
+**Option D: Hybrid - Block Default, Character On-Demand** ✅ **SELECTED**
+- Use block-level mapping for scroll sync (fast, low memory)
+- Calculate character-level mapping only when needed (WYSIWYG editing)
+- Best of both worlds: performance when scrolling, precision when editing
+
+**Decision Rationale:** This hybrid approach provides optimal performance for the common case (scroll sync) while maintaining the capability for precise character-level mapping when WYSIWYG editing is implemented. Block-level mapping with `data-line-start` and `data-line-end` attributes handles multi-line elements naturally, and character-level calculations are deferred until actually needed.
+
+---
+
+#### Decision 2: Source Map Generation Timing
+
+**Question:** When should the line mapping be generated?
+
+**Option A: During Parsing (Current)**
+- BlockProcessor adds `data-line` attributes during markdown→HTML conversion
+- Pros: Already implemented, no extra pass
+- Cons: Limited to what parser knows, can't track post-render changes
+
+**Option B: Post-Render DOM Analysis**
+- After HTML is rendered, traverse DOM to build complete map
+- Pros: Sees actual rendered structure, handles dynamic content
+- Cons: Extra processing step, may not match source accurately
+
+**Option C: Hybrid - Parser Seeds, Post-Render Enhances** ✅ **SELECTED**
+- Parser adds `data-line` attributes (block boundaries)
+- Post-render pass adds measurements (heights, offsets)
+- Pros: Accurate source mapping + actual render measurements
+- Cons: More complex, two-phase process
+
+**Decision Rationale:** This two-phase approach leverages the existing BlockProcessor infrastructure (which already adds `data-line` attributes) while adding post-render measurement for accurate height and offset tracking. The parser has the most accurate knowledge of source line positions, while post-render measurement captures the actual DOM dimensions after CSS styling and reflow.
+
+---
+
+#### Decision 3: Height Calculation Strategy
+
+**Question:** How should we handle height differences between source and rendered content?
+
+**Problem:** Source lines have uniform height (line-height), but rendered elements have variable heights:
+- A 3-line source paragraph might render as 5 lines of text (wrapping)
+- An image takes 1 source line but could be 500px tall
+- Code blocks with syntax highlighting may differ from source
+
+**Option A: Percentage-Based Interpolation (Current Fallback)**
+- Calculate scroll position as percentage of total height
+- Simple, works reasonably well for similar-length content
+- Breaks down with images, large code blocks, or varying density
+
+**Option B: Element-Height Weighted Mapping** ✅ **SELECTED**
+- Track actual rendered height of each mapped element
+- Distribute scroll position proportionally based on element heights
+- More accurate for mixed content documents
+
+**Option C: Line-Height Normalized Mapping**
+- Normalize all heights to "equivalent source lines"
+- A 200px image = ~13 source lines at 15px line-height
+- Provides conceptually simple mapping
+- May feel "wrong" when scrolling over images
+
+**Option D: Content-Aware Adaptive Mapping**
+- Different strategies for different content types
+- Text: line-based interpolation
+- Images: jump to/from (sync at boundaries, not within)
+- Code: syntax-line based (sync by code line, not source line)
+- Most accurate but most complex
+
+**Decision Rationale (Option B selected):** Element-height weighted mapping provides significantly better accuracy than percentage-based interpolation without the complexity of content-aware adaptive strategies. By tracking actual rendered heights, the system can distribute scroll positions proportionally—a 500px tall image gets proportionally more scroll "space" than a 50px paragraph. This approach works well for mixed content documents while remaining straightforward to implement and maintain.
+
+---
+
+#### Decision 4: DOM Change Handling
+
+**Question:** How should the mapping respond to DOM changes?
+
+**Scenarios:**
+- User types in editor → source changes → re-render
+- Window resize → reflow → heights change
+- Theme switch → styles change → heights change
+- Dynamic content (collapsible sections, lazy images)
+
+**Option A: Full Rebuild on Any Change**
+- Any DOM mutation triggers complete map rebuild
+- Simple logic but potentially expensive
+- May cause scroll jumps during editing
+
+**Option B: Incremental Updates**
+- MutationObserver tracks specific changes
+- Only update affected portions of map
+- Complex but efficient
+- Risk of map drift/corruption over time
+
+**Option C: Lazy Rebuild with Dirty Flag**
+- Mark map as "dirty" on changes
+- Rebuild only when mapping is actually queried
+- Good for burst edits (typing rapidly)
+- Slight latency on first scroll after edit
+
+**Option D: Time-Debounced Rebuild** ✅ **SELECTED**
+- Rebuild map after 100-300ms of no changes
+- Balances accuracy with performance
+- Similar to current auto-save debouncing
+- Natural fit with existing architecture
+
+**Decision Rationale:** Time-debounced rebuild (150-300ms) aligns with the existing architecture patterns used throughout the application (e.g., auto-save debouncing). This approach prevents expensive rebuilds during rapid typing while ensuring the map stays current. The slight latency after the last change is imperceptible to users and avoids the complexity of incremental updates or the overhead of full rebuilds on every change.
+
+---
+
+#### Decision 5: Scroll Sync Algorithm Improvements
+
+**Question:** What algorithm improvements should we implement?
+
+**Current Algorithm:**
+1. Calculate visible line from scroll position
+2. Apply offset adjustment
+3. Find element with matching `data-line`
+4. Scroll preview to that element
+
+**Proposed Improvements:**
+
+**Improvement A: Sub-Element Interpolation** ✅ **SELECTED FOR PHASE 2**
+- When scrolled partway through an element, interpolate proportionally
+- If paragraph spans lines 5-8 and we're at line 6.5, scroll to 37.5% through paragraph
+- Smoother scrolling, especially for long paragraphs
+
+**Improvement B: Velocity-Aware Sync** 📋 **DEFERRED TO FUTURE ENHANCEMENTS**
+- Track scroll velocity (fast vs slow scrolling)
+- Fast scroll: sync at block boundaries only (less jitter)
+- Slow scroll: precise sub-element sync
+- Prevents "fighting" during rapid scroll
+
+**Improvement C: Directional Bias** 📋 **DEFERRED TO FUTURE ENHANCEMENTS**
+- Remember last scroll direction
+- When syncing, bias toward revealing content in scroll direction
+- Prevents constant back-and-forth adjustments
+
+**Improvement D: Anchor Point Preservation** 📋 **DEFERRED TO FUTURE ENHANCEMENTS**
+- When heights change, preserve current anchor point
+- Re-calculate positions relative to anchor, not absolute
+- Prevents jarring jumps on reflow
+
+**Decision Rationale:** Sub-element interpolation (Option A) provides the most significant accuracy improvement and is essential for smooth scrolling within multi-line blocks. Options B, C, and D are valuable refinements that may be implemented in future phases if additional scroll sync accuracy is needed. They have been moved to the "Future Enhancements" section for consideration after Phase 2 implementation is complete and real-world testing can inform their priority.
+
+---
+
+#### Decision 6: WYSIWYG Infrastructure Hooks
+
+**Question:** What hooks should Line Mapper provide for future WYSIWYG mode?
+
+**Decision:** ✅ **INCLUDE ESSENTIAL HOOKS NOW**
+
+Include the essential WYSIWYG hooks in the initial LineMapper implementation. This ensures the infrastructure is ready for WYSIWYG mode without requiring a later refactor.
+
+**Essential Hooks:**
+
+```javascript
+// Get DOM position for source cursor
+getRenderedPositionForCursor(line, column) → {element, offset}
+
+// Get source position for DOM selection
+getSourcePositionForSelection(selection) → {line, column}
+
+// Get the block element containing a source position
+getContainingBlock(line) → {element, startLine, endLine}
+
+// Check if source position is in a "raw" zone (code block, etc.)
+isRawZone(line) → boolean
+
+// Get editable range for current block
+getEditableRange(line) → {startLine, endLine, startCol, endCol}
+```
+
+**Optional Hooks (Future):**
+
+```javascript
+// Track live edits without full re-parse
+trackEdit(line, column, text, type: 'insert'|'delete')
+
+// Get syntax context at position (for highlighting)
+getSyntaxContext(line, column) → 'heading'|'paragraph'|'code'|...
+
+// Get available transformations at position
+getAvailableTransforms(line) → ['bold', 'italic', ...]
+```
+
+**Decision Rationale:** Including essential WYSIWYG hooks from the start prevents a costly refactor later. The hooks are designed to be lightweight—they only calculate character-level mappings when actually called (on-demand), not continuously. Optional hooks are documented for future WYSIWYG implementation but will not be included in Phase 2.
+
+---
+
+#### Decision 7: Integration Points
+
+**Question:** How should Line Mapper integrate with existing modules?
+
+**Decision:** ✅ **APPROVED AS PROPOSED**
+
+The integration approach follows existing patterns and provides clear separation of concerns.
+
+**Integration Map:**
+
+| Module | Integration |
+|--------|-------------|
+| **BlockProcessor** | Emits line info during parsing, LineMapper consumes |
+| **ScrollSync** | Uses LineMapper instead of raw `data-line` queries |
+| **MarkdownRenderer** | Triggers LineMapper update after render |
+| **DocumentManager** | Notifies LineMapper of document switches |
+| **SettingsManager** | Stores sync accuracy preferences |
+| **Future WYSIWYG** | Primary consumer of bidirectional mapping |
+
+**Event Flow:**
+
+```
+User types → DocumentManager saves → MarkdownParser parses
+                                           ↓
+                                    BlockProcessor emits line data
+                                           ↓
+                                    MarkdownRenderer renders HTML
+                                           ↓
+                                    LineMapper.update() called
+                                           ↓
+                                    ScrollSync uses updated map
+```
+
+**Decision Rationale:** This event flow follows the existing application architecture patterns. Each module has a clear responsibility:
+- **BlockProcessor** seeds line data during parsing (already does this)
+- **MarkdownRenderer** triggers LineMapper update after render
+- **DocumentManager** notifies LineMapper of document switches (triggers `invalidate()`)
+- **ScrollSync** becomes a consumer of LineMapper rather than directly querying DOM
+- **SettingsManager** stores user preferences for sync behavior
+
+---
+
+#### Decision 8: Performance Budget
+
+**Question:** What are acceptable performance limits?
+
+**Decision:** ✅ **APPROVED WITH SINGLE-MAP MEMORY STRATEGY**
+
+The performance targets are appropriate for the application scope. A critical clarification was made regarding memory management:
+
+**Memory Strategy: Single Active Map Only**
+- Only ONE source map exists at any time (for the currently active document)
+- When documents are switched, `invalidate()` is called, clearing the existing map
+- A fresh map is built for the new document on first scroll/query
+- **No per-document caching** — prevents memory accumulation over time
+- Small latency (~5-20ms) on first scroll after document switch is acceptable
+
+This approach ensures:
+- Zero memory leaks from accumulated document mappings
+- Predictable memory usage regardless of session length
+- Clean state on each document switch
+
+**Targets:**
+
+| Operation | Target | Acceptable |
+|-----------|--------|------------|
+| Initial map build (1000 lines) | <50ms | <100ms |
+| Incremental update (single block) | <5ms | <10ms |
+| Scroll position query | <1ms | <2ms |
+| Full rebuild (triggered by resize) | <100ms | <200ms |
+| Memory overhead (1000 lines) | <500KB | <1MB |
+
+**Measurement Points:**
+- Add performance marks in dev mode
+- Log slow operations (>2x target)
+- Consider worker thread for initial build on large docs
+
+**Decision Rationale:** These performance targets are reasonable for the application scope. The single-map memory strategy prevents memory leaks that could occur if maps were cached per-document. The slight latency on document switch (while the new map builds) is acceptable and aligns with existing render latency when switching documents.
+
+---
+
+#### Decision 9: API Design
+
+**Question:** What should the LineMapper public API look like?
+
+**Decision:** ✅ **APPROVED AS PROPOSED**
+
+The API is organized into clear categories for ease of use:
+
+1. **Core Mapping Queries** - The essential methods for scroll sync
+2. **Height/Position Info** - Supporting data for calculations
+3. **WYSIWYG Hooks** - Future cursor positioning (on-demand calculation)
+4. **Lifecycle Methods** - Manual control when needed
+5. **Events** - For external modules to react to map changes
+
+**Approved API:**
+
+```javascript
+class LineMapper {
+  // Initialization
+  constructor(options: {
+    parser: MarkdownParser,
+    renderer: MarkdownRenderer,
+    previewContainer: HTMLElement,
+    rebuildDebounceMs: number
+  })
+
+  // Core mapping queries
+  getElementForLine(line: number): Element | null
+  getLinesForElement(element: Element): { start: number, end: number } | null
+  getScrollPositionForLine(line: number): number
+  getLineForScrollPosition(scrollTop: number): number
+
+  // Height/position info
+  getElementHeight(element: Element): number
+  getElementOffset(element: Element): number
+  getTotalMappedHeight(): number
+
+  // WYSIWYG hooks (Phase 2+)
+  getRenderedPositionForCursor(line: number, col: number): { element: Element, offset: number }
+  getSourcePositionForSelection(sel: Selection): { line: number, col: number }
+  isRawZone(line: number): boolean
+
+  // Lifecycle
+  update(): void           // Manual trigger
+  invalidate(): void       // Mark dirty
+  destroy(): void          // Cleanup
+
+  // Events
+  on('update', callback): void
+  on('error', callback): void
+}
+```
+
+**API Design Rationale:** This API provides a clean, minimal surface area while supporting all Phase 2 requirements:
+- **Core queries** are what ScrollSync needs day-to-day
+- **Height/position methods** support weighted interpolation calculations
+- **WYSIWYG hooks** are included but calculate on-demand (not continuously)
+- **Lifecycle methods** allow DocumentManager to control map state on document switches
+- **Events** let external modules react to map updates without polling
+
+---
+
+#### Implementation Phases
+
+**Phase 2a: LineMapper Foundation** (Core Infrastructure) ✅ **COMPLETE - January 14, 2026**
+- [x] Create `js/shared/line-mapper.js` module
+- [x] Implement block-level line-to-element mapping using existing `data-line` attributes
+- [x] Add element height and offset tracking (post-render measurement)
+- [x] Implement element-height weighted interpolation for scroll position queries
+- [x] Add time-debounced rebuild (200ms) on DOM changes
+- [x] Implement `invalidate()` for document switches (single-map memory strategy)
+- [x] Add performance marks in debug mode for measurement
+- [x] Integrate with markdown-editor-main.js (auto-update after render)
+- [x] Hook into DocumentManager for document switch invalidation
+- [x] Expose as `window.lineMapper` and `MarkdownEditor.lineMapper` for debugging
+- [ ] Extend BlockProcessor to emit `data-line-start` and `data-line-end` for multi-line blocks (deferred - current `data-line` works well)
+
+**Phase 2a Testing Results (January 14, 2026):**
+```javascript
+lineMapper.getDebugInfo()
+// {isDirty: false, isBuilding: false, totalLines: 212,
+//  totalHeight: 9087.87, elementCount: 126, ...}
+
+lineMapper.getElementForLine(5)
+// <p data-line="5">This document tests all shortcut syntaxes...</p>
+
+lineMapper.getScrollPositionForLine(10)
+// 480.77 (pixels - element-height weighted)
+```
+
+**Phase 2b: Enhanced Scroll Sync** (Algorithm Improvements)
+- [ ] Refactor ScrollSync to use LineMapper instead of direct DOM `data-line` queries
+- [ ] Implement sub-element interpolation (scroll proportionally within multi-line elements)
+- [ ] Update scroll position calculations to use weighted heights instead of line counts
+- [ ] Add integration with DocumentManager for document switch notifications
+- [ ] Test with various document types (text-heavy, image-heavy, code-heavy, mixed)
+- [ ] Verify performance targets are met (query <1ms, rebuild <100ms)
+
+**Phase 2c: WYSIWYG Preparation** (Essential Hooks Only) ✅ **API COMPLETE - January 14, 2026**
+
+Essential hooks implemented in LineMapper (calculate on-demand, not continuously):
+- [x] Implement `getRenderedPositionForCursor(line, column)` hook
+- [x] Implement `getSourcePositionForSelection(selection)` hook
+- [x] Implement `getContainingBlock(line)` hook
+- [x] Implement `isRawZone(line)` hook for code blocks and frontmatter
+- [x] Implement `getEditableRange(line)` hook
+- [x] Add `on('update')` and `on('error')` events
+- [ ] Add lazy character-level mapping capability (enhance existing hooks when needed)
+- [ ] Document API for future WYSIWYG implementation phase
+
+---
+
+### Phase 3: WYSIWYG Unified View (Alternative Approach) - Planning Session
+
+**Branch:** `IMPLEMENT-WYSIWYG-UNIFIED-VIEW`
+**Started:** January 14, 2026
+**Status:** 🔬 Experimental - Parallel implementation to compare with split-view approach
+
+#### Overview
+
+This phase implements a Typora-style unified WYSIWYG editing experience as an alternative to the split-view with scroll sync. The goal is to compare both approaches and determine which provides a better user experience.
+
+**Key Decision:** After both implementations are complete (split-view with element matching AND unified WYSIWYG), we will compare them and choose which to merge to main based on:
+- User experience quality
+- Implementation complexity & maintainability
+- Performance characteristics
+- Ease of future enhancements
+
+#### User Experience Goals
+
+**Typora-Style Editing Behavior:**
+
+1. **Type Mode:** While typing, markdown syntax remains visible
+   - Type `# Heading` → shows as plain text `# Heading`
+   - Type `**bold**` → shows as plain text `**bold**`
+   - Syntax stays visible as you continue typing
+
+2. **Render on Enter:** Pressing Enter key renders the current line/block
+   - `# Heading` + Enter → renders as `<h1>Heading</h1>`
+   - `**bold**` + Enter → renders as `<strong>bold</strong>`
+
+3. **Click to Edit:** Clicking a rendered element returns it to edit mode
+   - Click `<h1>Heading</h1>` → reverts to `# Heading` with cursor positioned
+
+4. **Toggle Source Mode:** Button to switch between WYSIWYG and raw markdown
+   - WYSIWYG mode (default) → contenteditable with live rendering
+   - Source mode → textarea with raw markdown text
+
+#### Architecture Decisions
+
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| **Storage Format** | Store as markdown | Maintains compatibility, enables source toggle |
+| **Editing Mode** | Toggle WYSIWYG/Source | Flexibility for power users, easier debugging |
+| **Layout** | Single full-width pane | Eliminates scroll sync issues entirely |
+| **Divider Repurpose** | Floating toolbar | Reuse space for formatting controls |
+| **Features to Keep** | All except split view | Document tabs, themes, settings, auto-save, external window |
+| **Line Numbers** | Hidden in WYSIWYG mode | Not relevant for unified view, keep in source mode |
+
+#### Implementation Phases
+
+**Phase 3a: Layout Restructuring** ⏳ PENDING
+- [ ] Remove `.editor-input` and `.editor-preview` split-view divs from HTML
+- [ ] Create new `.unified-editor` contenteditable div
+- [ ] Update CSS for full-width single pane display
+- [ ] Convert `.resizable-divider` to floating toolbar
+- [ ] Preserve document tabs bar above editor
+- [ ] Update all theme CSS files to support unified view layout
+
+**Files to Modify:**
+- `markdown-editor.html` - HTML structure changes
+- `css/markdown-editor-base.css` - Base layout styles
+- `css/markdown-editor.css` - Editor-specific styles
+- All theme CSS in `themes/` folder
+
+**Success Criteria:**
+- Single contenteditable div displays full-width
+- Document tabs remain functional
+- Toolbar positioned and styled correctly
+- No visual artifacts from removed split view
+- All themes render correctly
+
+---
+
+**Phase 3b: WYSIWYG Core Engine** ⏳ PENDING
+- [ ] Create `js/wysiwyg/wysiwyg-engine.js` module
+- [ ] Implement "type mode" - show markdown syntax while typing
+- [ ] Implement "Enter key handler" - render block on Enter press
+- [ ] Implement "click-to-edit" - convert rendered element back to markdown
+- [ ] Track cursor position using LineMapper hooks from Phase 2a
+- [ ] Handle special keys (Backspace, Delete, Arrow keys in rendered blocks)
+- [ ] Implement block detection (paragraph, heading, list, code, etc.)
+- [ ] Handle inline formatting within blocks (bold, italic, links, etc.)
+
+**Key Classes:**
+```javascript
+class WysiwygEngine {
+    constructor(editorElement, lineMapper) { }
+
+    // Core editing
+    handleKeyPress(event) { }
+    handleEnterKey() { }
+    handleClickOnElement(element) { }
+
+    // Block management
+    getCurrentBlock() { }
+    renderBlock(block) { }
+    unrenderBlock(block) { }
+
+    // Cursor tracking via LineMapper hooks
+    saveCursorPosition() { }
+    restoreCursorPosition() { }
+}
+```
+
+**Files to Create:**
+- `js/wysiwyg/wysiwyg-engine.js` - Core WYSIWYG editing logic
+- `js/wysiwyg/block-detector.js` - Detect markdown block types
+- `js/wysiwyg/cursor-manager.js` - Cursor position tracking
+
+**Success Criteria:**
+- Can type markdown syntax and see it as plain text
+- Pressing Enter renders the current line/block
+- Clicking rendered elements returns them to editable markdown
+- Cursor position maintained through render/unrender cycles
+- Special keys work correctly in both modes
+
+---
+
+**Phase 3c: Source Mode Toggle** ⏳ PENDING
+- [ ] Add "Source Mode" toggle button to toolbar
+- [ ] Create hidden textarea element for source mode
+- [ ] Implement mode switching logic (WYSIWYG ↔ Source)
+- [ ] Sync content between WYSIWYG contenteditable and source textarea
+- [ ] Parse contenteditable HTML back to markdown text
+- [ ] Add keyboard shortcut (Ctrl+/) for quick mode toggle
+- [ ] Maintain cursor position when switching modes (if possible)
+
+**Key Classes:**
+```javascript
+class ModeManager {
+    constructor(wysiwygElement, sourceElement) { }
+
+    switchToWysiwyg() { }
+    switchToSource() { }
+    syncWysiwygToSource() { }
+    syncSourceToWysiwyg() { }
+}
+```
+
+**Files to Create:**
+- `js/wysiwyg/mode-manager.js` - Handle mode switching
+- `js/wysiwyg/html-to-markdown.js` - Convert HTML back to markdown
+
+**Success Criteria:**
+- Toggle button switches between modes seamlessly
+- Content stays synchronized between both modes
+- Keyboard shortcut (Ctrl+/) works correctly
+- Cursor position maintained when possible
+- No data loss during mode switches
+
+---
+
+**Phase 3d: Integration** ⏳ PENDING
+- [ ] Integrate with DocumentManager for multi-document support
+- [ ] Connect to theme system for WYSIWYG content styling
+- [ ] Update auto-save to capture contenteditable changes
+- [ ] Update external window preview to use WYSIWYG content
+- [ ] Remove split-view settings from Settings panel
+- [ ] Add WYSIWYG-specific settings (auto-render, default mode, etc.)
+- [ ] Update Help panel with WYSIWYG usage instructions
+
+**Settings to Add:**
+```javascript
+settings.editor.wysiwyg = {
+    enabled: true,
+    autoRenderOnEnter: true,
+    showMarkdownOnEdit: true,
+    defaultMode: 'wysiwyg' // or 'source'
+}
+```
+
+**Files to Modify:**
+- `js/markdown-editor-main.js` - Main application integration
+- `js/shared/settings-manager.js` - Add WYSIWYG settings schema
+- `js/markdown/document-manager.js` - Support contenteditable documents
+- Help panel HTML content
+
+**Success Criteria:**
+- Multiple documents work correctly in WYSIWYG mode
+- Themes apply to WYSIWYG rendered content
+- Auto-save captures changes from contenteditable
+- External preview window displays WYSIWYG content
+- Settings panel has WYSIWYG configuration options
+- Help documentation updated and accurate
+
+---
+
+#### Technical Considerations
+
+**LineMapper Integration (from Phase 2a)**
+
+We have these WYSIWYG hooks already implemented:
+- `getRenderedPositionForCursor(line, column)` - Find DOM position for cursor placement
+- `getSourcePositionForSelection(selection)` - Get markdown position from browser selection
+- `getContainingBlock(line)` - Identify which block a line belongs to
+- `isRawZone(line)` - Detect code blocks that shouldn't be WYSIWYG-edited
+- `getEditableRange(line)` - Get editable text span for a line
+
+These hooks are critical for:
+- Accurate cursor management during render/unrender
+- Block detection and manipulation
+- Determining which content can be edited inline
+
+**Markdown Parsing Strategy**
+
+Two directions needed:
+- **Forward (already exists):** Markdown → HTML via existing parser
+- **Reverse (need to implement):** HTML → Markdown for source mode and storage
+
+Consider:
+- Using library like `turndown` for HTML → Markdown conversion
+- OR implementing custom converter based on our shortcut syntax
+- Must handle our extended shortcut syntax correctly
+
+**ContentEditable Challenges**
+
+Known issues to handle:
+1. **Browser inconsistencies** - Different browsers handle contenteditable differently
+2. **Cursor position** - Difficult to maintain through DOM mutations
+3. **Undo/Redo** - Browser's built-in undo might not work as expected
+4. **Paste events** - Need to sanitize and normalize pasted HTML
+5. **Performance** - Re-rendering on every keystroke can cause lag
+
+**Mitigation Strategies:**
+- Only render on Enter key (not every keystroke) - reduces DOM mutations
+- Use LineMapper hooks for robust cursor tracking
+- Implement custom undo/redo stack if browser's is insufficient
+- Sanitize pasted content by round-tripping through markdown parser
+- Debounce auto-save to avoid excessive writes
+
+---
+
+#### Comparison Criteria: Split View vs WYSIWYG
+
+After both implementations are complete, we will evaluate:
+
+| Aspect | Split View (element-matching) | WYSIWYG (unified view) |
+|--------|------------------------------|------------------------|
+| **Sync Issues** | Still has drift in image-heavy sections | No sync needed - single view |
+| **UX Complexity** | Two panes to understand | Simpler - one view |
+| **Word Wrap** | Must be disabled for accuracy | Can be enabled/disabled freely |
+| **Implementation Complexity** | Complex scroll sync logic | Complex contenteditable handling |
+| **Performance** | Two rendering passes | Single render with re-renders on Enter |
+| **Power User Features** | Can see both source and preview simultaneously | Must toggle to see source |
+| **Mobile Support** | Difficult on small screens (two panes) | Better for small screens (one pane) |
+| **Learning Curve** | Users understand traditional editor + preview | May need explanation of WYSIWYG behavior |
+| **Debugging** | Easy to see source ↔ rendered mapping | Must switch to source mode |
+
+---
+
+#### Testing Strategy
+
+**Unit Tests:**
+- Block detection (identify heading, paragraph, list, code, etc.)
+- Markdown → HTML → Markdown round-trip accuracy
+- Cursor position tracking across render/unrender
+- Mode switching (WYSIWYG ↔ Source)
+
+**Integration Tests:**
+- Multi-document support with WYSIWYG
+- Theme switching with rendered content
+- Auto-save with contenteditable changes
+- External window preview
+
+**Manual Testing Scenarios:**
+1. Type `# Heading` and press Enter → should render as H1
+2. Click the rendered heading → should show `# Heading` with cursor
+3. Type multi-line list and press Enter multiple times → should render list items
+4. Toggle source mode → should show raw markdown correctly
+5. Switch between documents → should maintain WYSIWYG state per document
+6. Paste HTML content → should convert to markdown properly
+7. Switch themes → should apply styling to WYSIWYG content
+8. Type in code block → should NOT render markdown (raw zone detection)
+
+---
+
+#### Rollback Plan
+
+If WYSIWYG implementation doesn't meet quality standards:
+1. Branch `EXPERIMENTAL-SCROLL-SYNC-INDEX-MATCHING` has complete split-view implementation
+2. Can merge either branch to main based on evaluation results
+3. Document learnings and tradeoffs for future reference
+4. Consider hybrid approach if both have merits
+
+---
+
+#### Next Steps
+
+1. ✅ Complete planning and add to DOCUMENTATION.md
+2. ⏳ Start Phase 3a: Layout Restructuring
+3. ⏳ Build WYSIWYG engine prototype
+4. ⏳ Iterate based on testing feedback
+5. ⏳ Compare completed implementations and make final decision
+
+---
+
+#### Questions Resolved ✅
+
+All architectural questions have been resolved. See individual Decision sections above for full rationale.
+
+| Question | Resolution |
+|----------|------------|
+| 1. Mapping Granularity | ✅ Hybrid (block default, character on-demand) |
+| 2. Generation Timing | ✅ Hybrid (parser seeds, post-render enhances) |
+| 3. Height Calculation | ✅ Element-height weighted mapping |
+| 4. Change Handling | ✅ Time-debounced rebuild (150-300ms) |
+| 5. Algorithm Improvements | ✅ Sub-element interpolation (others deferred) |
+| 6. WYSIWYG Hooks | ✅ Include essential hooks now |
+| 7. Integration Points | ✅ Approved as proposed |
+| 8. Performance Budget | ✅ Approved with single-map memory strategy |
+| 9. API Design | ✅ Approved as proposed |
+
+---
+
+### Phase 2 Planning: COMPLETE ✅
+
+All 9 architectural decisions have been finalized. The Scroll Sync Accuracy & WYSIWYG Infrastructure is ready for implementation.
+
+**Summary of Phase 2 Decisions:**
+
+| # | Decision Area | Choice | Key Details |
+|---|---------------|--------|-------------|
+| 1 | Mapping Granularity | **Hybrid** | Block-level for scroll sync, character-level on-demand for WYSIWYG |
+| 2 | Source Map Timing | **Hybrid** | Parser seeds `data-line` attributes, post-render adds measurements |
+| 3 | Height Calculation | **Weighted** | Track actual rendered heights, distribute scroll proportionally |
+| 4 | DOM Change Handling | **Debounced** | Rebuild map after 150-300ms of no changes |
+| 5 | Scroll Improvements | **Sub-element Interpolation** | Scroll proportionally within multi-line blocks |
+| 6 | WYSIWYG Hooks | **Include Essential** | Add hooks now to prevent later refactor |
+| 7 | Integration Points | **Approved** | Follows existing event flow patterns |
+| 8 | Performance Budget | **Approved** | Single-map memory strategy (no per-document caching) |
+| 9 | API Design | **Approved** | Clean categories: core queries, WYSIWYG hooks, lifecycle |
+
+**Key Architectural Clarifications:**
+
+1. **Memory Strategy:** Single active map only—cleared on document switch via `invalidate()`. No per-document caching prevents memory accumulation over session lifetime.
+
+2. **Deferred Improvements:** Scroll sync improvements B (Velocity-Aware), C (Directional Bias), and D (Anchor Preservation) have been moved to Future Enhancements for potential implementation if additional accuracy is needed after Phase 2.
+
+3. **WYSIWYG Hooks:** Essential hooks are included but calculate character-level mappings on-demand only—they do not continuously track character positions.
+
+---
+
+#### Future Enhancements (Deferred from Phase 2)
+
+These scroll sync improvements may be implemented in future phases if additional accuracy is required after Phase 2 testing:
+
+**Velocity-Aware Sync**
+- Track scroll velocity (fast vs slow scrolling)
+- Fast scroll: sync at block boundaries only (reduces jitter)
+- Slow scroll: precise sub-element sync
+- Prevents "fighting" during rapid scrolling
+
+**Directional Bias**
+- Remember last scroll direction
+- Bias toward revealing content in scroll direction
+- Reduces constant back-and-forth adjustments
+
+**Anchor Point Preservation**
+- When heights change (resize, theme switch), preserve current anchor point
+- Re-calculate positions relative to anchor, not absolute
+- Prevents jarring jumps on reflow
 
 ---
 

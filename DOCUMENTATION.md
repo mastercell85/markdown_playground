@@ -3472,6 +3472,112 @@ List editing operations verified:
 
 ---
 
+### Bug Fixes: List Markers, Paste Handling & Tab Persistence
+
+**Status:** ✅ COMPLETE
+**Session Date:** January 15, 2026
+
+#### Overview
+
+This session addressed three bugs affecting list editing behavior, paste functionality in WYSIWYG mode, and active tab persistence across page refreshes.
+
+---
+
+#### Bug Fix 7: Lingering List Markers When Switching Modes
+
+**Problem:** When a user created a list item, pressed Enter (creating an empty list item like `- `), and then switched between WYSIWYG and source mode, the empty list marker would persist instead of being removed.
+
+**Root Cause:** Empty list items (e.g., `- ` with no content) were not being filtered out during mode transitions. The `updateRenderedBlockMarkdown()` method was correctly handling this for WYSIWYG → Source transitions, but the `setMarkdown()` method wasn't filtering empty list items when loading from Source → WYSIWYG.
+
+**Fix Applied:**
+1. Modified `updateRenderedBlockMarkdown()` to filter out empty `<li>` elements when generating markdown from rendered lists
+2. Added empty list item detection in `setMarkdown()` using regex: `/^(\s*)([-*+]|\d+\.)\s*$/`
+3. Empty list item lines are now skipped during document loading
+
+**Files Changed:** `js/wysiwyg/wysiwyg-engine.js`
+
+---
+
+#### Bug Fix 8: WYSIWYG Paste Handler for Markdown Rendering
+
+**Problem:** When pasting multi-line markdown content into the WYSIWYG editor, the content was inserted as plain text instead of being rendered as formatted markdown.
+
+**Root Cause:** No paste event handler existed to intercept clipboard data and process it as markdown.
+
+**Fix Applied:** Added a comprehensive `handlePaste()` method that:
+- Intercepts paste events and extracts plain text from clipboard
+- Normalizes line endings (CRLF/CR to LF)
+- For single-line pastes: inserts text and triggers auto-render
+- For multi-line pastes: processes each line through `renderMarkdown()`
+- Groups consecutive list items into proper `<ul>` or `<ol>` elements
+- Preserves indent levels on pasted content
+- Wraps rendered content with `data-wysiwyg-rendered` and `data-wysiwyg-markdown` attributes
+
+**Files Changed:** `js/wysiwyg/wysiwyg-engine.js`
+
+---
+
+#### Bug Fix 9: Pasted Content Not Persisting to Storage
+
+**Problem:** After pasting content into the WYSIWYG editor and refreshing the page, the pasted content would disappear.
+
+**Root Cause:** The paste handler wasn't triggering the auto-save mechanism because no `input` event was dispatched after programmatically inserting content.
+
+**Fix Applied:** Added `this.editorElement.dispatchEvent(new Event('input', { bubbles: true }))` at the end of `handlePaste()` to trigger the auto-save listener.
+
+**Files Changed:** `js/wysiwyg/wysiwyg-engine.js`
+
+---
+
+#### Bug Fix 10: Active Tab Not Persisting on Page Refresh
+
+**Problem:** When refreshing the page while on a non-first document tab, the editor would switch to the leftmost tab instead of staying on the currently active tab.
+
+**Root Cause:** In `document-manager.js`, the `switchDocument()` method was calling `saveToStorage()` **before** updating `this.activeDocumentId`. This meant the old active document ID was being saved instead of the new one:
+
+```javascript
+// BEFORE (buggy):
+if (this.autoSave && this.activeDocumentId) {
+    this.saveToStorage();  // Saves OLD activeDocumentId
+}
+this.activeDocumentId = id;  // New ID set AFTER save
+```
+
+**Fix Applied:** Reordered the operations to set the new `activeDocumentId` before saving:
+
+```javascript
+// AFTER (fixed):
+this.activeDocumentId = id;  // Set new ID first
+
+if (this.autoSave) {
+    this.saveToStorage();  // Now saves correct activeDocumentId
+}
+```
+
+**Files Changed:** `js/markdown/document-manager.js`
+
+---
+
+#### Verification Summary
+
+All bug fixes verified working:
+- ✅ Empty list markers removed when switching modes (both directions)
+- ✅ Pasted markdown renders correctly in WYSIWYG mode
+- ✅ Consecutive list items grouped properly when pasting
+- ✅ Pasted content persists across page refreshes
+- ✅ Active tab persists correctly on page refresh
+
+---
+
+#### Files Changed Summary
+
+| File | Changes |
+|------|---------|
+| `js/wysiwyg/wysiwyg-engine.js` | Empty list filtering, paste handler, input event dispatch |
+| `js/markdown/document-manager.js` | Fixed activeDocumentId save order in switchDocument() |
+
+---
+
 #### Implementation Checklist (Phase 1)
 
 **Core Implementation (✅ Complete):**

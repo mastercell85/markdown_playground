@@ -32,6 +32,7 @@ class WysiwygEngine {
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.handleInput = this.handleInput.bind(this);
+        this.handlePaste = this.handlePaste.bind(this);
         this.handleSourceKeyDown = this.handleSourceKeyDown.bind(this);
 
         this.init();
@@ -50,6 +51,7 @@ class WysiwygEngine {
         this.editorElement.addEventListener('keydown', this.handleKeyDown);
         this.editorElement.addEventListener('click', this.handleClick);
         this.editorElement.addEventListener('input', this.handleInput);
+        this.editorElement.addEventListener('paste', this.handlePaste);
 
         // Set initial placeholder if empty
         if (this.editorElement.textContent.trim() === '') {
@@ -229,6 +231,196 @@ class WysiwygEngine {
         // Auto-save could be triggered here
         // For now, just ensure we maintain proper structure
         this.ensureProperStructure();
+    }
+
+    /**
+     * Handle paste events - render pasted markdown content
+     */
+    handlePaste(event) {
+        // Get plain text from clipboard
+        const clipboardData = event.clipboardData || window.clipboardData;
+        const pastedText = clipboardData.getData('text/plain');
+
+        if (!pastedText) return; // Let default paste behavior handle non-text
+
+        // Prevent default paste behavior
+        event.preventDefault();
+
+        console.log('[DEBUG] handlePaste - pasted text length:', pastedText.length);
+        console.log('[DEBUG] handlePaste - first 100 chars:', pastedText.substring(0, 100));
+
+        // Normalize line endings
+        const normalizedText = pastedText.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+        const lines = normalizedText.split('\n');
+
+        // Get current selection/cursor position
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return;
+
+        const range = selection.getRangeAt(0);
+        const currentBlock = this.getCurrentBlock(range.startContainer);
+
+        // If pasting multiple lines, we need to handle them properly
+        if (lines.length === 1) {
+            // Single line paste - just insert at cursor and try to render
+            document.execCommand('insertText', false, lines[0]);
+            this.tryAutoRender();
+        } else {
+            // Multi-line paste - render each line as a block
+            // First, delete any selected content
+            if (!range.collapsed) {
+                range.deleteContents();
+            }
+
+            // Build HTML for pasted content
+            const blocks = [];
+            let i = 0;
+            while (i < lines.length) {
+                const line = lines[i];
+
+                if (line.trim() === '') {
+                    blocks.push('<p><br></p>');
+                    i++;
+                    continue;
+                }
+
+                // Try to render as markdown
+                const rendered = this.renderMarkdown(line);
+
+                // Handle list grouping for consecutive list items
+                if (rendered && rendered.match(/^<ul[\s>]/)) {
+                    const ulItems = [];
+                    const ulMarkdown = [];
+                    const indentMatch = rendered.match(/data-indent-level="(\d+)"/);
+                    const groupIndentLevel = indentMatch ? parseInt(indentMatch[1]) : 0;
+
+                    while (i < lines.length) {
+                        const currentLine = lines[i];
+                        const currentRendered = this.renderMarkdown(currentLine);
+
+                        if (currentRendered && currentRendered.match(/^<ul[\s>]/)) {
+                            const currentIndentMatch = currentRendered.match(/data-indent-level="(\d+)"/);
+                            const currentIndentLevel = currentIndentMatch ? parseInt(currentIndentMatch[1]) : 0;
+
+                            if (currentIndentLevel === groupIndentLevel) {
+                                const liMatch = currentRendered.match(/<li>(.+?)<\/li>/);
+                                if (liMatch) {
+                                    ulItems.push(liMatch[1]);
+                                    ulMarkdown.push(currentLine);
+                                }
+                                i++;
+                            } else {
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+
+                    const ul = document.createElement('ul');
+                    ulItems.forEach(itemContent => {
+                        const li = document.createElement('li');
+                        li.innerHTML = itemContent;
+                        ul.appendChild(li);
+                    });
+
+                    ul.setAttribute('data-wysiwyg-rendered', 'true');
+                    ul.setAttribute('data-wysiwyg-markdown', ulMarkdown.join('\n'));
+                    ul.contentEditable = 'true';
+                    if (groupIndentLevel > 0) {
+                        ul.setAttribute('data-indent-level', groupIndentLevel);
+                    }
+                    blocks.push(ul.outerHTML);
+                    continue;
+                }
+
+                // Handle ordered list grouping
+                if (rendered && rendered.match(/^<ol[\s>]/)) {
+                    const olItems = [];
+                    const olMarkdown = [];
+                    const indentMatch = rendered.match(/data-indent-level="(\d+)"/);
+                    const groupIndentLevel = indentMatch ? parseInt(indentMatch[1]) : 0;
+
+                    while (i < lines.length) {
+                        const currentLine = lines[i];
+                        const currentRendered = this.renderMarkdown(currentLine);
+
+                        if (currentRendered && currentRendered.match(/^<ol[\s>]/)) {
+                            const currentIndentMatch = currentRendered.match(/data-indent-level="(\d+)"/);
+                            const currentIndentLevel = currentIndentMatch ? parseInt(currentIndentMatch[1]) : 0;
+
+                            if (currentIndentLevel === groupIndentLevel) {
+                                const liMatch = currentRendered.match(/<li>(.+?)<\/li>/);
+                                if (liMatch) {
+                                    olItems.push(liMatch[1]);
+                                    olMarkdown.push(currentLine);
+                                }
+                                i++;
+                            } else {
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+
+                    const ol = document.createElement('ol');
+                    olItems.forEach(itemContent => {
+                        const li = document.createElement('li');
+                        li.innerHTML = itemContent;
+                        ol.appendChild(li);
+                    });
+
+                    ol.setAttribute('data-wysiwyg-rendered', 'true');
+                    ol.setAttribute('data-wysiwyg-markdown', olMarkdown.join('\n'));
+                    ol.contentEditable = 'true';
+                    if (groupIndentLevel > 0) {
+                        ol.setAttribute('data-indent-level', groupIndentLevel);
+                    }
+                    blocks.push(ol.outerHTML);
+                    continue;
+                }
+
+                if (rendered) {
+                    // Wrap rendered content with data attributes
+                    const wrapper = document.createElement('div');
+                    wrapper.innerHTML = rendered;
+                    const element = wrapper.firstChild;
+                    element.setAttribute('data-wysiwyg-rendered', 'true');
+                    element.setAttribute('data-wysiwyg-markdown', line);
+                    element.contentEditable = 'true';
+                    blocks.push(element.outerHTML);
+                } else {
+                    // Plain text paragraph
+                    blocks.push(`<p>${this.escapeHtml(line)}</p>`);
+                }
+                i++;
+            }
+
+            // Insert the rendered HTML
+            const htmlToInsert = blocks.join('');
+            console.log('[DEBUG] handlePaste - inserting HTML:', htmlToInsert.substring(0, 200));
+
+            // If we're inside an empty paragraph, replace it
+            if (currentBlock && currentBlock.tagName === 'P' && currentBlock.textContent.trim() === '') {
+                currentBlock.insertAdjacentHTML('afterend', htmlToInsert);
+                currentBlock.remove();
+            } else {
+                // Insert at cursor position
+                document.execCommand('insertHTML', false, htmlToInsert);
+            }
+
+            // Move cursor to end of pasted content
+            const lastInserted = this.editorElement.querySelector('[data-wysiwyg-rendered]:last-of-type') ||
+                                 this.editorElement.lastElementChild;
+            if (lastInserted) {
+                this.setCursorAtEnd(lastInserted);
+            }
+        }
+
+        // Dispatch input event to trigger auto-save
+        // This ensures pasted content is persisted to storage
+        this.editorElement.dispatchEvent(new Event('input', { bubbles: true }));
     }
 
     /**
@@ -590,15 +782,17 @@ class WysiwygEngine {
                 markdown = '---';
                 break;
             case 'ol':
-                // Ordered list - extract list items
-                const olItems = Array.from(renderedBlock.querySelectorAll('li'));
+                // Ordered list - extract list items, filtering out empty ones
+                const olItems = Array.from(renderedBlock.querySelectorAll('li'))
+                    .filter(li => li.textContent.trim() !== '');
                 markdown = olItems.map((li, index) => `${index + 1}. ${li.textContent}`).join('\n');
                 break;
             case 'ul':
-                // Unordered list - extract list items
+                // Unordered list - extract list items, filtering out empty ones
                 // Use direct children only to avoid nested list issues
-                const ulItems = Array.from(renderedBlock.children).filter(el => el.tagName === 'LI');
-                console.log('[DEBUG] UL update - found', ulItems.length, 'direct LI children');
+                const ulItems = Array.from(renderedBlock.children)
+                    .filter(el => el.tagName === 'LI' && el.textContent.trim() !== '');
+                console.log('[DEBUG] UL update - found', ulItems.length, 'non-empty direct LI children');
                 ulItems.forEach((li, idx) => {
                     console.log(`[DEBUG] LI[${idx}] textContent:`, JSON.stringify(li.textContent));
                     console.log(`[DEBUG] LI[${idx}] innerHTML:`, li.innerHTML);
@@ -741,16 +935,23 @@ class WysiwygEngine {
      */
     getMarkdown() {
         const blocks = Array.from(this.editorElement.children);
-        const markdown = blocks.map(block => {
-            // If it's a rendered block, return original markdown
-            if (block.hasAttribute('data-wysiwyg-markdown')) {
-                return block.getAttribute('data-wysiwyg-markdown');
+        const markdownLines = blocks.map(block => {
+            // If it's a rendered block, refresh and return markdown
+            if (block.hasAttribute('data-wysiwyg-rendered')) {
+                // Update the stored markdown from current content
+                // This ensures empty list items etc. are filtered out
+                this.updateRenderedBlockMarkdown(block);
+                const md = block.getAttribute('data-wysiwyg-markdown');
+                // Filter out blocks that became empty (e.g., list with all empty items)
+                return md || '';
             }
             // Otherwise return text content
             return block.textContent || '';
-        }).join('\n');
+        });
 
-        return markdown;
+        // Filter out completely empty lines that came from empty rendered blocks
+        // But keep intentional empty lines (from <p><br></p> or plain empty paragraphs)
+        return markdownLines.join('\n');
     }
 
     /**
@@ -786,6 +987,16 @@ class WysiwygEngine {
 
             if (line.trim() === '') {
                 blocks.push('<p><br></p>');
+                i++;
+                continue;
+            }
+
+            // Filter out empty list item lines (e.g., "- " or "1. " with no content)
+            // These are created when user presses Enter in source mode but doesn't add content
+            const emptyListItemMatch = line.match(/^(\s*)([-*+]|\d+\.)\s*$/);
+            if (emptyListItemMatch) {
+                // Skip empty list items - they shouldn't be rendered
+                console.log('[DEBUG] Skipping empty list item line:', JSON.stringify(line));
                 i++;
                 continue;
             }

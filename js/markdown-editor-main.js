@@ -1737,6 +1737,10 @@
 
         // Setup auto-save: save content when input changes
         wysiwygElement.addEventListener('input', () => {
+            // Skip saving during document loading to prevent corruption
+            if (wysiwygEngine.isLoadingDocument) {
+                return;
+            }
             const markdown = wysiwygEngine.getMarkdown();
             documentManager.updateActiveContent(markdown);
         });

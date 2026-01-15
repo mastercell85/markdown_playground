@@ -1848,6 +1848,18 @@ header[role="banner"] {
     background: var(--md-table-hover-bg, rgba(255, 255, 255, 0.08));
 }
 
+/* Indentation levels - Tab key indentation */
+.wysiwyg-content [data-indent-level="1"] { margin-left: 40px; }
+.wysiwyg-content [data-indent-level="2"] { margin-left: 80px; }
+.wysiwyg-content [data-indent-level="3"] { margin-left: 120px; }
+.wysiwyg-content [data-indent-level="4"] { margin-left: 160px; }
+.wysiwyg-content [data-indent-level="5"] { margin-left: 200px; }
+.wysiwyg-content [data-indent-level="6"] { margin-left: 240px; }
+.wysiwyg-content [data-indent-level="7"] { margin-left: 280px; }
+.wysiwyg-content [data-indent-level="8"] { margin-left: 320px; }
+.wysiwyg-content [data-indent-level="9"] { margin-left: 360px; }
+.wysiwyg-content [data-indent-level="10"] { margin-left: 400px; }
+
 /* Edit mode - show markdown syntax as plain text */
 .wysiwyg-content[data-mode="edit"] {
     font-family: var(--font-family-mono);

@@ -138,21 +138,32 @@ class WysiwygEngine {
             return;
         }
 
-        // Get the markdown text from the block
-        const markdownText = block.textContent.trim();
+        // Get the markdown text from the block - preserve leading whitespace for indentation
+        let markdownText = block.textContent;
+        const trimmedText = markdownText.trim();
 
-        if (markdownText === '') {
+        if (trimmedText === '') {
             // Empty block, just insert new paragraph
             document.execCommand('insertParagraph');
             return;
         }
 
-        // Render the markdown
+        // Check if block already has an indent level (from previous auto-render)
+        // If so, prepend tabs to reconstruct the full markdown with indentation
+        const existingIndentLevel = parseInt(block.getAttribute('data-indent-level')) || 0;
+        if (existingIndentLevel > 0) {
+            const tabs = '\t'.repeat(existingIndentLevel);
+            markdownText = tabs + markdownText;
+            console.log('[DEBUG] handleEnterKey - prepending', existingIndentLevel, 'tabs to markdown:', JSON.stringify(markdownText.substring(0, 50)));
+        }
+
+        // Render the markdown (renderMarkdown handles indentation detection)
         const rendered = this.renderMarkdown(markdownText);
 
         if (rendered) {
             // Replace the block with rendered HTML
-            const newBlock = this.createRenderedBlock(rendered, markdownText);
+            // Store original text with leading whitespace for proper markdown reconstruction
+            const newBlock = this.createRenderedBlock(rendered, markdownText.trimEnd());
             block.parentNode.replaceChild(newBlock, block);
 
             // Insert new paragraph after rendered block
@@ -236,9 +247,9 @@ class WysiwygEngine {
         // Don't auto-render if block is already rendered
         if (block.hasAttribute('data-wysiwyg-rendered')) return;
 
-        // Get the text content
-        const text = block.textContent.trim();
-        if (!text) return;
+        // Get the text content - preserve leading whitespace for indentation
+        const text = block.textContent;
+        if (!text.trim()) return;
 
         // Check if the text matches a renderable markdown pattern
         const rendered = this.renderMarkdown(text);
@@ -248,7 +259,8 @@ class WysiwygEngine {
         const cursorOffset = this.getCursorOffsetInBlock(block);
 
         // Replace the block with rendered version
-        const newBlock = this.createRenderedBlock(rendered, text);
+        // Store original text with leading whitespace for proper markdown reconstruction
+        const newBlock = this.createRenderedBlock(rendered, text.trimEnd());
         block.parentNode.replaceChild(newBlock, block);
 
         // Restore cursor position at the end of the rendered block
@@ -334,12 +346,31 @@ class WysiwygEngine {
     renderMarkdown(text) {
         if (!text || text.trim() === '') return null;
 
-        // Count and strip leading tabs for indentation
+        // Count and strip leading whitespace for indentation
+        // Supports both tabs and spaces (4 spaces = 1 indent level, or 1 tab = 1 indent level)
         let indentLevel = 0;
         let processedText = text;
-        while (processedText.startsWith('\t')) {
-            indentLevel++;
-            processedText = processedText.substring(1);
+
+        // First, count leading whitespace
+        const leadingWhitespace = text.match(/^(\s*)/)[1];
+        if (leadingWhitespace && leadingWhitespace.length > 0) {
+            // Count tabs (each tab = 1 level)
+            const tabCount = (leadingWhitespace.match(/\t/g) || []).length;
+            // Count spaces (every 2-4 spaces = 1 level, using 2 as minimum for flexibility)
+            const spaceOnlyPart = leadingWhitespace.replace(/\t/g, '');
+            const spaceCount = Math.floor(spaceOnlyPart.length / 2); // 2 spaces = 1 indent level
+
+            indentLevel = tabCount + spaceCount;
+            processedText = text.substring(leadingWhitespace.length);
+
+            console.log('[DEBUG] renderMarkdown indent detection:', {
+                originalText: JSON.stringify(text.substring(0, 30)),
+                leadingWhitespace: JSON.stringify(leadingWhitespace),
+                tabCount,
+                spaceCount,
+                indentLevel,
+                processedText: JSON.stringify(processedText.substring(0, 30))
+            });
         }
 
         // First, process any shortcut syntax to convert to standard markdown
@@ -505,6 +536,9 @@ class WysiwygEngine {
      * Create a rendered block element
      */
     createRenderedBlock(html, originalMarkdown) {
+        console.log('[DEBUG] createRenderedBlock - input HTML:', html.substring(0, 200));
+        console.log('[DEBUG] createRenderedBlock - originalMarkdown:', JSON.stringify(originalMarkdown));
+
         const wrapper = document.createElement('div');
         wrapper.innerHTML = html;
         const element = wrapper.firstChild;
@@ -513,6 +547,12 @@ class WysiwygEngine {
         element.setAttribute('data-wysiwyg-rendered', 'true');
         element.setAttribute('data-wysiwyg-markdown', originalMarkdown);
         element.contentEditable = 'true'; // Make it editable in rendered state
+
+        console.log('[DEBUG] createRenderedBlock - element tagName:', element.tagName);
+        console.log('[DEBUG] createRenderedBlock - element has data-indent-level:', element.hasAttribute('data-indent-level'));
+        if (element.hasAttribute('data-indent-level')) {
+            console.log('[DEBUG] createRenderedBlock - data-indent-level value:', element.getAttribute('data-indent-level'));
+        }
 
         return element;
     }
@@ -577,6 +617,8 @@ class WysiwygEngine {
 
         // Prepend tabs based on indent level
         const indentLevel = parseInt(renderedBlock.getAttribute('data-indent-level')) || 0;
+        console.log('[DEBUG] updateRenderedBlockMarkdown - indentLevel:', indentLevel, 'from element:', renderedBlock.tagName);
+        console.log('[DEBUG] updateRenderedBlockMarkdown - element attributes:', renderedBlock.getAttributeNames().join(', '));
         if (indentLevel > 0) {
             const tabs = '\t'.repeat(indentLevel);
             markdown = tabs + markdown;
@@ -752,22 +794,34 @@ class WysiwygEngine {
             if (renderAll) {
                 const rendered = this.renderMarkdown(line);
 
-                // Group consecutive ordered list items
-                if (rendered && rendered.startsWith('<ol>')) {
+                // Group consecutive ordered list items WITH SAME INDENT LEVEL
+                if (rendered && rendered.match(/^<ol[\s>]/)) {
                     const olItems = [];
                     const olMarkdown = [];
+                    // Extract indent level from first item
+                    const indentMatch = rendered.match(/data-indent-level="(\d+)"/);
+                    const groupIndentLevel = indentMatch ? parseInt(indentMatch[1]) : 0;
 
                     while (i < lines.length) {
                         const currentLine = lines[i];
                         const currentRendered = this.renderMarkdown(currentLine);
 
-                        if (currentRendered && currentRendered.startsWith('<ol>')) {
-                            const liMatch = currentRendered.match(/<li>(.+?)<\/li>/);
-                            if (liMatch) {
-                                olItems.push(liMatch[1]);
-                                olMarkdown.push(currentLine);
+                        if (currentRendered && currentRendered.match(/^<ol[\s>]/)) {
+                            // Check if this item has the same indent level
+                            const currentIndentMatch = currentRendered.match(/data-indent-level="(\d+)"/);
+                            const currentIndentLevel = currentIndentMatch ? parseInt(currentIndentMatch[1]) : 0;
+
+                            if (currentIndentLevel === groupIndentLevel) {
+                                const liMatch = currentRendered.match(/<li>(.+?)<\/li>/);
+                                if (liMatch) {
+                                    olItems.push(liMatch[1]);
+                                    olMarkdown.push(currentLine);
+                                }
+                                i++;
+                            } else {
+                                // Different indent level - stop grouping
+                                break;
                             }
-                            i++;
                         } else {
                             break;
                         }
@@ -783,26 +837,41 @@ class WysiwygEngine {
                     ol.setAttribute('data-wysiwyg-rendered', 'true');
                     ol.setAttribute('data-wysiwyg-markdown', olMarkdown.join('\n'));
                     ol.contentEditable = 'true';
+                    if (groupIndentLevel > 0) {
+                        ol.setAttribute('data-indent-level', groupIndentLevel);
+                    }
                     blocks.push(ol.outerHTML);
                     continue;
                 }
 
-                // Group consecutive unordered list items
-                if (rendered && rendered.startsWith('<ul>')) {
+                // Group consecutive unordered list items WITH SAME INDENT LEVEL
+                if (rendered && rendered.match(/^<ul[\s>]/)) {
                     const ulItems = [];
                     const ulMarkdown = [];
+                    // Extract indent level from first item
+                    const indentMatch = rendered.match(/data-indent-level="(\d+)"/);
+                    const groupIndentLevel = indentMatch ? parseInt(indentMatch[1]) : 0;
 
                     while (i < lines.length) {
                         const currentLine = lines[i];
                         const currentRendered = this.renderMarkdown(currentLine);
 
-                        if (currentRendered && currentRendered.startsWith('<ul>')) {
-                            const liMatch = currentRendered.match(/<li>(.+?)<\/li>/);
-                            if (liMatch) {
-                                ulItems.push(liMatch[1]);
-                                ulMarkdown.push(currentLine);
+                        if (currentRendered && currentRendered.match(/^<ul[\s>]/)) {
+                            // Check if this item has the same indent level
+                            const currentIndentMatch = currentRendered.match(/data-indent-level="(\d+)"/);
+                            const currentIndentLevel = currentIndentMatch ? parseInt(currentIndentMatch[1]) : 0;
+
+                            if (currentIndentLevel === groupIndentLevel) {
+                                const liMatch = currentRendered.match(/<li>(.+?)<\/li>/);
+                                if (liMatch) {
+                                    ulItems.push(liMatch[1]);
+                                    ulMarkdown.push(currentLine);
+                                }
+                                i++;
+                            } else {
+                                // Different indent level - stop grouping
+                                break;
                             }
-                            i++;
                         } else {
                             break;
                         }
@@ -818,6 +887,10 @@ class WysiwygEngine {
                     ul.setAttribute('data-wysiwyg-rendered', 'true');
                     ul.setAttribute('data-wysiwyg-markdown', ulMarkdown.join('\n'));
                     ul.contentEditable = 'true';
+                    if (groupIndentLevel > 0) {
+                        ul.setAttribute('data-indent-level', groupIndentLevel);
+                        console.log('[DEBUG] UL with indent level', groupIndentLevel, 'outerHTML:', ul.outerHTML);
+                    }
                     blocks.push(ul.outerHTML);
                     continue;
                 }
@@ -925,6 +998,11 @@ class WysiwygEngine {
         const htmlToSet = blocks.join('');
         console.log('[DEBUG] About to set innerHTML with', htmlToSet.length, 'characters');
         console.log('[DEBUG] First 200 chars of HTML:', htmlToSet.substring(0, 200));
+        // Log any indent levels in the HTML
+        const indentMatches = htmlToSet.match(/data-indent-level="\d+"/g);
+        if (indentMatches) {
+            console.log('[DEBUG] Indent levels in HTML:', indentMatches);
+        }
 
         this.editorElement.innerHTML = htmlToSet;
 
@@ -1033,9 +1111,23 @@ class WysiwygEngine {
 
     /**
      * Handle keydown events in source mode (textarea)
-     * Provides smart list continuation like other markdown editors
+     * Provides smart list continuation and tab insertion like other markdown editors
      */
     handleSourceKeyDown(event) {
+        // Handle Tab key - insert tab character instead of moving focus
+        if (event.key === 'Tab') {
+            event.preventDefault();
+            const textarea = this.sourceTextarea;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+
+            // Insert tab at cursor position
+            textarea.value = text.substring(0, start) + '\t' + text.substring(end);
+            textarea.selectionStart = textarea.selectionEnd = start + 1;
+            return;
+        }
+
         if (event.key !== 'Enter' || event.shiftKey) return;
 
         const textarea = this.sourceTextarea;
@@ -1053,12 +1145,15 @@ class WysiwygEngine {
             const [, indent, marker, content] = ulMatch;
 
             if (content.trim() === '') {
-                // Empty list item - exit list
+                // Empty list item - exit list by removing the entire line
                 event.preventDefault();
-                const beforeCursor = text.substring(0, lineStart);
-                const afterCursor = text.substring(cursorPos);
-                textarea.value = beforeCursor + '\n' + afterCursor;
-                textarea.selectionStart = textarea.selectionEnd = lineStart + 1;
+                const beforeLine = text.substring(0, lineStart);
+                const actualLineEnd = lineEnd === -1 ? text.length : lineEnd;
+                const afterLine = text.substring(actualLineEnd);
+                // Remove the empty list item line and just leave a newline
+                textarea.value = beforeLine.trimEnd() + '\n' + afterLine.trimStart();
+                // Position cursor at the start of the new line
+                textarea.selectionStart = textarea.selectionEnd = beforeLine.trimEnd().length + 1;
             } else {
                 // Continue list with same marker
                 event.preventDefault();
@@ -1077,12 +1172,13 @@ class WysiwygEngine {
             const [, indent, num, content] = olMatch;
 
             if (content.trim() === '') {
-                // Empty list item - exit list
+                // Empty list item - exit list by removing the entire line
                 event.preventDefault();
-                const beforeCursor = text.substring(0, lineStart);
-                const afterCursor = text.substring(cursorPos);
-                textarea.value = beforeCursor + '\n' + afterCursor;
-                textarea.selectionStart = textarea.selectionEnd = lineStart + 1;
+                const beforeLine = text.substring(0, lineStart);
+                const actualLineEnd = lineEnd === -1 ? text.length : lineEnd;
+                const afterLine = text.substring(actualLineEnd);
+                textarea.value = beforeLine.trimEnd() + '\n' + afterLine.trimStart();
+                textarea.selectionStart = textarea.selectionEnd = beforeLine.trimEnd().length + 1;
             } else {
                 // Continue list with incremented number
                 event.preventDefault();
@@ -1102,12 +1198,13 @@ class WysiwygEngine {
             const [, indent, markers, content] = bqMatch;
 
             if (content.trim() === '') {
-                // Empty blockquote line - exit blockquote
+                // Empty blockquote line - exit blockquote by removing the entire line
                 event.preventDefault();
-                const beforeCursor = text.substring(0, lineStart);
-                const afterCursor = text.substring(cursorPos);
-                textarea.value = beforeCursor + '\n' + afterCursor;
-                textarea.selectionStart = textarea.selectionEnd = lineStart + 1;
+                const beforeLine = text.substring(0, lineStart);
+                const actualLineEnd = lineEnd === -1 ? text.length : lineEnd;
+                const afterLine = text.substring(actualLineEnd);
+                textarea.value = beforeLine.trimEnd() + '\n' + afterLine.trimStart();
+                textarea.selectionStart = textarea.selectionEnd = beforeLine.trimEnd().length + 1;
             } else {
                 // Continue blockquote
                 event.preventDefault();

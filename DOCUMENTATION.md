@@ -3340,6 +3340,138 @@ The WYSIWYG editor now provides complete markdown rendering support including fu
 
 ---
 
+### Bug Fixes: Tab Content, List Behavior, Indentation & Shortcuts
+
+**Status:** ✅ COMPLETE
+**Session Date:** January 15, 2026
+
+#### Overview
+
+This session addressed multiple critical bugs affecting document persistence, list editing behavior, visual indentation rendering, and shortcut syntax processing.
+
+---
+
+#### Bug Fix 1: New Tabs Inheriting Old Content
+
+**Problem:** When creating a new document tab, it would incorrectly display content from the previously active document instead of starting empty.
+
+**Root Cause:** Race condition in tab switching where the new document's empty content was being overwritten by a delayed render callback from the previous document.
+
+**Fix Applied:** Added a loading flag mechanism to prevent stale content from being applied during tab transitions.
+
+**Files Changed:** `js/wysiwyg/wysiwyg-engine.js`
+
+---
+
+#### Bug Fix 2: List Item Content Truncation
+
+**Problem:** When editing list items in WYSIWYG mode, content was being truncated or lost during certain editing operations.
+
+**Root Cause:** The event handler was using `event.target` to identify the current list item, which could reference the wrong element when the DOM structure changed during editing.
+
+**Fix Applied:** Changed to use `window.getSelection()` to reliably identify the current editing position and extract content from the correct list item element.
+
+**Files Changed:** `js/wysiwyg/wysiwyg-engine.js`
+
+---
+
+#### Bug Fix 3: Enter Key Creating Nested Structures in Lists
+
+**Problem:** Pressing Enter while editing a list item would sometimes create incorrectly nested list structures instead of a new sibling list item.
+
+**Root Cause:** The Enter key handler wasn't properly managing the DOM structure when inserting new list items, particularly in edge cases involving cursor position and existing content.
+
+**Fix Applied:** Revised the Enter key handling logic to properly create sibling list items while maintaining the correct list structure and preserving any content after the cursor.
+
+**Files Changed:** `js/wysiwyg/wysiwyg-engine.js`
+
+---
+
+#### Bug Fix 4: Visual Indentation in WYSIWYG Mode
+
+**Problem:** Tab and space indentation was not displaying correctly in WYSIWYG mode. Indented content appeared flush left instead of showing proper visual indentation.
+
+**Root Cause:** The `data-indent-level` attribute was being set on elements, but the corresponding CSS styles were not properly applying the visual indentation.
+
+**Fix Applied:** Updated the CSS in `markdown-editor-base.css` to properly apply left padding based on the `data-indent-level` attribute value, with each level adding 2em of indentation.
+
+**CSS Added:**
+```css
+.wysiwyg-content [data-indent-level="1"] { padding-left: 2em; }
+.wysiwyg-content [data-indent-level="2"] { padding-left: 4em; }
+.wysiwyg-content [data-indent-level="3"] { padding-left: 6em; }
+.wysiwyg-content [data-indent-level="4"] { padding-left: 8em; }
+.wysiwyg-content [data-indent-level="5"] { padding-left: 10em; }
+```
+
+**Files Changed:** `css/markdown-editor-base.css`
+
+---
+
+#### Bug Fix 5: Smart List Continuation in Source Mode
+
+**Problem:** When pressing Enter at the end of a list item in source mode, the new line didn't automatically continue the list pattern.
+
+**Fix Applied:** Added smart list continuation that detects the current list type (unordered `-`, `*`, `+` or ordered `1.`, `2.`, etc.) and automatically inserts the appropriate prefix on the new line.
+
+**Files Changed:** `js/wysiwyg/wysiwyg-engine.js`
+
+---
+
+#### Bug Fix 6: Missing l{} Link Shortcut
+
+**Problem:** The brace-style link shortcut `l{text|url}` was not rendering correctly. When users entered content like `l{click here|https://example.com}`, it appeared as raw text instead of being converted to a clickable link.
+
+**Root Cause:** Investigation of `js/markdown/shortcut-processor.js` revealed that the `createLinkShortcuts()` method was missing the brace-style pattern. Other brace-style shortcuts (`b{}`, `i{}`, `bi{}`, `s{}`, `c{}`) worked correctly, but `l{}` was never implemented despite being documented.
+
+**Fix Applied:** Added the missing pattern to `createLinkShortcuts()`:
+
+```javascript
+{ pattern: /l\{([^|]+)\|([^}]+)\}/g, replacement: '[$1]($2)', name: 'link-brace' }
+```
+
+**Pattern Explanation:**
+- `l\{` - Match literal `l{`
+- `([^|]+)` - Capture group 1: link text (any characters except `|`)
+- `\|` - Match literal `|` separator
+- `([^}]+)` - Capture group 2: URL (any characters except `}`)
+- `\}` - Match literal closing `}`
+- Replacement: `[$1]($2)` - Standard markdown link format
+
+**Files Changed:** `js/markdown/shortcut-processor.js`
+
+---
+
+#### Verification Summary
+
+All brace-style shortcuts now work consistently:
+- ✅ `b{bold text}` → **bold text**
+- ✅ `i{italic text}` → *italic text*
+- ✅ `bi{bold italic}` → ***bold italic***
+- ✅ `s{strikethrough}` → ~~strikethrough~~
+- ✅ `c{inline code}` → `inline code`
+- ✅ `l{link text|url}` → [link text](url)
+
+Indentation rendering verified at all 5 levels with proper visual spacing.
+
+List editing operations verified:
+- ✅ Enter key creates proper sibling list items
+- ✅ Content preservation during editing
+- ✅ Tab switching maintains document isolation
+- ✅ Smart list continuation in source mode
+
+---
+
+#### Files Changed Summary
+
+| File | Changes |
+|------|---------|
+| `js/wysiwyg/wysiwyg-engine.js` | Tab loading flag, list item selection fix, Enter key handling, smart list continuation |
+| `js/markdown/shortcut-processor.js` | Added `l{}` brace-style link pattern |
+| `css/markdown-editor-base.css` | Added `data-indent-level` padding styles |
+
+---
+
 #### Implementation Checklist (Phase 1)
 
 **Core Implementation (✅ Complete):**

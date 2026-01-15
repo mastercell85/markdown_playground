@@ -1,0 +1,295 @@
+markdown-editor-main.js:18 Markdown Editor initialized
+markdown-editor-main.js:27 SettingsManager initialized: {editor: {…}, theme: {…}}
+theme-loader.js:89 Loading theme by ID: cyberpunk
+theme-loader.js:138 CSS variable theme detected: Cyberpunk
+theme-loader.js:142 Set data-theme attribute: cyberpunk
+theme-loader.js:152 Loaded theme CSS: themes/cyberpunk-theme-v2.css
+theme-loader.js:215 Theme loaded: Cyberpunk (type: variable-theme)
+markdown-editor-main.js:1405 Tab menu style changed to: Steel
+markdown-editor-main.js:1495 Layout already set to: wysiwyg (from HTML)
+markdown-editor-main.js:1474 Zoom changed to: 100%
+markdown-editor-main.js:1533 View preferences restored
+wysiwyg-engine.js:59 WysiwygEngine: Initialized
+markdown-editor-main.js:1756 WYSIWYG: Loaded documents from storage
+markdown-editor-main.js:1759 WYSIWYG: Active document: Untitled-1
+wysiwyg-engine.js:722 [DEBUG] setMarkdown called with renderAll: true
+wysiwyg-engine.js:723 [DEBUG] Markdown length: 0
+wysiwyg-engine.js:724 [DEBUG] Editor element: <div id=​"wysiwyg-editor" class=​"wysiwyg-content" contenteditable=​"true" spellcheck=​"true" aria-label=​"WYSIWYG markdown editor" style=​"display:​ none;​">​…​</div>​
+wysiwyg-engine.js:727 [DEBUG] Empty markdown, setting empty paragraph
+markdown-editor-main.js:1766 WYSIWYG: All documents: ['Untitled-1']
+markdown-editor-main.js:1775 WYSIWYG: Initializing TabController
+tab-controller.js:44 TabController.renderTabs() called
+tab-controller.js:51 TabController: Found 1 documents
+tab-controller.js:52 TabController: Active ID: doc-1768509505773-01ufx29is
+tab-controller.js:53 TabController: Documents: [{…}]
+tab-controller.js:56 TabController: Creating tab for Untitled-1
+tab-controller.js:61 TabController: Finished rendering 1 tabs
+markdown-editor-main.js:1777 WYSIWYG: TabController initialized
+wysiwyg-engine.js:982 Switched to source mode
+markdown-editor-main.js:1817 Restored source mode from settings
+markdown-editor-main.js:1853 Source mode toggle initialized
+markdown-editor-main.js:1796 WYSIWYG editor initialized
+markdown-editor.html:703  GET https://p.typekit.net/p.gif?s=1&k=fzq7emy&ht=tk&f=2005.2009.2011&a=923804&js=1.21.0&app=typekit&e=js&_=1768509530806 net::ERR_BLOCKED_BY_CLIENT
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+about:blank:1  GET about:blank net::ERR_UNKNOWN_URL_SCHEME
+Image
+(anonymous) @ fzq7emy.js:37
+setTimeout
+Da @ fzq7emy.js:37
+active @ fzq7emy.js:35
+C @ fzq7emy.js:23
+Ca @ fzq7emy.js:33
+R.i @ fzq7emy.js:32
+(anonymous) @ fzq7emy.js:30
+Promise.then
+Aa.start @ fzq7emy.js:30
+Ba @ fzq7emy.js:32
+(anonymous) @ fzq7emy.js:36
+ja @ fzq7emy.js:20
+T.load @ fzq7emy.js:36
+Fa @ fzq7emy.js:37
+U.load @ fzq7emy.js:36
+window.Typekit.load @ fzq7emy.js:37
+(anonymous) @ markdown-editor.html:18
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:722 [DEBUG] setMarkdown called with renderAll: true
+wysiwyg-engine.js:723 [DEBUG] Markdown length: 223
+wysiwyg-engine.js:724 [DEBUG] Editor element: <div id=​"wysiwyg-editor" class=​"wysiwyg-content" contenteditable=​"true" spellcheck=​"true" aria-label=​"WYSIWYG markdown editor" style=​"display:​ none;​">​…​</div>​
+wysiwyg-engine.js:738 [DEBUG] Split into 13 lines
+wysiwyg-engine.js:926 [DEBUG] About to set innerHTML with 771 characters
+wysiwyg-engine.js:927 [DEBUG] First 200 chars of HTML: <ul data-wysiwyg-rendered="true" data-wysiwyg-markdown="- first item" contenteditable="true"><li>first item</li></ul><p><br></p><ol data-wysiwyg-rendered="true" data-wysiwyg-markdown="1. first item" c
+wysiwyg-engine.js:934 [DEBUG] setMarkdown completed. Set 13 blocks
+wysiwyg-engine.js:935 [DEBUG] Editor innerHTML length AFTER setting: 771
+wysiwyg-engine.js:936 [DEBUG] Editor element ID: wysiwyg-editor
+wysiwyg-engine.js:937 [DEBUG] Editor element is in DOM: true
+wysiwyg-engine.js:1024 Switched to WYSIWYG mode

@@ -22,6 +22,9 @@ class WysiwygEngine {
         this.sourceMode = false; // true = raw markdown textarea, false = WYSIWYG
         this.sourceTextarea = null;
 
+        // Loading state - prevents input events from saving during document switches
+        this.isLoadingDocument = false;
+
         // Initialize shortcut processor for custom markdown syntax
         this.shortcutProcessor = new ShortcutProcessor();
 
@@ -29,6 +32,7 @@ class WysiwygEngine {
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.handleInput = this.handleInput.bind(this);
+        this.handleSourceKeyDown = this.handleSourceKeyDown.bind(this);
 
         this.init();
     }
@@ -73,10 +77,10 @@ class WysiwygEngine {
             return;
         }
 
-        // Tab key - insert spaces
+        // Tab key - insert tab character for indentation
         if (event.key === 'Tab') {
             event.preventDefault();
-            document.execCommand('insertText', false, '  '); // 2 spaces
+            document.execCommand('insertText', false, '\t'); // Tab character
             return;
         }
     }
@@ -96,6 +100,41 @@ class WysiwygEngine {
         if (!block) {
             // No block found, insert new paragraph
             document.execCommand('insertParagraph');
+            return;
+        }
+
+        // Check if we're inside a rendered list (UL or OL)
+        const parentList = block.closest('ul[data-wysiwyg-rendered="true"], ol[data-wysiwyg-rendered="true"]');
+        if (parentList && block.tagName === 'LI') {
+            // We're inside a list item in a rendered list
+            const listItemContent = block.textContent.trim();
+
+            if (listItemContent === '') {
+                // Empty list item - exit the list by creating a new paragraph after it
+                const newParagraph = document.createElement('p');
+                newParagraph.innerHTML = '<br>';
+                parentList.parentNode.insertBefore(newParagraph, parentList.nextSibling);
+
+                // Remove the empty list item
+                block.remove();
+
+                // Move cursor to new paragraph
+                this.setCursorAt(newParagraph, 0);
+
+                // Update the list's markdown
+                this.updateRenderedBlockMarkdown(parentList);
+            } else {
+                // Non-empty list item - add a new list item after current one
+                const newLi = document.createElement('li');
+                newLi.innerHTML = '<br>';
+                block.parentNode.insertBefore(newLi, block.nextSibling);
+
+                // Move cursor to new list item
+                this.setCursorAt(newLi, 0);
+
+                // Update the list's markdown
+                this.updateRenderedBlockMarkdown(parentList);
+            }
             return;
         }
 
@@ -141,11 +180,34 @@ class WysiwygEngine {
      * Handle input events - track changes and auto-render
      */
     handleInput(event) {
-        const target = event.target;
+        // Skip input handling during document loading to prevent corruption
+        if (this.isLoadingDocument) {
+            return;
+        }
 
-        // Check if we're editing a rendered block
-        const renderedBlock = target.closest('[data-wysiwyg-rendered="true"]');
+        // Use selection to find the actual element being edited, not event.target
+        // (event.target may be the main editor DIV due to event bubbling)
+        const selection = window.getSelection();
+        let editedElement = null;
+
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            const node = range.startContainer;
+            editedElement = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+        }
+
+        // Fallback to event target if selection didn't give us anything useful
+        if (!editedElement || editedElement === this.editorElement) {
+            editedElement = event.target;
+        }
+
+        console.log('[DEBUG] handleInput - editedElement:', editedElement?.tagName, 'textContent:', JSON.stringify(editedElement?.textContent?.substring(0, 50)));
+
+        // Check if we're editing within a rendered block
+        const renderedBlock = editedElement?.closest('[data-wysiwyg-rendered="true"]');
         if (renderedBlock) {
+            console.log('[DEBUG] handleInput - found renderedBlock:', renderedBlock.tagName);
+            console.log('[DEBUG] handleInput - renderedBlock innerHTML:', renderedBlock.innerHTML?.substring(0, 200));
             // Update the stored markdown when rendered content changes
             this.updateRenderedBlockMarkdown(renderedBlock);
         } else {
@@ -272,9 +334,16 @@ class WysiwygEngine {
     renderMarkdown(text) {
         if (!text || text.trim() === '') return null;
 
+        // Count and strip leading tabs for indentation
+        let indentLevel = 0;
+        let processedText = text;
+        while (processedText.startsWith('\t')) {
+            indentLevel++;
+            processedText = processedText.substring(1);
+        }
+
         // First, process any shortcut syntax to convert to standard markdown
         // Note: Need to handle bi{} before b{} to avoid pattern collision
-        let processedText = text;
 
         // Manually process bi{text} first to avoid collision with b{text}
         processedText = processedText.replace(/bi\{(.+?)\}/g, '***$1***');
@@ -289,19 +358,19 @@ class WysiwygEngine {
         if (headerMatch) {
             const level = headerMatch[1].length;
             const content = headerMatch[2];
-            return `<h${level}>${this.escapeHtml(content)}</h${level}>`;
+            return this.applyIndent(`<h${level}>${this.escapeHtml(content)}</h${level}>`, indentLevel);
         }
 
         // Blockquote (> text)
         const quoteMatch = processedText.match(/^>\s*(.+)$/);
         if (quoteMatch) {
             const content = quoteMatch[1];
-            return `<blockquote>${this.escapeHtml(content)}</blockquote>`;
+            return this.applyIndent(`<blockquote>${this.escapeHtml(content)}</blockquote>`, indentLevel);
         }
 
         // Horizontal rule (--- or ***)
         if (processedText.match(/^(-{3,}|\*{3,}|_{3,})$/)) {
-            return '<hr>';
+            return this.applyIndent('<hr>', indentLevel);
         }
 
         // Code block (```lang or just ```)
@@ -322,7 +391,7 @@ class WysiwygEngine {
         if (ulMatch) {
             const content = ulMatch[1];
             const formattedContent = this.renderInlineFormatting(content);
-            return `<ul><li>${formattedContent}</li></ul>`;
+            return this.applyIndent(`<ul><li>${formattedContent}</li></ul>`, indentLevel);
         }
 
         // Ordered list (1. item)
@@ -330,7 +399,7 @@ class WysiwygEngine {
         if (olMatch) {
             const content = olMatch[1];
             const formattedContent = this.renderInlineFormatting(content);
-            return `<ol><li>${formattedContent}</li></ol>`;
+            return this.applyIndent(`<ol><li>${formattedContent}</li></ol>`, indentLevel);
         }
 
         // Task list (- [ ] or - [x])
@@ -340,17 +409,27 @@ class WysiwygEngine {
             const content = taskMatch[2];
             const formattedContent = this.renderInlineFormatting(content);
             const checkbox = checked ? '☑' : '☐';
-            return `<p>${checkbox} ${formattedContent}</p>`;
+            return this.applyIndent(`<p>${checkbox} ${formattedContent}</p>`, indentLevel);
         }
 
         // Regular paragraph with inline formatting
         const formatted = this.renderInlineFormatting(processedText);
         if (formatted !== processedText) {
-            return `<p>${formatted}</p>`;
+            return this.applyIndent(`<p>${formatted}</p>`, indentLevel);
         }
 
         // No special markdown detected
         return null;
+    }
+
+    /**
+     * Apply indent level to rendered HTML
+     */
+    applyIndent(html, indentLevel) {
+        if (indentLevel === 0) return html;
+
+        // Inject data-indent-level attribute into the opening tag
+        return html.replace(/^<(\w+)/, `<$1 data-indent-level="${indentLevel}"`);
     }
 
     /**
@@ -477,8 +556,15 @@ class WysiwygEngine {
                 break;
             case 'ul':
                 // Unordered list - extract list items
-                const ulItems = Array.from(renderedBlock.querySelectorAll('li'));
+                // Use direct children only to avoid nested list issues
+                const ulItems = Array.from(renderedBlock.children).filter(el => el.tagName === 'LI');
+                console.log('[DEBUG] UL update - found', ulItems.length, 'direct LI children');
+                ulItems.forEach((li, idx) => {
+                    console.log(`[DEBUG] LI[${idx}] textContent:`, JSON.stringify(li.textContent));
+                    console.log(`[DEBUG] LI[${idx}] innerHTML:`, li.innerHTML);
+                });
                 markdown = ulItems.map(li => `- ${li.textContent}`).join('\n');
+                console.log('[DEBUG] UL markdown result:', JSON.stringify(markdown));
                 break;
             case 'p':
                 // Paragraph - could have inline formatting
@@ -487,6 +573,13 @@ class WysiwygEngine {
             default:
                 // Fallback to text content
                 markdown = renderedBlock.textContent;
+        }
+
+        // Prepend tabs based on indent level
+        const indentLevel = parseInt(renderedBlock.getAttribute('data-indent-level')) || 0;
+        if (indentLevel > 0) {
+            const tabs = '\t'.repeat(indentLevel);
+            markdown = tabs + markdown;
         }
 
         // Update the stored markdown
@@ -623,6 +716,9 @@ class WysiwygEngine {
      * @param {boolean} renderAll - If true, render all markdown blocks immediately
      */
     setMarkdown(markdown, renderAll = false) {
+        // Set loading flag to prevent input events from corrupting content
+        this.isLoadingDocument = true;
+
         console.log('[DEBUG] setMarkdown called with renderAll:', renderAll);
         console.log('[DEBUG] Markdown length:', markdown?.length);
         console.log('[DEBUG] Editor element:', this.editorElement);
@@ -630,6 +726,7 @@ class WysiwygEngine {
         if (!markdown || markdown.trim() === '') {
             console.log('[DEBUG] Empty markdown, setting empty paragraph');
             this.editorElement.innerHTML = '<p><br></p>';
+            this.isLoadingDocument = false;
             return;
         }
 
@@ -831,6 +928,9 @@ class WysiwygEngine {
 
         this.editorElement.innerHTML = htmlToSet;
 
+        // Reset loading flag after content is set
+        this.isLoadingDocument = false;
+
         console.log('[DEBUG] setMarkdown completed. Set', blocks.length, 'blocks');
         console.log('[DEBUG] Editor innerHTML length AFTER setting:', this.editorElement.innerHTML.length);
         console.log('[DEBUG] Editor element ID:', this.editorElement.id);
@@ -872,6 +972,9 @@ class WysiwygEngine {
         // Load markdown into source textarea
         this.sourceTextarea.value = markdown;
 
+        // Attach smart list continuation handler
+        this.sourceTextarea.addEventListener('keydown', this.handleSourceKeyDown);
+
         // Focus the textarea
         this.sourceTextarea.focus();
 
@@ -889,6 +992,9 @@ class WysiwygEngine {
             console.warn('Source textarea not initialized');
             return;
         }
+
+        // Remove source mode event listener
+        this.sourceTextarea.removeEventListener('keydown', this.handleSourceKeyDown);
 
         // Get markdown from source textarea
         const markdown = this.sourceTextarea.value;
@@ -926,6 +1032,96 @@ class WysiwygEngine {
     }
 
     /**
+     * Handle keydown events in source mode (textarea)
+     * Provides smart list continuation like other markdown editors
+     */
+    handleSourceKeyDown(event) {
+        if (event.key !== 'Enter' || event.shiftKey) return;
+
+        const textarea = this.sourceTextarea;
+        const cursorPos = textarea.selectionStart;
+        const text = textarea.value;
+
+        // Get the current line
+        const lineStart = text.lastIndexOf('\n', cursorPos - 1) + 1;
+        const lineEnd = text.indexOf('\n', cursorPos);
+        const currentLine = text.substring(lineStart, lineEnd === -1 ? text.length : lineEnd);
+
+        // Check for unordered list pattern: "- ", "* ", "+ "
+        const ulMatch = currentLine.match(/^(\s*)([-*+])\s(.*)$/);
+        if (ulMatch) {
+            const [, indent, marker, content] = ulMatch;
+
+            if (content.trim() === '') {
+                // Empty list item - exit list
+                event.preventDefault();
+                const beforeCursor = text.substring(0, lineStart);
+                const afterCursor = text.substring(cursorPos);
+                textarea.value = beforeCursor + '\n' + afterCursor;
+                textarea.selectionStart = textarea.selectionEnd = lineStart + 1;
+            } else {
+                // Continue list with same marker
+                event.preventDefault();
+                const beforeCursor = text.substring(0, cursorPos);
+                const afterCursor = text.substring(cursorPos);
+                const newListItem = `\n${indent}${marker} `;
+                textarea.value = beforeCursor + newListItem + afterCursor;
+                textarea.selectionStart = textarea.selectionEnd = cursorPos + newListItem.length;
+            }
+            return;
+        }
+
+        // Check for ordered list pattern: "1. ", "2. ", etc.
+        const olMatch = currentLine.match(/^(\s*)(\d+)\.\s(.*)$/);
+        if (olMatch) {
+            const [, indent, num, content] = olMatch;
+
+            if (content.trim() === '') {
+                // Empty list item - exit list
+                event.preventDefault();
+                const beforeCursor = text.substring(0, lineStart);
+                const afterCursor = text.substring(cursorPos);
+                textarea.value = beforeCursor + '\n' + afterCursor;
+                textarea.selectionStart = textarea.selectionEnd = lineStart + 1;
+            } else {
+                // Continue list with incremented number
+                event.preventDefault();
+                const beforeCursor = text.substring(0, cursorPos);
+                const afterCursor = text.substring(cursorPos);
+                const nextNum = parseInt(num) + 1;
+                const newListItem = `\n${indent}${nextNum}. `;
+                textarea.value = beforeCursor + newListItem + afterCursor;
+                textarea.selectionStart = textarea.selectionEnd = cursorPos + newListItem.length;
+            }
+            return;
+        }
+
+        // Check for blockquote pattern: "> "
+        const bqMatch = currentLine.match(/^(\s*)(>+)\s(.*)$/);
+        if (bqMatch) {
+            const [, indent, markers, content] = bqMatch;
+
+            if (content.trim() === '') {
+                // Empty blockquote line - exit blockquote
+                event.preventDefault();
+                const beforeCursor = text.substring(0, lineStart);
+                const afterCursor = text.substring(cursorPos);
+                textarea.value = beforeCursor + '\n' + afterCursor;
+                textarea.selectionStart = textarea.selectionEnd = lineStart + 1;
+            } else {
+                // Continue blockquote
+                event.preventDefault();
+                const beforeCursor = text.substring(0, cursorPos);
+                const afterCursor = text.substring(cursorPos);
+                const newLine = `\n${indent}${markers} `;
+                textarea.value = beforeCursor + newLine + afterCursor;
+                textarea.selectionStart = textarea.selectionEnd = cursorPos + newLine.length;
+            }
+            return;
+        }
+    }
+
+    /**
      * Clean up and destroy
      */
     destroy() {
@@ -933,6 +1129,9 @@ class WysiwygEngine {
             this.editorElement.removeEventListener('keydown', this.handleKeyDown);
             this.editorElement.removeEventListener('click', this.handleClick);
             this.editorElement.removeEventListener('input', this.handleInput);
+        }
+        if (this.sourceTextarea) {
+            this.sourceTextarea.removeEventListener('keydown', this.handleSourceKeyDown);
         }
     }
 }

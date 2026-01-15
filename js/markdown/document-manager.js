@@ -78,12 +78,13 @@ class DocumentManager {
         const document = this.getDocument(id);
         if (!document) return null;
 
-        // Save current document before switching (if auto-save enabled)
-        if (this.autoSave && this.activeDocumentId) {
+        // Update active document ID
+        this.activeDocumentId = id;
+
+        // Save to storage after switching (to persist the new active document ID)
+        if (this.autoSave) {
             this.saveToStorage();
         }
-
-        this.activeDocumentId = id;
 
         // Trigger callback
         if (this.onDocumentSwitch) {

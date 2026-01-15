@@ -125,6 +125,9 @@ link: https://example.com
 ### BBCode auto
 [url]https://example.com[/url]
 
+### Brace style
+l{Link text here|https://example.com}
+
 ---
 
 ## 4. Image Shortcuts

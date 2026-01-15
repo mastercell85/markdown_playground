@@ -1,0 +1,538 @@
+markdown-editor-main.js:18 Markdown Editor initialized
+markdown-editor-main.js:27 SettingsManager initialized: {editor: {…}, theme: {…}}
+theme-loader.js:89 Loading theme by ID: cyberpunk
+theme-loader.js:138 CSS variable theme detected: Cyberpunk
+theme-loader.js:142 Set data-theme attribute: cyberpunk
+theme-loader.js:152 Loaded theme CSS: themes/cyberpunk-theme-v2.css
+theme-loader.js:215 Theme loaded: Cyberpunk (type: variable-theme)
+markdown-editor-main.js:1405 Tab menu style changed to: Steel
+markdown-editor-main.js:1495 Layout already set to: wysiwyg (from HTML)
+markdown-editor-main.js:1474 Zoom changed to: 100%
+markdown-editor-main.js:1533 View preferences restored
+wysiwyg-engine.js:59 WysiwygEngine: Initialized
+markdown-editor-main.js:1756 WYSIWYG: Loaded documents from storage
+markdown-editor-main.js:1759 WYSIWYG: Active document: Untitled-1
+wysiwyg-engine.js:744 [DEBUG] setMarkdown called with renderAll: true
+wysiwyg-engine.js:745 [DEBUG] Markdown length: 1
+wysiwyg-engine.js:746 [DEBUG] Editor element: <div id=​"wysiwyg-editor" class=​"wysiwyg-content" contenteditable=​"true" spellcheck=​"true" aria-label=​"WYSIWYG markdown editor">​…​</div>​
+wysiwyg-engine.js:749 [DEBUG] Empty markdown, setting empty paragraph
+markdown-editor-main.js:1766 WYSIWYG: All documents: ['Untitled-1']
+markdown-editor-main.js:1775 WYSIWYG: Initializing TabController
+tab-controller.js:44 TabController.renderTabs() called
+tab-controller.js:51 TabController: Found 1 documents
+tab-controller.js:52 TabController: Active ID: doc-1768513497452-0a0mj3f69
+tab-controller.js:53 TabController: Documents: [{…}]
+tab-controller.js:56 TabController: Creating tab for Untitled-1
+tab-controller.js:61 TabController: Finished rendering 1 tabs
+markdown-editor-main.js:1777 WYSIWYG: TabController initialized
+markdown-editor-main.js:1853 Source mode toggle initialized
+markdown-editor-main.js:1796 WYSIWYG editor initialized
+markdown-editor.html:703  GET https://p.typekit.net/p.gif?s=1&k=fzq7emy&ht=tk&f=2005.2009.2011&a=923804&js=1.21.0&app=typekit&e=js&_=1768514820165 net::ERR_BLOCKED_BY_CLIENT
+about:blank:1  GET about:blank net::ERR_UNKNOWN_URL_SCHEME
+Image
+(anonymous) @ fzq7emy.js:37
+setTimeout
+Da @ fzq7emy.js:37
+active @ fzq7emy.js:35
+C @ fzq7emy.js:23
+Ca @ fzq7emy.js:33
+R.i @ fzq7emy.js:32
+(anonymous) @ fzq7emy.js:30
+Promise.then
+Aa.start @ fzq7emy.js:30
+Ba @ fzq7emy.js:32
+(anonymous) @ fzq7emy.js:36
+ja @ fzq7emy.js:20
+T.load @ fzq7emy.js:36
+Fa @ fzq7emy.js:37
+U.load @ fzq7emy.js:36
+window.Typekit.load @ fzq7emy.js:37
+(anonymous) @ markdown-editor.html:18
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "-"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- r"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - r
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- re"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - re
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- reg"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - reg
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regu"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regu
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regul"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regul
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regula"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regula
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regular"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regular
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regular "
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regular&nbsp;
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regular t"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regular t
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regular te"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regular te
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regular tex"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regular tex
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regular text"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regular text
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: " "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "  "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "  -"
+wysiwyg-engine.js:357 [DEBUG] renderMarkdown indent detection: {originalText: '"  -"', leadingWhitespace: '"  "', tabCount: 0, spaceCount: 1, indentLevel: 1, …}
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "  - "
+wysiwyg-engine.js:357 [DEBUG] renderMarkdown indent detection: {originalText: '"  - "', leadingWhitespace: '"  "', tabCount: 0, spaceCount: 1, indentLevel: 1, …}
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- t"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - t
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- tw"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - tw
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- two"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - two
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- two "
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - two&nbsp;
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- two s"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - two s
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- two sp"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - two sp
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- two spa"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - two spa
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- two spac"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - two spac
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- two space"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - two space
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- two space "
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - two space&nbsp;
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- two space i"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - two space i
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- two space it"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - two space it
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- two space ite"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - two space ite
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- two space item"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - two space item
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: " "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "  "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "   "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "    "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "    -"
+wysiwyg-engine.js:357 [DEBUG] renderMarkdown indent detection: {originalText: '"    -"', leadingWhitespace: '"    "', tabCount: 0, spaceCount: 2, indentLevel: 2, …}
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "    - "
+wysiwyg-engine.js:357 [DEBUG] renderMarkdown indent detection: {originalText: '"    - "', leadingWhitespace: '"    "', tabCount: 0, spaceCount: 2, indentLevel: 2, …}
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- f"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - f
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- fo"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - fo
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- fou"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - fou
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- four"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - four
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- four "
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - four&nbsp;
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- four s"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - four s
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- four sp"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - four sp
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- four spa"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - four spa
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- four spac"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - four spac
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- four space"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - four space
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- four space "
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - four space&nbsp;
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- four space i"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - four space i
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- four space it"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - four space it
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- four space ite"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - four space ite
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- four space item"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - four space item
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "-"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- r"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - r
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- re"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - re
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- reg"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - reg
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regu"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regu
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regul"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regul
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regula"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regula
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regular"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regular
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regular "
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regular&nbsp;
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regular i"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regular i
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regular it"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regular it
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regular ite"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regular ite
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- regular item"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - regular item
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: SPAN textContent: "\t"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "\t-"
+wysiwyg-engine.js:357 [DEBUG] renderMarkdown indent detection: {originalText: '"\\t-"', leadingWhitespace: '"\\t"', tabCount: 1, spaceCount: 0, indentLevel: 1, …}
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "\t- "
+wysiwyg-engine.js:357 [DEBUG] renderMarkdown indent detection: {originalText: '"\\t- "', leadingWhitespace: '"\\t"', tabCount: 1, spaceCount: 0, indentLevel: 1, …}
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- t"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - t
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- ta"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - ta
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- tab"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - tab
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- tab "
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - tab&nbsp;
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- tab i"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - tab i
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- tab in"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - tab in
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- tab ind"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - tab ind
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- tab inde"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - tab inde
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- tab inden"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - tab inden
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- tab indent"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - tab indent
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- tab indente"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - tab indente
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- tab indented"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - tab indented
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- tab indented "
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - tab indented&nbsp;
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- tab indented i"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - tab indented i
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- tab indented it"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - tab indented it
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- tab indented ite"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - tab indented ite
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- tab indented item"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - tab indented item
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: SPAN textContent: "\t"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: SPAN textContent: "\t\t"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "\t\t-"
+wysiwyg-engine.js:357 [DEBUG] renderMarkdown indent detection: {originalText: '"\\t\\t-"', leadingWhitespace: '"\\t\\t"', tabCount: 2, spaceCount: 0, indentLevel: 2, …}
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "\t\t- "
+wysiwyg-engine.js:357 [DEBUG] renderMarkdown indent detection: {originalText: '"\\t\\t- "', leadingWhitespace: '"\\t\\t"', tabCount: 2, spaceCount: 0, indentLevel: 2, …}
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- o"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - o
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- oo"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - oo
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- o"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - o
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- "
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: -&nbsp;
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- d"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - d
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- do"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - do
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- dou"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - dou
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- doub"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - doub
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- doubl"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - doubl
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- double"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - double
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- double "
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - double&nbsp;
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- double i"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - double i
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- double in"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - double in
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- double ind"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - double ind
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- double inde"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - double inde
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- double inden"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - double inden
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- double indent"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - double indent
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- double indente"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - double indente
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- double indented"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - double indented
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- double indented "
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - double indented&nbsp;
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- double indented i"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - double indented i
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- double indented it"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - double indented it
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- double indented ite"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - double indented ite
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:206 [DEBUG] handleInput - editedElement: P textContent: "- double indented item"
+wysiwyg-engine.js:211 [DEBUG] handleInput - found renderedBlock: P
+wysiwyg-engine.js:212 [DEBUG] handleInput - renderedBlock innerHTML: - double indented item
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:1040 Switched to source mode
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:744 [DEBUG] setMarkdown called with renderAll: true
+wysiwyg-engine.js:745 [DEBUG] Markdown length: 145
+wysiwyg-engine.js:746 [DEBUG] Editor element: <div id=​"wysiwyg-editor" class=​"wysiwyg-content" contenteditable=​"true" spellcheck=​"true" aria-label=​"WYSIWYG markdown editor" style=​"display:​ none;​">​…​</div>​
+wysiwyg-engine.js:760 [DEBUG] Split into 7 lines
+wysiwyg-engine.js:979 [DEBUG] About to set innerHTML with 381 characters
+wysiwyg-engine.js:980 [DEBUG] First 200 chars of HTML: <ul data-wysiwyg-rendered="true" data-wysiwyg-markdown="- regular text
+- two space item
+- four space item
+- regular item
+- tab indented item
+- double indented item" contenteditable="true"><li>regular 
+wysiwyg-engine.js:992 [DEBUG] setMarkdown completed. Set 2 blocks
+wysiwyg-engine.js:993 [DEBUG] Editor innerHTML length AFTER setting: 381
+wysiwyg-engine.js:994 [DEBUG] Editor element ID: wysiwyg-editor
+wysiwyg-engine.js:995 [DEBUG] Editor element is in DOM: true
+wysiwyg-engine.js:1082 Switched to WYSIWYG mode

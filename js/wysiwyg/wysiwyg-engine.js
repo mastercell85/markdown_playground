@@ -61,7 +61,6 @@ class WysiwygEngine {
             this.editorElement.innerHTML = '<p><br></p>';
         }
 
-        console.log('WysiwygEngine: Initialized');
     }
 
     /**
@@ -165,7 +164,6 @@ class WysiwygEngine {
         if (existingIndentLevel > 0) {
             const tabs = '\t'.repeat(existingIndentLevel);
             markdownText = tabs + markdownText;
-            console.log('[DEBUG] handleEnterKey - prepending', existingIndentLevel, 'tabs to markdown:', JSON.stringify(markdownText.substring(0, 50)));
         }
 
         // Render the markdown (renderMarkdown handles indentation detection)
@@ -229,13 +227,9 @@ class WysiwygEngine {
             editedElement = event.target;
         }
 
-        console.log('[DEBUG] handleInput - editedElement:', editedElement?.tagName, 'textContent:', JSON.stringify(editedElement?.textContent?.substring(0, 50)));
-
         // Check if we're editing within a rendered block
         const renderedBlock = editedElement?.closest('[data-wysiwyg-rendered="true"]');
         if (renderedBlock) {
-            console.log('[DEBUG] handleInput - found renderedBlock:', renderedBlock.tagName);
-            console.log('[DEBUG] handleInput - renderedBlock innerHTML:', renderedBlock.innerHTML?.substring(0, 200));
             // Update the stored markdown when rendered content changes
             this.updateRenderedBlockMarkdown(renderedBlock);
         } else {
@@ -268,9 +262,6 @@ class WysiwygEngine {
 
         // Prevent default paste behavior
         event.preventDefault();
-
-        console.log('[DEBUG] handlePaste - pasted text length:', pastedText.length);
-        console.log('[DEBUG] handlePaste - first 100 chars:', pastedText.substring(0, 100));
 
         // Normalize line endings
         const normalizedText = pastedText.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
@@ -422,7 +413,6 @@ class WysiwygEngine {
 
             // Insert the rendered HTML
             const htmlToInsert = blocks.join('');
-            console.log('[DEBUG] handlePaste - inserting HTML:', htmlToInsert.substring(0, 200));
 
             // If we're inside an empty paragraph, replace it
             if (currentBlock && currentBlock.tagName === 'P' && currentBlock.textContent.trim() === '') {
@@ -577,15 +567,6 @@ class WysiwygEngine {
 
             indentLevel = tabCount + spaceCount;
             processedText = text.substring(leadingWhitespace.length);
-
-            console.log('[DEBUG] renderMarkdown indent detection:', {
-                originalText: JSON.stringify(text.substring(0, 30)),
-                leadingWhitespace: JSON.stringify(leadingWhitespace),
-                tabCount,
-                spaceCount,
-                indentLevel,
-                processedText: JSON.stringify(processedText.substring(0, 30))
-            });
         }
 
         // First, process any shortcut syntax to convert to standard markdown
@@ -751,9 +732,6 @@ class WysiwygEngine {
      * Create a rendered block element
      */
     createRenderedBlock(html, originalMarkdown) {
-        console.log('[DEBUG] createRenderedBlock - input HTML:', html.substring(0, 200));
-        console.log('[DEBUG] createRenderedBlock - originalMarkdown:', JSON.stringify(originalMarkdown));
-
         const wrapper = document.createElement('div');
         wrapper.innerHTML = html;
         const element = wrapper.firstChild;
@@ -762,12 +740,6 @@ class WysiwygEngine {
         element.setAttribute('data-wysiwyg-rendered', 'true');
         element.setAttribute('data-wysiwyg-markdown', originalMarkdown);
         element.contentEditable = 'true'; // Make it editable in rendered state
-
-        console.log('[DEBUG] createRenderedBlock - element tagName:', element.tagName);
-        console.log('[DEBUG] createRenderedBlock - element has data-indent-level:', element.hasAttribute('data-indent-level'));
-        if (element.hasAttribute('data-indent-level')) {
-            console.log('[DEBUG] createRenderedBlock - data-indent-level value:', element.getAttribute('data-indent-level'));
-        }
 
         return element;
     }
@@ -815,13 +787,7 @@ class WysiwygEngine {
                 // Use direct children only to avoid nested list issues
                 const ulItems = Array.from(renderedBlock.children)
                     .filter(el => el.tagName === 'LI' && el.textContent.trim() !== '');
-                console.log('[DEBUG] UL update - found', ulItems.length, 'non-empty direct LI children');
-                ulItems.forEach((li, idx) => {
-                    console.log(`[DEBUG] LI[${idx}] textContent:`, JSON.stringify(li.textContent));
-                    console.log(`[DEBUG] LI[${idx}] innerHTML:`, li.innerHTML);
-                });
                 markdown = ulItems.map(li => `- ${li.textContent}`).join('\n');
-                console.log('[DEBUG] UL markdown result:', JSON.stringify(markdown));
                 break;
             case 'p':
                 // Paragraph - could have inline formatting
@@ -834,8 +800,6 @@ class WysiwygEngine {
 
         // Prepend tabs based on indent level
         const indentLevel = parseInt(renderedBlock.getAttribute('data-indent-level')) || 0;
-        console.log('[DEBUG] updateRenderedBlockMarkdown - indentLevel:', indentLevel, 'from element:', renderedBlock.tagName);
-        console.log('[DEBUG] updateRenderedBlockMarkdown - element attributes:', renderedBlock.getAttributeNames().join(', '));
         if (indentLevel > 0) {
             const tabs = '\t'.repeat(indentLevel);
             markdown = tabs + markdown;
@@ -1044,12 +1008,7 @@ class WysiwygEngine {
         // Set loading flag to prevent input events from corrupting content
         this.isLoadingDocument = true;
 
-        console.log('[DEBUG] setMarkdown called with renderAll:', renderAll);
-        console.log('[DEBUG] Markdown length:', markdown?.length);
-        console.log('[DEBUG] Editor element:', this.editorElement);
-
         if (!markdown || markdown.trim() === '') {
-            console.log('[DEBUG] Empty markdown, setting empty paragraph');
             this.editorElement.innerHTML = '<p><br></p>';
             this.isLoadingDocument = false;
             return;
@@ -1060,7 +1019,6 @@ class WysiwygEngine {
 
         // Split into lines and create paragraphs
         const lines = normalizedMarkdown.split('\n');
-        console.log('[DEBUG] Split into', lines.length, 'lines');
         const blocks = [];
 
         let i = 0;
@@ -1078,7 +1036,6 @@ class WysiwygEngine {
             const emptyListItemMatch = line.match(/^(\s*)([-*+]|\d+\.)\s*$/);
             if (emptyListItemMatch) {
                 // Skip empty list items - they shouldn't be rendered
-                console.log('[DEBUG] Skipping empty list item line:', JSON.stringify(line));
                 i++;
                 continue;
             }
@@ -1182,7 +1139,6 @@ class WysiwygEngine {
                     ul.contentEditable = 'true';
                     if (groupIndentLevel > 0) {
                         ul.setAttribute('data-indent-level', groupIndentLevel);
-                        console.log('[DEBUG] UL with indent level', groupIndentLevel, 'outerHTML:', ul.outerHTML);
                     }
                     blocks.push(ul.outerHTML);
                     continue;
@@ -1289,23 +1245,10 @@ class WysiwygEngine {
         }
 
         const htmlToSet = blocks.join('');
-        console.log('[DEBUG] About to set innerHTML with', htmlToSet.length, 'characters');
-        console.log('[DEBUG] First 200 chars of HTML:', htmlToSet.substring(0, 200));
-        // Log any indent levels in the HTML
-        const indentMatches = htmlToSet.match(/data-indent-level="\d+"/g);
-        if (indentMatches) {
-            console.log('[DEBUG] Indent levels in HTML:', indentMatches);
-        }
-
         this.editorElement.innerHTML = htmlToSet;
 
         // Reset loading flag after content is set
         this.isLoadingDocument = false;
-
-        console.log('[DEBUG] setMarkdown completed. Set', blocks.length, 'blocks');
-        console.log('[DEBUG] Editor innerHTML length AFTER setting:', this.editorElement.innerHTML.length);
-        console.log('[DEBUG] Editor element ID:', this.editorElement.id);
-        console.log('[DEBUG] Editor element is in DOM:', document.body.contains(this.editorElement));
     }
 
     /**
@@ -1350,7 +1293,6 @@ class WysiwygEngine {
         this.sourceTextarea.focus();
 
         this.sourceMode = true;
-        console.log('Switched to source mode');
     }
 
     /**
@@ -1392,7 +1334,6 @@ class WysiwygEngine {
         this.editorElement.focus();
 
         this.sourceMode = false;
-        console.log('Switched to WYSIWYG mode');
     }
 
     /**

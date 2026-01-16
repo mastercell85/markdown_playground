@@ -15,8 +15,6 @@
 
     // Initialize when DOM is ready
     function init() {
-        console.log('Markdown Editor initialized');
-
         // Initialize settings manager first (with legacy migration)
         settingsManager = new SettingsManager();
         settingsManager.initWithMigration();
@@ -24,7 +22,6 @@
         // Expose to window for console testing
         window.settingsManager = settingsManager;
         window.SettingsError = SettingsError;
-        console.log('SettingsManager initialized:', settingsManager.settings);
 
         // Initialize theme loader
         themeLoader = new ThemeLoader({
@@ -183,50 +180,19 @@
                     const content = e.target.result;
                     const filename = file.name.replace(/\.(md|markdown|txt)$/i, '');
 
-                    console.log('[DEBUG] File > Open: Starting file load process');
-                    console.log('[DEBUG] MarkdownEditor exists:', !!window.MarkdownEditor);
-                    console.log('[DEBUG] documentManager exists:', !!window.MarkdownEditor?.documentManager);
-                    console.log('[DEBUG] wysiwygEngine exists:', !!window.MarkdownEditor?.wysiwygEngine);
-                    console.log('[DEBUG] Content length:', content.length);
-                    console.log('[DEBUG] Content preview:', content.substring(0, 100));
-
                     if (window.MarkdownEditor && window.MarkdownEditor.documentManager) {
                         const newDoc = window.MarkdownEditor.documentManager.createDocument({
                             name: filename,
                             content: content
                         });
-                        console.log('[DEBUG] Document created with ID:', newDoc.id);
 
                         window.MarkdownEditor.documentManager.switchDocument(newDoc.id);
-                        console.log('[DEBUG] switchDocument called');
-
                         window.MarkdownEditor.tabController.renderTabs();
-                        console.log('[DEBUG] renderTabs called');
-
-                        // Check editor state after renderTabs
-                        const editorElement = document.getElementById('wysiwyg-editor');
-                        console.log('[DEBUG] After renderTabs - editor innerHTML length:', editorElement?.innerHTML.length);
 
                         // Explicitly render the document content in WYSIWYG mode
-                        console.log('[DEBUG] About to check wysiwygEngine condition');
                         if (window.MarkdownEditor.wysiwygEngine) {
-                            console.log('[DEBUG] Calling setMarkdown with renderAll=true');
                             window.MarkdownEditor.wysiwygEngine.setMarkdown(content, true);
-                            console.log('[DEBUG] setMarkdown call completed');
-
-                            // Check editor state after a brief delay to see if something modifies it
-                            setTimeout(() => {
-                                const editorEl = document.getElementById('wysiwyg-editor');
-                                console.log('[DEBUG] 100ms after setMarkdown - innerHTML length:', editorEl?.innerHTML.length);
-                                console.log('[DEBUG] 100ms after setMarkdown - First 200 chars:', editorEl?.innerHTML.substring(0, 200));
-                                console.log('[DEBUG] 100ms after setMarkdown - Display style:', window.getComputedStyle(editorEl).display);
-                                console.log('[DEBUG] 100ms after setMarkdown - Visibility:', window.getComputedStyle(editorEl).visibility);
-                            }, 100);
-                        } else {
-                            console.error('[DEBUG] wysiwygEngine is NOT available!');
                         }
-
-                        console.log('File opened:', filename);
                     }
 
                     // Reset file input
@@ -1401,8 +1367,6 @@
 
         // Save preference via SettingsManager
         settingsManager.set('theme.tabMenu', styleId);
-
-        console.log(`Tab menu style changed to: ${style.name}`);
     }
 
     /**
@@ -1446,8 +1410,6 @@
 
         // Save preference to SettingsManager
         settingsManager.set('editor.layout', layout);
-
-        console.log(`Layout changed to: ${layout}`);
     }
 
     /**
@@ -1470,8 +1432,6 @@
 
         // Save preference to SettingsManager
         settingsManager.set('editor.zoom', percent);
-
-        console.log(`Zoom changed to: ${percent}%`);
     }
 
     /**
@@ -1491,8 +1451,6 @@
             // No layout specified in HTML, use saved preference
             const savedLayout = settingsManager.settings.editor.layout;
             handleLayoutChange(savedLayout);
-        } else {
-            console.log(`Layout already set to: ${currentLayout} (from HTML)`);
         }
 
         // Restore editor appearance settings
@@ -1528,9 +1486,6 @@
         // Restore zoom
         const savedZoom = settingsManager.settings.editor.zoom;
         handleZoomChange(savedZoom);
-
-
-        console.log('View preferences restored');
     }
 
     /**
@@ -1542,7 +1497,6 @@
             const newDoc = window.MarkdownEditor.documentManager.createDocument();
             window.MarkdownEditor.documentManager.switchDocument(newDoc.id);
             window.MarkdownEditor.tabController.renderTabs();
-            console.log('New file created:', newDoc.name);
         }
     }
 
@@ -1566,8 +1520,6 @@
             });
             window.MarkdownEditor.documentManager.switchDocument(regexDoc.id);
             window.MarkdownEditor.tabController.renderTabs();
-
-            console.log('Regex documentation loaded as read-only');
         }
     }
 
@@ -1616,8 +1568,6 @@
             // Cleanup
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
-
-            console.log('File saved:', exportData.filename);
         }
     }
 
@@ -1660,8 +1610,6 @@
             // Cleanup
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
-
-            console.log('File saved as:', filename);
         }
     }
 
@@ -1674,7 +1622,6 @@
             if (activeDoc) {
                 window.MarkdownEditor.documentManager.closeDocument(activeDoc.id);
                 window.MarkdownEditor.tabController.renderTabs();
-                console.log('File closed:', activeDoc.name);
             }
         }
     }
@@ -1728,10 +1675,9 @@
             onDocumentSwitch: (doc) => {
                 // Load document content into WYSIWYG editor with rendering enabled by default
                 wysiwygEngine.setMarkdown(doc.content, true);
-                console.log('Switched to document:', doc.name);
             },
             onDocumentUpdate: (doc) => {
-                console.log('Document updated:', doc.name);
+                // Document auto-saved
             }
         });
 
@@ -1747,23 +1693,16 @@
 
         // Try to load documents from storage, or create initial document
         if (!documentManager.loadFromStorage()) {
-            console.log('WYSIWYG: No documents in storage, creating initial document');
             const initialDoc = documentManager.createDocument();
-            console.log('WYSIWYG: Created document:', initialDoc.id, initialDoc.name);
             documentManager.switchDocument(initialDoc.id);
-            console.log('WYSIWYG: Switched to initial document');
         } else {
-            console.log('WYSIWYG: Loaded documents from storage');
             // Restore active document
             const activeDoc = documentManager.getActiveDocument();
-            console.log('WYSIWYG: Active document:', activeDoc ? activeDoc.name : 'null');
             if (activeDoc) {
                 // Load with rendering enabled by default
                 wysiwygEngine.setMarkdown(activeDoc.content, true);
             }
         }
-
-        console.log('WYSIWYG: All documents:', documentManager.getAllDocuments().map(d => d.name));
 
         // Initialize tab controller AFTER documents are loaded (same as split view)
         const tabController = new TabController({
@@ -1772,9 +1711,7 @@
             newTabButton: document.getElementById('new-document-btn')
         });
 
-        console.log('WYSIWYG: Initializing TabController');
         tabController.init();
-        console.log('WYSIWYG: TabController initialized');
 
         // Focus the editor after initialization
         setTimeout(() => {
@@ -1792,8 +1729,6 @@
             tabController: tabController,
             lineMapper: lineMapper
         };
-
-        console.log('WYSIWYG editor initialized');
     }
 
     /**
@@ -1814,7 +1749,6 @@
             // Switch to source mode
             wysiwygEngine.toggleSourceMode();
             toggleButton.classList.add('active');
-            console.log('Restored source mode from settings');
         }
 
         // Handle toolbar button click
@@ -1850,7 +1784,6 @@
             }
         });
 
-        console.log('Source mode toggle initialized');
     }
 
     /**

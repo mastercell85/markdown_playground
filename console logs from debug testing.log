@@ -1,0 +1,946 @@
+markdown-editor-main.js:18 Markdown Editor initialized
+markdown-editor-main.js:27 SettingsManager initialized: {editor: {…}, theme: {…}}
+theme-loader.js:89 Loading theme by ID: cyberpunk
+theme-loader.js:138 CSS variable theme detected: Cyberpunk
+theme-loader.js:142 Set data-theme attribute: cyberpunk
+theme-loader.js:152 Loaded theme CSS: themes/cyberpunk-theme-v2.css
+theme-loader.js:215 Theme loaded: Cyberpunk (type: variable-theme)
+markdown-editor-main.js:1405 Tab menu style changed to: Steel
+markdown-editor-main.js:1495 Layout already set to: wysiwyg (from HTML)
+markdown-editor-main.js:1474 Zoom changed to: 100%
+markdown-editor-main.js:1533 View preferences restored
+wysiwyg-engine.js:58 WysiwygEngine: Initialized
+markdown-editor-main.js:1756 WYSIWYG: Loaded documents from storage
+markdown-editor-main.js:1759 WYSIWYG: Active document: Untitled-1
+wysiwyg-engine.js:671 [DEBUG] setMarkdown called with renderAll: true
+wysiwyg-engine.js:672 [DEBUG] Markdown length: 0
+wysiwyg-engine.js:673 [DEBUG] Editor element: <div id=​"wysiwyg-editor" class=​"wysiwyg-content" contenteditable=​"true" spellcheck=​"true" aria-label=​"WYSIWYG markdown editor">​…​</div>​
+wysiwyg-engine.js:676 [DEBUG] Empty markdown, setting empty paragraph
+markdown-editor-main.js:1766 WYSIWYG: All documents: ['Untitled-1']
+markdown-editor-main.js:1775 WYSIWYG: Initializing TabController
+tab-controller.js:44 TabController.renderTabs() called
+tab-controller.js:51 TabController: Found 1 documents
+tab-controller.js:52 TabController: Active ID: doc-1768503787862-6i3nx16j1
+tab-controller.js:53 TabController: Documents: [{…}]
+tab-controller.js:56 TabController: Creating tab for Untitled-1
+tab-controller.js:61 TabController: Finished rendering 1 tabs
+markdown-editor-main.js:1777 WYSIWYG: TabController initialized
+markdown-editor-main.js:1853 Source mode toggle initialized
+markdown-editor-main.js:1796 WYSIWYG editor initialized
+markdown-editor.html:703  GET https://p.typekit.net/p.gif?s=1&k=fzq7emy&ht=tk&f=2005.2009.2011&a=923804&js=1.21.0&app=typekit&e=js&_=1768503828200 net::ERR_BLOCKED_BY_CLIENT
+about:blank:1  GET about:blank net::ERR_UNKNOWN_URL_SCHEME
+Image
+(anonymous) @ fzq7emy.js:37
+setTimeout
+Da @ fzq7emy.js:37
+active @ fzq7emy.js:35
+C @ fzq7emy.js:23
+Ca @ fzq7emy.js:33
+R.i @ fzq7emy.js:32
+(anonymous) @ fzq7emy.js:30
+Promise.then
+Aa.start @ fzq7emy.js:30
+Ba @ fzq7emy.js:32
+(anonymous) @ fzq7emy.js:36
+ja @ fzq7emy.js:20
+T.load @ fzq7emy.js:36
+Fa @ fzq7emy.js:37
+U.load @ fzq7emy.js:36
+window.Typekit.load @ fzq7emy.js:37
+(anonymous) @ markdown-editor.html:18
+markdown-editor-main.js:186 [DEBUG] File > Open: Starting file load process
+markdown-editor-main.js:187 [DEBUG] MarkdownEditor exists: true
+markdown-editor-main.js:188 [DEBUG] documentManager exists: true
+markdown-editor-main.js:189 [DEBUG] wysiwygEngine exists: true
+markdown-editor-main.js:190 [DEBUG] Content length: 430
+markdown-editor-main.js:191 [DEBUG] Content preview: h1: u
+h4: Confused_Emus
+h4: t
+h4: sTAb!442
+h4: FaceTaint
+h4: coolpiratedude16
+ul: ebooks
+h4: LordFer
+markdown-editor-main.js:198 [DEBUG] Document created with ID: doc-1768503884856-2nr9x4h30
+wysiwyg-engine.js:671 [DEBUG] setMarkdown called with renderAll: true
+wysiwyg-engine.js:672 [DEBUG] Markdown length: 430
+wysiwyg-engine.js:673 [DEBUG] Editor element: <div id=​"wysiwyg-editor" class=​"wysiwyg-content" contenteditable=​"true" spellcheck=​"true" aria-label=​"WYSIWYG markdown editor">​…​</div>​scroll
+wysiwyg-engine.js:687 [DEBUG] Split into 34 lines
+wysiwyg-engine.js:875 [DEBUG] About to set innerHTML with 3635 characters
+wysiwyg-engine.js:876 [DEBUG] First 200 chars of HTML: <h1 data-wysiwyg-rendered="true" data-wysiwyg-markdown="h1: u" contenteditable="true">u</h1><h4 data-wysiwyg-rendered="true" data-wysiwyg-markdown="h4:&nbsp;Confused_Emus" contenteditable="true">Confu
+wysiwyg-engine.js:883 [DEBUG] setMarkdown completed. Set 33 blocks
+wysiwyg-engine.js:884 [DEBUG] Editor innerHTML length AFTER setting: 3635
+wysiwyg-engine.js:885 [DEBUG] Editor element ID: wysiwyg-editor
+wysiwyg-engine.js:886 [DEBUG] Editor element is in DOM: true
+markdown-editor-main.js:1731 Switched to document: test_bug_fixes_file
+markdown-editor-main.js:201 [DEBUG] switchDocument called
+tab-controller.js:44 TabController.renderTabs() called
+tab-controller.js:51 TabController: Found 2 documents
+tab-controller.js:52 TabController: Active ID: doc-1768503884856-2nr9x4h30
+tab-controller.js:53 TabController: Documents: (2) [{…}, {…}]
+tab-controller.js:56 TabController: Creating tab for Untitled-1
+tab-controller.js:56 TabController: Creating tab for test_bug_fixes_file
+tab-controller.js:61 TabController: Finished rendering 2 tabs
+markdown-editor-main.js:204 [DEBUG] renderTabs called
+markdown-editor-main.js:208 [DEBUG] After renderTabs - editor innerHTML length: 3635
+markdown-editor-main.js:211 [DEBUG] About to check wysiwygEngine condition
+markdown-editor-main.js:213 [DEBUG] Calling setMarkdown with renderAll=true
+wysiwyg-engine.js:671 [DEBUG] setMarkdown called with renderAll: true
+wysiwyg-engine.js:672 [DEBUG] Markdown length: 430
+wysiwyg-engine.js:673 [DEBUG] Editor element: <div id=​"wysiwyg-editor" class=​"wysiwyg-content" contenteditable=​"true" spellcheck=​"true" aria-label=​"WYSIWYG markdown editor">​…​</div>​scroll
+wysiwyg-engine.js:687 [DEBUG] Split into 34 lines
+wysiwyg-engine.js:875 [DEBUG] About to set innerHTML with 3635 characters
+wysiwyg-engine.js:876 [DEBUG] First 200 chars of HTML: <h1 data-wysiwyg-rendered="true" data-wysiwyg-markdown="h1: u" contenteditable="true">u</h1><h4 data-wysiwyg-rendered="true" data-wysiwyg-markdown="h4:&nbsp;Confused_Emus" contenteditable="true">Confu
+wysiwyg-engine.js:883 [DEBUG] setMarkdown completed. Set 33 blocks
+wysiwyg-engine.js:884 [DEBUG] Editor innerHTML length AFTER setting: 3635
+wysiwyg-engine.js:885 [DEBUG] Editor element ID: wysiwyg-editor
+wysiwyg-engine.js:886 [DEBUG] Editor element is in DOM: true
+markdown-editor-main.js:215 [DEBUG] setMarkdown call completed
+markdown-editor-main.js:229 File opened: test_bug_fixes_file
+markdown-editor-main.js:220 [DEBUG] 100ms after setMarkdown - innerHTML length: 3635
+markdown-editor-main.js:221 [DEBUG] 100ms after setMarkdown - First 200 chars: <h1 data-wysiwyg-rendered="true" data-wysiwyg-markdown="h1: u" contenteditable="true">u</h1><h4 data-wysiwyg-rendered="true" data-wysiwyg-markdown="h4:&nbsp;Confused_Emus" contenteditable="true">Confu
+markdown-editor-main.js:222 [DEBUG] 100ms after setMarkdown - Display style: block
+markdown-editor-main.js:223 [DEBUG] 100ms after setMarkdown - Visibility: visible
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthsTAb!442FaceTaintcoolpiratedude16e"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthasTAb!442FaceTaintcoolpiratedude16"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthamsTAb!442FaceTaintcoolpiratedude1"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampsTAb!442FaceTaintcoolpiratedude"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "uConfused_EmusthampysTAb!442FaceTaintcoolpiratedud"
+markdown-editor-main.js:1734 Document updated: test_bug_fixes_file
+wysiwyg-engine.js:671 [DEBUG] setMarkdown called with renderAll: true
+wysiwyg-engine.js:672 [DEBUG] Markdown length: 0
+wysiwyg-engine.js:673 [DEBUG] Editor element: <div id=​"wysiwyg-editor" class=​"wysiwyg-content" contenteditable=​"true" spellcheck=​"true" aria-label=​"WYSIWYG markdown editor">​…​</div>​
+wysiwyg-engine.js:676 [DEBUG] Empty markdown, setting empty paragraph
+markdown-editor-main.js:1731 Switched to document: Untitled-2
+tab-controller.js:44 TabController.renderTabs() called
+tab-controller.js:51 TabController: Found 3 documents
+tab-controller.js:52 TabController: Active ID: doc-1768504157905-79dqqrylz
+tab-controller.js:53 TabController: Documents: (3) [{…}, {…}, {…}]
+tab-controller.js:56 TabController: Creating tab for Untitled-1
+tab-controller.js:56 TabController: Creating tab for test_bug_fixes_file
+tab-controller.js:56 TabController: Creating tab for Untitled-2
+tab-controller.js:61 TabController: Finished rendering 3 tabs
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "t"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "th"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "thi"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this "
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this i"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is "
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  "
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a "
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a n"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a ne"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new "
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new w"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new wi"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new win"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new wind"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new windo"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window "
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window t"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window te"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window tes"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window test"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window test."
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window test"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window tes"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window te"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window t"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window "
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window t"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to "
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to t"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to te"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to tes"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test "
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test t"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test th"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test the"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test the "
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test the b"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test the bu"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test the bug"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test the bug "
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test the bug f"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test the bug fi"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test the bug fix"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test the bug fixe"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test the bug fixes"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test the bug fixes,"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "Hthis is  a new window to test the bug fixes,"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "H1this is  a new window to test the bug fixes,"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "Hthis is  a new window to test the bug fixes,"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "this is  a new window to test the bug fixes,"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "hthis is  a new window to test the bug fixes,"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "h1this is  a new window to test the bug fixes,"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "h1:this is  a new window to test the bug fixes,"
+markdown-editor-main.js:1734 Document updated: Untitled-2
+wysiwyg-engine.js:153 [DEBUG] handleInput - target: DIV textContent: "h1: this is  a new window to test the bug fixes,"
+markdown-editor-main.js:1734 Document updated: Untitled-2

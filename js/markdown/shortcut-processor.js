@@ -126,6 +126,8 @@ class ShortcutProcessor {
      */
     createLinkShortcuts() {
         return [
+            // Brace style l{text|url}
+            { pattern: /l\{([^|]+)\|([^}]+)\}/g, replacement: '[$1]($2)', name: 'link-brace' },
             // BBCode [url=link]text[/url]
             { pattern: /\[url=([^\]]+)\](.+?)\[\/url\]/g, replacement: '[$2]($1)', name: 'link-bbcode-with-text' },
             // BBCode [url]link[/url] (auto-link)

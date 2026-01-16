@@ -1,0 +1,601 @@
+markdown-editor-main.js:18 Markdown Editor initialized
+markdown-editor-main.js:27 SettingsManager initialized: {editor: {…}, theme: {…}}
+theme-loader.js:89 Loading theme by ID: cyberpunk
+theme-loader.js:138 CSS variable theme detected: Cyberpunk
+theme-loader.js:142 Set data-theme attribute: cyberpunk
+theme-loader.js:152 Loaded theme CSS: themes/cyberpunk-theme-v2.css
+theme-loader.js:215 Theme loaded: Cyberpunk (type: variable-theme)
+markdown-editor-main.js:1405 Tab menu style changed to: Steel
+markdown-editor-main.js:1495 Layout already set to: wysiwyg (from HTML)
+markdown-editor-main.js:1474 Zoom changed to: 100%
+markdown-editor-main.js:1533 View preferences restored
+wysiwyg-engine.js:58 WysiwygEngine: Initialized
+markdown-editor-main.js:1756 WYSIWYG: Loaded documents from storage
+markdown-editor-main.js:1759 WYSIWYG: Active document: Untitled-1
+wysiwyg-engine.js:721 [DEBUG] setMarkdown called with renderAll: true
+wysiwyg-engine.js:722 [DEBUG] Markdown length: 0
+wysiwyg-engine.js:723 [DEBUG] Editor element: <div id=​"wysiwyg-editor" class=​"wysiwyg-content" contenteditable=​"true" spellcheck=​"true" aria-label=​"WYSIWYG markdown editor">​…​</div>​
+wysiwyg-engine.js:726 [DEBUG] Empty markdown, setting empty paragraph
+markdown-editor-main.js:1766 WYSIWYG: All documents: ['Untitled-1']
+markdown-editor-main.js:1775 WYSIWYG: Initializing TabController
+tab-controller.js:44 TabController.renderTabs() called
+tab-controller.js:51 TabController: Found 1 documents
+tab-controller.js:52 TabController: Active ID: doc-1768508600249-yz60eg113
+tab-controller.js:53 TabController: Documents: [{…}]
+tab-controller.js:56 TabController: Creating tab for Untitled-1
+tab-controller.js:61 TabController: Finished rendering 1 tabs
+markdown-editor-main.js:1777 WYSIWYG: TabController initialized
+markdown-editor-main.js:1853 Source mode toggle initialized
+markdown-editor-main.js:1796 WYSIWYG editor initialized
+markdown-editor.html:703  GET https://p.typekit.net/p.gif?s=1&k=fzq7emy&ht=tk&f=2005.2009.2011&a=923804&js=1.21.0&app=typekit&e=js&_=1768508606322 net::ERR_BLOCKED_BY_CLIENT
+about:blank:1  GET about:blank net::ERR_UNKNOWN_URL_SCHEME
+Image
+(anonymous) @ fzq7emy.js:37
+setTimeout
+Da @ fzq7emy.js:37
+active @ fzq7emy.js:35
+C @ fzq7emy.js:23
+Ca @ fzq7emy.js:33
+R.i @ fzq7emy.js:32
+(anonymous) @ fzq7emy.js:30
+Promise.then
+Aa.start @ fzq7emy.js:30
+Ba @ fzq7emy.js:32
+(anonymous) @ fzq7emy.js:36
+ja @ fzq7emy.js:20
+T.load @ fzq7emy.js:36
+Fa @ fzq7emy.js:37
+U.load @ fzq7emy.js:36
+window.Typekit.load @ fzq7emy.js:37
+(anonymous) @ markdown-editor.html:18
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "-"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "- "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "- f"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "fi"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>fi</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 1 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "fi"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: fi
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- fi"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "fir"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>fir</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 1 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "fir"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: fir
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- fir"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "firs"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>firs</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 1 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "firs"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: firs
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- firs"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "first"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 1 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "first "
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first&nbsp;</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 1 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first "
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first&nbsp;
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "first i"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first i</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 1 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first i"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first i
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first i"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "first it"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first it</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 1 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first it"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first it
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first it"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "first ite"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first ite</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 1 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first ite"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first ite
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first ite"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "first item"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 1 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:560 [DEBUG] UL update - found 2 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: ""
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: <br>
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- "
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "s"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>s</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 2 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "s"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: s
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- s"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "se"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>se</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 2 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "se"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: se
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- se"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "sec"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>sec</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 2 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "sec"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: sec
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- sec"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "seco"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>seco</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 2 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "seco"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: seco
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- seco"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "secon"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>secon</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 2 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "secon"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: secon
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- secon"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "second"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 2 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "second "
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second&nbsp;</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 2 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second "
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second&nbsp;
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "second i"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second i</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 2 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second i"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second i
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second i"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "second it"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second it</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 2 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second it"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second it
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second it"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "second ite"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second ite</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 2 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second ite"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second ite
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second ite"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "second item"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second item</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 2 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:560 [DEBUG] UL update - found 3 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: ""
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: <br>
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- "
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "t"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second item</li><li>t</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 3 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: "t"
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: t
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- t"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "th"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second item</li><li>th</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 3 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: "th"
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: th
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- th"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "thi"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second item</li><li>thi</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 3 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: "thi"
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: thi
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- thi"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "thir"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second item</li><li>thir</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 3 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: "thir"
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: thir
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- thir"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "third"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second item</li><li>third</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 3 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: "third"
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: third
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- third"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "third "
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second item</li><li>third&nbsp;</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 3 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: "third "
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: third&nbsp;
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- third "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "third i"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second item</li><li>third i</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 3 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: "third i"
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: third i
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- third i"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "third ie"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second item</li><li>third ie</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 3 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: "third ie"
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: third ie
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- third ie"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "third iem"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second item</li><li>third iem</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 3 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: "third iem"
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: third iem
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- third iem"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "third ie"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second item</li><li>third ie</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 3 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: "third ie"
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: third ie
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- third ie"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "third i"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second item</li><li>third i</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 3 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: "third i"
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: third i
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- third i"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "third it"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second item</li><li>third it</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 3 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: "third it"
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: third it
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- third it"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "third ite"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second item</li><li>third ite</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 3 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: "third ite"
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: third ite
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- third ite"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: LI textContent: "third item"
+wysiwyg-engine.js:208 [DEBUG] handleInput - found renderedBlock: UL
+wysiwyg-engine.js:209 [DEBUG] handleInput - renderedBlock innerHTML: <li>first item</li><li>second item</li><li>third item</li>
+wysiwyg-engine.js:560 [DEBUG] UL update - found 3 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: "third item"
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: third item
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- third item"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:560 [DEBUG] UL update - found 4 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: "third item"
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: third item
+wysiwyg-engine.js:562 [DEBUG] LI[3] textContent: ""
+wysiwyg-engine.js:563 [DEBUG] LI[3] innerHTML: <br>
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- third item\n- "
+wysiwyg-engine.js:560 [DEBUG] UL update - found 3 direct LI children
+wysiwyg-engine.js:562 [DEBUG] LI[0] textContent: "first item"
+wysiwyg-engine.js:563 [DEBUG] LI[0] innerHTML: first item
+wysiwyg-engine.js:562 [DEBUG] LI[1] textContent: "second item"
+wysiwyg-engine.js:563 [DEBUG] LI[1] innerHTML: second item
+wysiwyg-engine.js:562 [DEBUG] LI[2] textContent: "third item"
+wysiwyg-engine.js:563 [DEBUG] LI[2] innerHTML: third item
+wysiwyg-engine.js:566 [DEBUG] UL markdown result: "- first item\n- second item\n- third item"
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "n"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "no"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not i"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in t"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in te"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in teh"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in teh "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in teh l"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in teh li"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in teh lis"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in teh list"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in teh list "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in teh list"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in teh lis"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in teh li"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in teh l"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in teh "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in teh"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in te"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in t"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not in"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not i"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "not"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "no"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "n"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: ""
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "s"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "sh"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "sho"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "shou"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "shoul"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should n"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should no"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not b"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be i"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in t"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in th"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the l"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the li"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the lis"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list n"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list no"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now i"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in t"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in th"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in the"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in the "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in the s"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in the so"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in the sou"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in the sour"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in the sourc"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in the source"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in the source "
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in the source c"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in the source co"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in the source cod"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: "should not be in the list now in the source code"
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:203 [DEBUG] handleInput - editedElement: P textContent: ""
+markdown-editor-main.js:1734 Document updated: Untitled-1
+wysiwyg-engine.js:978 Switched to source mode

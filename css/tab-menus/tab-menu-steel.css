@@ -1013,7 +1013,7 @@
 }
 
 /* ============================================================================
-   STEEL MENU - VERY SMALL SCREENS (<900px)
+   STEEL MENU - SMALL SCREENS (<900px)
    Scale down help panel to fit viewport while keeping steel design
    ============================================================================ */
 
@@ -1091,6 +1091,52 @@
         box-sizing: border-box;
     }
 
+}
+
+/* ============================================================================
+   STEEL MENU - VERY NARROW SCREENS (<500px)
+   For extremely narrow viewports, use fixed positioning to fill screen
+   ============================================================================ */
+
+@media (max-width: 500px) {
+    /* Override transform-based positioning with fixed full-width approach */
+    .intro.tab-menu-steel .help-panel.panel-open,
+    .intro.tab-menu-steel .view-panel.panel-open,
+    .intro.tab-menu-steel .settings-panel.panel-open {
+        position: fixed !important;
+        left: 10px !important;
+        right: 10px !important;
+        top: 50px !important;
+        width: auto !important;
+        transform: none !important;
+        max-height: calc(100vh - 60px);
+        z-index: 1000;
+    }
+
+    /* Hide decorative backgrounds on very narrow screens */
+    .intro.tab-menu-steel .help-panel.panel-open::before,
+    .intro.tab-menu-steel .help-panel.panel-open::after,
+    .intro.tab-menu-steel .view-panel.panel-open::before,
+    .intro.tab-menu-steel .view-panel.panel-open::after,
+    .intro.tab-menu-steel .settings-panel.panel-open::before,
+    .intro.tab-menu-steel .settings-panel.panel-open::after {
+        display: none !important;
+    }
+
+    /* Simple solid background */
+    .intro.tab-menu-steel .help-panel.panel-open,
+    .intro.tab-menu-steel .view-panel.panel-open,
+    .intro.tab-menu-steel .settings-panel.panel-open {
+        background: #000000 !important;
+        border: 2px solid var(--accent-secondary, #00ffff) !important;
+        border-radius: 8px;
+    }
+
+    /* Stack two-column help layout vertically */
+    .intro.tab-menu-steel .help-two-col {
+        grid-template-columns: 1fr !important;
+        gap: 8px;
+    }
 }
 
 /* ============================================================================

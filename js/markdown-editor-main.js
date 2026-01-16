@@ -12,9 +12,81 @@
     let settingsManager = null;
     let lineMapper = null;
     let wysiwygEngine = null;
+    let lastDirectoryHandle = null; // Stores last used directory for file picker (persists through refresh via IndexedDB)
+
+    // IndexedDB helpers for persisting FileSystemHandle across page refresh
+    const DB_NAME = 'MarkdownEditorDB';
+    const STORE_NAME = 'fileHandles';
+
+    /**
+     * Open IndexedDB database
+     * @returns {Promise<IDBDatabase>}
+     */
+    function openDatabase() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(DB_NAME, 1);
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => resolve(request.result);
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains(STORE_NAME)) {
+                    db.createObjectStore(STORE_NAME);
+                }
+            };
+        });
+    }
+
+    /**
+     * Store a FileSystemHandle in IndexedDB
+     * @param {string} key - Storage key
+     * @param {FileSystemHandle} handle - The handle to store
+     */
+    async function storeHandle(key, handle) {
+        try {
+            const db = await openDatabase();
+            const tx = db.transaction(STORE_NAME, 'readwrite');
+            const store = tx.objectStore(STORE_NAME);
+            store.put(handle, key);
+            await new Promise((resolve, reject) => {
+                tx.oncomplete = resolve;
+                tx.onerror = () => reject(tx.error);
+            });
+            db.close();
+        } catch (err) {
+            console.warn('[IndexedDB] Failed to store handle:', err);
+        }
+    }
+
+    /**
+     * Retrieve a FileSystemHandle from IndexedDB
+     * @param {string} key - Storage key
+     * @returns {Promise<FileSystemHandle|null>}
+     */
+    async function getStoredHandle(key) {
+        try {
+            const db = await openDatabase();
+            const tx = db.transaction(STORE_NAME, 'readonly');
+            const store = tx.objectStore(STORE_NAME);
+            const request = store.get(key);
+            const result = await new Promise((resolve, reject) => {
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+            db.close();
+            return result || null;
+        } catch (err) {
+            console.warn('[IndexedDB] Failed to get handle:', err);
+            return null;
+        }
+    }
 
     // Initialize when DOM is ready
-    function init() {
+    async function init() {
+        // Restore last directory handle from IndexedDB (for persistence through refresh)
+        lastDirectoryHandle = await getStoredHandle('lastDirectory');
+        if (lastDirectoryHandle) {
+            console.log('[Init] Restored last directory handle from IndexedDB');
+        }
         // Initialize settings manager first (with legacy migration)
         settingsManager = new SettingsManager();
         settingsManager.initWithMigration();
@@ -1458,6 +1530,7 @@
     /**
      * Handle Open File action using File System Access API
      * Falls back to traditional file input for unsupported browsers
+     * Remembers last directory through page refresh (sessionStorage)
      */
     async function handleOpenFile() {
         // Check for File System Access API support
@@ -1474,15 +1547,29 @@
         console.log('[Open] Using File System Access API');
 
         try {
-            const [fileHandle] = await window.showOpenFilePicker({
+            // Build picker options
+            const pickerOptions = {
                 types: [{
                     description: 'Markdown Files',
                     accept: { 'text/markdown': ['.md', '.markdown', '.txt'] }
                 }],
                 multiple: false
-            });
+            };
+
+            // Use last directory if available (startIn accepts a FileSystemHandle)
+            if (lastDirectoryHandle) {
+                pickerOptions.startIn = lastDirectoryHandle;
+                console.log('[Open] Starting in last directory');
+            }
+
+            const [fileHandle] = await window.showOpenFilePicker(pickerOptions);
 
             console.log('[Open] Got file handle:', fileHandle.name);
+
+            // Store this file handle as the last location (browser will open to its directory next time)
+            lastDirectoryHandle = fileHandle;
+            // Persist to IndexedDB for refresh survival
+            storeHandle('lastDirectory', fileHandle);
 
             const file = await fileHandle.getFile();
             const content = await file.text();
@@ -1666,6 +1753,7 @@
      * Handle Save As File action using File System Access API
      * Allows user to choose save location
      * Falls back to download for unsupported browsers
+     * Remembers last directory through page refresh
      */
     async function handleSaveAsFile() {
         const activeDoc = window.MarkdownEditor?.documentManager?.getActiveDocument();
@@ -1688,13 +1776,22 @@
         }
 
         try {
-            const fileHandle = await window.showSaveFilePicker({
+            // Build picker options
+            const pickerOptions = {
                 suggestedName: activeDoc.name + '.md',
                 types: [{
                     description: 'Markdown Files',
                     accept: { 'text/markdown': ['.md'] }
                 }]
-            });
+            };
+
+            // Use last directory if available
+            if (lastDirectoryHandle) {
+                pickerOptions.startIn = lastDirectoryHandle;
+                console.log('[SaveAs] Starting in last directory');
+            }
+
+            const fileHandle = await window.showSaveFilePicker(pickerOptions);
 
             const writable = await fileHandle.createWritable();
             await writable.write(markdownContent);
@@ -1704,6 +1801,11 @@
             activeDoc.metadata.fileHandle = fileHandle;
             const newName = fileHandle.name.replace(/\.md$/i, '');
             activeDoc.setName(newName);
+
+            // Store this file handle as the last location
+            lastDirectoryHandle = fileHandle;
+            // Persist to IndexedDB for refresh survival
+            storeHandle('lastDirectory', fileHandle);
 
             console.log('[SaveAs] fileHandle stored on doc:', activeDoc.id, 'handle:', !!activeDoc.metadata.fileHandle);
 

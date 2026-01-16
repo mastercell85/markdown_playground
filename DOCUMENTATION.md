@@ -3872,6 +3872,52 @@ document.addEventListener('keydown', (event) => {
 
 ---
 
+#### Bug Fix 17: Remember Last Directory for File Picker
+
+**Feature Implemented:**
+
+File Open and Save As dialogs now remember the last used directory and open to that location on subsequent uses, persisting through page refresh.
+
+**Implementation Details:**
+
+1. **IndexedDB Storage** - FileSystemHandle objects cannot be serialized to localStorage/sessionStorage, so IndexedDB is used:
+   - `openDatabase()` - Opens/creates the MarkdownEditorDB database
+   - `storeHandle(key, handle)` - Stores a FileSystemHandle in IndexedDB
+   - `getStoredHandle(key)` - Retrieves a FileSystemHandle from IndexedDB
+
+2. **Module-level Variable:**
+   - `lastDirectoryHandle` - Stores the most recently accessed file handle in memory
+
+3. **Initialization:**
+   - On page load, `init()` restores `lastDirectoryHandle` from IndexedDB
+   - This allows the directory preference to survive page refresh
+
+4. **File Picker Integration:**
+   - `handleOpenFile()` - Uses `startIn: lastDirectoryHandle` option and updates handle after selection
+   - `handleSaveAsFile()` - Uses `startIn: lastDirectoryHandle` option and updates handle after save
+
+**How It Works:**
+
+1. User opens a file from `/Documents/Projects/`
+2. File handle is stored in memory and IndexedDB
+3. User refreshes the page
+4. On load, handle is restored from IndexedDB
+5. Next File > Open dialog opens to `/Documents/Projects/`
+
+**Persistence Scope:**
+
+- ✅ Persists through page refresh
+- ✅ Persists through navigation within the app
+- ❌ Does not persist through browser close (by design per user request)
+
+**Files Changed:**
+
+| File | Changes |
+|------|---------|
+| `js/markdown-editor-main.js` | Added IndexedDB helpers (`openDatabase`, `storeHandle`, `getStoredHandle`), updated `init()` to restore handle, updated `handleOpenFile()` and `handleSaveAsFile()` to use and store directory handle |
+
+---
+
 #### Implementation Checklist (Phase 1)
 
 **Core Implementation (✅ Complete):**

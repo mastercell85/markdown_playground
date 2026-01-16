@@ -3558,6 +3558,55 @@ if (this.autoSave) {
 
 ---
 
+#### Bug Fix 11: Cursor Not Staying Visible When Typing at Bottom of Editor
+
+**Problem:** When typing enough text to reach the bottom of the editor, the cursor would move below the visible area. Users couldn't see what they were typing until they manually scrolled or pressed Enter.
+
+**Root Cause:** The WYSIWYG editor had no automatic scroll management to keep the cursor in view during typing. The contenteditable element didn't automatically scroll to follow the cursor position.
+
+**Fix Applied:** Added a `scrollCursorIntoView()` method to `wysiwyg-engine.js` that:
+1. Uses `range.getClientRects()` to get the cursor's visual position
+2. Compares cursor position against the editor's visible bounds
+3. Scrolls the editor to keep cursor visible with a 50px buffer for comfortable viewing
+4. Includes a fallback using temporary span insertion for edge cases
+5. Uses debouncing (50ms) in `handleInput()` to prevent excessive calculations during rapid typing
+
+```javascript
+scrollCursorIntoView() {
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return;
+
+    const range = selection.getRangeAt(0);
+    const rects = range.getClientRects();
+
+    if (rects.length > 0) {
+        const rect = rects[0];
+        const editorRect = this.editorElement.getBoundingClientRect();
+        const buffer = 50;
+
+        // Scroll down if cursor is near/below bottom
+        if (rect.bottom > editorRect.bottom - buffer) {
+            const scrollAmount = (rect.bottom - editorRect.bottom) + buffer;
+            this.editorElement.scrollTop += scrollAmount;
+        }
+        // Scroll up if cursor is near/above top
+        else if (rect.top < editorRect.top + buffer) {
+            const scrollAmount = (editorRect.top - rect.top) + buffer;
+            this.editorElement.scrollTop -= scrollAmount;
+        }
+    }
+}
+```
+
+**Integration Points:**
+- Called with debouncing in `handleInput()` for continuous typing
+- Called directly after `handleEnterKey()` creates new paragraphs
+- Called after list item handling to ensure new list items are visible
+
+**Files Changed:** `js/wysiwyg/wysiwyg-engine.js`
+
+---
+
 #### Verification Summary
 
 All bug fixes verified working:
@@ -3566,6 +3615,7 @@ All bug fixes verified working:
 - ✅ Consecutive list items grouped properly when pasting
 - ✅ Pasted content persists across page refreshes
 - ✅ Active tab persists correctly on page refresh
+- ✅ Cursor stays visible when typing at bottom of editor
 
 ---
 
@@ -3573,7 +3623,7 @@ All bug fixes verified working:
 
 | File | Changes |
 |------|---------|
-| `js/wysiwyg/wysiwyg-engine.js` | Empty list filtering, paste handler, input event dispatch |
+| `js/wysiwyg/wysiwyg-engine.js` | Empty list filtering, paste handler, input event dispatch, scrollCursorIntoView |
 | `js/markdown/document-manager.js` | Fixed activeDocumentId save order in switchDocument() |
 
 ---

@@ -25,6 +25,9 @@ class WysiwygEngine {
         // Loading state - prevents input events from saving during document switches
         this.isLoadingDocument = false;
 
+        // Scroll debounce timer - prevents excessive scroll calculations during rapid typing
+        this.scrollDebounceTimer = null;
+
         // Initialize shortcut processor for custom markdown syntax
         this.shortcutProcessor = new ShortcutProcessor();
 
@@ -125,6 +128,9 @@ class WysiwygEngine {
 
                 // Update the list's markdown
                 this.updateRenderedBlockMarkdown(parentList);
+
+                // Scroll into view
+                this.scrollCursorIntoView();
             } else {
                 // Non-empty list item - add a new list item after current one
                 const newLi = document.createElement('li');
@@ -136,6 +142,9 @@ class WysiwygEngine {
 
                 // Update the list's markdown
                 this.updateRenderedBlockMarkdown(parentList);
+
+                // Scroll into view
+                this.scrollCursorIntoView();
             }
             return;
         }
@@ -175,9 +184,15 @@ class WysiwygEngine {
 
             // Move cursor to new paragraph
             this.setCursorAt(newParagraph, 0);
+
+            // Scroll the new paragraph into view
+            this.scrollCursorIntoView();
         } else {
             // No special markdown detected, just insert paragraph
             document.execCommand('insertParagraph');
+
+            // Scroll cursor into view after paragraph insertion
+            this.scrollCursorIntoView();
         }
     }
 
@@ -231,6 +246,14 @@ class WysiwygEngine {
         // Auto-save could be triggered here
         // For now, just ensure we maintain proper structure
         this.ensureProperStructure();
+
+        // Ensure cursor stays visible when typing near bottom of editor (debounced)
+        if (this.scrollDebounceTimer) {
+            clearTimeout(this.scrollDebounceTimer);
+        }
+        this.scrollDebounceTimer = setTimeout(() => {
+            this.scrollCursorIntoView();
+        }, 50); // Small delay to batch rapid keystrokes
     }
 
     /**
@@ -919,6 +942,65 @@ class WysiwygEngine {
              this.editorElement.firstChild.textContent === '')) {
             this.editorElement.innerHTML = '<p><br></p>';
         }
+    }
+
+    /**
+     * Scroll the current cursor/caret position into view
+     * This ensures the user can always see where they're typing
+     */
+    scrollCursorIntoView() {
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return;
+
+        const range = selection.getRangeAt(0);
+
+        // Try to get cursor position from range's client rects first (less intrusive)
+        const rects = range.getClientRects();
+        if (rects.length > 0) {
+            const rect = rects[0];
+            const editorRect = this.editorElement.getBoundingClientRect();
+
+            // Use a larger buffer to ensure cursor is comfortably visible
+            // Account for line height (~24px) plus extra padding
+            const buffer = 50;
+
+            // Check if cursor is below the visible area (or too close to bottom)
+            if (rect.bottom > editorRect.bottom - buffer) {
+                // Scroll down to show the cursor with comfortable padding
+                const scrollAmount = (rect.bottom - editorRect.bottom) + buffer;
+                this.editorElement.scrollTop += scrollAmount;
+            }
+            // Check if cursor is above the visible area (or too close to top)
+            else if (rect.top < editorRect.top + buffer) {
+                // Scroll up to show the cursor with comfortable padding
+                const scrollAmount = (editorRect.top - rect.top) + buffer;
+                this.editorElement.scrollTop -= scrollAmount;
+            }
+            return;
+        }
+
+        // Fallback: use temporary element if getClientRects didn't work
+        // (can happen at start of empty elements)
+        const tempSpan = document.createElement('span');
+        tempSpan.textContent = '\u200B'; // Zero-width space
+
+        // Clone range to avoid modifying the original selection
+        const clonedRange = range.cloneRange();
+        clonedRange.insertNode(tempSpan);
+
+        // Scroll the temp element into view with 'center' to ensure visibility
+        tempSpan.scrollIntoView({
+            behavior: 'instant',
+            block: 'center',
+            inline: 'nearest'
+        });
+
+        // Remove the temp element
+        const parent = tempSpan.parentNode;
+        parent.removeChild(tempSpan);
+
+        // Normalize to merge any split text nodes
+        parent.normalize();
     }
 
     /**

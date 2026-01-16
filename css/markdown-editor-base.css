@@ -1043,8 +1043,8 @@ body {
 
 .editor-section-content {
     flex: 1;
-    padding: 20px;
-    overflow: auto;
+    padding: 0;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -1674,7 +1674,7 @@ header[role="banner"] {
     font-size: var(--font-size-base);
     line-height: 1.6;
     color: var(--textarea-text);
-    background: transparent;
+    background: var(--editor-section-bg, rgba(50, 50, 50, 0.8));
     overflow-wrap: break-word;
     word-wrap: break-word;
     overflow: auto;
@@ -1685,24 +1685,8 @@ header[role="banner"] {
     outline: none;
 }
 
-/* Source mode textarea (hidden by default) */
-.source-textarea {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    border: none;
-    outline: none;
-    resize: none;
-    font-family: var(--font-family-mono);
-    font-size: var(--font-size-base);
-    line-height: 1.5;
-    color: var(--textarea-text);
-    background: var(--editor-section-bg);
-    box-sizing: border-box;
-}
+/* Source mode textarea - base styles (used by source-editor-container) */
+/* Note: position is now relative/flex-based when inside source-editor-container */
 
 /* Gap in WYSIWYG mode - toolbar area (reusing existing gap styles) */
 .editor-container[data-layout="wysiwyg"] .editor-gap {
@@ -1915,21 +1899,24 @@ header[role="banner"] {
     flex-direction: row;
     width: 100%;
     height: 100%;
-    background: var(--editor-bg, #1e1e1e);
+    background: var(--editor-section-bg, rgba(50, 50, 50, 0.8));
     border-radius: 4px;
     overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 /* Line numbers gutter */
 .line-numbers-gutter {
     flex-shrink: 0;
     width: 50px;
-    padding: 10px 8px 10px 8px;
+    padding: 20px 8px 20px 8px;
     background: var(--line-numbers-bg, rgba(0, 0, 0, 0.2));
     border-right: 1px solid var(--line-numbers-border, rgba(255, 255, 255, 0.1));
     font-family: var(--font-family-mono, 'Consolas', monospace);
-    font-size: inherit;
-    line-height: inherit;
+    font-size: var(--font-size-base, 14px);
+    line-height: 1.5;
     color: var(--line-numbers-color, rgba(255, 255, 255, 0.4));
     text-align: right;
     user-select: none;
@@ -1951,15 +1938,15 @@ header[role="banner"] {
     flex: 1;
     width: 100%;
     height: 100%;
-    padding: 10px;
+    padding: 20px;
     border: none;
     outline: none;
     resize: none;
     background: transparent;
-    color: var(--editor-text, #d4d4d4);
+    color: var(--textarea-text, #fff);
     font-family: var(--font-family-mono, 'Consolas', monospace);
-    font-size: inherit;
-    line-height: inherit;
+    font-size: var(--font-size-base, 14px);
+    line-height: 1.5;
     white-space: pre-wrap;
     overflow-wrap: break-word;
     overflow-y: auto;

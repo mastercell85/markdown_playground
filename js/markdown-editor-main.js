@@ -463,49 +463,6 @@
                 event.target.value = '';
             });
         }
-
-
-        // Zoom buttons
-        const zoom90Btn = document.getElementById('zoom-90-btn');
-        const zoom100Btn = document.getElementById('zoom-100-btn');
-        const zoom110Btn = document.getElementById('zoom-110-btn');
-        const zoom125Btn = document.getElementById('zoom-125-btn');
-        const zoom150Btn = document.getElementById('zoom-150-btn');
-
-        if (zoom90Btn) {
-            zoom90Btn.addEventListener('click', function(event) {
-                event.stopPropagation();
-                handleZoomChange(90);
-            });
-        }
-
-        if (zoom100Btn) {
-            zoom100Btn.addEventListener('click', function(event) {
-                event.stopPropagation();
-                handleZoomChange(100);
-            });
-        }
-
-        if (zoom110Btn) {
-            zoom110Btn.addEventListener('click', function(event) {
-                event.stopPropagation();
-                handleZoomChange(110);
-            });
-        }
-
-        if (zoom125Btn) {
-            zoom125Btn.addEventListener('click', function(event) {
-                event.stopPropagation();
-                handleZoomChange(125);
-            });
-        }
-
-        if (zoom150Btn) {
-            zoom150Btn.addEventListener('click', function(event) {
-                event.stopPropagation();
-                handleZoomChange(150);
-            });
-        }
     }
 
     /**
@@ -830,6 +787,11 @@
         if (sourceEditor) {
             sourceEditor.style.fontSize = size + 'px';
         }
+        // Apply to line numbers gutter (must match source editor)
+        const lineNumbersGutter = document.getElementById('line-numbers');
+        if (lineNumbersGutter) {
+            lineNumbersGutter.style.fontSize = size + 'px';
+        }
     }
 
     /**
@@ -845,6 +807,11 @@
         const sourceEditor = document.getElementById('source-editor');
         if (sourceEditor) {
             sourceEditor.style.lineHeight = height;
+        }
+        // Apply to line numbers gutter (must match source editor)
+        const lineNumbersGutter = document.getElementById('line-numbers');
+        if (lineNumbersGutter) {
+            lineNumbersGutter.style.lineHeight = height;
         }
     }
 
@@ -1412,28 +1379,6 @@
     }
 
     /**
-     * Handle toggle scroll sync (used by divider sync button)
-     */
-
-    /**
-     * Handle zoom change
-     * @param {number} percent - Zoom percentage (90, 100, 110, 125, 150)
-     */
-    function handleZoomChange(percent) {
-        const editorContainer = document.querySelector('.editor-container');
-        if (!editorContainer) return;
-
-        // Set font size based on zoom percentage
-        const baseFontSize = 16; // Base font size in pixels
-        const newFontSize = (baseFontSize * percent) / 100;
-
-        editorContainer.style.fontSize = `${newFontSize}px`;
-
-        // Save preference to SettingsManager
-        settingsManager.set('editor.zoom', percent);
-    }
-
-    /**
      * Restore view preferences from localStorage
      */
     function restoreViewPreferences() {
@@ -1466,17 +1411,13 @@
         const savedFontFamily = settingsManager.settings.editor.fontFamily;
         applyEditorFontFamily(savedFontFamily);
 
-        // Line Numbers (stub - not implemented for WYSIWYG)
+        // Line Numbers
         const savedLineNumbers = settingsManager.settings.editor.lineNumbers;
         applyLineNumbers(savedLineNumbers);
 
         // Word Wrap
         const savedWordWrap = settingsManager.settings.editor.wordWrap;
         applyWordWrap(savedWordWrap);
-
-        // Restore zoom
-        const savedZoom = settingsManager.settings.editor.zoom;
-        handleZoomChange(savedZoom);
     }
 
     /**

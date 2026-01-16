@@ -3985,6 +3985,107 @@ Added a responsive media query in `tab-menu-steel.css` for screens under 900px w
 
 ---
 
+#### Bug Fix 18b: Very Narrow Screen Support (<500px)
+
+**Problem:**
+
+On very narrow screens (under 500px width, such as mobile devices or split-screen laptop windows), the transform-based positioning calculations from Bug Fix 18 didn't work correctly. The panels would be positioned off-screen or incorrectly sized.
+
+**Solution:**
+
+Added a second media query specifically for very narrow viewports:
+
+```css
+@media (max-width: 500px) {
+    .intro.tab-menu-steel .help-panel.panel-open,
+    .intro.tab-menu-steel .view-panel.panel-open,
+    .intro.tab-menu-steel .settings-panel.panel-open {
+        position: fixed !important;
+        left: 10px !important;
+        right: 10px !important;
+        top: 50px !important;
+        width: auto !important;
+        transform: none !important;
+        max-height: calc(100vh - 60px);
+        z-index: 1000;
+        background: #000000 !important;
+        border: 2px solid var(--accent-secondary, #00ffff) !important;
+        border-radius: 8px;
+    }
+
+    /* Hide decorative backgrounds on very narrow screens */
+    .intro.tab-menu-steel .help-panel.panel-open::before,
+    .intro.tab-menu-steel .help-panel.panel-open::after { display: none !important; }
+
+    /* Stack two-column help layout vertically */
+    .intro.tab-menu-steel .help-two-col {
+        grid-template-columns: 1fr !important;
+    }
+}
+```
+
+**Key Changes:**
+
+1. **Fixed Positioning** - Uses `position: fixed` with `left/right` instead of transform calculations
+2. **Simplified Styling** - Removes decorative SVG backgrounds that don't scale well
+3. **Full-Width Panels** - Panels span nearly the entire viewport width
+4. **Vertical Stacking** - Two-column help content stacks vertically for readability
+
+**Files Changed:**
+
+| File | Changes |
+|------|---------|
+| `css/tab-menus/tab-menu-steel.css` | Added `@media (max-width: 500px)` query with fixed positioning, hidden decorations, and vertical stacking |
+
+---
+
+#### Bug Fix 19: Horizontal Rule Disappearing in WYSIWYG Mode
+
+**Problem:**
+
+When typing `---` in WYSIWYG mode to create a horizontal rule:
+1. The first `---` would work correctly
+2. Immediately typing another `---` would cause it to disappear
+3. The cursor was being placed inside the `<hr>` element, which is a void element that cannot contain text
+
+**Root Cause:**
+
+After rendering an `<hr>` element, the `tryAutoRender()` function was calling `setCursorAtEnd(newBlock)` on the `<hr>`. Since `<hr>` is a self-closing/void element, it cannot contain text content. Any text typed would either disappear or be placed incorrectly.
+
+**Solution:**
+
+Modified `tryAutoRender()` in `wysiwyg-engine.js` to detect void elements like `<hr>` and create a new paragraph after them:
+
+```javascript
+// For void elements like <hr>, create a new paragraph after and place cursor there
+if (newBlock.tagName.toLowerCase() === 'hr') {
+    const newParagraph = document.createElement('p');
+    newParagraph.innerHTML = '<br>'; // Empty paragraph with line break for cursor
+    newBlock.parentNode.insertBefore(newParagraph, newBlock.nextSibling);
+    this.setCursorAtEnd(newParagraph);
+} else {
+    // Restore cursor position at the end of the rendered block
+    this.setCursorAtEnd(newBlock);
+}
+```
+
+**How It Works:**
+
+1. User types `---`
+2. WYSIWYG engine renders it as `<hr>` element
+3. Engine detects `<hr>` is a void element
+4. Creates new `<p><br></p>` paragraph after the `<hr>`
+5. Places cursor in the new paragraph
+6. User can immediately type more content, including another `---`
+
+**Files Changed:**
+
+| File | Changes |
+|------|---------|
+| `js/wysiwyg/wysiwyg-engine.js` | Added void element detection in `tryAutoRender()`, creates new paragraph after `<hr>` elements |
+
+---
+
 #### Implementation Checklist (Phase 1)
 
 **Core Implementation (✅ Complete):**

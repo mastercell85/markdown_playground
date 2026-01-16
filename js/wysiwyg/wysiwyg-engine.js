@@ -468,8 +468,16 @@ class WysiwygEngine {
         const newBlock = this.createRenderedBlock(rendered, text.trimEnd());
         block.parentNode.replaceChild(newBlock, block);
 
-        // Restore cursor position at the end of the rendered block
-        this.setCursorAtEnd(newBlock);
+        // For void elements like <hr>, create a new paragraph after and place cursor there
+        if (newBlock.tagName.toLowerCase() === 'hr') {
+            const newParagraph = document.createElement('p');
+            newParagraph.innerHTML = '<br>'; // Empty paragraph with line break for cursor
+            newBlock.parentNode.insertBefore(newParagraph, newBlock.nextSibling);
+            this.setCursorAtEnd(newParagraph);
+        } else {
+            // Restore cursor position at the end of the rendered block
+            this.setCursorAtEnd(newBlock);
+        }
     }
 
     /**

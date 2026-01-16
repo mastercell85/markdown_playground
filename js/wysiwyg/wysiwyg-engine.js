@@ -845,34 +845,6 @@ class WysiwygEngine {
     }
 
     /**
-     * Convert a rendered block back to edit mode (deprecated - keeping for backwards compatibility)
-     */
-    convertToEditMode(renderedBlock) {
-        // Get original markdown
-        const markdown = renderedBlock.getAttribute('data-wysiwyg-markdown');
-        if (!markdown) return;
-
-        // Create editable paragraph with markdown text
-        const editBlock = document.createElement('p');
-        editBlock.textContent = markdown;
-        editBlock.contentEditable = 'true';
-
-        // Replace rendered block with editable block
-        renderedBlock.parentNode.replaceChild(editBlock, renderedBlock);
-
-        // Focus and select all text
-        this.setCursorAt(editBlock, markdown.length);
-        editBlock.focus();
-
-        // Select all text in the block
-        const range = document.createRange();
-        range.selectNodeContents(editBlock);
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
-    }
-
-    /**
      * Set cursor position within an element
      */
     setCursorAt(element, offset) {

@@ -281,108 +281,98 @@
     }
 
     /**
+     * Get the active editor element (WYSIWYG or source editor)
+     * @returns {HTMLElement|null}
+     */
+    function getActiveEditor() {
+        const sourceEditor = document.getElementById('source-editor');
+        const wysiwygEditor = document.getElementById('wysiwyg-editor');
+
+        // Check if source editor is visible (source mode active)
+        if (sourceEditor && sourceEditor.style.display !== 'none') {
+            return sourceEditor;
+        }
+        // Default to WYSIWYG editor
+        return wysiwygEditor;
+    }
+
+    /**
      * Handle Undo action
      */
     function handleUndo() {
-        const inputElement = document.getElementById('markdown-input');
-        if (!inputElement) return;
+        const editor = getActiveEditor();
+        if (!editor) return;
 
-        // Focus the textarea first to ensure the undo command works
-        inputElement.focus();
-
-        // Try the modern approach first
-        if (document.execCommand) {
-            document.execCommand('undo');
-        }
+        editor.focus();
+        document.execCommand('undo');
     }
 
     /**
      * Handle Redo action
      */
     function handleRedo() {
-        const inputElement = document.getElementById('markdown-input');
-        if (!inputElement) return;
+        const editor = getActiveEditor();
+        if (!editor) return;
 
-        // Focus the textarea first to ensure the redo command works
-        inputElement.focus();
-
-        // Execute redo command
-        if (document.execCommand) {
-            document.execCommand('redo');
-        }
+        editor.focus();
+        document.execCommand('redo');
     }
 
     /**
      * Handle Cut action
      */
     function handleCut() {
-        const inputElement = document.getElementById('markdown-input');
-        if (!inputElement) return;
+        const editor = getActiveEditor();
+        if (!editor) return;
 
-        // Focus the textarea first
-        inputElement.focus();
-
-        // Execute cut command
-        if (document.execCommand) {
-            document.execCommand('cut');
-        }
+        editor.focus();
+        document.execCommand('cut');
     }
 
     /**
      * Handle Copy action
      */
     function handleCopy() {
-        const inputElement = document.getElementById('markdown-input');
-        if (!inputElement) return;
+        const editor = getActiveEditor();
+        if (!editor) return;
 
-        // Focus the textarea first
-        inputElement.focus();
-
-        // Execute copy command
-        if (document.execCommand) {
-            document.execCommand('copy');
-        }
+        editor.focus();
+        document.execCommand('copy');
     }
 
     /**
      * Handle Paste action
      */
     async function handlePaste() {
-        const inputElement = document.getElementById('markdown-input');
-        if (!inputElement) return;
+        const editor = getActiveEditor();
+        if (!editor) return;
 
-        // Focus the textarea first
-        inputElement.focus();
+        editor.focus();
 
-        // Try modern Clipboard API first
-        if (navigator.clipboard && navigator.clipboard.readText) {
+        // Try modern Clipboard API for textarea (source mode)
+        if (editor.tagName === 'TEXTAREA' && navigator.clipboard && navigator.clipboard.readText) {
             try {
                 const text = await navigator.clipboard.readText();
-                const start = inputElement.selectionStart;
-                const end = inputElement.selectionEnd;
-                const currentValue = inputElement.value;
+                const start = editor.selectionStart;
+                const end = editor.selectionEnd;
+                const currentValue = editor.value;
 
                 // Insert text at cursor position
-                inputElement.value = currentValue.substring(0, start) + text + currentValue.substring(end);
+                editor.value = currentValue.substring(0, start) + text + currentValue.substring(end);
 
                 // Move cursor to end of pasted text
                 const newPosition = start + text.length;
-                inputElement.setSelectionRange(newPosition, newPosition);
+                editor.setSelectionRange(newPosition, newPosition);
 
                 // Trigger input event to update the preview
-                inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+                editor.dispatchEvent(new Event('input', { bubbles: true }));
             } catch (err) {
                 // If Clipboard API fails, try execCommand as fallback
-                console.warn('Clipboard API failed, trying execCommand:', err);
-                if (document.execCommand) {
-                    document.execCommand('paste');
-                }
-            }
-        } else {
-            // Fallback to execCommand for older browsers
-            if (document.execCommand) {
                 document.execCommand('paste');
             }
+        } else {
+            // For contenteditable WYSIWYG or as fallback
+            document.execCommand('paste');
         }
     }
 
@@ -390,14 +380,22 @@
      * Handle Select All action
      */
     function handleSelectAll() {
-        const inputElement = document.getElementById('markdown-input');
-        if (!inputElement) return;
+        const editor = getActiveEditor();
+        if (!editor) return;
 
-        // Focus the textarea first
-        inputElement.focus();
+        editor.focus();
 
-        // Select all text
-        inputElement.select();
+        if (editor.tagName === 'TEXTAREA') {
+            // For textarea, use select()
+            editor.select();
+        } else {
+            // For contenteditable, use Selection API
+            const range = document.createRange();
+            range.selectNodeContents(editor);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
     }
 
     /**
@@ -412,94 +410,11 @@
     }
 
     /**
-     * Handle Replace action
+     * Handle Replace action - opens Find & Replace dialog
      */
     function handleReplace() {
-        const inputElement = document.getElementById('markdown-input');
-        if (!inputElement) return;
-
-        // Focus the textarea
-        inputElement.focus();
-
-        // Prompt user for find and replace text
-        const findText = prompt('Find:');
-        if (!findText) return;
-
-        const replaceText = prompt('Replace with:');
-        if (replaceText === null) return; // User cancelled
-
-        let content = inputElement.value;
-        let currentIndex = 0;
-        let replacedCount = 0;
-
-        // Find all occurrences
-        const occurrences = [];
-        let index = content.indexOf(findText);
-        while (index !== -1) {
-            occurrences.push(index);
-            index = content.indexOf(findText, index + 1);
-        }
-
-        if (occurrences.length === 0) {
-            alert(`"${findText}" not found.`);
-            return;
-        }
-
-        // Ask user how they want to proceed
-        const choice = confirm(`Found ${occurrences.length} occurrence(s).\n\nClick OK to replace one by one, or Cancel to replace all at once.`);
-
-        if (!choice) {
-            // Replace all occurrences
-            const newContent = content.split(findText).join(replaceText);
-            inputElement.value = newContent;
-
-            // Trigger input event to update the preview
-            inputElement.dispatchEvent(new Event('input', { bubbles: true }));
-
-            alert(`Replaced ${occurrences.length} occurrence(s).`);
-            return;
-        }
-
-        // Interactive replace - go through each occurrence
-        function replaceNext() {
-            if (currentIndex >= occurrences.length) {
-                alert(`Finished! Replaced ${replacedCount} of ${occurrences.length} occurrence(s).`);
-                return;
-            }
-
-            // Recalculate position based on previous replacements
-            const offset = replacedCount * (replaceText.length - findText.length);
-            const position = occurrences[currentIndex] + offset;
-
-            // Select the current occurrence
-            inputElement.setSelectionRange(position, position + findText.length);
-            inputElement.focus();
-
-            // Ask user if they want to replace this occurrence
-            const shouldReplace = confirm(`Replace this occurrence?\n\nOccurrence ${currentIndex + 1} of ${occurrences.length}\n\nClick OK to replace, Cancel to skip.`);
-
-            if (shouldReplace) {
-                // Replace this occurrence
-                content = inputElement.value;
-                inputElement.value = content.substring(0, position) + replaceText + content.substring(position + findText.length);
-
-                // Trigger input event to update the preview
-                inputElement.dispatchEvent(new Event('input', { bubbles: true }));
-
-                replacedCount++;
-
-                // Select the replaced text
-                inputElement.setSelectionRange(position, position + replaceText.length);
-            }
-
-            currentIndex++;
-
-            // Continue to next occurrence
-            setTimeout(replaceNext, 10);
-        }
-
-        // Start the interactive replacement
-        replaceNext();
+        // Use the FindManager dialog for Replace (same as Find)
+        handleFind();
     }
 
     /**
@@ -546,33 +461,6 @@
             });
         }
 
-        // Layout buttons
-        const layoutSplitBtn = document.getElementById('layout-split-btn');
-        const layoutEditorBtn = document.getElementById('layout-editor-btn');
-        const layoutPreviewBtn = document.getElementById('layout-preview-btn');
-
-        if (layoutSplitBtn) {
-            layoutSplitBtn.addEventListener('click', function(event) {
-                event.stopPropagation();
-                handleLayoutChange('split');
-            });
-        }
-
-        if (layoutEditorBtn) {
-            layoutEditorBtn.addEventListener('click', function(event) {
-                event.stopPropagation();
-                handleLayoutChange('editor');
-            });
-        }
-
-        if (layoutPreviewBtn) {
-            layoutPreviewBtn.addEventListener('click', function(event) {
-                event.stopPropagation();
-                handleLayoutChange('preview');
-            });
-        }
-
-        // Scroll Sync toggle button on divider (Editor options moved to Settings panel)
 
         // Zoom buttons
         const zoom90Btn = document.getElementById('zoom-90-btn');
@@ -926,57 +814,103 @@
     }
 
     /**
-     * Apply font size to the editor textarea
+     * Apply font size to the editor
      */
     function applyEditorFontSize(size) {
-        const textarea = document.getElementById('markdown-input');
-        if (textarea) {
-            textarea.style.fontSize = size + 'px';
+        // Apply to WYSIWYG editor
+        const wysiwygEditor = document.getElementById('wysiwyg-editor');
+        if (wysiwygEditor) {
+            wysiwygEditor.style.fontSize = size + 'px';
+        }
+        // Apply to source editor
+        const sourceEditor = document.getElementById('source-editor');
+        if (sourceEditor) {
+            sourceEditor.style.fontSize = size + 'px';
         }
     }
 
     /**
-     * Apply line height to the editor textarea
+     * Apply line height to the editor
      */
     function applyEditorLineHeight(height) {
-        const textarea = document.getElementById('markdown-input');
-        if (textarea) {
-            textarea.style.lineHeight = height;
+        // Apply to WYSIWYG editor
+        const wysiwygEditor = document.getElementById('wysiwyg-editor');
+        if (wysiwygEditor) {
+            wysiwygEditor.style.lineHeight = height;
+        }
+        // Apply to source editor
+        const sourceEditor = document.getElementById('source-editor');
+        if (sourceEditor) {
+            sourceEditor.style.lineHeight = height;
         }
     }
 
     /**
-     * Apply tab size to the editor textarea
+     * Apply tab size to the editor
      */
     function applyEditorTabSize(size) {
-        const textarea = document.getElementById('markdown-input');
-        if (textarea) {
-            textarea.style.tabSize = size;
-            textarea.style.MozTabSize = size;
+        // Apply to WYSIWYG editor
+        const wysiwygEditor = document.getElementById('wysiwyg-editor');
+        if (wysiwygEditor) {
+            wysiwygEditor.style.tabSize = size;
+            wysiwygEditor.style.MozTabSize = size;
+        }
+        // Apply to source editor
+        const sourceEditor = document.getElementById('source-editor');
+        if (sourceEditor) {
+            sourceEditor.style.tabSize = size;
+            sourceEditor.style.MozTabSize = size;
         }
     }
 
     /**
-     * Apply font family to the editor textarea
+     * Apply font family to the editor
      */
     function applyEditorFontFamily(family) {
-        const textarea = document.getElementById('markdown-input');
-        if (textarea) {
-            textarea.style.fontFamily = family;
+        // Apply to WYSIWYG editor
+        const wysiwygEditor = document.getElementById('wysiwyg-editor');
+        if (wysiwygEditor) {
+            wysiwygEditor.style.fontFamily = family;
+        }
+        // Apply to source editor
+        const sourceEditor = document.getElementById('source-editor');
+        if (sourceEditor) {
+            sourceEditor.style.fontFamily = family;
         }
     }
 
     function applyWordWrap(enabled) {
-        const textarea = document.getElementById('markdown-input');
-        if (textarea) {
-            textarea.style.whiteSpace = enabled ? 'pre-wrap' : 'pre';
-            textarea.style.overflowWrap = enabled ? 'break-word' : 'normal';
+        // Apply to source editor textarea (used in source mode)
+        const sourceTextarea = document.getElementById('source-editor');
+        if (sourceTextarea) {
+            sourceTextarea.style.whiteSpace = enabled ? 'pre-wrap' : 'pre';
+            sourceTextarea.style.overflowWrap = enabled ? 'break-word' : 'normal';
         }
     }
 
     /**
-     * Apply scroll sync setting
+     * Apply line numbers setting
+     * Note: Line numbers are not currently implemented for WYSIWYG mode
+     * This is a stub to prevent errors when the setting is changed
      */
+    function applyLineNumbers(enabled) {
+        // Line numbers are not implemented for WYSIWYG contenteditable
+        // This setting could apply to source mode textarea in the future
+        // For now, just store the preference (already handled by settingsManager)
+    }
+
+    /**
+     * Initialize the FindManager instance
+     */
+    function initializeFindManager() {
+        if (!findManager) {
+            findManager = new FindManager({
+                textareaSelector: '#source-editor',
+                dialogSelector: '#find-replace-dialog'
+            });
+            findManager.init();
+        }
+    }
 
     /**
      * Show theme selector modal
@@ -1453,35 +1387,27 @@
             handleLayoutChange(savedLayout);
         }
 
-        // Restore editor appearance settings
-        const inputElement = document.getElementById('markdown-input');
-        if (inputElement) {
-            // Font Size
-            const savedFontSize = settingsManager.settings.editor.fontSize;
-            inputElement.style.fontSize = savedFontSize + 'px';
+        // Restore editor appearance settings using the apply functions
+        // These functions handle both WYSIWYG and source editor elements
+        const savedFontSize = settingsManager.settings.editor.fontSize;
+        applyEditorFontSize(savedFontSize);
 
-            // Line Height
-            const savedLineHeight = settingsManager.settings.editor.lineHeight;
-            inputElement.style.lineHeight = savedLineHeight;
+        const savedLineHeight = settingsManager.settings.editor.lineHeight;
+        applyEditorLineHeight(savedLineHeight);
 
-            // Tab Size
-            const savedTabSize = settingsManager.settings.editor.tabSize;
-            inputElement.style.tabSize = savedTabSize;
-            inputElement.style.MozTabSize = savedTabSize;
+        const savedTabSize = settingsManager.settings.editor.tabSize;
+        applyEditorTabSize(savedTabSize);
 
-            // Font Family
-            const savedFontFamily = settingsManager.settings.editor.fontFamily;
-            inputElement.style.fontFamily = savedFontFamily;
+        const savedFontFamily = settingsManager.settings.editor.fontFamily;
+        applyEditorFontFamily(savedFontFamily);
 
-            // Line Numbers - use applyLineNumbers to set up gutter and listeners
-            const savedLineNumbers = settingsManager.settings.editor.lineNumbers;
-            applyLineNumbers(savedLineNumbers);
+        // Line Numbers (stub - not implemented for WYSIWYG)
+        const savedLineNumbers = settingsManager.settings.editor.lineNumbers;
+        applyLineNumbers(savedLineNumbers);
 
-            // Word Wrap
-            const savedWordWrap = settingsManager.settings.editor.wordWrap;
-            inputElement.style.whiteSpace = savedWordWrap ? 'pre-wrap' : 'pre';
-            inputElement.style.overflowWrap = savedWordWrap ? 'break-word' : 'normal';
-        }
+        // Word Wrap
+        const savedWordWrap = settingsManager.settings.editor.wordWrap;
+        applyWordWrap(savedWordWrap);
 
         // Restore zoom
         const savedZoom = settingsManager.settings.editor.zoom;

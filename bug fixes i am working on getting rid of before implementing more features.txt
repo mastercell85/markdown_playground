@@ -1,4 +1,23 @@
+COMPLETED BUG FIXES:
+=====================
+
+Bug Fix 12: Code cleanup - Removed broken #markdown-input references
+- Fixed all Edit menu handlers (Undo, Redo, Cut, Copy, Paste, Select All) that referenced
+  non-existent #markdown-input element
+- Added getActiveEditor() helper function to detect active editor (WYSIWYG or source mode)
+- Added missing initializeFindManager() function to properly initialize FindManager
+- Added missing applyLineNumbers() stub function (line numbers not implemented for WYSIWYG)
+- Updated editor style functions (font size, line height, tab size, font family, word wrap)
+  to apply to both #wysiwyg-editor and #source-editor elements
+- Simplified handleReplace() to use FindManager dialog instead of broken prompt-based code
+- Fixed restoreViewPreferences() to use apply functions instead of direct element manipulation
+
+REMAINING BUGS/FEATURES TO IMPLEMENT:
+=====================================
 
 -fix and implement saving to the local computer in any directory and saving to
 	the original document. just like regular apps do.
 -fix turn off spell check in the browser
+-wire up toolbar buttons (Bold, Italic, Link, etc.) for WYSIWYG mode
+-fix find/replace to work with WYSIWYG contenteditable
+-fix Cyberpunk theme compatibility

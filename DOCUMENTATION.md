@@ -3619,12 +3619,56 @@ All bug fixes verified working:
 
 ---
 
+#### Bug Fix 12: Code Cleanup - Broken #markdown-input References
+
+**Problem:** After migrating from split-view to WYSIWYG-only editor, many functions in `markdown-editor-main.js` still referenced `#markdown-input` which no longer exists in the HTML. This caused Edit menu handlers (Undo, Redo, Cut, Copy, Paste, Select All) and editor style functions to fail silently.
+
+**Root Cause:** The original split-view editor used a `<textarea id="markdown-input">` element. After the WYSIWYG migration, this was replaced with:
+- `#wysiwyg-editor` - contenteditable div for WYSIWYG mode
+- `#source-editor` - textarea for source mode (hidden by default)
+
+All references to `#markdown-input` were now pointing to a non-existent element.
+
+**Fix Applied:**
+
+1. **Added `getActiveEditor()` helper function** - Detects which editor is currently active (WYSIWYG or source mode) and returns the appropriate element.
+
+2. **Fixed Edit menu handlers:**
+   - `handleUndo()` - Now uses `getActiveEditor()` and `document.execCommand('undo')`
+   - `handleRedo()` - Now uses `getActiveEditor()` and `document.execCommand('redo')`
+   - `handleCut()` - Now uses `getActiveEditor()` and `document.execCommand('cut')`
+   - `handleCopy()` - Now uses `getActiveEditor()` and `document.execCommand('copy')`
+   - `handlePaste()` - Now works with both textarea (Clipboard API) and contenteditable (execCommand)
+   - `handleSelectAll()` - Now uses Selection API for contenteditable or `select()` for textarea
+
+3. **Added missing functions:**
+   - `initializeFindManager()` - Properly initializes the FindManager class with correct selectors
+   - `applyLineNumbers()` - Stub function (line numbers not implemented for WYSIWYG)
+
+4. **Updated editor style functions to target both editors:**
+   - `applyEditorFontSize()` - Applies to both `#wysiwyg-editor` and `#source-editor`
+   - `applyEditorLineHeight()` - Applies to both editors
+   - `applyEditorTabSize()` - Applies to both editors
+   - `applyEditorFontFamily()` - Applies to both editors
+   - `applyWordWrap()` - Applies to `#source-editor` (source mode textarea)
+
+5. **Simplified `handleReplace()`** - Removed broken prompt-based replacement code, now opens FindManager dialog (same as Find)
+
+6. **Fixed `restoreViewPreferences()`** - Now uses the apply functions instead of directly manipulating non-existent element
+
+**Files Changed:** `js/markdown-editor-main.js`
+
+**Lines Changed:** ~120 lines removed (broken code), ~50 lines added (working code)
+
+---
+
 #### Files Changed Summary
 
 | File | Changes |
 |------|---------|
 | `js/wysiwyg/wysiwyg-engine.js` | Empty list filtering, paste handler, input event dispatch, scrollCursorIntoView |
 | `js/markdown/document-manager.js` | Fixed activeDocumentId save order in switchDocument() |
+| `js/markdown-editor-main.js` | Fixed broken #markdown-input references, added getActiveEditor(), initializeFindManager(), applyLineNumbers() |
 
 ---
 

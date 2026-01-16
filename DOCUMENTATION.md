@@ -3672,6 +3672,58 @@ All references to `#markdown-input` were now pointing to a non-existent element.
 
 ---
 
+#### Bug Fix 13: Line Numbers, Zoom Verification, and View Tab Cleanup
+
+**Line Numbers Implementation (Source Mode):**
+
+Added line numbers display for the source mode textarea with the following components:
+
+1. **HTML Changes** (`markdown-editor.html`):
+   - Wrapped source textarea in `source-editor-container` div
+   - Added `line-numbers-gutter` div for displaying line numbers
+
+2. **CSS Changes** (`css/markdown-editor-base.css`):
+   - Added `.source-editor-container` with flexbox layout
+   - Added `.line-numbers-gutter` styling with scroll sync support
+   - Added `.line-number` span styling
+   - Hidden scrollbar on gutter (synced with textarea scroll)
+
+3. **JavaScript Changes** (`js/markdown-editor-main.js`):
+   - Implemented `applyLineNumbers(enabled)` - toggles gutter visibility
+   - Added `updateLineNumbers()` - rebuilds line number HTML from content
+   - Added `syncLineNumbersScroll()` - syncs gutter scroll with textarea
+   - Added `initLineNumbers()` - sets up event listeners for input and scroll
+
+4. **WYSIWYG Engine Changes** (`js/wysiwyg/wysiwyg-engine.js`):
+   - Updated `switchToSource()` to show/hide container instead of just textarea
+   - Updated `switchToWysiwyg()` to hide container instead of just textarea
+   - Added line numbers update trigger when switching to source mode
+
+**Zoom Functionality:**
+
+Verified zoom buttons (90%, 100%, 110%, 125%, 150%) are already working correctly:
+- Located in View tab > Zoom section
+- Applies font-size scaling to `.editor-container`
+- Preferences saved via `settingsManager.set('editor.zoom', percent)`
+- Restored on page load via `restoreViewPreferences()`
+
+**View Tab Cleanup:**
+
+Removed External Window section:
+- Removed HTML section containing "Open Preview in New Window" and "Close External Window" buttons
+- Removed orphaned JSDoc comment in `markdown-editor-main.js`
+
+**Files Changed:**
+
+| File | Changes |
+|------|---------|
+| `markdown-editor.html` | Added line numbers container, removed External Window section |
+| `css/markdown-editor-base.css` | Added source editor and line numbers gutter styling |
+| `js/markdown-editor-main.js` | Implemented line numbers functions, removed external window comment |
+| `js/wysiwyg/wysiwyg-engine.js` | Updated source mode toggle for container display |
+
+---
+
 #### Implementation Checklist (Phase 1)
 
 **Core Implementation (✅ Complete):**

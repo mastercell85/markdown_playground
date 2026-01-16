@@ -1241,8 +1241,9 @@ class WysiwygEngine {
     switchToSource() {
         if (this.sourceMode) return;
 
-        // Find the source textarea
+        // Find the source textarea and its container
         this.sourceTextarea = document.getElementById('source-editor');
+        const sourceContainer = document.getElementById('source-editor-container');
         if (!this.sourceTextarea) {
             console.warn('Source editor textarea not found');
             return;
@@ -1251,12 +1252,24 @@ class WysiwygEngine {
         // Get current markdown from WYSIWYG editor
         const markdown = this.getMarkdown();
 
-        // Hide WYSIWYG editor, show source textarea
+        // Hide WYSIWYG editor, show source container (includes line numbers)
         this.editorElement.style.display = 'none';
-        this.sourceTextarea.style.display = 'block';
+        if (sourceContainer) {
+            sourceContainer.style.display = 'flex';
+        } else {
+            this.sourceTextarea.style.display = 'block';
+        }
 
         // Load markdown into source textarea
         this.sourceTextarea.value = markdown;
+
+        // Trigger line numbers update if available
+        if (typeof window.updateLineNumbers === 'function') {
+            window.updateLineNumbers();
+        } else {
+            // Dispatch event for line numbers update
+            this.sourceTextarea.dispatchEvent(new Event('input', { bubbles: true }));
+        }
 
         // Attach smart list continuation handler
         this.sourceTextarea.addEventListener('keydown', this.handleSourceKeyDown);
@@ -1284,8 +1297,13 @@ class WysiwygEngine {
         // Get markdown from source textarea
         const markdown = this.sourceTextarea.value;
 
-        // Hide source textarea, show WYSIWYG editor
-        this.sourceTextarea.style.display = 'none';
+        // Hide source container (includes line numbers), show WYSIWYG editor
+        const sourceContainer = document.getElementById('source-editor-container');
+        if (sourceContainer) {
+            sourceContainer.style.display = 'none';
+        } else {
+            this.sourceTextarea.style.display = 'none';
+        }
         this.editorElement.style.display = 'block';
 
         // Load markdown into WYSIWYG editor with rendering enabled

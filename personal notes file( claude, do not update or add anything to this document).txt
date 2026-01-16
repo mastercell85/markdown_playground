@@ -12,6 +12,19 @@ Bug Fix 12: Code cleanup - Removed broken #markdown-input references
 - Simplified handleReplace() to use FindManager dialog instead of broken prompt-based code
 - Fixed restoreViewPreferences() to use apply functions instead of direct element manipulation
 
+Bug Fix 13: Line numbers, zoom, and View tab cleanup
+- Implemented line numbers for source mode with gutter display
+  - Added source-editor-container with line-numbers-gutter div
+  - Added CSS for line number styling and scroll sync
+  - Line numbers update on content change and sync scroll with textarea
+  - Toggle via Settings > Options > Line Numbers checkbox
+- Zoom buttons already working (90%, 100%, 110%, 125%, 150%)
+  - Applies font-size scaling to editor container
+  - Saves preference to settingsManager
+- Removed External Window section from View tab
+  - Removed HTML for External Window buttons
+  - Removed orphaned comment stub in JS
+
 REMAINING BUGS/FEATURES TO IMPLEMENT:
 =====================================
 

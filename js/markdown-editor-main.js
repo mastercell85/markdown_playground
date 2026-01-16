@@ -79,6 +79,9 @@
         // Setup Settings panel
         setupSettingsPanel();
 
+        // Initialize line numbers
+        initLineNumbers();
+
         // Restore user preferences
         restoreViewPreferences();
     }
@@ -889,14 +892,76 @@
     }
 
     /**
-     * Apply line numbers setting
-     * Note: Line numbers are not currently implemented for WYSIWYG mode
-     * This is a stub to prevent errors when the setting is changed
+     * Apply line numbers setting for source mode
+     * Line numbers are displayed in a gutter next to the source textarea
      */
     function applyLineNumbers(enabled) {
-        // Line numbers are not implemented for WYSIWYG contenteditable
-        // This setting could apply to source mode textarea in the future
-        // For now, just store the preference (already handled by settingsManager)
+        const lineNumbersGutter = document.getElementById('line-numbers');
+        if (!lineNumbersGutter) return;
+
+        if (enabled) {
+            lineNumbersGutter.classList.remove('hidden');
+            updateLineNumbers();
+        } else {
+            lineNumbersGutter.classList.add('hidden');
+        }
+    }
+
+    /**
+     * Update line numbers in the gutter based on textarea content
+     */
+    function updateLineNumbers() {
+        const sourceEditor = document.getElementById('source-editor');
+        const lineNumbersGutter = document.getElementById('line-numbers');
+
+        if (!sourceEditor || !lineNumbersGutter || lineNumbersGutter.classList.contains('hidden')) {
+            return;
+        }
+
+        const content = sourceEditor.value || '';
+        const lineCount = content.split('\n').length;
+
+        // Build line numbers HTML
+        let lineNumbersHtml = '';
+        for (let i = 1; i <= lineCount; i++) {
+            lineNumbersHtml += `<span class="line-number">${i}</span>`;
+        }
+
+        lineNumbersGutter.innerHTML = lineNumbersHtml;
+    }
+
+    /**
+     * Sync line numbers scroll position with textarea
+     */
+    function syncLineNumbersScroll() {
+        const sourceEditor = document.getElementById('source-editor');
+        const lineNumbersGutter = document.getElementById('line-numbers');
+
+        if (!sourceEditor || !lineNumbersGutter) return;
+
+        lineNumbersGutter.scrollTop = sourceEditor.scrollTop;
+    }
+
+    /**
+     * Initialize line numbers event listeners
+     */
+    function initLineNumbers() {
+        const sourceEditor = document.getElementById('source-editor');
+        const lineNumbersGutter = document.getElementById('line-numbers');
+
+        if (!sourceEditor || !lineNumbersGutter) return;
+
+        // Update line numbers when content changes
+        sourceEditor.addEventListener('input', updateLineNumbers);
+
+        // Sync scroll position
+        sourceEditor.addEventListener('scroll', syncLineNumbersScroll);
+
+        // Initial update if line numbers are enabled
+        const lineNumbersEnabled = settingsManager?.settings?.editor?.lineNumbers;
+        if (lineNumbersEnabled) {
+            updateLineNumbers();
+        }
     }
 
     /**
@@ -1711,10 +1776,6 @@
         });
 
     }
-
-    /**
-     * Setup View panel controls for external window
-     */
 
     // Listen for regex help event from FindManager
     document.addEventListener('openRegexHelp', () => {

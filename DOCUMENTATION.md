@@ -3777,6 +3777,101 @@ Removed External Window section:
 
 ---
 
+#### Bug Fix 15: Local File Saving with File System Access API
+
+**Feature Implemented:**
+
+True local file saving like regular desktop applications - open files from any directory and save directly back to the original file location.
+
+**File System Access API Integration:**
+
+1. **`handleOpenFile()`** - Updated to use `showOpenFilePicker()`:
+   - Opens native file picker showing full file system
+   - Stores `FileSystemFileHandle` in document metadata
+   - Falls back to `<input type="file">` for unsupported browsers
+   - Supports .md, .markdown, and .txt files
+
+2. **`handleSaveFile()`** - Updated for direct file saving:
+   - If document has a stored file handle, saves directly to original location
+   - Uses `FileSystemFileHandle.createWritable()` to write content
+   - Falls back to Save As for new documents or if direct save fails
+
+3. **`handleSaveAsFile()`** - Updated to use `showSaveFilePicker()`:
+   - Opens native save dialog to choose location
+   - Updates document with new file handle after saving
+   - Falls back to download for unsupported browsers
+
+4. **`fallbackSaveFile()`** - New function for browser compatibility:
+   - Downloads file to browser's Downloads folder
+   - Used when File System Access API is not available
+
+**Browser Compatibility:**
+
+| Browser | File System Access API Support |
+|---------|-------------------------------|
+| Chrome | 86+ (full support) |
+| Edge | 86+ (full support) |
+| Firefox | 111+ (full support) |
+| Safari | 15.1+ (limited) |
+| Older browsers | Falls back to download |
+
+**How It Works:**
+
+1. **Open File**: User clicks File > Open, native file picker appears, file opens in editor with handle stored
+2. **Save (Ctrl+S)**: If file was opened from disk, saves directly back to original location
+3. **Save As**: User chooses new location, file handle updated for future saves
+4. **New Documents**: Save triggers Save As to choose initial location
+
+**Files Changed:**
+
+| File | Changes |
+|------|---------|
+| `js/markdown-editor-main.js` | Rewrote `handleOpenFile()`, `handleSaveFile()`, `handleSaveAsFile()`, added `fallbackSaveFile()` |
+
+---
+
+#### Bug Fix 16: Toast Notifications and Ctrl+S Keyboard Shortcut
+
+**Toast Notification System:**
+
+Added visual feedback when files are saved, replacing reliance on browser permission dialogs for confirmation.
+
+1. **`showToast(message, type, duration)`** - New function that:
+   - Creates a floating notification at bottom-center of screen
+   - Supports three types: `success` (green), `error` (red), `info` (blue)
+   - Auto-dismisses after configurable duration (default 2000ms)
+   - Includes fade-in/fade-out CSS animations
+   - Removes any existing toast before showing new one
+
+2. **Toast Integration:**
+   - `handleSaveFile()` - Shows "File saved" on successful direct save
+   - `handleSaveAsFile()` - Shows "File saved as [filename]" after Save As
+   - `fallbackSaveFile()` - Shows "File downloaded to Downloads folder" for fallback
+
+**Ctrl+S Keyboard Shortcut Fix:**
+
+The Ctrl+S shortcut was not triggering saves because the event listener was scoped inside `setupSourceModeToggle()` function.
+
+**Fix Applied:** Moved the keyboard event listener to module level (outside any function) so it has proper access to `handleSaveFile()`:
+
+```javascript
+// At module level (line ~1912)
+document.addEventListener('keydown', (event) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+        event.preventDefault();
+        handleSaveFile();
+    }
+});
+```
+
+**Files Changed:**
+
+| File | Changes |
+|------|---------|
+| `js/markdown-editor-main.js` | Added `showToast()` function, integrated toast calls in save functions, moved Ctrl+S handler to module level |
+
+---
+
 #### Implementation Checklist (Phase 1)
 
 **Core Implementation (✅ Complete):**

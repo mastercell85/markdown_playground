@@ -1456,12 +1456,63 @@
     }
 
     /**
-     * Handle Open File action
+     * Handle Open File action using File System Access API
+     * Falls back to traditional file input for unsupported browsers
      */
-    function handleOpenFile() {
-        const fileInput = document.getElementById('file-input');
-        if (fileInput) {
-            fileInput.click();
+    async function handleOpenFile() {
+        // Check for File System Access API support
+        if (!window.showOpenFilePicker) {
+            console.log('[Open] File System Access API not available, using fallback');
+            // Fallback to traditional file input
+            const fileInput = document.getElementById('file-input');
+            if (fileInput) {
+                fileInput.click();
+            }
+            return;
+        }
+
+        console.log('[Open] Using File System Access API');
+
+        try {
+            const [fileHandle] = await window.showOpenFilePicker({
+                types: [{
+                    description: 'Markdown Files',
+                    accept: { 'text/markdown': ['.md', '.markdown', '.txt'] }
+                }],
+                multiple: false
+            });
+
+            console.log('[Open] Got file handle:', fileHandle.name);
+
+            const file = await fileHandle.getFile();
+            const content = await file.text();
+            const filename = file.name.replace(/\.(md|markdown|txt)$/i, '');
+
+            console.log('[Open] File content length:', content.length, 'filename:', filename);
+
+            if (window.MarkdownEditor && window.MarkdownEditor.documentManager) {
+                // Create document with file handle stored in metadata
+                const newDoc = window.MarkdownEditor.documentManager.createDocument({
+                    name: filename,
+                    content: content,
+                    metadata: { fileHandle: fileHandle }
+                });
+
+                console.log('[Open] Document created with fileHandle in metadata:', !!newDoc.metadata.fileHandle);
+
+                window.MarkdownEditor.documentManager.switchDocument(newDoc.id);
+                window.MarkdownEditor.tabController.renderTabs();
+
+                // Render content in WYSIWYG mode
+                if (window.MarkdownEditor.wysiwygEngine) {
+                    window.MarkdownEditor.wysiwygEngine.setMarkdown(content, true);
+                }
+            }
+        } catch (err) {
+            // User cancelled the file picker - not an error
+            if (err.name !== 'AbortError') {
+                console.error('Failed to open file:', err);
+            }
         }
     }
 
@@ -1473,76 +1524,221 @@
     }
 
     /**
-     * Handle Save File action
+     * Show a toast notification message
+     * @param {string} message - Message to display
+     * @param {string} type - 'success', 'error', or 'info'
+     * @param {number} duration - How long to show in ms (default 2000)
      */
-    function handleSaveFile() {
-        if (window.MarkdownEditor && window.MarkdownEditor.documentManager) {
-            const exportData = window.MarkdownEditor.documentManager.exportActiveDocument();
-            if (!exportData) {
-                console.warn('No active document to save');
+    function showToast(message, type = 'success', duration = 2000) {
+        // Remove existing toast if any
+        const existingToast = document.getElementById('save-toast');
+        if (existingToast) {
+            existingToast.remove();
+        }
+
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.id = 'save-toast';
+        toast.textContent = message;
+
+        // Style based on type
+        const colors = {
+            success: { bg: 'rgba(34, 197, 94, 0.9)', border: 'rgba(34, 197, 94, 1)' },
+            error: { bg: 'rgba(239, 68, 68, 0.9)', border: 'rgba(239, 68, 68, 1)' },
+            info: { bg: 'rgba(59, 130, 246, 0.9)', border: 'rgba(59, 130, 246, 1)' }
+        };
+        const color = colors[type] || colors.info;
+
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            background: ${color.bg};
+            border: 1px solid ${color.border};
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: toastFadeIn 0.3s ease;
+        `;
+
+        // Add animation keyframes if not exists
+        if (!document.getElementById('toast-styles')) {
+            const style = document.createElement('style');
+            style.id = 'toast-styles';
+            style.textContent = `
+                @keyframes toastFadeIn {
+                    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+                    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+                }
+                @keyframes toastFadeOut {
+                    from { opacity: 1; transform: translateX(-50%) translateY(0); }
+                    to { opacity: 0; transform: translateX(-50%) translateY(20px); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        document.body.appendChild(toast);
+
+        // Auto-remove after duration
+        setTimeout(() => {
+            toast.style.animation = 'toastFadeOut 0.3s ease forwards';
+            setTimeout(() => toast.remove(), 300);
+        }, duration);
+    }
+
+    /**
+     * Get current markdown content from the editor
+     * Ensures we get the latest content from WYSIWYG or source mode
+     * @returns {string} Current markdown content
+     */
+    function getCurrentMarkdownContent() {
+        const wysiwygEngine = window.MarkdownEditor?.wysiwygEngine;
+        const activeDoc = window.MarkdownEditor?.documentManager?.getActiveDocument();
+
+        if (!activeDoc) return '';
+
+        // If in source mode, get content from source textarea
+        if (wysiwygEngine?.isSourceMode()) {
+            const sourceTextarea = document.getElementById('source-editor');
+            return sourceTextarea?.value || activeDoc.content;
+        }
+
+        // Otherwise get current markdown from WYSIWYG engine
+        if (wysiwygEngine) {
+            return wysiwygEngine.getMarkdown();
+        }
+
+        return activeDoc.content;
+    }
+
+    /**
+     * Handle Save File action using File System Access API
+     * Saves directly to original file if opened via File System API
+     * Falls back to Save As for new documents or unsupported browsers
+     */
+    async function handleSaveFile() {
+        console.log('[Save] handleSaveFile called');
+
+        const activeDoc = window.MarkdownEditor?.documentManager?.getActiveDocument();
+        if (!activeDoc) {
+            console.warn('[Save] No active document to save');
+            return;
+        }
+
+        console.log('[Save] Active doc:', activeDoc.name, 'has fileHandle:', !!activeDoc.metadata?.fileHandle);
+
+        // Get current markdown content from editor
+        const markdownContent = getCurrentMarkdownContent();
+        console.log('[Save] Markdown content length:', markdownContent.length);
+        console.log('[Save] Content preview:', markdownContent.substring(0, 100));
+
+        // Update document content before saving
+        activeDoc.setContent(markdownContent);
+
+        // If document has a file handle from File System API, save directly to it
+        if (activeDoc.metadata?.fileHandle) {
+            console.log('[Save] Attempting direct save to:', activeDoc.metadata.fileHandle.name);
+            try {
+                const writable = await activeDoc.metadata.fileHandle.createWritable();
+                await writable.write(markdownContent);
+                await writable.close();
+                console.log('[Save] File saved successfully to:', activeDoc.metadata.fileHandle.name);
+                showToast('File saved');
                 return;
+            } catch (err) {
+                console.error('[Save] Failed to save file directly:', err);
+                // Fall through to Save As if direct save fails (e.g., permission denied)
             }
+        }
 
-            // Create a blob with the markdown content
-            const blob = new Blob([exportData.content], { type: 'text/markdown;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
+        // No file handle or direct save failed - use Save As
+        console.log('[Save] No file handle, calling Save As');
+        await handleSaveAsFile();
+    }
 
-            // Create a temporary download link
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = exportData.filename;
-            link.style.display = 'none';
+    /**
+     * Handle Save As File action using File System Access API
+     * Allows user to choose save location
+     * Falls back to download for unsupported browsers
+     */
+    async function handleSaveAsFile() {
+        const activeDoc = window.MarkdownEditor?.documentManager?.getActiveDocument();
+        if (!activeDoc) {
+            console.warn('No active document to save');
+            return;
+        }
 
-            // Trigger download
-            document.body.appendChild(link);
-            link.click();
+        // Get current markdown content from editor
+        const markdownContent = getCurrentMarkdownContent();
 
-            // Cleanup
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
+        // Update document content
+        activeDoc.setContent(markdownContent);
+
+        // Check for File System Access API support
+        if (!window.showSaveFilePicker) {
+            // Fallback to download approach
+            fallbackSaveFile(activeDoc);
+            return;
+        }
+
+        try {
+            const fileHandle = await window.showSaveFilePicker({
+                suggestedName: activeDoc.name + '.md',
+                types: [{
+                    description: 'Markdown Files',
+                    accept: { 'text/markdown': ['.md'] }
+                }]
+            });
+
+            const writable = await fileHandle.createWritable();
+            await writable.write(markdownContent);
+            await writable.close();
+
+            // Update document with new file handle and name
+            activeDoc.metadata.fileHandle = fileHandle;
+            const newName = fileHandle.name.replace(/\.md$/i, '');
+            activeDoc.setName(newName);
+
+            console.log('[SaveAs] fileHandle stored on doc:', activeDoc.id, 'handle:', !!activeDoc.metadata.fileHandle);
+
+            window.MarkdownEditor.tabController.renderTabs();
+            console.log('File saved as:', fileHandle.name);
+            showToast('File saved as ' + fileHandle.name);
+        } catch (err) {
+            // User cancelled the file picker - not an error
+            if (err.name !== 'AbortError') {
+                console.error('Failed to save file:', err);
+            }
         }
     }
 
     /**
-     * Handle Save As File action
+     * Fallback save function for browsers without File System Access API
+     * Downloads the file to the browser's Downloads folder
+     * @param {MarkdownDocument} doc - Document to save
      */
-    function handleSaveAsFile() {
-        if (window.MarkdownEditor && window.MarkdownEditor.documentManager) {
-            const activeDoc = window.MarkdownEditor.documentManager.getActiveDocument();
-            if (!activeDoc) {
-                console.warn('No active document to save');
-                return;
-            }
+    function fallbackSaveFile(doc) {
+        const blob = new Blob([doc.content], { type: 'text/markdown;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
 
-            // Prompt user for custom filename
-            const currentName = activeDoc.name.replace(/\.md$/, ''); // Remove .md if present
-            const customName = prompt('Enter filename (without .md extension):', currentName);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = doc.name + '.md';
+        link.style.display = 'none';
 
-            if (customName === null || customName.trim() === '') {
-                // User cancelled or entered empty name
-                return;
-            }
+        document.body.appendChild(link);
+        link.click();
 
-            const filename = customName.trim() + '.md';
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
 
-            // Create a blob with the markdown content
-            const blob = new Blob([activeDoc.content], { type: 'text/markdown;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-
-            // Create a temporary download link
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
-            link.style.display = 'none';
-
-            // Trigger download
-            document.body.appendChild(link);
-            link.click();
-
-            // Cleanup
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }
+        showToast('File downloaded to Downloads folder');
     }
 
     /**
@@ -1717,6 +1913,16 @@
         });
 
     }
+
+    // Handle Ctrl+S keyboard shortcut for save (at module level for proper scope)
+    document.addEventListener('keydown', (event) => {
+        // Ctrl+S or Cmd+S to save
+        if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+            event.preventDefault();
+            console.log('[Ctrl+S] Save shortcut triggered');
+            handleSaveFile();
+        }
+    });
 
     // Listen for regex help event from FindManager
     document.addEventListener('openRegexHelp', () => {

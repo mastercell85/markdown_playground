@@ -1,29 +1,4 @@
-COMPLETED BUG FIXES:
-=====================
 
-Bug Fix 12: Code cleanup - Removed broken #markdown-input references
-- Fixed all Edit menu handlers (Undo, Redo, Cut, Copy, Paste, Select All) that referenced
-  non-existent #markdown-input element
-- Added getActiveEditor() helper function to detect active editor (WYSIWYG or source mode)
-- Added missing initializeFindManager() function to properly initialize FindManager
-- Added missing applyLineNumbers() stub function (line numbers not implemented for WYSIWYG)
-- Updated editor style functions (font size, line height, tab size, font family, word wrap)
-  to apply to both #wysiwyg-editor and #source-editor elements
-- Simplified handleReplace() to use FindManager dialog instead of broken prompt-based code
-- Fixed restoreViewPreferences() to use apply functions instead of direct element manipulation
-
-Bug Fix 13: Line numbers, zoom, and View tab cleanup
-- Implemented line numbers for source mode with gutter display
-  - Added source-editor-container with line-numbers-gutter div
-  - Added CSS for line number styling and scroll sync
-  - Line numbers update on content change and sync scroll with textarea
-  - Toggle via Settings > Options > Line Numbers checkbox
-- Zoom buttons already working (90%, 100%, 110%, 125%, 150%)
-  - Applies font-size scaling to editor container
-  - Saves preference to settingsManager
-- Removed External Window section from View tab
-  - Removed HTML for External Window buttons
-  - Removed orphaned comment stub in JS
 
 REMAINING BUGS/FEATURES TO IMPLEMENT:
 =====================================
@@ -33,4 +8,22 @@ REMAINING BUGS/FEATURES TO IMPLEMENT:
 -fix turn off spell check in the browser
 -wire up toolbar buttons (Bold, Italic, Link, etc.) for WYSIWYG mode
 -fix find/replace to work with WYSIWYG contenteditable
--fix Cyberpunk theme compatibility
+-need to move the horzontal scroll bar up a little bit so that it is not
+  partially cut off at the bottom of the screen.
+-the file buttons, edit buttons are too small.
+-in teh help menu the expanded window is not adjusting to the sections properly and the right
+  of the expanded view is off the screen to the right.
+-change the font size and line height to arrow buttons instead of the slider
+-implement side by side view of documents. editing a document is allowed
+-add a button somewhere that will convert my shortcut syntax into 
+  regular markdown syntax for using the document in other markdown apps
+-swap the theme and tab menu buttons position in the view tab
+-in addition to a scroll bar on the open tabs panel, i want to implement
+  buttons. i never liked scroll bars on open tabs panel. maybe be applyLineNumbers
+  to toggle between them for people that want one instead of the otehr.
+  probrably add an option in the settings->Options
+-the menu tabs, open on hover, needs to be removed from all menu tabs
+  they should be open on click and close on click anywhere on the screeen
+  that is not that tab (click anywere part is already implemented).
+-the open file needs to go to the last directory and persist throough
+  refresh. it does not need to persist through open/close of the app.

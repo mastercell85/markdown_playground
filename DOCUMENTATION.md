@@ -3918,6 +3918,73 @@ File Open and Save As dialogs now remember the last used directory and open to t
 
 ---
 
+#### Bug Fix 18: Responsive Help Panel for Small Screens
+
+**Problem:**
+
+On smaller screen sizes (< 900px viewport width), the expanded Help panel content overflowed past the right edge of the screen and below the panel bounds. The panel was designed for larger displays and didn't adapt to narrower viewports.
+
+**Issues Fixed:**
+
+1. Panel content extending past the right edge of the viewport
+2. Content overflowing below the panel's bottom boundary
+3. Scrolling content appearing behind the "Expand/Collapse All" checkbox header
+4. Two-column layout (Syntax | Preview) not fitting properly
+
+**Solution:**
+
+Added a responsive media query in `tab-menu-steel.css` for screens under 900px width:
+
+1. **Dynamic Panel Width:**
+   - Used CSS custom property `--responsive-width: calc(100vw - 80px)` for flexible sizing
+   - Applied transform to reposition panel within viewport bounds
+
+2. **Content Overflow Control:**
+   - Added `max-height: 80vh` to panel with `overflow: hidden`
+   - Set `max-height: calc(80vh - 60px)` on `.panel-content` with `overflow-y: auto`
+
+3. **Sticky Header:**
+   - Made `.help-header-row` sticky with `position: sticky; top: -20px`
+   - Added solid black background to prevent content showing through when scrolling
+   - Used negative margin/padding technique to cover full header area
+
+4. **Background Scaling:**
+   - Scaled SVG background decorations (`::before`, `::after`) to match responsive width
+
+**CSS Implementation:**
+
+```css
+@media (max-width: 900px) {
+    .intro.tab-menu-steel .help-panel.panel-open {
+        --responsive-width: calc(100vw - 80px);
+        width: var(--responsive-width);
+        transform: translateX(calc(-1 * (var(--responsive-width) - 100vw + 580px)));
+        overflow: hidden;
+        max-height: 80vh;
+    }
+
+    .intro.tab-menu-steel .help-panel .help-header-row {
+        position: sticky;
+        top: -20px;
+        background: #000000;
+        z-index: 10;
+        padding-top: 20px;
+        padding-bottom: 15px;
+        margin-top: -20px;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
+```
+
+**Files Changed:**
+
+| File | Changes |
+|------|---------|
+| `css/tab-menus/tab-menu-steel.css` | Added responsive media query for `@media (max-width: 900px)` with panel width scaling, sticky header, overflow constraints, and background sizing |
+
+---
+
 #### Implementation Checklist (Phase 1)
 
 **Core Implementation (✅ Complete):**

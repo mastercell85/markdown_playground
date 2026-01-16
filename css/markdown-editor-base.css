@@ -1646,6 +1646,43 @@ header[role="banner"] {
     }
 }
 
+/* Small screen responsive - constrain panels to viewport */
+@media (max-width: 900px) {
+    .panel-content {
+        /* Remove centering transform and use viewport-aware positioning */
+        left: 10px;
+        right: 10px;
+        transform: none;
+        min-width: auto;
+        max-width: calc(100vw - 20px);
+    }
+
+    .help-panel .panel-content {
+        min-width: auto;
+        max-width: calc(100vw - 20px);
+    }
+
+    .settings-panel .panel-content {
+        min-width: auto;
+        max-width: calc(100vw - 20px);
+    }
+
+    /* Make the two-column help layout stack on small screens */
+    .help-two-col {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    /* Column labels for stacked layout */
+    .help-col-label {
+        margin-top: 8px;
+    }
+
+    .help-col-label:first-child {
+        margin-top: 0;
+    }
+}
+
 /* ============================================================================
    WYSIWYG UNIFIED VIEW - Phase 3
    ============================================================================ */

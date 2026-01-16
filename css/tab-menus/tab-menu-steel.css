@@ -1013,6 +1013,87 @@
 }
 
 /* ============================================================================
+   STEEL MENU - VERY SMALL SCREENS (<900px)
+   Scale down help panel to fit viewport while keeping steel design
+   ============================================================================ */
+
+@media (max-width: 900px) {
+    /* Scale help panel width to fit screen */
+    .intro.tab-menu-steel .help-panel.panel-open {
+        --responsive-width: calc(100vw - 80px);
+        width: var(--responsive-width);
+        /* Shift right: panel needs to move left by (panel-width - space-from-right-edge) */
+        /* At 850px viewport: panel is ~770px, needs to shift ~230px left to have 40px right margin */
+        transform: translateX(calc(-1 * (var(--responsive-width) - 100vw + 580px)));
+        /* Contain overflow */
+        overflow: hidden;
+        max-height: 80vh;
+    }
+
+    /* Scale backgrounds to match */
+    .intro.tab-menu-steel .help-panel.panel-open {
+        background-size: var(--responsive-width) auto;
+    }
+
+    .intro.tab-menu-steel .help-panel.panel-open::before {
+        width: var(--responsive-width);
+        background-size: auto auto, var(--responsive-width) auto;
+    }
+
+    .intro.tab-menu-steel .help-panel.panel-open::after {
+        width: var(--responsive-width);
+        background-size: var(--responsive-width) auto;
+    }
+
+    /* Similar for view and settings panels */
+    .intro.tab-menu-steel .view-panel.panel-open,
+    .intro.tab-menu-steel .settings-panel.panel-open {
+        --responsive-width: calc(100vw - 80px);
+        width: var(--responsive-width);
+        transform: translateX(calc(-1 * (var(--responsive-width) - 100vw + 580px)));
+        background-size: var(--responsive-width) auto;
+        overflow: hidden;
+        max-height: 80vh;
+    }
+
+    .intro.tab-menu-steel .view-panel.panel-open::before,
+    .intro.tab-menu-steel .settings-panel.panel-open::before {
+        width: var(--responsive-width);
+        background-size: auto auto, var(--responsive-width) auto;
+    }
+
+    .intro.tab-menu-steel .view-panel.panel-open::after,
+    .intro.tab-menu-steel .settings-panel.panel-open::after {
+        width: var(--responsive-width);
+        background-size: var(--responsive-width) auto;
+    }
+
+    /* Constrain panel content scrolling - must be less than panel max-height */
+    .intro.tab-menu-steel .help-panel .panel-content,
+    .intro.tab-menu-steel .view-panel .panel-content,
+    .intro.tab-menu-steel .settings-panel .panel-content {
+        max-height: calc(80vh - 60px) !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Sticky header for help panel - stays at top when scrolling */
+    .intro.tab-menu-steel .help-panel .help-header-row {
+        position: sticky;
+        top: -20px;
+        background: #000000;
+        z-index: 10;
+        padding-top: 20px;
+        padding-bottom: 15px;
+        margin-top: -20px;
+        /* Constrain width to not extend past panel */
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+}
+
+/* ============================================================================
    STEEL MENU - HIDE DECORATIONS FOR EXTERNAL THEMES
    When using external themes, hide the SVG hooks/frames
    ============================================================================ */

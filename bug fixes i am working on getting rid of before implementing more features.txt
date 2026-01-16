@@ -1,9 +1,4 @@
--fix changes arent persisting through refresh in files that i did not open
-	by using the file->open method. if the file is a standard new document created 
-	by the editor it does not persist through refresh.
+
 -fix and implement saving to the local computer in any directory and saving to
 	the original document. just like regular apps do.
 -fix turn off spell check in the browser
--fix when typing in the editor and i get to the bottom of the page. press enter
-	and the cursor moves below the screen. it is not in view for me to see what 
-	i am typing. need to keep it in view.

@@ -3,13 +3,11 @@
 REMAINING BUGS/FEATURES TO IMPLEMENT:
 =====================================
 
--fix and implement saving to the local computer in any directory and saving to
-	the original document. just like regular apps do.
+
 -fix turn off spell check in the browser
 -wire up toolbar buttons (Bold, Italic, Link, etc.) for WYSIWYG mode
 -fix find/replace to work with WYSIWYG contenteditable
--need to move the horzontal scroll bar up a little bit so that it is not
-  partially cut off at the bottom of the screen.
+
 -the file buttons, edit buttons are too small.
 -in teh help menu the expanded window is not adjusting to the sections properly and the right
   of the expanded view is off the screen to the right.
@@ -25,5 +23,6 @@ REMAINING BUGS/FEATURES TO IMPLEMENT:
 -the menu tabs, open on hover, needs to be removed from all menu tabs
   they should be open on click and close on click anywhere on the screeen
   that is not that tab (click anywere part is already implemented).
--the open file needs to go to the last directory and persist throough
-  refresh. it does not need to persist through open/close of the app.
+-fix bug, when typing in a open tab, the text from one tab is still being copied to another tab when it 
+  should not be.
+  

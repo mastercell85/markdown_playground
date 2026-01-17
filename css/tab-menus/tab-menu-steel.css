@@ -145,7 +145,7 @@
 .intro.tab-menu-steel .panel-tab-label {
     height: var(--steel-panel-height);
     font-size: 16px;
-    padding: 8px 15px 0 15px;
+    padding: 0 15px;
     letter-spacing: 0.5px;
     display: flex;
     align-items: center;
@@ -153,6 +153,7 @@
     background: transparent;
     border: none;
     color: inherit;
+    box-sizing: border-box;
 }
 
 /* Override base hover styles - Steel uses transform instead */
@@ -1167,49 +1168,77 @@
    ============================================================================ */
 
 @media (max-width: 500px) {
+    /* Collapsed tabs - ensure proper sizing at very narrow widths */
+    .intro.tab-menu-steel .editor-panel {
+        width: auto;
+        min-width: 60px;
+        max-width: 100px;
+        height: 28px;
+        margin-right: -20px;
+        transform: rotate(-3deg) skew(-3deg) scale(0.9);
+    }
+
+    .intro.tab-menu-steel .panel-tab-label {
+        height: 28px;
+        font-size: 10px;
+        padding: 0 8px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Hide chain decorations on very narrow screens */
+    .intro.tab-menu-steel .editor-panel::before,
+    .intro.tab-menu-steel .editor-panel::after {
+        display: none !important;
+    }
+
     /* Override transform-based positioning with fixed full-width approach */
     .intro.tab-menu-steel .help-panel.panel-open,
     .intro.tab-menu-steel .view-panel.panel-open,
     .intro.tab-menu-steel .settings-panel.panel-open {
         position: fixed !important;
-        left: 10px !important;
-        right: 10px !important;
-        top: 50px !important;
+        left: 5px !important;
+        right: 5px !important;
+        top: 45px !important;
         width: auto !important;
+        min-width: auto !important;
+        max-width: none !important;
+        height: auto !important;
         transform: none !important;
-        max-height: calc(100vh - 60px);
+        max-height: calc(100vh - 55px);
         z-index: 1000;
     }
 
-    /* Hide decorative backgrounds on very narrow screens */
-    .intro.tab-menu-steel .help-panel.panel-open::before,
-    .intro.tab-menu-steel .help-panel.panel-open::after,
-    .intro.tab-menu-steel .view-panel.panel-open::before,
-    .intro.tab-menu-steel .view-panel.panel-open::after,
-    .intro.tab-menu-steel .settings-panel.panel-open::before,
-    .intro.tab-menu-steel .settings-panel.panel-open::after {
-        display: none !important;
-    }
-
-    /* Simple solid background */
+    /* Simple solid background for expanded panels */
     .intro.tab-menu-steel .help-panel.panel-open,
     .intro.tab-menu-steel .view-panel.panel-open,
     .intro.tab-menu-steel .settings-panel.panel-open {
-        background: #000000 !important;
+        background: var(--steel-panel-bg) !important;
         border: 2px solid var(--accent-secondary, #00ffff) !important;
         border-radius: 8px;
     }
 
-    /* Stack two-column help layout vertically */
-    .intro.tab-menu-steel .help-two-col {
+    /* Stack all two-column layouts vertically */
+    .intro.tab-menu-steel .help-two-col,
+    .intro.tab-menu-steel .view-two-col,
+    .intro.tab-menu-steel .settings-two-col {
         grid-template-columns: 1fr !important;
         gap: 8px;
+    }
+
+    /* Adjust panel content padding for narrow screens */
+    .intro.tab-menu-steel .help-panel .panel-content,
+    .intro.tab-menu-steel .view-panel .panel-content,
+    .intro.tab-menu-steel .settings-panel .panel-content {
+        padding: 10px !important;
+        max-height: calc(100vh - 120px) !important;
     }
 }
 
 /* ============================================================================
    STEEL MENU - HIDE DECORATIONS FOR EXTERNAL THEMES
-   When using external themes, hide the SVG hooks/frames
+   When using external themes, hide the CSS chain/bar decorations
    ============================================================================ */
 
 body.external-theme .intro.tab-menu-steel .editor-panel::before,

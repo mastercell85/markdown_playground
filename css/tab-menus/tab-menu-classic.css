@@ -994,3 +994,48 @@ header[role="banner"] {
     cursor: pointer;
     accent-color: #4a9eff;
 }
+
+/* ============================================================================
+   CLASSIC MENU - SMALL SCREENS (<900px)
+   Scale down panels to fit viewport
+   ============================================================================ */
+
+@media (max-width: 900px) {
+    /* Constrain panel width and enable scrolling */
+    .help-panel .panel-content,
+    .view-panel .panel-content,
+    .settings-panel .panel-content {
+        max-width: calc(100vw - 40px) !important;
+        min-width: 200px !important;
+        max-height: 70vh !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Stack two-column layouts vertically */
+    .help-two-col,
+    .view-two-col,
+    .settings-two-col {
+        grid-template-columns: 1fr !important;
+        gap: 8px;
+    }
+}
+
+/* ============================================================================
+   CLASSIC MENU - VERY NARROW SCREENS (<500px)
+   Full-width panels for mobile
+   ============================================================================ */
+
+@media (max-width: 500px) {
+    /* Full-width panels on very narrow screens */
+    .editor-panel.panel-open .panel-content {
+        position: fixed !important;
+        left: 10px !important;
+        right: 10px !important;
+        top: 100px !important;
+        max-width: none !important;
+        width: auto !important;
+        max-height: calc(100vh - 120px) !important;
+        z-index: 1000;
+    }
+}

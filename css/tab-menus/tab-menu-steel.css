@@ -1,6 +1,7 @@
 /**
  * Steel Tab Menu Layout
- * Animated panel menu with 3D transforms, SVG decorations, and smooth transitions
+ * Animated panel menu with 3D transforms, CSS industrial decorations, and smooth transitions
+ * Features: Hanging chain effect, brushed metal gradients, beveled edges
  *
  * Activate by adding 'tab-menu-steel' class to .intro container
  * Themes can customize colors via CSS variables defined below
@@ -17,8 +18,33 @@
     --steel-panel-height: 35px;
     --steel-panel-margin-right: -35px;
 
-    /* Steel Menu - Colors */
-    --steel-panel-bg: url(../../assets/layer-middle.svg);
+    /* Steel Menu - Industrial Metal Colors (themes can override via --theme-* variables) */
+    --steel-metal-dark: var(--theme-panel-bg, #1a1a1a);
+    --steel-metal-mid: var(--theme-panel-bg-light, #2a2a2a);
+    --steel-metal-light: var(--theme-panel-highlight, #3a3a3a);
+    --steel-metal-shine: var(--theme-panel-shine, #4a4a4a);
+    --steel-rivet-color: var(--theme-accent-secondary, #555);
+    --steel-rivet-highlight: var(--theme-accent, #777);
+    --steel-border-dark: var(--theme-border-dark, #111);
+    --steel-border-light: var(--theme-border-light, #444);
+
+    /* Steel Menu - CSS Brushed Metal Background (replaces SVG) */
+    --steel-panel-bg: linear-gradient(
+        180deg,
+        var(--steel-metal-dark) 0%,
+        var(--steel-metal-mid) 3%,
+        var(--steel-metal-dark) 6%,
+        var(--steel-metal-mid) 9%,
+        var(--steel-metal-dark) 12%,
+        var(--steel-metal-mid) 50%,
+        var(--steel-metal-dark) 88%,
+        var(--steel-metal-mid) 91%,
+        var(--steel-metal-dark) 94%,
+        var(--steel-metal-mid) 97%,
+        var(--steel-metal-dark) 100%
+    );
+
+    /* Steel Menu - Text Colors */
     --steel-panel-text: #999;
     --steel-panel-text-hover: #fff;
 
@@ -32,11 +58,10 @@
     --steel-transition-duration: 1s;
     --steel-transition-easing: ease-out;
 
-    /* Steel Menu - Hook/Frame dimensions */
-    --steel-hook-height: 350px;
-    --steel-hook-offset: -350px;
-    --steel-frame-height: 23px;
-    --steel-frame-offset: -23px;
+    /* Steel Menu - Chain dimensions (CSS chain, replaces SVG hooks) */
+    --steel-chain-height: 25px;
+    --steel-chain-height-expanded: 50px;
+    --steel-chain-width: 12px;
 
     /* Steel Menu - Help panel expanded width */
     --steel-help-width: 650px;
@@ -90,18 +115,27 @@
     width: var(--steel-panel-width);
     height: var(--steel-panel-height);
     overflow: hidden;
-    background: var(--steel-panel-bg) repeat-y center top;
-    background-size: var(--steel-panel-width) auto;
+    /* CSS gradient background - replaces SVG */
+    background: var(--steel-panel-bg);
     color: var(--steel-panel-text);
     margin: 0 var(--steel-panel-margin-right) 0 0;
     transform: rotate(var(--steel-panel-rotate)) skew(var(--steel-panel-skew)) scale(var(--steel-panel-scale));
     transition: transform var(--steel-transition-duration) var(--steel-transition-easing),
                 height var(--steel-transition-duration) var(--steel-transition-easing),
                 width var(--steel-transition-duration) var(--steel-transition-easing),
-                background-size var(--steel-transition-duration) var(--steel-transition-easing),
                 margin var(--steel-transition-duration) var(--steel-transition-easing),
                 color var(--steel-transition-duration) var(--steel-transition-easing),
                 overflow 0s var(--steel-transition-duration);
+    /* Beveled metal edge effect */
+    border: 2px solid;
+    border-color: var(--steel-border-light) var(--steel-border-dark)
+                  var(--steel-border-dark) var(--steel-border-light);
+    border-radius: 3px;
+    /* Inner shadow for depth */
+    box-shadow:
+        inset 1px 1px 2px rgba(255,255,255,0.1),
+        inset -1px -1px 2px rgba(0,0,0,0.3),
+        0 2px 4px rgba(0,0,0,0.3);
 }
 
 /* ============================================================================
@@ -127,49 +161,83 @@
 }
 
 /* ============================================================================
-   STEEL MENU - SVG DECORATIONS (Hooks and Frames)
+   STEEL MENU - CSS CHAIN DECORATION (Replaces SVG Hooks)
+   Chain links that suspend tabs "in the air" like hanging from a crane
    ============================================================================ */
 
-.intro.tab-menu-steel .editor-panel::before,
-.intro.tab-menu-steel .editor-panel::after {
-    position: absolute;
-    left: 0;
-    z-index: 1;
-    display: block;
-    width: var(--steel-panel-width);
-    content: '';
-    transition: width var(--steel-transition-duration) var(--steel-transition-easing),
-                background-size var(--steel-transition-duration) var(--steel-transition-easing);
-}
-
-/* Hook - positioned above panel */
+/* Chain - positioned above panel (short chain when collapsed) */
 .intro.tab-menu-steel .editor-panel::before {
-    top: var(--steel-hook-offset);
-    height: var(--steel-hook-height);
-    background-size: auto auto;
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: calc(-1 * var(--steel-chain-height));
+    width: var(--steel-chain-width);
+    height: var(--steel-chain-height);
+    z-index: -1;
+
+    /* Create chain link pattern using repeating gradients */
+    background:
+        /* Chain link outer ring */
+        repeating-linear-gradient(
+            180deg,
+            transparent 0px,
+            transparent 2px,
+            var(--steel-metal-mid) 2px,
+            var(--steel-metal-light) 4px,
+            var(--steel-metal-shine) 5px,
+            var(--steel-metal-light) 6px,
+            var(--steel-metal-mid) 8px,
+            transparent 8px,
+            transparent 12px
+        );
+
+    /* Add depth with shadow */
+    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.5));
+    border-radius: 2px;
+
+    /* Transition for expand animation - chain "lowers" */
+    transition: height var(--steel-transition-duration) var(--steel-transition-easing),
+                top var(--steel-transition-duration) var(--steel-transition-easing);
 }
 
-/* Frame - positioned below panel */
-.intro.tab-menu-steel .editor-panel::after {
-    bottom: var(--steel-frame-offset);
-    height: var(--steel-frame-height);
-    background: transparent url(../../assets/layer-frame.svg) no-repeat center bottom;
-    background-size: var(--steel-panel-width) auto;
-}
-
-/* Alternating hook styles (odd/even panels) */
-.intro.tab-menu-steel .editor-panel:nth-child(odd)::before {
-    background: url(../../assets/hook1.svg) no-repeat center bottom;
-}
-
+/* Alternating chain style for even panels (slightly different appearance) */
 .intro.tab-menu-steel .editor-panel:nth-child(even)::before {
-    background: url(../../assets/hook2.svg) no-repeat center bottom;
+    width: 10px;
+    background:
+        repeating-linear-gradient(
+            180deg,
+            transparent 0px,
+            transparent 3px,
+            var(--steel-metal-mid) 3px,
+            var(--steel-metal-light) 5px,
+            var(--steel-metal-mid) 7px,
+            transparent 7px,
+            transparent 11px
+        );
 }
 
-/* Slight variation in frame position for even panels */
-.intro.tab-menu-steel .editor-panel:nth-child(even)::after {
-    bottom: -21px;
-    height: 21px;
+/* Frame decoration at bottom - subtle metallic bar */
+.intro.tab-menu-steel .editor-panel::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 10%;
+    width: 80%;
+    height: 4px;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--steel-border-dark) 5%,
+        var(--steel-metal-mid) 20%,
+        var(--steel-metal-light) 50%,
+        var(--steel-metal-mid) 80%,
+        var(--steel-border-dark) 95%,
+        transparent 100%
+    );
+    border-radius: 2px;
+    z-index: 1;
+    transition: opacity var(--steel-transition-duration) var(--steel-transition-easing);
 }
 
 /* ============================================================================
@@ -208,6 +276,7 @@
 
 /* ============================================================================
    STEEL MENU - EXPANDED STATE (Click-to-Open)
+   Chain lowers, panel expands below centered tab label
    ============================================================================ */
 
 .intro.tab-menu-steel .editor-panel.panel-open {
@@ -216,6 +285,42 @@
     overflow: visible;
     color: var(--steel-panel-text-hover);
     transform: rotateY(0) scale(var(--steel-panel-scale-hover));
+
+    /* Enhanced metal frame for expanded state */
+    box-shadow:
+        inset 2px 2px 4px rgba(255,255,255,0.1),
+        inset -2px -2px 4px rgba(0,0,0,0.4),
+        0 8px 20px rgba(0,0,0,0.5);
+}
+
+/* Chain extends longer when panel expands ("lowering" effect) */
+.intro.tab-menu-steel .editor-panel.panel-open::before {
+    height: var(--steel-chain-height-expanded);
+    top: calc(-1 * var(--steel-chain-height-expanded));
+}
+
+/* Hide bottom bar when expanded (panel content provides the frame) */
+.intro.tab-menu-steel .editor-panel.panel-open::after {
+    opacity: 0;
+}
+
+/* Centered tab label above expanded panel content */
+.intro.tab-menu-steel .editor-panel.panel-open {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.intro.tab-menu-steel .editor-panel.panel-open .panel-tab-label {
+    align-self: center;
+    flex-shrink: 0;
+    /* Keep original height for the collapsed appearance */
+    height: var(--steel-panel-height);
+    width: 100%;
+    max-width: var(--steel-panel-width);
+    /* Subtle separator between label and content */
+    border-bottom: 1px solid var(--steel-border-light);
+    margin-bottom: 0;
 }
 
 /* ============================================================================
@@ -337,7 +442,6 @@
 
 .intro.tab-menu-steel .help-panel.panel-open {
     width: var(--steel-help-width);
-    background-size: var(--steel-help-width) auto;
     z-index: 10;
     max-height: none;
     /* Default: no transform for large screens (>=1400px) */
@@ -350,44 +454,14 @@
     overflow-x: hidden !important;
 }
 
-/* Help panel decorations expand and shift with panel */
-.intro.tab-menu-steel .help-panel.panel-open::before,
-.intro.tab-menu-steel .help-panel.panel-open::after {
-    width: var(--steel-help-width);
-    /* Decorations inherit transform from parent, no additional shift needed */
-}
-
-.intro.tab-menu-steel .help-panel.panel-open::before {
-    background-size: auto auto, var(--steel-help-width) auto;
-}
-
-.intro.tab-menu-steel .help-panel.panel-open::after {
-    background-size: var(--steel-help-width) auto;
-}
-
 /* ============================================================================
    STEEL MENU - VIEW PANEL (Wider Expansion for Two-Column Layout)
    ============================================================================ */
 
 .intro.tab-menu-steel .view-panel.panel-open {
     width: var(--steel-view-width);
-    background-size: var(--steel-view-width) auto;
     z-index: 10;
     max-height: none;
-}
-
-/* View panel decorations expand with panel */
-.intro.tab-menu-steel .view-panel.panel-open::before,
-.intro.tab-menu-steel .view-panel.panel-open::after {
-    width: var(--steel-view-width);
-}
-
-.intro.tab-menu-steel .view-panel.panel-open::before {
-    background-size: auto auto, var(--steel-view-width) auto;
-}
-
-.intro.tab-menu-steel .view-panel.panel-open::after {
-    background-size: var(--steel-view-width) auto;
 }
 
 /* ============================================================================
@@ -396,23 +470,8 @@
 
 .intro.tab-menu-steel .settings-panel.panel-open {
     width: var(--steel-settings-width, 520px);
-    background-size: var(--steel-settings-width, 520px) auto;
     z-index: 10;
     max-height: none;
-}
-
-/* Settings panel decorations expand with panel */
-.intro.tab-menu-steel .settings-panel.panel-open::before,
-.intro.tab-menu-steel .settings-panel.panel-open::after {
-    width: var(--steel-settings-width, 520px);
-}
-
-.intro.tab-menu-steel .settings-panel.panel-open::before {
-    background-size: auto auto, var(--steel-settings-width, 520px) auto;
-}
-
-.intro.tab-menu-steel .settings-panel.panel-open::after {
-    background-size: var(--steel-settings-width, 520px) auto;
 }
 
 /* Settings panel content padding - match View panel alignment */
@@ -429,8 +488,7 @@
     position: sticky;
     top: -10px;
     z-index: 100;
-    background: url(../../assets/layer-middle.svg) repeat-y center top;
-    background-size: var(--steel-settings-width, 520px) auto;
+    background: var(--steel-panel-bg);
     padding: 20px 0 10px 0;
     margin-top: -20px;
 }
@@ -540,8 +598,7 @@
     position: sticky;
     top: -10px;
     z-index: 100;
-    background: url(../../assets/layer-middle.svg) repeat-y center top;
-    background-size: var(--steel-help-width, 650px) auto;
+    background: var(--steel-panel-bg);
     padding: 20px 0 10px 0;
     margin-top: -20px;
 }
@@ -765,8 +822,7 @@
     position: sticky;
     top: -10px;
     z-index: 100;
-    background: url(../../assets/layer-middle.svg) repeat-y center top;
-    background-size: var(--steel-view-width, 500px) auto;
+    background: var(--steel-panel-bg);
     padding: 20px 0 10px 0;
     margin-top: -20px;
 }
@@ -900,14 +956,16 @@
         line-height: calc(var(--steel-panel-height) * 0.75);
     }
 
-    .intro.tab-menu-steel .editor-panel::before,
-    .intro.tab-menu-steel .editor-panel::after {
-        width: calc(var(--steel-panel-width) * 0.75);
+    /* Scale chain for medium screens */
+    .intro.tab-menu-steel .editor-panel::before {
+        width: calc(var(--steel-chain-width) * 0.75);
+        height: calc(var(--steel-chain-height) * 0.75);
+        top: calc(-1 * var(--steel-chain-height) * 0.75);
     }
 
-    .intro.tab-menu-steel .editor-panel::before {
-        top: calc(var(--steel-hook-offset) * 0.75);
-        height: calc(var(--steel-hook-height) * 0.75);
+    .intro.tab-menu-steel .editor-panel.panel-open::before {
+        height: calc(var(--steel-chain-height-expanded) * 0.75);
+        top: calc(-1 * var(--steel-chain-height-expanded) * 0.75);
     }
 
     .intro.tab-menu-steel .editor-panel h3 {
@@ -946,14 +1004,16 @@
         line-height: calc(var(--steel-panel-height) * 0.55);
     }
 
-    .intro.tab-menu-steel .editor-panel::before,
-    .intro.tab-menu-steel .editor-panel::after {
-        width: calc(var(--steel-panel-width) * 0.55);
+    /* Scale chain for small screens */
+    .intro.tab-menu-steel .editor-panel::before {
+        width: calc(var(--steel-chain-width) * 0.55);
+        height: calc(var(--steel-chain-height) * 0.55);
+        top: calc(-1 * var(--steel-chain-height) * 0.55);
     }
 
-    .intro.tab-menu-steel .editor-panel::before {
-        top: calc(var(--steel-hook-offset) * 0.55);
-        height: calc(var(--steel-hook-height) * 0.55);
+    .intro.tab-menu-steel .editor-panel.panel-open::before {
+        height: calc(var(--steel-chain-height-expanded) * 0.55);
+        top: calc(-1 * var(--steel-chain-height-expanded) * 0.55);
     }
 
     .intro.tab-menu-steel .editor-panel h3 {
@@ -1018,54 +1078,32 @@
    ============================================================================ */
 
 @media (max-width: 900px) {
-    /* Scale help panel width to fit screen */
+    /* Responsive panel sizing - CSS gradients scale automatically */
     .intro.tab-menu-steel .help-panel.panel-open {
         --responsive-width: calc(100vw - 80px);
         width: var(--responsive-width);
-        /* Shift right: panel needs to move left by (panel-width - space-from-right-edge) */
-        /* At 850px viewport: panel is ~770px, needs to shift ~230px left to have 40px right margin */
+        /* Shift left to keep panel on screen */
         transform: translateX(calc(-1 * (var(--responsive-width) - 100vw + 580px)));
-        /* Contain overflow */
         overflow: hidden;
         max-height: 80vh;
     }
 
-    /* Scale backgrounds to match */
-    .intro.tab-menu-steel .help-panel.panel-open {
-        background-size: var(--responsive-width) auto;
-    }
-
-    .intro.tab-menu-steel .help-panel.panel-open::before {
+    .intro.tab-menu-steel .view-panel.panel-open {
+        --responsive-width: calc(100vw - 80px);
         width: var(--responsive-width);
-        background-size: auto auto, var(--responsive-width) auto;
+        max-width: 700px;
+        overflow: hidden;
+        max-height: 80vh;
+        transform: translateX(calc(-1 * (var(--responsive-width) - 100vw + 480px)));
     }
 
-    .intro.tab-menu-steel .help-panel.panel-open::after {
-        width: var(--responsive-width);
-        background-size: var(--responsive-width) auto;
-    }
-
-    /* Similar for view and settings panels */
-    .intro.tab-menu-steel .view-panel.panel-open,
     .intro.tab-menu-steel .settings-panel.panel-open {
         --responsive-width: calc(100vw - 80px);
         width: var(--responsive-width);
-        transform: translateX(calc(-1 * (var(--responsive-width) - 100vw + 580px)));
-        background-size: var(--responsive-width) auto;
+        max-width: 700px;
         overflow: hidden;
         max-height: 80vh;
-    }
-
-    .intro.tab-menu-steel .view-panel.panel-open::before,
-    .intro.tab-menu-steel .settings-panel.panel-open::before {
-        width: var(--responsive-width);
-        background-size: auto auto, var(--responsive-width) auto;
-    }
-
-    .intro.tab-menu-steel .view-panel.panel-open::after,
-    .intro.tab-menu-steel .settings-panel.panel-open::after {
-        width: var(--responsive-width);
-        background-size: var(--responsive-width) auto;
+        transform: translateX(calc(-1 * (var(--responsive-width) - 100vw + 420px)));
     }
 
     /* Constrain panel content scrolling - must be less than panel max-height */
@@ -1077,18 +1115,48 @@
         overflow-x: hidden !important;
     }
 
-    /* Sticky header for help panel - stays at top when scrolling */
+    /* Sticky header for all panels - stays at top when scrolling */
     .intro.tab-menu-steel .help-panel .help-header-row {
         position: sticky;
         top: -20px;
-        background: #000000;
+        background: var(--steel-panel-bg);
         z-index: 10;
         padding-top: 20px;
         padding-bottom: 15px;
         margin-top: -20px;
-        /* Constrain width to not extend past panel */
         max-width: 100%;
         box-sizing: border-box;
+    }
+
+    .intro.tab-menu-steel .view-panel .panel-header-row {
+        position: sticky;
+        top: -20px;
+        background: var(--steel-panel-bg);
+        z-index: 10;
+        padding-top: 20px;
+        padding-bottom: 15px;
+        margin-top: -20px;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .intro.tab-menu-steel .settings-panel .panel-header-row {
+        position: sticky;
+        top: -20px;
+        background: var(--steel-panel-bg);
+        z-index: 10;
+        padding-top: 20px;
+        padding-bottom: 15px;
+        margin-top: -20px;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Stack two-column layouts on small screens */
+    .intro.tab-menu-steel .view-two-col,
+    .intro.tab-menu-steel .settings-two-col {
+        grid-template-columns: 1fr !important;
+        gap: 8px;
     }
 
 }

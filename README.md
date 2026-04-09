@@ -73,7 +73,6 @@ Key design patterns: Single Responsibility, Dependency Injection, Observer Patte
 │   └── tab-menus/                 # Modular tab menu scripts
 ├── themes/                        # Cyberpunk and LCARS theme CSS
 ├── tests/                         # Unit tests (FindManager: 15 tests, 29 assertions)
-├── old-monolithic-code/           # Original codebase before SOLID refactor
 ├── index.html                     # Home page (CSS Zen Garden animation)
 ├── markdown-editor.html           # Main editor application
 └── typora-window.html             # External preview window
@@ -92,7 +91,7 @@ Open `markdown-editor.html` in your browser to launch the editor, or open `index
 
 ## Background
 
-This project started as a CSS Zen Garden responsive refactor and evolved into a full markdown editor. The initial codebase was a single monolithic file (preserved in `old-monolithic-code/`) which was later refactored from the ground up into a modular architecture following SOLID principles. The rebuild prioritized separated concerns, extensibility, and maintainability — each component is independent and swappable without affecting the rest of the system.
+This project started as a CSS Zen Garden responsive refactor and evolved into a full markdown editor. The initial codebase was a single monolithic file which was later refactored from the ground up into a modular architecture following SOLID principles. The rebuild prioritized separated concerns, extensibility, and maintainability — each component is independent and swappable without affecting the rest of the system.
 
 ## Development
 
